@@ -1,0 +1,33 @@
+{
+  "name": "method-ui",
+  "version": "0.1.0",
+  "description": "Method UI Component Library CLI",
+  "main": "index.ts",
+  "bin": {
+    "method": "./index.ts"
+  },
+  "scripts": {
+    "build": "bun build index.ts --outdir dist",
+    "dev": "bun run index.ts"
+  },
+  "dependencies": {
+    "citty": "^0.1.6",
+    "cli-spinners": "^3.3.0",
+    "consola": "^3.4.2",
+    "yocto-spinner": "^1.0.0",
+    "yoctocolors": "^2.1.2"
+  },
+  "devDependencies": {
+    "@ark-ui/solid": "^3.0.0",
+    "@iconify-json/lucide": "^1.1.0",
+    "@types/node": "^20.0.0",
+    "@unocss/preset-icons": "^0.58.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "solid-js": "^1.8.0",
+    "solid-motionone": "^1.0.0",
+    "typescript": "^5.0.0",
+    "unocss": "^0.58.0",
+    "unocss-merge": "^0.6.0"
+  }
+}
