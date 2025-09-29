@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { consola } from "consola";
 import {
   transformTypeScriptToJavaScript,
@@ -41,26 +42,40 @@ function getIconCollection(iconLibrary: string): {
  * Find the CLI's templates directory
  */
 function getTemplatesDirectory(): string {
-  // Find the CLI directory - look for where the CLI's templates folder is
-  let cliDir = process.cwd();
+  // Get the current file's directory
+  const currentFileUrl = import.meta.url;
+  const currentFilePath = fileURLToPath(currentFileUrl);
+  const currentDir = dirname(currentFilePath);
 
-  // If we're in a user project, go up to find the CLI directory
-  while (!existsSync(join(cliDir, "templates")) && cliDir !== dirname(cliDir)) {
-    cliDir = dirname(cliDir);
+  // Try multiple approaches to find the templates directory
+  const searchPaths = [
+    // 1. Relative to this file (src/utils/files.ts -> templates)
+    join(currentDir, "..", "..", "templates"),
+    // 2. Walking up from current working directory
+    (() => {
+      let cliDir = process.cwd();
+      while (
+        !existsSync(join(cliDir, "templates")) &&
+        cliDir !== dirname(cliDir)
+      ) {
+        cliDir = dirname(cliDir);
+      }
+      return join(cliDir, "templates");
+    })(),
+    // 3. Common node_modules locations
+    join(process.cwd(), "node_modules", "method-ui", "templates"),
+    join(currentDir, "..", "..", "..", "method-ui", "templates"),
+  ];
+
+  for (const templatesDir of searchPaths) {
+    if (existsSync(templatesDir)) {
+      return templatesDir;
+    }
   }
 
-  // If still not found, try relative to this file
-  if (!existsSync(join(cliDir, "templates"))) {
-    cliDir = join(__dirname || ".", "..", "..", "..");
-  }
-
-  const templatesDir = join(cliDir, "templates");
-
-  if (!existsSync(templatesDir)) {
-    throw new Error(`Could not find templates directory at ${templatesDir}`);
-  }
-
-  return templatesDir;
+  throw new Error(
+    `Could not find templates directory. Searched in:\n${searchPaths.join("\n")}`,
+  );
 }
 
 /**
