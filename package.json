@@ -24,16 +24,16 @@
     "yoctocolors": "^2.1.2"
   },
   "devDependencies": {
-    "@ark-ui/solid": "^3.0.0",
-    "@iconify-json/lucide": "^1.1.0",
-    "@types/node": "^20.0.0",
-    "@unocss/preset-icons": "^0.58.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
-    "solid-js": "^1.8.0",
-    "solid-motionone": "^1.0.0",
-    "typescript": "^5.0.0",
-    "unocss": "^0.58.0",
+    "@ark-ui/solid": "^3.13.0",
+    "@iconify-json/lucide": "^1.2.68",
+    "@types/node": "^20.19.18",
+    "@unocss/preset-icons": "^0.58.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "solid-js": "^1.9.9",
+    "solid-motionone": "^1.0.4",
+    "typescript": "^5.9.2",
+    "unocss": "^0.58.9",
     "unocss-merge": "^0.6.0"
   }
 }

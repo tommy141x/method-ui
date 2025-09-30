@@ -41,7 +41,7 @@ function getIconCollection(iconLibrary: string): {
 /**
  * Find the CLI's templates directory
  */
-function getTemplatesDirectory(): string {
+export function getTemplatesDirectory(): string {
   // Get the current file's directory
   const currentFileUrl = import.meta.url;
   const currentFilePath = fileURLToPath(currentFileUrl);

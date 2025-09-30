@@ -32,6 +32,7 @@ import {
   componentExists,
   getAvailableComponents,
 } from "./src/utils/transform.js";
+import { installWithDependencies } from "./src/utils/dependency-installer.js";
 import {
   getProjectRoot,
   isInProject,
@@ -375,169 +376,66 @@ const addCommand = defineCommand({
         return;
       }
 
-      // Check for missing packages first (including icon library)
-      const config = readComponentsConfig();
-      const iconLibrary = config?.iconLibrary || "lucide";
-      const missingPackages = getMissingPackagesWithIcons(iconLibrary);
+      // Use new dependency resolution system
+      try {
+        consola.log(`${cyan("◇")} Analyzing dependencies...`);
 
-      if (missingPackages.length > 0) {
-        consola.log("");
-        consola.log(`${yellow("!")} Missing required packages for components:`);
-        consola.log(formatPackageList(missingPackages));
-        consola.log("");
+        const result = await installWithDependencies(componentNames);
 
-        const shouldInstall = await consola.prompt(
-          "Would you like to install them now?",
-          {
-            type: "confirm",
-            initial: true,
-          },
-        );
-
-        if (shouldInstall) {
-          const packageManager = detectPackageManager();
-
-          // Check if the detected package manager is available
-          if (!isPackageManagerAvailable(packageManager)) {
-            consola.error(
-              `${packageManager} is not available. Please install it or use a different package manager.`,
+        if (result.success) {
+          consola.log("");
+          if (result.installedComponents.length > 0) {
+            consola.success(
+              `Successfully added ${result.installedComponents.length} component(s):`,
             );
-            consola.log(`You can install the packages manually with:`);
-            consola.log(`  npm install ${missingPackages.join(" ")}`);
-            return;
+            result.installedComponents.forEach((comp) =>
+              consola.log(`  ✓ ${comp}`),
+            );
           }
 
-          const spinner = yoctoSpinner({
-            text: `Installing packages with ${packageManager}...`,
-            spinner: cliSpinners.dots,
-          }).start();
-
-          try {
-            installPackagesUtil(missingPackages, { packageManager });
-            spinner.success("Packages installed successfully!");
-            consola.log("");
-          } catch (error) {
-            spinner.error("Failed to install packages");
-            consola.error(
-              "Installation failed. You can install manually with:",
+          if (result.installedPackages.length > 0) {
+            consola.success(
+              `Successfully installed ${result.installedPackages.length} package(s):`,
             );
-            consola.log(`  npm install ${missingPackages.join(" ")}`);
-            consola.log(`  Or try running the command again.`);
-            return;
+            result.installedPackages.forEach((pkg) =>
+              consola.log(`  ✓ ${pkg}`),
+            );
           }
+
+          consola.log("");
+          consola.log("Next steps:");
+          consola.log("  1. Import the components you need");
+          consola.log("  2. Start building amazing UIs!");
         } else {
-          consola.warn(
-            "Please install the required packages manually before adding components.",
-          );
-          consola.log(`Run: npm install ${missingPackages.join(" ")}`);
-          return;
-        }
-      }
+          consola.error("Installation failed:");
+          result.errors.forEach((error) => consola.error(`  ${error}`));
 
-      // Process components
-      const results: { name: string; success: boolean; error?: string }[] = [];
-      const { join } = await import("path");
-      const { existsSync } = await import("fs");
-
-      for (let i = 0; i < componentNames.length; i++) {
-        const componentName = componentNames[i];
-        const isLast = i === componentNames.length - 1;
-
-        const spinner = yoctoSpinner({
-          text: `Adding ${componentName} component... (${i + 1}/${componentNames.length})`,
-          spinner: cliSpinners.dots,
-        }).start();
-
-        try {
-          const config = readComponentsConfig();
-          if (!config) {
-            spinner.error("Configuration not found");
-            results.push({
-              name: componentName,
-              success: false,
-              error: "Configuration not found",
-            });
-            continue;
-          }
-
-          const packageManager = detectPackageManager();
-          const result = prepareComponentForUser(componentName, packageManager);
-
-          // Validate the transformed component
-          const validation = validateComponent(result.code);
-          if (!validation.valid) {
-            spinner.error("Component validation failed");
-            results.push({
-              name: componentName,
-              success: false,
-              error: `Validation failed: ${validation.errors.join(", ")}`,
-            });
-            continue;
-          }
-
-          const componentsPath = getComponentsPath(config);
-          const outputPath = join(projectRoot, componentsPath, result.fileName);
-
-          // Check if component already exists
-          if (existsSync(outputPath)) {
-            spinner.stop();
-            const shouldOverwrite = await consola.prompt(
-              `Component ${componentName} already exists. Overwrite?`,
-              {
-                type: "confirm",
-                initial: false,
-              },
-            );
-
-            if (!shouldOverwrite) {
-              results.push({
-                name: componentName,
-                success: false,
-                error: "Overwrite declined",
-              });
-              continue;
+          if (
+            result.installedComponents.length > 0 ||
+            result.installedPackages.length > 0
+          ) {
+            consola.log("");
+            consola.log("Partially installed:");
+            if (result.installedComponents.length > 0) {
+              consola.log("Components:");
+              result.installedComponents.forEach((comp) =>
+                consola.log(`  ✓ ${comp}`),
+              );
             }
-
-            spinner.start();
+            if (result.installedPackages.length > 0) {
+              consola.log("Packages:");
+              result.installedPackages.forEach((pkg) =>
+                consola.log(`  ✓ ${pkg}`),
+              );
+            }
           }
-
-          safeWriteFile(outputPath, result.code);
-          spinner.success(`Added ${componentName}`);
-          results.push({ name: componentName, success: true });
-        } catch (error) {
-          spinner.error(`Failed to add ${componentName}`);
-          const errorMessage =
-            error instanceof Error ? error.message : "Unknown error";
-          results.push({
-            name: componentName,
-            success: false,
-            error: errorMessage,
-          });
         }
-      }
-
-      // Show summary
-      consola.log("");
-      const successful = results.filter((r) => r.success);
-      const failed = results.filter((r) => !r.success);
-
-      if (successful.length > 0) {
-        consola.success(
-          `Successfully added ${successful.length} component(s):`,
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        consola.error(
+          `Failed to analyze or install dependencies: ${errorMessage}`,
         );
-        successful.forEach((r) => consola.log(`  ✓ ${r.name}`));
-      }
-
-      if (failed.length > 0) {
-        consola.error(`Failed to add ${failed.length} component(s):`);
-        failed.forEach((r) => consola.log(`  ✗ ${r.name}: ${r.error}`));
-      }
-
-      if (successful.length > 0) {
-        consola.log("");
-        consola.log("Next steps:");
-        consola.log("  1. Import the components you need");
-        consola.log("  2. Start building amazing UIs!");
       }
     }
   },

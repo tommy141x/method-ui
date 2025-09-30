@@ -1,10 +1,12 @@
-/** @jsxImportSource solid-js */
-import { JSX, splitProps } from "solid-js";
-import { cva, type VariantProps } from "class-variance-authority";
+import type { JSX, Component } from "solid-js";
+import { splitProps, mergeProps } from "solid-js";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+
 import { cn } from "../src/utils/cn";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -12,7 +14,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
@@ -20,9 +22,9 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        sm: "h-9 px-3 text-xs",
+        lg: "h-11 px-8",
+        icon: "size-8",
       },
     },
     defaultVariants: {
@@ -32,21 +34,19 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
-  extends JSX.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  loading?: boolean;
-}
+type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants> & {
+    class?: string | undefined;
+    children?: JSX.Element;
+  };
 
-export function Button(props: ButtonProps) {
-  const [local, others] = splitProps(props, [
-    "class",
-    "variant",
-    "size",
-    "loading",
-    "disabled",
-    "children",
-  ]);
+const Button: Component<ButtonProps> = (props) => {
+  const merged = mergeProps(
+    { variant: "default" as const, size: "default" as const },
+    props,
+  );
+
+  const [local, others] = splitProps(merged, ["variant", "size", "class"]);
 
   return (
     <button
@@ -54,47 +54,10 @@ export function Button(props: ButtonProps) {
         buttonVariants({ variant: local.variant, size: local.size }),
         local.class,
       )}
-      disabled={local.disabled || local.loading}
       {...others}
-    >
-      {local.loading && (
-        <div class="i-lucide-loader-2 mr-2 h-4 w-4 animate-spin" />
-      )}
-      {local.children}
-    </button>
+    />
   );
-}
+};
 
-export function IconButton(props: ButtonProps & { icon: string }) {
-  const [local, others] = splitProps(props, ["icon", "children"]);
-
-  return (
-    <Button size="icon" {...others}>
-      <div class={cn("h-4 w-4", local.icon)} />
-      <span class="sr-only">{local.children}</span>
-    </Button>
-  );
-}
-
-export function ButtonWithIcon(
-  props: ButtonProps & { icon?: string; iconPosition?: "left" | "right" },
-) {
-  const [local, others] = splitProps(props, [
-    "icon",
-    "iconPosition",
-    "children",
-  ]);
-  const position = local.iconPosition || "left";
-
-  return (
-    <Button {...others}>
-      {local.icon && position === "left" && (
-        <div class={cn("h-4 w-4 mr-2", local.icon)} />
-      )}
-      {local.children}
-      {local.icon && position === "right" && (
-        <div class={cn("h-4 w-4 ml-2", local.icon)} />
-      )}
-    </Button>
-  );
-}
+export { Button, buttonVariants };
+export type { ButtonProps };
