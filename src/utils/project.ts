@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import { join, dirname, resolve } from "path";
-import { readPackageJson } from "./packages.js";
+import { readPackageJson } from "./dependencies.js";
 
 /**
  * Find the project root directory by looking for package.json

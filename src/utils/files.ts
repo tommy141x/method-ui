@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { consola } from "consola";
+import * as p from "@clack/prompts";
 import {
   transformTypeScriptToJavaScript,
   convertFileExtension,
@@ -129,10 +129,13 @@ function readTemplate(templatePath: string, iconLibrary?: string): string {
 /**
  * Generate UnoCSS configuration file content from template
  */
-export function generateUnoConfig(
-  typescript: boolean,
-  iconLibrary: string,
-): string {
+export async function generateUnoConfig(iconLibrary: string): Promise<string> {
+  const { readComponentsConfig, isTypeScriptProject } = await import(
+    "./config.js"
+  );
+  const config = readComponentsConfig();
+  const typescript = isTypeScriptProject(config);
+
   const templatesDir = getTemplatesDirectory();
   const templatePath = join(templatesDir, "uno.config.ts");
 
@@ -140,6 +143,7 @@ export function generateUnoConfig(
 
   // Transform to JavaScript if needed
   if (!typescript) {
+    const { transformTypeScriptToJavaScript } = await import("./typescript.js");
     content = transformTypeScriptToJavaScript(content);
   }
 
@@ -159,21 +163,26 @@ export function generateGlobalCSS(): string {
 /**
  * Create UnoCSS configuration file
  */
-export function createUnoConfig(
+export async function createUnoConfig(
   projectRoot: string,
-  typescript: boolean,
   iconLibrary: string,
-): void {
+): Promise<void> {
+  const { readComponentsConfig, isTypeScriptProject } = await import(
+    "./config.js"
+  );
+  const config = readComponentsConfig();
+  const typescript = isTypeScriptProject(config);
+
   const extension = typescript ? "ts" : "js";
   const filename = `uno.config.${extension}`;
   const filepath = join(projectRoot, filename);
 
   try {
-    const content = generateUnoConfig(typescript, iconLibrary);
+    const content = await generateUnoConfig(iconLibrary);
     safeWriteFile(filepath, content);
-    consola.success(`Created ${filename}`);
+    p.log.success(`Created ${filename}`);
   } catch (error) {
-    consola.error(`Failed to create ${filename}:`, error);
+    p.log.error(`Failed to create ${filename}: ${error}`);
     throw error;
   }
 }
@@ -188,9 +197,9 @@ export function createGlobalCSS(projectRoot: string): void {
   try {
     const content = generateGlobalCSS();
     safeWriteFile(filepath, content);
-    consola.success(`Created ${filename}`);
+    p.log.success(`Created ${filename}`);
   } catch (error) {
-    consola.error(`Failed to create ${filename}:`, error);
+    p.log.error(`Failed to create ${filename}: ${error}`);
     throw error;
   }
 }
@@ -198,11 +207,10 @@ export function createGlobalCSS(projectRoot: string): void {
 /**
  * Create all necessary project files
  */
-export function createProjectFiles(
+export async function createProjectFiles(
   projectRoot: string,
-  typescript: boolean,
   iconLibrary: string,
-): void {
-  createUnoConfig(projectRoot, typescript, iconLibrary);
+): Promise<void> {
+  await createUnoConfig(projectRoot, iconLibrary);
   createGlobalCSS(projectRoot);
 }

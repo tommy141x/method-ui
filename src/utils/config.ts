@@ -1,10 +1,11 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { consola } from "consola";
+import * as p from "@clack/prompts";
 
 export interface ComponentsConfig {
   components: string;
   iconLibrary: string;
+  typescript: boolean;
 }
 
 export interface InitConfig {
@@ -16,6 +17,7 @@ export interface InitConfig {
 const DEFAULT_CONFIG: Partial<ComponentsConfig> = {
   components: "./src/components",
   iconLibrary: "lucide",
+  typescript: true,
 };
 
 /**
@@ -37,7 +39,7 @@ export function readComponentsConfig(): ComponentsConfig | null {
     const content = readFileSync("components.json", "utf-8");
     return JSON.parse(content) as ComponentsConfig;
   } catch (error) {
-    consola.error("Failed to parse components.json:", error);
+    p.log.error(`Failed to parse components.json: ${error}`);
     return null;
   }
 }
@@ -49,13 +51,14 @@ export function createComponentsConfig(config: InitConfig): void {
   const componentsConfig: ComponentsConfig = {
     components: config.componentsPath,
     iconLibrary: config.iconLibrary,
+    typescript: config.typescript,
   };
 
   try {
     writeFileSync("components.json", JSON.stringify(componentsConfig, null, 2));
-    consola.success("components.json created successfully!");
+    p.log.success("components.json created successfully!");
   } catch (error) {
-    consola.error("Failed to create components.json:", error);
+    p.log.error(`Failed to create components.json: ${error}`);
     throw error;
   }
 }
@@ -69,7 +72,7 @@ export function updateComponentsConfig(
   const existingConfig = readComponentsConfig();
 
   if (!existingConfig) {
-    consola.error("No components.json found to update");
+    p.log.error("No components.json found to update");
     return;
   }
 
@@ -77,9 +80,9 @@ export function updateComponentsConfig(
 
   try {
     writeFileSync("components.json", JSON.stringify(updatedConfig, null, 2));
-    consola.success("components.json updated successfully!");
+    p.log.success("components.json updated successfully!");
   } catch (error) {
-    consola.error("Failed to update components.json:", error);
+    p.log.error(`Failed to update components.json: ${error}`);
     throw error;
   }
 }
@@ -129,6 +132,10 @@ export function validateComponentsConfig(config: ComponentsConfig): string[] {
     errors.push("Missing icon library in configuration");
   }
 
+  if (config.typescript === undefined) {
+    errors.push("Missing typescript setting in configuration");
+  }
+
   return errors;
 }
 
@@ -141,10 +148,19 @@ export function getComponentsPath(config?: ComponentsConfig): string {
 }
 
 /**
- * Gets the file extension based on the tsx configuration
+ * Gets the file extension based on the typescript configuration
  */
-export function getFileExtension(): string {
-  return ".tsx";
+export function getFileExtension(config?: ComponentsConfig | null): string {
+  const componentsConfig = config || readComponentsConfig();
+  return componentsConfig?.typescript ? ".tsx" : ".jsx";
+}
+
+/**
+ * Checks if the project is configured for TypeScript
+ */
+export function isTypeScriptProject(config?: ComponentsConfig | null): boolean {
+  const componentsConfig = config || readComponentsConfig();
+  return componentsConfig?.typescript ?? true; // Default to TypeScript if not specified
 }
 
 /**
