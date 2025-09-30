@@ -14,7 +14,7 @@ import {
   installWithDependencies,
   validatePackageJson,
   checkPackageCompatibility,
-} from "./src/utils/dependencies.js";
+} from "./utils/dependencies.js";
 import {
   readComponentsConfig,
   hasComponentsConfig,
@@ -22,21 +22,21 @@ import {
   validateComponentsConfig,
   createComponentsConfig,
   getDefaultConfigValues,
-} from "./src/utils/config.js";
+} from "./utils/config.js";
 
 import {
   prepareComponentForUser,
   validateComponent,
   componentExists,
   getAvailableComponents,
-} from "./src/utils/transform.js";
+} from "./utils/transform.js";
 
 import {
   getProjectRoot,
   isInProject,
   getProjectLanguageInfo,
-} from "./src/utils/project.js";
-import { createProjectFiles, safeWriteFile } from "./src/utils/files.js";
+} from "./utils/project.js";
+import { createProjectFiles, safeWriteFile } from "./utils/files.js";
 
 const initCommand = defineCommand({
   meta: {

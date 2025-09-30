@@ -2,19 +2,18 @@
   "name": "method-ui",
   "version": "0.1.0",
   "description": "Method UI Component Library CLI",
-  "main": "index.ts",
+  "main": "cli/cli.ts",
   "bin": {
-    "method": "./index.ts"
+    "method": "./cli/cli.ts"
   },
   "files": [
-    "index.ts",
-    "src/",
+    "cli/",
     "templates/",
     "components/"
   ],
   "scripts": {
-    "build": "bun build index.ts --outdir dist",
-    "dev": "bun run index.ts"
+    "build": "bun build cli/cli.ts --outdir dist",
+    "dev": "bun run cli/cli.ts"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",

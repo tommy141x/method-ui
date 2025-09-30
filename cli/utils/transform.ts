@@ -10,10 +10,28 @@ import type { ClassValue } from "clsx";
 import { getProjectRoot } from "./project.js";
 
 /**
- * The hardcoded cn function that will be injected into components
+ * Get the cn function code from templates directory
  * This makes components completely self-contained with no external dependencies
  */
-export const CN_FUNCTION_CODE = `import type { ClassValue } from "clsx";
+function getCnFunctionCode(): string {
+  // Find the CLI directory - look for where the CLI's templates folder is
+  let cliDir = process.cwd();
+
+  // If we're in a user project, go up to find the CLI directory
+  while (!existsSync(join(cliDir, "templates")) && cliDir !== dirname(cliDir)) {
+    cliDir = dirname(cliDir);
+  }
+
+  // If still not found, try relative to this file
+  if (!existsSync(join(cliDir, "templates"))) {
+    cliDir = join(__dirname || ".", "..", "..", "..");
+  }
+
+  const cnPath = join(cliDir, "templates", "cn.ts");
+
+  if (!existsSync(cnPath)) {
+    // Fallback to hardcoded version if template file not found
+    return `import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import { unoMerge } from "unocss-merge";
 
@@ -21,6 +39,54 @@ import { unoMerge } from "unocss-merge";
 function cn(...classLists: ClassValue[]) {
   return unoMerge(clsx(classLists));
 }`;
+  }
+
+  try {
+    const cnFileContent = readFileSync(cnPath, "utf-8");
+    // Transform the export to a local function declaration
+    // Remove comments and extract just the function logic
+    const lines = cnFileContent.split("\n");
+    const importLines = lines.filter((line) =>
+      line.trim().startsWith("import"),
+    );
+    const exportLine = lines.find((line) => line.includes("export const cn"));
+
+    if (exportLine) {
+      // Convert "export const cn = (...args) => body" to "function cn(...args) { return body; }"
+      const arrowMatch = exportLine.match(
+        /export const cn = \((.*?)\) => (.+);?$/,
+      );
+      if (arrowMatch) {
+        const params = arrowMatch[1];
+        const body = arrowMatch[2];
+        const functionDeclaration = `function cn(${params}) {\n  return ${body};\n}`;
+
+        return [
+          ...importLines,
+          "",
+          "// Hardcoded cn function - makes this component completely self-contained",
+          functionDeclaration,
+        ].join("\n");
+      }
+    }
+
+    // Fallback if parsing fails
+    return cnFileContent
+      .replace(/export const cn = /g, "function cn")
+      .replace(/=> /g, "{ return ")
+      .replace(/;$/, "; }");
+  } catch (error) {
+    // Fallback to hardcoded version if reading fails
+    return `import type { ClassValue } from "clsx";
+import clsx from "clsx";
+import { unoMerge } from "unocss-merge";
+
+// Hardcoded cn function - makes this component completely self-contained
+function cn(...classLists: ClassValue[]) {
+  return unoMerge(clsx(classLists));
+}`;
+  }
+}
 
 /**
  * Get list of available components
@@ -101,10 +167,10 @@ export function readComponentFile(componentName: string): string {
 export function transformComponent(componentCode: string): string {
   let transformedCode = componentCode;
 
-  // Replace the cn import with hardcoded function
+  // Replace the cn import with the function from templates
   transformedCode = transformedCode.replace(
     /import\s*{\s*cn\s*}\s*from\s*["'].*?["'];?\s*\n?/g,
-    CN_FUNCTION_CODE + "\n\n",
+    getCnFunctionCode() + "\n\n",
   );
 
   return transformedCode;
