@@ -10,21 +10,99 @@ import type { ClassValue } from "clsx";
 import { getProjectRoot } from "./project.js";
 
 /**
+ * Find the CLI package directory using multiple strategies
+ */
+function findCliDirectory(): string | null {
+  let cliDir: string | null = null;
+
+  // Strategy 1: Use __dirname if available (Node.js/CommonJS)
+  if (typeof __dirname !== "undefined") {
+    // Go up from cli/utils to package root
+    cliDir = join(__dirname, "..", "..");
+  }
+
+  // Strategy 2: Use import.meta.url if available (ES modules)
+  if (!cliDir && typeof import.meta !== "undefined" && import.meta.url) {
+    try {
+      const currentFile = new URL(import.meta.url).pathname;
+      // Go up from cli/utils to package root
+      cliDir = join(dirname(dirname(dirname(currentFile))));
+    } catch (error) {
+      // Ignore URL parsing errors
+    }
+  }
+
+  // Strategy 3: Look for package.json with our specific name
+  if (!cliDir) {
+    let searchDir = process.cwd();
+    while (searchDir !== dirname(searchDir)) {
+      try {
+        const pkgPath = join(searchDir, "package.json");
+        if (existsSync(pkgPath)) {
+          const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
+          if (
+            pkg.name === "method-ui" &&
+            existsSync(join(searchDir, "components"))
+          ) {
+            cliDir = searchDir;
+            break;
+          }
+        }
+      } catch (error) {
+        // Ignore JSON parsing errors
+      }
+      searchDir = dirname(searchDir);
+    }
+  }
+
+  // Strategy 4: Check common locations for the CLI package
+  if (!cliDir) {
+    const possiblePaths = [
+      join(process.cwd(), "node_modules", "method-ui"),
+      join(dirname(process.cwd()), "method"),
+      join(__dirname || ".", "..", ".."),
+    ];
+
+    for (const path of possiblePaths) {
+      if (
+        existsSync(join(path, "components")) &&
+        existsSync(join(path, "package.json"))
+      ) {
+        try {
+          const pkg = JSON.parse(
+            readFileSync(join(path, "package.json"), "utf-8"),
+          );
+          if (pkg.name === "method-ui") {
+            cliDir = path;
+            break;
+          }
+        } catch (error) {
+          // Continue checking other paths
+        }
+      }
+    }
+  }
+
+  return cliDir;
+}
+
+/**
  * Get the cn function code from templates directory
  * This makes components completely self-contained with no external dependencies
  */
 function getCnFunctionCode(): string {
-  // Find the CLI directory - look for where the CLI's templates folder is
-  let cliDir = process.cwd();
+  const cliDir = findCliDirectory();
 
-  // If we're in a user project, go up to find the CLI directory
-  while (!existsSync(join(cliDir, "templates")) && cliDir !== dirname(cliDir)) {
-    cliDir = dirname(cliDir);
-  }
+  if (!cliDir) {
+    // Fallback to hardcoded version if CLI directory not found
+    return `import type { ClassValue } from "clsx";
+import clsx from "clsx";
+import { unoMerge } from "unocss-merge";
 
-  // If still not found, try relative to this file
-  if (!existsSync(join(cliDir, "templates"))) {
-    cliDir = join(__dirname || ".", "..", "..", "..");
+// Hardcoded cn function - makes this component completely self-contained
+function cn(...classLists: ClassValue[]) {
+  return unoMerge(clsx(classLists));
+}`;
   }
 
   const cnPath = join(cliDir, "templates", "cn.ts");
@@ -92,20 +170,10 @@ function cn(...classLists: ClassValue[]) {
  * Get list of available components
  */
 export function getAvailableComponents(): string[] {
-  // Find the CLI directory - look for where the CLI's components folder is
-  let cliDir = process.cwd();
+  const cliDir = findCliDirectory();
 
-  // If we're in a user project, go up to find the CLI directory
-  while (
-    !existsSync(join(cliDir, "components")) &&
-    cliDir !== dirname(cliDir)
-  ) {
-    cliDir = dirname(cliDir);
-  }
-
-  // If still not found, try relative to this file
-  if (!existsSync(join(cliDir, "components"))) {
-    cliDir = join(__dirname || ".", "..", "..", "..");
+  if (!cliDir) {
+    return [];
   }
 
   const componentsDir = join(cliDir, "components");
@@ -135,20 +203,10 @@ export function componentExists(componentName: string): boolean {
  * Read a component file from our CLI's components directory
  */
 export function readComponentFile(componentName: string): string {
-  // Find the CLI directory - look for where the CLI's package.json is
-  let cliDir = process.cwd();
+  const cliDir = findCliDirectory();
 
-  // If we're in a user project, go up to find the CLI directory
-  while (
-    !existsSync(join(cliDir, "components")) &&
-    cliDir !== dirname(cliDir)
-  ) {
-    cliDir = dirname(cliDir);
-  }
-
-  // If still not found, try relative to this file
-  if (!existsSync(join(cliDir, "components"))) {
-    cliDir = join(__dirname || ".", "..", "..", "..");
+  if (!cliDir) {
+    throw new Error(`Could not locate method-ui package directory`);
   }
 
   const componentPath = join(cliDir, "components", `${componentName}.tsx`);
