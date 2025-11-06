@@ -99,7 +99,6 @@ function getCnFunctionCode(): string {
 import clsx from "clsx";
 import { unoMerge } from "unocss-merge";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
   return unoMerge(clsx(classLists));
 }`;
