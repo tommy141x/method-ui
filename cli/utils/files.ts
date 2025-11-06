@@ -1,5 +1,11 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
-import { join, dirname } from "path";
+import {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  mkdirSync,
+  copyFileSync,
+} from "fs";
+import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import * as p from "@clack/prompts";
 import {
@@ -39,7 +45,7 @@ function getIconCollection(iconLibrary: string): {
 }
 
 /**
- * Find the CLI's templates directory
+ * Find the CLI's lib directory (contains template files)
  */
 export function getTemplatesDirectory(): string {
   // Get the current file's directory
@@ -47,24 +53,21 @@ export function getTemplatesDirectory(): string {
   const currentFilePath = fileURLToPath(currentFileUrl);
   const currentDir = dirname(currentFilePath);
 
-  // Try multiple approaches to find the templates directory
+  // Try multiple approaches to find the lib directory
   const searchPaths = [
-    // 1. Relative to this file (src/utils/files.ts -> templates)
-    join(currentDir, "..", "..", "templates"),
+    // 1. Relative to this file (cli/utils/files.ts -> lib)
+    join(currentDir, "..", "..", "lib"),
     // 2. Walking up from current working directory
     (() => {
       let cliDir = process.cwd();
-      while (
-        !existsSync(join(cliDir, "templates")) &&
-        cliDir !== dirname(cliDir)
-      ) {
+      while (!existsSync(join(cliDir, "lib")) && cliDir !== dirname(cliDir)) {
         cliDir = dirname(cliDir);
       }
-      return join(cliDir, "templates");
+      return join(cliDir, "lib");
     })(),
     // 3. Common node_modules locations
-    join(process.cwd(), "node_modules", "method-ui", "templates"),
-    join(currentDir, "..", "..", "..", "method-ui", "templates"),
+    join(process.cwd(), "node_modules", "method-ui", "lib"),
+    join(currentDir, "..", "..", "..", "method-ui", "lib"),
   ];
 
   for (const templatesDir of searchPaths) {
@@ -74,7 +77,7 @@ export function getTemplatesDirectory(): string {
   }
 
   throw new Error(
-    `Could not find templates directory. Searched in:\n${searchPaths.join("\n")}`,
+    `Could not find lib directory. Searched in:\n${searchPaths.join("\n")}`,
   );
 }
 
@@ -99,6 +102,33 @@ export function safeWriteFile(filePath: string, content: string): void {
   const dir = dirname(filePath);
   ensureDirectoryExists(dir);
   writeFileSync(filePath, content);
+}
+
+/**
+ * Create a backup of an existing file
+ */
+function createBackup(filePath: string): string {
+  if (!existsSync(filePath)) {
+    return "";
+  }
+
+  const backupPath = `${filePath}.backup`;
+  let counter = 1;
+  let finalBackupPath = backupPath;
+
+  // Find a unique backup filename
+  while (existsSync(finalBackupPath)) {
+    finalBackupPath = `${backupPath}.${counter}`;
+    counter++;
+  }
+
+  try {
+    copyFileSync(filePath, finalBackupPath);
+    return finalBackupPath;
+  } catch (error) {
+    p.log.warn(`Failed to create backup: ${error}`);
+    return "";
+  }
 }
 
 /**
@@ -176,6 +206,32 @@ export async function createUnoConfig(
   const extension = typescript ? "ts" : "js";
   const filename = `uno.config.${extension}`;
   const filepath = join(projectRoot, filename);
+
+  // Check for existing uno.config files and create backups
+  const existingTsConfig = join(projectRoot, "uno.config.ts");
+  const existingJsConfig = join(projectRoot, "uno.config.js");
+
+  if (existsSync(existingTsConfig)) {
+    const backupPath = createBackup(existingTsConfig);
+    if (backupPath) {
+      p.log.warn(
+        `Existing uno.config.ts backed up to: ${basename(backupPath)}`,
+      );
+    }
+    p.log.warn(
+      "Your existing UnoCSS configuration will be replaced. Please merge any custom settings manually.",
+    );
+  } else if (existsSync(existingJsConfig)) {
+    const backupPath = createBackup(existingJsConfig);
+    if (backupPath) {
+      p.log.warn(
+        `Existing uno.config.js backed up to: ${basename(backupPath)}`,
+      );
+    }
+    p.log.warn(
+      "Your existing UnoCSS configuration will be replaced. Please merge any custom settings manually.",
+    );
+  }
 
   try {
     const content = await generateUnoConfig(iconLibrary);

@@ -148,11 +148,29 @@ function cn(...classLists: ClassValue[]) {
       }
     }
 
-    // Fallback if parsing fails
-    return cnFileContent
-      .replace(/export const cn = /g, "function cn")
-      .replace(/=> /g, "{ return ")
-      .replace(/;$/, "; }");
+    // Fallback if parsing fails - try a more robust transformation
+    let transformedContent = cnFileContent;
+
+    // Handle the specific case: export const cn = (...args) => body;
+    transformedContent = transformedContent.replace(
+      /export const cn = \((.*?)\) => ([^;]+);?/,
+      "function cn($1) {\n  return $2;\n}",
+    );
+
+    // If that didn't work, try the original approach but fix the closing brace
+    if (transformedContent.includes("export const cn =")) {
+      transformedContent = transformedContent
+        .replace(/export const cn = /g, "function cn")
+        .replace(/=> /g, "{ return ")
+        .replace(/;$/, ""); // Remove trailing semicolon
+
+      // Ensure proper closing brace
+      if (!transformedContent.includes("}")) {
+        transformedContent = transformedContent + "\n}";
+      }
+    }
+
+    return transformedContent;
   } catch (error) {
     // Fallback to hardcoded version if reading fails
     return `import type { ClassValue } from "clsx";
@@ -220,7 +238,49 @@ export function readComponentFile(componentName: string): string {
 }
 
 /**
+ * Remove meta export by finding balanced braces
+ * This handles nested objects and functions properly
+ */
+function removeMetaExport(code: string): string {
+  const metaStart = code.indexOf("export const meta:");
+  if (metaStart === -1) return code;
+
+  let braceCount = 0;
+  let inMeta = false;
+  let endIndex = metaStart;
+
+  for (let i = metaStart; i < code.length; i++) {
+    if (code[i] === "{") {
+      braceCount++;
+      inMeta = true;
+    } else if (code[i] === "}") {
+      braceCount--;
+      if (inMeta && braceCount === 0) {
+        // Find the semicolon after the closing brace
+        const semicolonIndex = code.indexOf(";", i);
+        if (semicolonIndex !== -1) {
+          endIndex = semicolonIndex + 1;
+          // Include trailing newline if present
+          if (code[endIndex] === "\n") {
+            endIndex++;
+          }
+        } else {
+          endIndex = i + 1;
+        }
+        break;
+      }
+    }
+  }
+
+  return code.slice(0, metaStart) + code.slice(endIndex);
+}
+
+/**
  * Transform a component by replacing imports and inlining utilities
+ * This prepares components for end-user installation by:
+ * - Inlining the cn utility function
+ * - Removing ComponentMeta import (not needed in user projects)
+ * - Removing meta export (only used for documentation/showcase)
  */
 export function transformComponent(componentCode: string): string {
   let transformedCode = componentCode;
@@ -230,6 +290,15 @@ export function transformComponent(componentCode: string): string {
     /import\s*{\s*cn\s*}\s*from\s*["'].*?["'];?\s*\n?/g,
     getCnFunctionCode() + "\n\n",
   );
+
+  // Remove ComponentMeta type import (users don't need it)
+  transformedCode = transformedCode.replace(
+    /import\s+type\s*{\s*ComponentMeta\s*}\s*from\s*["'].*?meta["'];?\s*\n?/g,
+    "",
+  );
+
+  // Remove the meta export and its entire value object using proper brace matching
+  transformedCode = removeMetaExport(transformedCode);
 
   return transformedCode;
 }

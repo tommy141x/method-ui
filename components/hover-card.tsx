@@ -1,41 +1,129 @@
 import { HoverCard as ArkHoverCard } from "@ark-ui/solid/hover-card";
-import { Portal } from "solid-js/web";
-import { ComponentProps, Show, JSX } from "solid-js";
+import { type JSX, splitProps, Show } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
+import { cn } from "../lib/cn";
+import type { ComponentMeta } from "../lib/meta";
 
-type HoverCardProps = ComponentProps<typeof ArkHoverCard.RootProvider> & {
-  content?: JSX.Element;
+interface HoverCardProps {
+  children?: JSX.Element;
+  open?: boolean;
+  onOpenChange?: (details: { open: boolean }) => void;
+  openDelay?: number;
+  closeDelay?: number;
+  positioning?: any;
+  disabled?: boolean;
+}
+
+export const HoverCard = (props: HoverCardProps) => {
+  return <ArkHoverCard.Root {...props}>{props.children}</ArkHoverCard.Root>;
 };
 
-export const HoverCard = Object.assign(
-  (props: HoverCardProps) => (
-    <ArkHoverCard.RootProvider {...props}>
-      {props.children}
-      <Portal>
+interface HoverCardTriggerProps {
+  children?: JSX.Element;
+  class?: string;
+}
+
+export const HoverCardTrigger = (props: HoverCardTriggerProps) => {
+  const [local, others] = splitProps(props, ["class"]);
+
+  return (
+    <ArkHoverCard.Trigger
+      class={cn(
+        "cursor-help underline decoration-dotted underline-offset-4",
+        local.class,
+      )}
+      {...others}
+    />
+  );
+};
+
+interface HoverCardContentProps {
+  children?: JSX.Element;
+  class?: string;
+  showArrow?: boolean;
+}
+
+export const HoverCardContent = (props: HoverCardContentProps) => {
+  const [local, others] = splitProps(props, ["children", "class", "showArrow"]);
+
+  return (
+    <ArkHoverCard.Context>
+      {(context) => (
         <ArkHoverCard.Positioner>
-          <ArkHoverCard.Content class="z-50 bg-transparent pointer-events-none" />
           <Presence>
-            <Show when={props.value?.().open}>
+            <Show when={context().open}>
               <Motion.div
-                class="z-50 w-64 rounded-md border bg-white dark:bg-gray-800 p-4 shadow-md outline-none pointer-events-auto"
-                animate={{ opacity: [0, 1], scale: [0.95, 1] }}
-                exit={{ opacity: [1, 0], scale: [1, 0.95] }}
-                transition={{ duration: 0.15, easing: "ease-in-out" }}
+                animate={{ opacity: [0, 1], scale: [0.96, 1] }}
+                exit={{ opacity: [1, 0], scale: [1, 0.96] }}
+                transition={{ duration: 0.2, easing: "ease-in-out" }}
               >
-                <ArkHoverCard.Arrow>
-                  <ArkHoverCard.ArrowTip />
-                </ArkHoverCard.Arrow>
-                {props.content}
+                <ArkHoverCard.Content
+                  class={cn(
+                    "z-50 w-64 rounded-md border border-border bg-background p-4 shadow-md outline-none",
+                    local.class,
+                  )}
+                  {...others}
+                >
+                  {local.showArrow !== false && (
+                    <ArkHoverCard.Arrow class="--arrow-size-[12px] --arrow-background-[var(--colors-background)]">
+                      <ArkHoverCard.ArrowTip class="border-t border-l border-border" />
+                    </ArkHoverCard.Arrow>
+                  )}
+                  {local.children}
+                </ArkHoverCard.Content>
               </Motion.div>
             </Show>
           </Presence>
         </ArkHoverCard.Positioner>
-      </Portal>
-    </ArkHoverCard.RootProvider>
-  ),
-  {
-    ...ArkHoverCard,
-  },
-);
+      )}
+    </ArkHoverCard.Context>
+  );
+};
 
-export { useHoverCard } from "@ark-ui/solid/hover-card";
+export const meta: ComponentMeta<HoverCardProps> = {
+  name: "HoverCard",
+  description:
+    "A card that appears when hovering over an element. Features smooth animations and customizable positioning.",
+  examples: [
+    {
+      title: "Basic Hover Card",
+      description: "A simple hover card with content",
+      code: () => (
+        <HoverCard>
+          <HoverCardTrigger>
+            <span>Hover over me</span>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <div>
+              <h4 class="font-semibold mb-2">Hover Card</h4>
+              <p class="text-sm text-muted-foreground">
+                This is a hover card with some helpful information.
+              </p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      ),
+    },
+    {
+      title: "Custom Positioning",
+      description: "Hover card with custom placement and no arrow",
+      code: () => (
+        <HoverCard positioning={{ placement: "right", gutter: 16 }}>
+          <HoverCardTrigger>
+            <span>Hover for right placement</span>
+          </HoverCardTrigger>
+          <HoverCardContent showArrow={false}>
+            <div>
+              <h4 class="font-semibold mb-2">Right Positioned</h4>
+              <p class="text-sm text-muted-foreground">
+                This hover card appears to the right with custom spacing.
+              </p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      ),
+    },
+  ],
+};
+
+export default HoverCard;

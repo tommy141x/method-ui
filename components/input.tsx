@@ -1,10 +1,11 @@
-/** @jsxImportSource solid-js */
-import { JSX, splitProps } from "solid-js";
+import { Field } from "@ark-ui/solid";
+import { type JSX, splitProps } from "solid-js";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../templates/cn";
+import { cn } from "../lib/cn";
+import type { ComponentMeta } from "../lib/meta";
 
 const inputVariants = cva(
-  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 ease-out hover:border-ring/50 focus-visible:border-ring",
   {
     variants: {
       size: {
@@ -12,120 +13,215 @@ const inputVariants = cva(
         sm: "h-9 px-3 text-xs",
         lg: "h-12 px-4 text-base",
       },
-      variant: {
-        default: "border-input",
-        destructive: "border-destructive focus-visible:ring-destructive",
-      },
     },
     defaultVariants: {
       size: "default",
-      variant: "default",
     },
   },
 );
 
-export interface InputProps
-  extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "size">,
-    VariantProps<typeof inputVariants> {}
+// Root component wraps Field.Root
+interface InputRootProps {
+  children?: JSX.Element;
+  invalid?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  required?: boolean;
+  class?: string;
+}
 
-export function Input(props: InputProps) {
-  const [local, others] = splitProps(props, [
-    "class",
-    "size",
-    "variant",
-    "type",
-  ]);
+export const InputRoot = (props: InputRootProps) => {
+  const [local, others] = splitProps(props, ["class", "children"]);
 
   return (
-    <input
-      type={local.type || "text"}
+    <Field.Root class={cn("space-y-2", local.class)} {...others}>
+      {local.children}
+    </Field.Root>
+  );
+};
+
+// Label component
+interface InputLabelProps {
+  children?: JSX.Element;
+  class?: string;
+}
+
+export const InputLabel = (props: InputLabelProps) => {
+  const [local, others] = splitProps(props, ["class"]);
+
+  return (
+    <Field.Label
       class={cn(
-        inputVariants({ size: local.size, variant: local.variant }),
+        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors duration-150",
         local.class,
       )}
       {...others}
     />
   );
-}
+};
 
-export interface InputWithLabelProps extends InputProps {
-  label?: string;
-  id?: string;
-  error?: string;
-  hint?: string;
-}
+// Input component (the actual input element)
+type InputProps = JSX.InputHTMLAttributes<HTMLInputElement> &
+  VariantProps<typeof inputVariants> & {
+    class?: string;
+  };
 
-export function InputWithLabel(props: InputWithLabelProps) {
-  const [local, others] = splitProps(props, [
-    "label",
-    "id",
-    "error",
-    "hint",
-    "class",
-  ]);
-
-  const inputId =
-    local.id || `input-${Math.random().toString(36).substr(2, 9)}`;
+export const Input = (props: InputProps) => {
+  const [local, others] = splitProps(props, ["class", "size"]);
 
   return (
-    <div class={cn("grid w-full max-w-sm items-center gap-1.5", local.class)}>
-      {local.label && (
-        <label
-          for={inputId}
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          {local.label}
-        </label>
-      )}
-      <Input
-        id={inputId}
-        variant={local.error ? "destructive" : "default"}
-        {...others}
-      />
-      {local.hint && !local.error && (
-        <p class="text-xs text-muted-foreground">{local.hint}</p>
-      )}
-      {local.error && <p class="text-xs text-destructive">{local.error}</p>}
-    </div>
+    <Field.Input
+      class={cn(inputVariants({ size: local.size }), local.class)}
+      {...others}
+    />
   );
+};
+
+// Textarea component
+interface TextareaProps
+  extends JSX.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    VariantProps<typeof inputVariants> {
+  class?: string;
+  autoresize?: boolean;
 }
 
-export interface InputWithIconProps extends InputProps {
-  icon?: string;
-  iconPosition?: "left" | "right";
-}
-
-export function InputWithIcon(props: InputWithIconProps) {
-  const [local, others] = splitProps(props, ["icon", "iconPosition", "class"]);
-
-  const position = local.iconPosition || "left";
+export const Textarea = (props: TextareaProps) => {
+  const [local, others] = splitProps(props, ["class", "size", "autoresize"]);
 
   return (
-    <div class="relative">
-      {local.icon && position === "left" && (
-        <div
-          class={cn(
-            "absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground",
-            local.icon,
-          )}
-        />
+    <Field.Textarea
+      autoresize={local.autoresize}
+      class={cn(
+        inputVariants({ size: local.size }),
+        "min-h-20 resize-none",
+        local.class,
       )}
-      <Input
-        class={cn(
-          local.icon && position === "left" && "pl-10",
-          local.icon && position === "right" && "pr-10",
-          local.class,
-        )}
-        {...others}
-      />
-      {local.icon && position === "right" && (
-        <div
-          class={cn(
-            "absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground",
-            local.icon,
-          )}
-        />
-      )}
-    </div>
+      {...others}
+    />
   );
+};
+
+// Helper text component
+interface InputHelperTextProps {
+  children?: JSX.Element;
+  class?: string;
 }
+
+export const InputHelperText = (props: InputHelperTextProps) => {
+  const [local, others] = splitProps(props, ["class"]);
+
+  return (
+    <Field.HelperText
+      class={cn(
+        "text-xs text-muted-foreground transition-colors duration-150",
+        local.class,
+      )}
+      {...others}
+    />
+  );
+};
+
+// Error text component
+interface InputErrorTextProps {
+  children?: JSX.Element;
+  class?: string;
+}
+
+export const InputErrorText = (props: InputErrorTextProps) => {
+  const [local, others] = splitProps(props, ["class"]);
+
+  return (
+    <Field.ErrorText
+      class={cn(
+        "text-xs text-destructive transition-all duration-200 animate-in fade-in slide-in-from-top-1",
+        local.class,
+      )}
+      {...others}
+    />
+  );
+};
+
+// Required indicator
+interface InputRequiredIndicatorProps {
+  children?: JSX.Element;
+  class?: string;
+}
+
+export const InputRequiredIndicator = (props: InputRequiredIndicatorProps) => {
+  const [local, others] = splitProps(props, ["class", "children"]);
+
+  return (
+    <Field.RequiredIndicator
+      class={cn(
+        "text-destructive ml-1 transition-colors duration-150",
+        local.class,
+      )}
+      {...others}
+    >
+      {local.children || "*"}
+    </Field.RequiredIndicator>
+  );
+};
+
+export const meta: ComponentMeta<InputRootProps> = {
+  name: "Input",
+  description:
+    "A composable form input component built with Ark UI Field. Components: InputRoot (wrapper), InputLabel, Input, Textarea, Select, InputHelperText, InputErrorText, InputRequiredIndicator. Use Input alone for simple cases, or compose with InputRoot for full control over labels, errors, and helper text.",
+  variants: inputVariants,
+  examples: [
+    {
+      title: "Simple Input",
+      description: "A standalone input without Field wrapper",
+      code: () => <Input placeholder="Enter text..." />,
+    },
+    {
+      title: "Input with Label",
+      description: "Complete form field with label and helper text",
+      code: () => (
+        <InputRoot>
+          <InputLabel>Email</InputLabel>
+          <Input type="email" placeholder="Enter your email" />
+          <InputHelperText>We'll never share your email</InputHelperText>
+        </InputRoot>
+      ),
+    },
+    {
+      title: "Input with Error",
+      description: "Input with error state and required indicator",
+      code: () => (
+        <InputRoot invalid required>
+          <InputLabel>
+            Password
+            <InputRequiredIndicator />
+          </InputLabel>
+          <Input type="password" placeholder="Enter password" />
+          <InputErrorText>Password is required</InputErrorText>
+        </InputRoot>
+      ),
+    },
+    {
+      title: "Textarea",
+      description: "Multi-line text input with autoresize",
+      code: () => (
+        <InputRoot>
+          <InputLabel>Message</InputLabel>
+          <Textarea autoresize placeholder="Enter your message..." />
+          <InputHelperText>This textarea will grow as you type</InputHelperText>
+        </InputRoot>
+      ),
+    },
+    {
+      title: "Input Sizes",
+      description: "Different input sizes",
+      code: () => (
+        <div class="space-y-4">
+          <Input placeholder="Small input" size="sm" />
+          <Input placeholder="Default input" size="default" />
+          <Input placeholder="Large input" size="lg" />
+        </div>
+      ),
+    },
+  ],
+};
+
+export default Input;

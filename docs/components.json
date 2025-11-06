@@ -1,0 +1,5 @@
+{
+  "components": "./src/components",
+  "iconLibrary": "lucide",
+  "typescript": true
+}

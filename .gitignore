@@ -1,1 +1,57 @@
+# Dependencies
 node_modules
+**/node_modules
+
+# Lock files (keep bun.lockb or bun.lock if you prefer Bun)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist
+build
+.output
+.vinxi
+.solid
+.vercel
+.netlify
+
+# Development
+.vite
+*.log
+*.tsbuildinfo
+.turbo
+
+# SolidStart/Vinxi specific
+.data
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage
+.nyc_output
+
+# Temporary
+*.tmp
+.cache
+
+# Docs playground built components (installed via CLI for testing)
+docs/src/components/

@@ -8,29 +8,32 @@
   },
   "files": [
     "cli/",
-    "templates/",
+    "lib/",
     "components/"
   ],
   "scripts": {
+    "dev": "bun run scripts/dev.ts",
     "build": "bun build cli/cli.ts --outdir dist",
-    "dev": "bun run cli/cli.ts"
+    "cli": "bun run cli/cli.ts",
+    "compile": "bun run scripts/compile.ts",
+    "watch": "bun run scripts/watch.ts",
+    "update": "bun run scripts/update.ts"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
-    "@unocss/reset": "^66.5.2",
+    "@unocss/reset": "^66.5.4",
     "citty": "^0.1.6",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@ark-ui/solid": "^5.25.1",
-    "@iconify-json/lucide": "^1.2.68",
-    "@types/node": "^20.19.18",
-    "@unocss/preset-icons": "^66.5.2",
+    "@ark-ui/solid": "^5.27.1",
+    "@iconify-json/lucide": "^1.2.72",
+    "@unocss/preset-icons": "^66.5.4",
     "class-variance-authority": "^0.7.1",
+    "@types/bun": "^1.3.1",
     "clsx": "^2.1.1",
-    "solid-js": "^1.9.9",
+    "solid-js": "^1.9.10",
     "solid-motionone": "^1.0.4",
-    "unocss": "^66.5.2",
     "unocss-merge": "^0.6.0"
   }
 }
