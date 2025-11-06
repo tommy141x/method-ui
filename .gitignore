@@ -52,6 +52,3 @@ coverage
 # Temporary
 *.tmp
 .cache
-
-# Docs playground built components (installed via CLI for testing)
-docs/src/components/
