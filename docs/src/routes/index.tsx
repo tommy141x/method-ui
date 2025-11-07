@@ -71,14 +71,15 @@ const components: ComponentInfo[] = Object.entries(componentMetadata)
     const runtimeMeta = module.meta || {};
 
     // Merge runtime examples (code functions) with generated sources
-    const mergedExamples = (runtimeMeta.examples || []).map(
-      (example: any, index: number) => {
-        const generatedExample = metadata.examples[index];
+    const mergedExamples = (metadata.examples || []).map(
+      (generatedExample: any, index: number) => {
+        const runtimeExample = runtimeMeta.examples?.[index];
         return {
-          ...example,
+          ...generatedExample,
+          code: runtimeExample?.code,
           source: generatedExample?.source
             ? dedent(generatedExample.source)
-            : example.source,
+            : runtimeExample?.source,
         };
       },
     );
@@ -201,10 +202,44 @@ const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
       <Show
         when={
           (meta().variants && meta().variants.length > 0) ||
-          (meta().props && meta().props.length > 0)
+          (meta().props && meta().props.length > 0) ||
+          componentMetadata[props.componentInfo.name]?.dependencies?.components
+            ?.length > 0
         }
       >
         <div class="grid grid-cols-1 gap-4 mt-6 pt-4 border-t border-border">
+          {/* Component Dependencies */}
+          <Show
+            when={
+              componentMetadata[props.componentInfo.name]?.dependencies
+                ?.components?.length > 0
+            }
+          >
+            <div class="bg-muted/50 rounded-lg p-4">
+              <h4 class="font-medium mb-3 text-foreground">
+                Component Dependencies
+              </h4>
+              <div class="flex flex-wrap gap-2">
+                <For
+                  each={
+                    componentMetadata[props.componentInfo.name].dependencies
+                      .components
+                  }
+                >
+                  {(dep) => (
+                    <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-md text-sm font-mono">
+                      {dep}
+                    </span>
+                  )}
+                </For>
+              </div>
+              <p class="text-xs text-muted-foreground mt-2">
+                These components will be automatically installed when you add
+                this component via CLI
+              </p>
+            </div>
+          </Show>
+
           {/* Variants Info */}
           <Show when={meta().variants && meta().variants.length > 0}>
             <div class="bg-muted/50 rounded-lg p-4">
