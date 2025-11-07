@@ -160,6 +160,11 @@
           "title": "Basic Checkbox",
           "description": "A simple checkbox with label",
           "source": "<Checkbox>Accept terms and conditions</Checkbox>"
+        },
+        {
+          "title": "Checkbox Group",
+          "description": "Multiple checkboxes in a group",
+          "source": "const items = [\n  { label: \"React\", value: \"react\" },\n  { label: \"Solid\", value: \"solid\" },\n  { label: \"Vue\", value: \"vue\" },\n];\n\nreturn (\n  <CheckboxGroup defaultValue={[\"solid\"]} name=\"framework\">\n    <For each={items}>\n      {(item) => <Checkbox value={item.value}>{item.label}</Checkbox>}\n    </For>\n  </CheckboxGroup>\n);"
         }
       ],
       "dependencies": {
@@ -278,7 +283,7 @@
         {
           "title": "Controlled Dialog",
           "description": "Control dialog state externally",
-          "source": "<>\n  <Button onClick={dialog.open}>Open Dialog</Button>\n  <Dialog\n    open={dialog.isOpen()}\n    onOpenChange={(e) => dialog.setOpen(e.open)}\n  >\n    <DialogContent>\n      <DialogTitle>Controlled Dialog</DialogTitle>\n      <DialogDescription>\n        This dialog is controlled by external state using the\n        createDialogState helper.\n      </DialogDescription>\n      <DialogFooter>\n        <Button variant=\"outline\" onClick={dialog.close}>\n          Close\n        </Button>\n      </DialogFooter>\n    </DialogContent>\n  </Dialog>\n</>"
+          "source": "const dialog = createDialogState();\nreturn (\n  <>\n    <Button onClick={dialog.open}>Open Dialog</Button>\n    <Dialog\n      open={dialog.isOpen()}\n      onOpenChange={(e) => dialog.setOpen(e.open)}\n    >\n      <DialogContent>\n        <DialogTitle>Controlled Dialog</DialogTitle>\n        <DialogDescription>\n          This dialog is controlled by external state using the\n          createDialogState helper.\n        </DialogDescription>\n        <DialogFooter>\n          <Button variant=\"outline\" onClick={dialog.close}>\n            Close\n          </Button>\n        </DialogFooter>\n      </DialogContent>\n    </Dialog>\n  </>\n);"
         },
         {
           "title": "Dialog with Form",
@@ -461,6 +466,228 @@
       "files": [
         "input.tsx"
       ]
+    },
+    "select": {
+      "name": "Select",
+      "fileName": "select",
+      "description": "A select component that allows users to choose from a list of options. Built with Ark UI for full accessibility and keyboard navigation.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string[] }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "description": "Multiple",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Invalid",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Whether the field is required",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "positioning",
+          "type": "any",
+          "description": "Positioning",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "outline",
+            "ghost"
+          ],
+          "defaultValue": "default"
+        },
+        {
+          "name": "size",
+          "values": [
+            "default",
+            "sm",
+            "lg"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic Select",
+          "description": "Simple single select with text items",
+          "source": "<Select>\n  <SelectPlaceholder>Select a Framework</SelectPlaceholder>\n  <SelectItem value=\"react\">React</SelectItem>\n  <SelectItem value=\"solid\">Solid</SelectItem>\n  <SelectItem value=\"vue\">Vue</SelectItem>\n  <SelectItem value=\"svelte\">Svelte</SelectItem>\n</Select>"
+        },
+        {
+          "title": "With Icons",
+          "description": "Select items with custom content",
+          "source": "<Select>\n  <SelectPlaceholder>Select a Framework</SelectPlaceholder>\n  <SelectItem value=\"react\">\n    <div class={cn(\"h-4 w-4\", icon(\"atom\"))} />\n    <span>React</span>\n  </SelectItem>\n  <SelectItem value=\"solid\">\n    <div class={cn(\"h-4 w-4\", icon(\"zap\"))} />\n    <span>Solid</span>\n  </SelectItem>\n  <SelectItem value=\"vue\">\n    <div class={cn(\"h-4 w-4\", icon(\"layers\"))} />\n    <span>Vue</span>\n  </SelectItem>\n</Select>"
+        },
+        {
+          "title": "With Groups",
+          "description": "Grouped select with multiple categories",
+          "source": "<Select>\n  <SelectPlaceholder>Select a tool</SelectPlaceholder>\n  <SelectGroup>\n    <SelectLabel>Frameworks</SelectLabel>\n    <SelectItem value=\"react\">\n      <div class={cn(\"h-4 w-4\", icon(\"atom\"))} />\n      <span>React</span>\n    </SelectItem>\n    <SelectItem value=\"solid\">\n      <div class={cn(\"h-4 w-4\", icon(\"zap\"))} />\n      <span>Solid</span>\n    </SelectItem>\n    <SelectItem value=\"vue\">\n      <div class={cn(\"h-4 w-4\", icon(\"layers\"))} />\n      <span>Vue</span>\n    </SelectItem>\n  </SelectGroup>\n  <SelectGroup>\n    <SelectLabel>Styling</SelectLabel>\n    <SelectItem value=\"panda\">Panda</SelectItem>\n    <SelectItem value=\"tailwind\">Tailwind</SelectItem>\n  </SelectGroup>\n</Select>"
+        },
+        {
+          "title": "Multiple Select",
+          "description": "Multiple selection with indicators",
+          "source": "<Select multiple>\n  <SelectPlaceholder>Select frameworks</SelectPlaceholder>\n  <SelectItem value=\"react\">React</SelectItem>\n  <SelectItem value=\"solid\">Solid</SelectItem>\n  <SelectItem value=\"vue\">Vue</SelectItem>\n  <SelectItem value=\"svelte\">Svelte</SelectItem>\n</Select>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "class-variance-authority",
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "select.tsx"
+      ]
+    },
+    "tabs": {
+      "name": "Tabs",
+      "fileName": "tabs",
+      "description": "A tabs component that allows users to switch between different views.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Orientation",
+          "required": false
+        },
+        {
+          "name": "activationMode",
+          "type": "\"manual\" | \"automatic\"",
+          "description": "Activation Mode",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "loopFocus",
+          "type": "boolean",
+          "description": "Loop Focus",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "lazyMount",
+          "type": "boolean",
+          "description": "Lazy Mount",
+          "required": false
+        },
+        {
+          "name": "unmountOnExit",
+          "type": "boolean",
+          "description": "Unmount On Exit",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Tabs",
+          "description": "Simple tabs with default styling",
+          "source": "<Tabs defaultValue=\"react\">\n  <TabsList>\n    <TabsTrigger value=\"react\">React</TabsTrigger>\n    <TabsTrigger value=\"solid\">Solid</TabsTrigger>\n    <TabsTrigger value=\"vue\">Vue</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"react\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">React</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        React is a JavaScript library for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"solid\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Solid</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        SolidJS is a reactive JavaScript library for building fast UIs.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"vue\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Vue</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        Vue is a progressive framework for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n</Tabs>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "tabs.tsx"
+      ]
     }
   },
   "componentList": [
@@ -468,6 +695,8 @@
     "checkbox",
     "dialog",
     "hover-card",
-    "input"
+    "input",
+    "select",
+    "tabs"
   ]
 }
