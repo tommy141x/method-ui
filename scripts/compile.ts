@@ -453,14 +453,84 @@ function extractDependencies(
   const componentDeps = new Set<string>();
   const packageDeps = new Set<string>();
 
+  // Extract only the import section at the top of the file
+  // Stop at the first actual code (export, const, function, interface, etc.)
+  // but skip over comments and JSDoc blocks
+  const lines = sourceCode.split("\n");
+  const importLines: string[] = [];
+  let inBlockComment = false;
+  let inImportStatement = false;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    // Track block comment state
+    if (trimmed.startsWith("/*") || trimmed.includes("/**")) {
+      inBlockComment = true;
+    }
+    if (trimmed.includes("*/")) {
+      inBlockComment = false;
+      continue; // Skip the closing line
+    }
+
+    // Track multi-line import statements
+    if (trimmed.startsWith("import ")) {
+      inImportStatement = true;
+      importLines.push(line);
+      // Check if import ends on same line
+      if (trimmed.includes(";") || trimmed.match(/from\s+['"][^'"]+['"]/)) {
+        inImportStatement = false;
+      }
+      continue;
+    }
+
+    // Continue multi-line import
+    if (inImportStatement) {
+      importLines.push(line);
+      // Check if import ends on this line
+      if (trimmed.includes(";") || trimmed.match(/from\s+['"][^'"]+['"]/)) {
+        inImportStatement = false;
+      }
+      continue;
+    }
+
+    // Include whitespace
+    if (trimmed === "") {
+      importLines.push(line);
+    }
+    // Skip comments
+    else if (
+      trimmed.startsWith("//") ||
+      trimmed.startsWith("*") ||
+      inBlockComment
+    ) {
+      continue; // Skip comments but keep looking for imports
+    }
+    // Stop at first actual code
+    else if (
+      trimmed.startsWith("export") ||
+      trimmed.startsWith("const ") ||
+      trimmed.startsWith("let ") ||
+      trimmed.startsWith("var ") ||
+      trimmed.startsWith("function ") ||
+      trimmed.startsWith("interface ") ||
+      trimmed.startsWith("type ") ||
+      trimmed.startsWith("class ")
+    ) {
+      break;
+    }
+  }
+
+  const importSection = importLines.join("\n");
+
   // Patterns to match various import styles
   const importRegex =
     /import\s+(?:{[^}]*}|[^{,\s]+|\*\s+as\s+\w+)\s+from\s+['"]([^'"]+)['"]/g;
   const dynamicImportRegex = /import\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
 
   const allMatches = [
-    ...sourceCode.matchAll(importRegex),
-    ...sourceCode.matchAll(dynamicImportRegex),
+    ...importSection.matchAll(importRegex),
+    ...importSection.matchAll(dynamicImportRegex),
   ];
 
   for (const match of allMatches) {

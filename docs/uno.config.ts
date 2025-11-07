@@ -4,6 +4,7 @@ import {
   presetIcons,
   presetTypography,
   presetUno,
+  presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
 } from "unocss";
@@ -43,8 +44,8 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({
       collections: {
-        lucide: () =>
-          import("@iconify-json/lucide/icons.json").then((i) => i.default),
+        // This will be replaced with actual icon library configuration
+        // Format: libraryName: () => import("@iconify-json/library/icons.json").then(i => i.default)
       },
       extraProperties: {
         display: "inline-block",
@@ -52,6 +53,12 @@ export default defineConfig({
       },
     }),
     presetTypography(),
+    presetWebFonts({
+      fonts: {
+        sans: "Inter:400,500,600,700",
+        mono: "JetBrains Mono:400,500,600,700",
+      },
+    }),
   ],
   transformers: [transformerDirectives(), transformerVariantGroup()],
   theme: {
@@ -94,6 +101,10 @@ export default defineConfig({
       lg: "var(--radius)",
       md: "calc(var(--radius) - 2px)",
       sm: "calc(var(--radius) - 4px)",
+    },
+    fontFamily: {
+      sans: ["Inter", "sans-serif"],
+      mono: ["JetBrains Mono", "monospace"],
     },
   },
   safelist: ["sr-only", "not-sr-only"],

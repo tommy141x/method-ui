@@ -393,6 +393,43 @@ export function isComponentInstalled(
   return findComponentFile(componentName, componentsPath) !== null;
 }
 
+// Registry Operations
+
+/**
+ * Load component dependencies from registry.json
+ * This provides accurate dependency information excluding example-only imports
+ */
+function getComponentDependenciesFromRegistry(
+  componentName: string,
+): { components: string[]; packages: string[] } | null {
+  try {
+    // Look for registry.json in the templates directory
+    const templatesDir = getTemplatesDirectory();
+    const registryPath = join(templatesDir, "lib", "registry.json");
+
+    if (!existsSync(registryPath)) {
+      return null;
+    }
+
+    const registryContent = readFileSync(registryPath, "utf-8");
+    const registry = JSON.parse(registryContent);
+
+    const componentMetadata = registry.componentMetadata?.[componentName];
+
+    if (!componentMetadata || !componentMetadata.dependencies) {
+      return null;
+    }
+
+    return {
+      components: componentMetadata.dependencies.components || [],
+      packages: componentMetadata.dependencies.packages || [],
+    };
+  } catch (error) {
+    // If registry is not available or malformed, return null to fall back to file analysis
+    return null;
+  }
+}
+
 // Dependency Tree Operations
 export function buildDependencyTree(
   componentName: string,
@@ -411,6 +448,38 @@ export function buildDependencyTree(
 
   visited.add(componentName);
 
+  // Try to get dependencies from registry first (this excludes example-only dependencies)
+  const registryDeps = getComponentDependenciesFromRegistry(componentName);
+
+  if (registryDeps) {
+    // Use registry data - this is more accurate and excludes example dependencies
+    const dependencyTrees: DependencyTree[] = [];
+
+    for (const depName of registryDeps.components) {
+      const subTree = buildDependencyTree(
+        depName,
+        componentsDir,
+        new Set(visited),
+      );
+      dependencyTrees.push(subTree);
+    }
+
+    const packageDependencies: PackageDependency[] = registryDeps.packages.map(
+      (pkg) => ({
+        name: pkg,
+        type: "package" as const,
+        imports: [],
+      }),
+    );
+
+    return {
+      name: componentName,
+      dependencies: dependencyTrees,
+      packageDependencies,
+    };
+  }
+
+  // Fallback to file analysis if registry is not available
   const componentPath = findComponentFile(componentName, componentsDir);
   if (!componentPath) {
     return {

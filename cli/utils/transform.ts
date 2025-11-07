@@ -87,6 +87,25 @@ function findCliDirectory(): string | null {
 }
 
 /**
+ * Get icon library from user's components.json config
+ */
+function getIconLibraryFromConfig(): string {
+  try {
+    const projectRoot = getProjectRoot();
+    const configPath = join(projectRoot, "components.json");
+
+    if (existsSync(configPath)) {
+      const configContent = readFileSync(configPath, "utf-8");
+      const config = JSON.parse(configContent);
+      return config.iconLibrary || "lucide";
+    }
+  } catch (error) {
+    // Fall back to lucide if config not found or invalid
+  }
+  return "lucide";
+}
+
+/**
  * Get the cn function code from templates directory
  * This makes components completely self-contained with no external dependencies
  */
@@ -275,8 +294,119 @@ function removeMetaExport(code: string): string {
 }
 
 /**
+ * Remove example-only imports that appear after component code
+ * These are imports placed after the main component definitions but before the meta export
+ * They're only used in examples and shouldn't be included in the user's code
+ *
+ * Strategy: Look for import statements that appear after we've seen at least one
+ * component export (export const/function) AND are followed by another comment mentioning
+ * "example" or appear in a specific pattern after component definitions.
+ */
+function removeExampleOnlyImports(code: string): string {
+  const lines = code.split("\n");
+  const result: string[] = [];
+
+  // First, identify the initial import block (all imports before any code)
+  let initialImportEnd = 0;
+  let inMultilineImport = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+
+    // Track multiline imports
+    if (trimmed.startsWith("import ")) {
+      inMultilineImport =
+        !trimmed.includes(";") &&
+        !trimmed.includes('from "') &&
+        !trimmed.includes("from '");
+    } else if (inMultilineImport) {
+      if (
+        trimmed.includes(";") ||
+        trimmed.includes('from "') ||
+        trimmed.includes("from '")
+      ) {
+        inMultilineImport = false;
+      }
+    } else if (
+      trimmed &&
+      !trimmed.startsWith("//") &&
+      !trimmed.startsWith("/*") &&
+      !trimmed.startsWith("*") &&
+      !trimmed.endsWith("*/") &&
+      !trimmed.startsWith("import")
+    ) {
+      // Found first non-import, non-comment line
+      initialImportEnd = i;
+      break;
+    }
+  }
+
+  // Now process all lines and remove imports that come after the initial block
+  let skipUntilSemicolon = false;
+  let skipCommentLines = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    // If we're skipping a multiline import
+    if (skipUntilSemicolon) {
+      if (
+        trimmed.includes(";") ||
+        trimmed.includes('from "') ||
+        trimmed.includes("from '")
+      ) {
+        skipUntilSemicolon = false;
+      }
+      continue;
+    }
+
+    // If we're past the initial imports and find another import
+    if (i > initialImportEnd && trimmed.startsWith("import ")) {
+      // Check if the previous lines were comments about examples
+      let foundExampleComment = false;
+      for (let j = Math.max(0, result.length - 5); j < result.length; j++) {
+        const prevLine = result[j];
+        if (
+          prevLine &&
+          prevLine.includes("example") &&
+          prevLine.trim().startsWith("//")
+        ) {
+          foundExampleComment = true;
+          skipCommentLines = result.length - j;
+          break;
+        }
+      }
+
+      // Remove the comment lines if this is an example import
+      if (foundExampleComment) {
+        for (let j = 0; j < skipCommentLines; j++) {
+          result.pop();
+        }
+        // Also remove any empty lines before the comments
+        while (result.length > 0 && result[result.length - 1].trim() === "") {
+          result.pop();
+        }
+      }
+
+      // Skip this import line
+      skipUntilSemicolon =
+        !trimmed.includes(";") &&
+        !trimmed.includes('from "') &&
+        !trimmed.includes("from '");
+      continue;
+    }
+
+    result.push(line);
+  }
+
+  return result.join("\n");
+}
+
+/**
  * Transform a component by replacing imports and inlining utilities
  * This prepares components for end-user installation by:
+ * - Removing example-only imports (imports after component code)
  * - Inlining the cn utility function
  * - Removing ComponentMeta import (not needed in user projects)
  * - Removing meta export (only used for documentation/showcase)
@@ -284,20 +414,98 @@ function removeMetaExport(code: string): string {
 export function transformComponent(componentCode: string): string {
   let transformedCode = componentCode;
 
-  // Replace the cn import with the function from templates
-  transformedCode = transformedCode.replace(
-    /import\s*{\s*cn\s*}\s*from\s*["'].*?["'];?\s*\n?/g,
-    getCnFunctionCode() + "\n\n",
-  );
+  // Step 1: Remove example-only imports (must be done before other transformations)
+  transformedCode = removeExampleOnlyImports(transformedCode);
 
-  // Remove ComponentMeta type import (users don't need it)
+  // Step 2: Remove the meta export and its entire value object
+  transformedCode = removeMetaExport(transformedCode);
+
+  // Step 3: Remove ComponentMeta type import (users don't need it)
   transformedCode = transformedCode.replace(
     /import\s+type\s*{\s*ComponentMeta\s*}\s*from\s*["'].*?meta["'];?\s*\n?/g,
     "",
   );
 
-  // Remove the meta export and its entire value object using proper brace matching
-  transformedCode = removeMetaExport(transformedCode);
+  // Step 4: Get icon library from user's config and inline the icon function
+  const iconLibrary = getIconLibraryFromConfig();
+  const iconFunctionCode = `
+// Icon helper function - returns UnoCSS icon class for your configured icon library
+function icon(name: string): string {
+  return \`i-${iconLibrary}-\${name}\`;
+}`;
+
+  // Remove icon import
+  transformedCode = transformedCode.replace(
+    /import\s*{\s*icon\s*}\s*from\s*["'][^"']*["'];?\s*\n?/g,
+    "",
+  );
+
+  // Step 5: Replace the cn import with the inlined function
+  // Find the last import line to insert the cn function after all imports
+  const lines = transformedCode.split("\n");
+  let lastImportIndex = -1;
+  let inMultilineImport = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+    if (trimmed.startsWith("import ")) {
+      lastImportIndex = i;
+      inMultilineImport =
+        !trimmed.includes(";") &&
+        !trimmed.includes('from "') &&
+        !trimmed.includes("from '");
+    } else if (inMultilineImport) {
+      lastImportIndex = i;
+      if (
+        trimmed.includes(";") ||
+        trimmed.includes('from "') ||
+        trimmed.includes("from '")
+      ) {
+        inMultilineImport = false;
+      }
+    } else if (
+      trimmed &&
+      !trimmed.startsWith("//") &&
+      !trimmed.startsWith("/*") &&
+      !trimmed.startsWith("*") &&
+      !inMultilineImport
+    ) {
+      break;
+    }
+  }
+
+  // Remove the cn import line
+  const cnImportMatch = transformedCode.match(
+    /^import\s*{\s*cn\s*}\s*from\s*["'][^"']*["'];?\s*\n?/m,
+  );
+
+  if (cnImportMatch) {
+    transformedCode = transformedCode.replace(cnImportMatch[0], "");
+  }
+
+  // Insert cn and icon functions after last import
+  if (lastImportIndex >= 0) {
+    const linesArray = transformedCode.split("\n");
+
+    // Check if component uses icon function
+    const usesIcon = transformedCode.includes("icon(");
+
+    if (usesIcon) {
+      linesArray.splice(
+        lastImportIndex + 1,
+        0,
+        "",
+        getCnFunctionCode(),
+        "",
+        iconFunctionCode,
+        "",
+      );
+    } else {
+      linesArray.splice(lastImportIndex + 1, 0, "", getCnFunctionCode(), "");
+    }
+
+    transformedCode = linesArray.join("\n");
+  }
 
   return transformedCode;
 }
