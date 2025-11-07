@@ -104,7 +104,11 @@ const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
   const [showCode, setShowCode] = createSignal(false);
 
   const meta = () => props.componentInfo.meta;
-  const currentExample = () => meta().examples[selectedExample()];
+  const currentExample = () => {
+    const examples = meta().examples;
+    if (!examples || examples.length === 0) return null;
+    return examples[selectedExample()];
+  };
 
   return (
     <div class="border border-border rounded-lg p-6 mb-8 bg-background">

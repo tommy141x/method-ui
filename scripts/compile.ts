@@ -295,90 +295,127 @@ function extractVariantsFromMeta(
 function extractExamplesFromMeta(sourceCode: string): ExampleDoc[] {
   const examples: ExampleDoc[] = [];
 
-  // Find the examples array in the meta export
-  const metaRegex = /examples:\s*\[([\s\S]*?)\]\s*,?\s*\}/;
-  const metaMatch = sourceCode.match(metaRegex);
+  // Create a TypeScript source file for AST parsing
+  const sourceFile = ts.createSourceFile(
+    "temp.tsx",
+    sourceCode,
+    ts.ScriptTarget.Latest,
+    true,
+  );
 
-  if (!metaMatch) return examples;
-
-  const examplesArray = metaMatch[1];
-
-  // Parse example objects by counting braces
-  const exampleObjects: string[] = [];
-  let depth = 0;
-  let currentExample = "";
-  let inExample = false;
-
-  for (let i = 0; i < examplesArray.length; i++) {
-    const char = examplesArray[i];
-
-    if (char === "{" && !inExample) {
-      inExample = true;
-      currentExample = char;
-      depth = 1;
-    } else if (inExample) {
-      currentExample += char;
-      if (char === "{") depth++;
-      if (char === "}") {
-        depth--;
-        if (depth === 0) {
-          exampleObjects.push(currentExample);
-          currentExample = "";
-          inExample = false;
-        }
+  // Find the meta export
+  let metaExport: ts.VariableStatement | undefined;
+  ts.forEachChild(sourceFile, (node) => {
+    if (
+      ts.isVariableStatement(node) &&
+      node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
+    ) {
+      const declaration = node.declarationList.declarations[0];
+      if (
+        declaration &&
+        ts.isIdentifier(declaration.name) &&
+        declaration.name.text === "meta"
+      ) {
+        metaExport = node;
       }
+    }
+  });
+
+  if (!metaExport) return examples;
+
+  const declaration = metaExport.declarationList.declarations[0];
+  if (
+    !declaration.initializer ||
+    !ts.isObjectLiteralExpression(declaration.initializer)
+  ) {
+    return examples;
+  }
+
+  // Find the examples property
+  const metaObject = declaration.initializer;
+  let examplesArray: ts.ArrayLiteralExpression | undefined;
+
+  for (const prop of metaObject.properties) {
+    if (
+      ts.isPropertyAssignment(prop) &&
+      ts.isIdentifier(prop.name) &&
+      prop.name.text === "examples" &&
+      ts.isArrayLiteralExpression(prop.initializer)
+    ) {
+      examplesArray = prop.initializer;
+      break;
     }
   }
 
-  // Extract data from each example object
-  for (const exampleObj of exampleObjects) {
-    // Extract title
-    const titleMatch = exampleObj.match(/title:\s*["']([^"']+)["']/);
-    if (!titleMatch) continue;
-    const title = titleMatch[1];
+  if (!examplesArray) return examples;
 
-    // Extract description
-    const descMatch = exampleObj.match(/description:\s*["']([^"']+)["']/);
-    const description = descMatch ? descMatch[1] : undefined;
+  // Extract each example
+  for (const element of examplesArray.elements) {
+    if (!ts.isObjectLiteralExpression(element)) continue;
 
-    // Extract JSX from code function
+    let title = "";
+    let description: string | undefined;
+    let codeFunction: ts.ArrowFunction | undefined;
+
+    // Extract properties from the example object
+    for (const prop of element.properties) {
+      if (!ts.isPropertyAssignment(prop)) continue;
+
+      const propName =
+        ts.isIdentifier(prop.name) || ts.isStringLiteral(prop.name)
+          ? prop.name.text
+          : "";
+
+      if (propName === "title" && ts.isStringLiteral(prop.initializer)) {
+        title = prop.initializer.text;
+      } else if (
+        propName === "description" &&
+        ts.isStringLiteral(prop.initializer)
+      ) {
+        description = prop.initializer.text;
+      } else if (propName === "code" && ts.isArrowFunction(prop.initializer)) {
+        codeFunction = prop.initializer;
+      }
+    }
+
+    if (!title || !codeFunction) continue;
+
+    // Extract JSX from the code function body
     let jsxSource = "";
 
-    // Find code: () => and extract what follows
-    const codeStart = exampleObj.indexOf("code:");
-    if (codeStart === -1) continue;
+    if (ts.isParenthesizedExpression(codeFunction.body)) {
+      // () => (JSX)
+      jsxSource = codeFunction.body.expression.getText(sourceFile);
+    } else if (
+      ts.isJsxElement(codeFunction.body) ||
+      ts.isJsxSelfClosingElement(codeFunction.body) ||
+      ts.isJsxFragment(codeFunction.body)
+    ) {
+      // () => <JSX>
+      jsxSource = codeFunction.body.getText(sourceFile);
+    } else if (ts.isBlock(codeFunction.body)) {
+      // () => { ... }
+      // Check if there are variable declarations before the return
+      const hasVariableDeclarations = codeFunction.body.statements.some(
+        (stmt) => ts.isVariableStatement(stmt),
+      );
 
-    const afterCode = exampleObj.substring(codeStart);
-
-    // Try to extract JSX by finding the code function and parsing its content
-    let match = afterCode.match(/code:\s*\(\)\s*=>\s*\(([\s\S]+)\)\s*,/);
-    if (match) {
-      // Parenthesized arrow function: () => (...)
-      jsxSource = match[1].trim();
-    } else {
-      // Try block with return: () => { ... return (...) }
-      match = afterCode.match(/code:\s*\(\)\s*=>\s*\{([\s\S]+?)\}\s*,/);
-      if (match) {
-        const block = match[1];
-        const returnMatch = block.match(/return\s*\(([\s\S]+)\);?\s*$/);
-        if (returnMatch) {
-          jsxSource = returnMatch[1].trim();
-        } else {
-          // Try without parens: return <...>
-          const simpleReturn = block.match(/return\s+([\s\S]+);/);
-          if (simpleReturn) {
-            jsxSource = simpleReturn[1].trim();
-          }
-        }
+      if (hasVariableDeclarations) {
+        // Include the entire function body with variable declarations
+        // Extract everything between { and }
+        const bodyText = codeFunction.body.getText(sourceFile);
+        // Remove the surrounding braces and trim
+        jsxSource = bodyText.substring(1, bodyText.length - 1).trim();
       } else {
-        // Try inline JSX: () => <Component>
-        match = afterCode.match(/code:\s*\(\)\s*=>\s*(<[\s\S]+)/);
-        if (match) {
-          let jsx = match[1];
-          // Find the end by looking for },
-          const endMatch = jsx.match(/^([\s\S]*?)(?=\s*,?\s*\})/);
-          if (endMatch) {
-            jsxSource = endMatch[1].trim().replace(/,\s*$/, "");
+        // Just extract the return statement JSX
+        for (const statement of codeFunction.body.statements) {
+          if (ts.isReturnStatement(statement) && statement.expression) {
+            if (ts.isParenthesizedExpression(statement.expression)) {
+              jsxSource = statement.expression.expression.getText(sourceFile);
+            } else {
+              jsxSource = statement.expression.getText(sourceFile);
+            }
+            break;
           }
         }
       }
