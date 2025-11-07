@@ -262,6 +262,11 @@ export const DialogFooter = (props: DialogFooterProps) => {
   );
 };
 
+// Import components for examples only - won't count as dependencies
+// since they're imported after component definitions
+import { Input } from "./input";
+import { Badge } from "./badge";
+
 interface DialogCloseProps {
   children?: JSX.Element;
 }
@@ -284,7 +289,12 @@ export const meta: ComponentMeta<DialogProps> = {
             <Button>Open Dialog</Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogTitle>Dialog Title</DialogTitle>
+            <DialogTitle>
+              Dialog Title
+              <Badge variant="secondary" class="ml-2">
+                New
+              </Badge>
+            </DialogTitle>
             <DialogDescription>
               This is a basic dialog with a title and description.
             </DialogDescription>
@@ -342,19 +352,11 @@ export const meta: ComponentMeta<DialogProps> = {
             <div class="space-y-4 my-4">
               <div class="space-y-2">
                 <label class="text-sm font-medium">Name</label>
-                <input
-                  type="text"
-                  class="w-full px-3 py-2 border border-input rounded-md"
-                  placeholder="Enter your name"
-                />
+                <Input type="text" placeholder="Enter your name" />
               </div>
               <div class="space-y-2">
                 <label class="text-sm font-medium">Email</label>
-                <input
-                  type="email"
-                  class="w-full px-3 py-2 border border-input rounded-md"
-                  placeholder="Enter your email"
-                />
+                <Input type="email" placeholder="Enter your email" />
               </div>
             </div>
             <DialogFooter>

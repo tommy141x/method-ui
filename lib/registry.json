@@ -4,10 +4,216 @@
   "name": "method-ui",
   "version": "0.1.0",
   "componentMetadata": {
+    "accordion": {
+      "name": "Accordion",
+      "fileName": "accordion",
+      "description": "A vertically stacked set of interactive headings that each reveal a section of content.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string[] }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "description": "Multiple",
+          "required": false
+        },
+        {
+          "name": "collapsible",
+          "type": "boolean",
+          "description": "Collapsible",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Orientation",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "outlined"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Single item expansion by default",
+          "source": "<Accordion defaultValue={[\"react\"]}>\n  <AccordionItem value=\"react\">\n    <AccordionTrigger>What is React?</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        React is a JavaScript library for building user interfaces. It\n        allows developers to create reusable UI components.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"solid\">\n    <AccordionTrigger>What is Solid?</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        SolidJS is a declarative, efficient, and flexible JavaScript\n        library for building user interfaces with fine-grained\n        reactivity.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"vue\">\n    <AccordionTrigger>What is Vue?</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        Vue is a progressive framework for building user interfaces,\n        designed to be incrementally adoptable.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
+        },
+        {
+          "title": "Collapsible",
+          "description": "Allow all panels to be closed",
+          "source": "<Accordion collapsible defaultValue={[\"react\"]}>\n  <AccordionItem value=\"react\">\n    <AccordionTrigger>Can I close all items?</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        Yes! With the collapsible prop, you can close all accordion\n        items by clicking the open item.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"solid\">\n    <AccordionTrigger>Is it animated?</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        Absolutely. The accordion uses smooth CSS animations for opening\n        and closing.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
+        },
+        {
+          "title": "Multiple",
+          "description": "Allow multiple panels to be open simultaneously",
+          "source": "<Accordion multiple defaultValue={[\"react\", \"solid\"]}>\n  <AccordionItem value=\"react\">\n    <AccordionTrigger>Features</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        Full keyboard navigation, collapsible items, and smooth\n        animations built-in.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"solid\">\n    <AccordionTrigger>Accessibility</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        Complies with WAI-ARIA design patterns and supports screen\n        readers.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"vue\">\n    <AccordionTrigger>Styling</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        Fully customizable with Tailwind CSS and class variance\n        authority.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
+        },
+        {
+          "title": "Outlined",
+          "description": "Accordion with outlined styling",
+          "source": "<Accordion defaultValue={[\"installation\"]}>\n  <AccordionItem value=\"installation\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">Installation</AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Install the package using your favorite package manager: npm\n        install @ark-ui/solid\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"usage\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">Usage</AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Import the components and start building your accordion UI with\n        full TypeScript support.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"customization\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">\n      Customization\n    </AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Use CVA variants and Tailwind classes to customize the look and\n        feel.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
+        },
+        {
+          "title": "Disabled",
+          "description": "Accordion with disabled items",
+          "source": "<Accordion defaultValue={[\"available\"]}>\n  <AccordionItem value=\"available\">\n    <AccordionTrigger>Available</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        This accordion item is available and can be toggled.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"disabled\" disabled>\n    <AccordionTrigger>Disabled</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        This item is disabled and cannot be opened.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"enabled\">\n    <AccordionTrigger>Enabled</AccordionTrigger>\n    <AccordionContent>\n      <span class=\"text-muted-foreground\">\n        This accordion item is also available.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "accordion.tsx"
+      ]
+    },
+    "badge": {
+      "name": "Badge",
+      "fileName": "badge",
+      "description": "A badge component for displaying small pieces of information like labels, status, or counts.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "VariantProps<typeof badgeVariants>[\"variant\"]",
+          "description": "Visual style variant",
+          "required": false,
+          "defaultValue": "\"default\""
+        },
+        {
+          "name": "clickable",
+          "type": "boolean",
+          "description": "Clickable",
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "(event: MouseEvent) => void",
+          "description": "Click event handler",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "secondary",
+            "destructive",
+            "outline"
+          ],
+          "defaultValue": "default"
+        },
+        {
+          "name": "clickable",
+          "values": [
+            "true",
+            "false"
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Badge variants",
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge>Badge</Badge>\n  <Badge variant=\"secondary\">Secondary</Badge>\n  <Badge variant=\"destructive\">Destructive</Badge>\n  <Badge variant=\"outline\">Outline</Badge>\n</div>"
+        },
+        {
+          "title": "With Icon",
+          "description": "Badge with an icon",
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge\n    variant=\"secondary\"\n    class=\"bg-blue-500 text-white dark:bg-blue-600\"\n  >\n    <div class=\"i-lucide-badge-check h-3 w-3\" />\n    Verified\n  </Badge>\n  <Badge>\n    <div class=\"i-lucide-star h-3 w-3\" />\n    Featured\n  </Badge>\n  <Badge variant=\"destructive\">\n    <div class=\"i-lucide-alert-circle h-3 w-3\" />\n    Error\n  </Badge>\n</div>"
+        },
+        {
+          "title": "Notification Badges",
+          "description": "Circular badges for counts",
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge class=\"h-5 min-w-5 rounded-full px-1 font-mono tabular-nums\">\n    8\n  </Badge>\n  <Badge\n    class=\"h-5 min-w-5 rounded-full px-1 font-mono tabular-nums\"\n    variant=\"destructive\"\n  >\n    99\n  </Badge>\n  <Badge\n    class=\"h-5 min-w-5 rounded-full px-1 font-mono tabular-nums\"\n    variant=\"outline\"\n  >\n    20+\n  </Badge>\n  <Badge\n    class=\"h-5 min-w-5 rounded-full px-1 font-mono tabular-nums\"\n    variant=\"secondary\"\n  >\n    3\n  </Badge>\n</div>"
+        },
+        {
+          "title": "Custom Colors",
+          "description": "Badges with custom background colors",
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge class=\"bg-green-500 text-white hover:bg-green-600\">\n    Success\n  </Badge>\n  <Badge class=\"bg-yellow-500 text-white hover:bg-yellow-600\">\n    Warning\n  </Badge>\n  <Badge class=\"bg-purple-500 text-white hover:bg-purple-600\">\n    Info\n  </Badge>\n  <Badge class=\"bg-orange-500 text-white hover:bg-orange-600\">\n    Pending\n  </Badge>\n</div>"
+        },
+        {
+          "title": "Sizes",
+          "description": "Different badge sizes",
+          "source": "<div class=\"flex flex-wrap items-center gap-2\">\n  <Badge class=\"text-[10px] px-1.5 py-0\">Small</Badge>\n  <Badge>Default</Badge>\n  <Badge class=\"text-sm px-3 py-1\">Large</Badge>\n</div>"
+        },
+        {
+          "title": "Clickable",
+          "description": "Interactive badges with click handlers",
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge clickable onClick={() => alert(\"Badge clicked!\")}>\n    Click me\n  </Badge>\n  <Badge\n    variant=\"secondary\"\n    clickable\n    onClick={() => console.log(\"Secondary clicked\")}\n  >\n    <div class=\"i-lucide-mouse-pointer-click h-3 w-3\" />\n    Interactive\n  </Badge>\n  <Badge\n    variant=\"outline\"\n    clickable\n    onClick={() => alert(\"Outline clicked\")}\n  >\n    Clickable\n  </Badge>\n  <Badge>Not clickable</Badge>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "badge.tsx"
+      ]
+    },
     "button": {
       "name": "Button",
       "fileName": "button",
-      "description": "A versatile button component with multiple variants and sizes",
+      "description": "A versatile button component with multiple variants and sizes. Supports toggle mode for stateful buttons.",
       "props": [
         {
           "name": "variant",
@@ -33,6 +239,30 @@
           "name": "children",
           "type": "JSX.Element",
           "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "toggle",
+          "type": "boolean",
+          "description": "Toggle",
+          "required": false
+        },
+        {
+          "name": "pressed",
+          "type": "boolean",
+          "description": "Pressed",
+          "required": false
+        },
+        {
+          "name": "defaultPressed",
+          "type": "boolean",
+          "description": "Default Pressed",
+          "required": false
+        },
+        {
+          "name": "onPressedChange",
+          "type": "(pressed: boolean) => void",
+          "description": "On Pressed Change",
           "required": false
         }
       ],
@@ -70,6 +300,95 @@
           "title": "Button Sizes",
           "description": "Different button sizes",
           "source": "<div class=\"flex gap-2 items-center\">\n  <Button size=\"sm\">Small</Button>\n  <Button size=\"default\">Default</Button>\n  <Button size=\"lg\">Large</Button>\n  <Button size=\"icon\">⭐</Button>\n</div>"
+        },
+        {
+          "title": "Toggle Button",
+          "description": "Button with toggle state",
+          "source": "const [pressed, setPressed] = createSignal(false);\nreturn (\n  <div class=\"flex flex-col gap-2\">\n    <Button\n      toggle\n      pressed={pressed()}\n      onPressedChange={setPressed}\n      variant=\"outline\"\n    >\n      {pressed() ? \"Pressed\" : \"Not Pressed\"}\n    </Button>\n    <p class=\"text-sm text-muted-foreground\">\n      State: {pressed() ? \"On\" : \"Off\"}\n    </p>\n  </div>\n);"
+        },
+        {
+          "title": "Toggle Group",
+          "description": "Multiple toggle buttons styled as a group",
+          "source": "const [selected, setSelected] = createSignal(\"center\");\nreturn (\n  <div class=\"flex\">\n    <Button\n      toggle\n      pressed={selected() === \"left\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"left\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-l-md !rounded-r-none\"\n    >\n      <div class=\"i-lucide-align-left h-4 w-4\" />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"center\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"center\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"rounded-none border-l-0\"\n    >\n      <div class=\"i-lucide-align-center h-4 w-4\" />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"right\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"right\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-r-md !rounded-l-none border-l-0\"\n    >\n      <div class=\"i-lucide-align-right h-4 w-4\" />\n    </Button>\n  </div>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "button.tsx"
+      ]
+    },
+    "card": {
+      "name": "Card",
+      "fileName": "card",
+      "description": "A versatile card component for displaying content. Use Card alone or compose with CardHeader, CardTitle, CardDescription, CardContent, and CardFooter.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "VariantProps<typeof cardVariants>[\"variant\"]",
+          "description": "Visual style variant",
+          "required": false,
+          "defaultValue": "\"default\""
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "elevated",
+            "outlined"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple card with content",
+          "source": "<Card class=\"w-[350px]\">\n  <CardHeader>\n    <CardTitle>Card Title</CardTitle>\n    <CardDescription>Card description goes here</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p>This is the card content area where you can put anything.</p>\n    <Badge variant=\"secondary\" class=\"mt-2\">\n      Featured\n    </Badge>\n  </CardContent>\n</Card>"
+        },
+        {
+          "title": "With Footer",
+          "description": "Card with header, content, and footer",
+          "source": "<Card class=\"w-[350px]\">\n  <CardHeader>\n    <CardTitle>Notifications</CardTitle>\n    <CardDescription>You have 3 unread messages.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <div class=\"flex flex-col gap-2\">\n      <div class=\"flex items-center gap-2\">\n        <div class=\"i-lucide-bell h-4 w-4\" />\n        <span class=\"text-sm\">New message from Alice</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"i-lucide-bell h-4 w-4\" />\n        <span class=\"text-sm\">Bob commented on your post</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"i-lucide-bell h-4 w-4\" />\n        <span class=\"text-sm\">Your report is ready</span>\n      </div>\n    </div>\n  </CardContent>\n  <CardFooter>\n    <button class=\"text-sm text-primary hover:underline\">\n      Mark all as read\n    </button>\n  </CardFooter>\n</Card>"
+        },
+        {
+          "title": "Variants",
+          "description": "Different card variants",
+          "source": "<div class=\"flex flex-col gap-4 w-full\">\n  <Card variant=\"default\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Default Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Standard card with default styling.</p>\n    </CardContent>\n  </Card>\n  <Card variant=\"elevated\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Elevated Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Card with enhanced shadow.</p>\n    </CardContent>\n  </Card>\n  <Card variant=\"outlined\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Outlined Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Card with prominent border.</p>\n    </CardContent>\n  </Card>\n</div>"
+        },
+        {
+          "title": "Flexible Layout",
+          "description": "Card without sub-components",
+          "source": "<Card class=\"w-[350px] p-6\">\n  <h3 class=\"text-xl font-bold mb-2\">Custom Layout</h3>\n  <p class=\"text-sm text-muted-foreground mb-4\">\n    You don't have to use the sub-components. Just put whatever you want\n    inside the Card.\n  </p>\n  <div class=\"flex gap-2\">\n    <Button>Action</Button>\n    <Button variant=\"outline\">Cancel</Button>\n  </div>\n</Card>"
+        },
+        {
+          "title": "With Form",
+          "description": "Card containing a form",
+          "source": "<Card class=\"w-[350px]\">\n  <CardHeader>\n    <CardTitle>Create Account</CardTitle>\n    <CardDescription>\n      Enter your details to create a new account\n    </CardDescription>\n  </CardHeader>\n  <CardContent>\n    <form class=\"flex flex-col gap-4\">\n      <div class=\"flex flex-col gap-2\">\n        <label class=\"text-sm font-medium\" for=\"name\">\n          Name\n        </label>\n        <Input id=\"name\" type=\"text\" placeholder=\"John Doe\" />\n      </div>\n      <div class=\"flex flex-col gap-2\">\n        <label class=\"text-sm font-medium\" for=\"email\">\n          Email\n        </label>\n        <Input id=\"email\" type=\"email\" placeholder=\"john@example.com\" />\n      </div>\n    </form>\n  </CardContent>\n  <CardFooter class=\"flex gap-2\">\n    <Button class=\"flex-1\">Create</Button>\n    <Button variant=\"outline\" class=\"flex-1\">\n      Cancel\n    </Button>\n  </CardFooter>\n</Card>"
+        },
+        {
+          "title": "Stats Card",
+          "description": "Card displaying statistics",
+          "source": "<div class=\"grid grid-cols-3 gap-4\">\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Total Users</CardDescription>\n      <CardTitle class=\"text-3xl\">1,234</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"i-lucide-trending-up h-3 w-3 text-green-500\" />\n        <span>+20.1% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Revenue</CardDescription>\n      <CardTitle class=\"text-3xl\">$12,345</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"i-lucide-trending-up h-3 w-3 text-green-500\" />\n        <span>+15.2% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Active Now</CardDescription>\n      <CardTitle class=\"text-3xl\">573</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"i-lucide-trending-down h-3 w-3 text-red-500\" />\n        <span>-5.3% from last hour</span>\n      </div>\n    </CardContent>\n  </Card>\n</div>"
         }
       ],
       "dependencies": {
@@ -79,7 +398,7 @@
         ]
       },
       "files": [
-        "button.tsx"
+        "card.tsx"
       ]
     },
     "checkbox": {
@@ -278,7 +597,7 @@
         {
           "title": "Basic Dialog",
           "description": "A simple dialog with trigger, title and description",
-          "source": "<Dialog>\n  <DialogTrigger>\n    <Button>Open Dialog</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogTitle>Dialog Title</DialogTitle>\n    <DialogDescription>\n      This is a basic dialog with a title and description.\n    </DialogDescription>\n    <DialogFooter>\n      <DialogClose>\n        <Button variant=\"outline\">Close</Button>\n      </DialogClose>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+          "source": "<Dialog>\n  <DialogTrigger>\n    <Button>Open Dialog</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogTitle>\n      Dialog Title\n      <Badge variant=\"secondary\" class=\"ml-2\">\n        New\n      </Badge>\n    </DialogTitle>\n    <DialogDescription>\n      This is a basic dialog with a title and description.\n    </DialogDescription>\n    <DialogFooter>\n      <DialogClose>\n        <Button variant=\"outline\">Close</Button>\n      </DialogClose>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
         },
         {
           "title": "Controlled Dialog",
@@ -288,7 +607,7 @@
         {
           "title": "Dialog with Form",
           "description": "Dialog containing form elements",
-          "source": "<Dialog>\n  <DialogTrigger>\n    <Button>Edit Profile</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogTitle>Edit Profile</DialogTitle>\n    <DialogDescription>\n      Make changes to your profile here. Click save when you're done.\n    </DialogDescription>\n    <div class=\"space-y-4 my-4\">\n      <div class=\"space-y-2\">\n        <label class=\"text-sm font-medium\">Name</label>\n        <input\n          type=\"text\"\n          class=\"w-full px-3 py-2 border border-input rounded-md\"\n          placeholder=\"Enter your name\"\n        />\n      </div>\n      <div class=\"space-y-2\">\n        <label class=\"text-sm font-medium\">Email</label>\n        <input\n          type=\"email\"\n          class=\"w-full px-3 py-2 border border-input rounded-md\"\n          placeholder=\"Enter your email\"\n        />\n      </div>\n    </div>\n    <DialogFooter>\n      <DialogClose>\n        <Button variant=\"outline\">Cancel</Button>\n      </DialogClose>\n      <Button>Save Changes</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+          "source": "<Dialog>\n  <DialogTrigger>\n    <Button>Edit Profile</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogTitle>Edit Profile</DialogTitle>\n    <DialogDescription>\n      Make changes to your profile here. Click save when you're done.\n    </DialogDescription>\n    <div class=\"space-y-4 my-4\">\n      <div class=\"space-y-2\">\n        <label class=\"text-sm font-medium\">Name</label>\n        <Input type=\"text\" placeholder=\"Enter your name\" />\n      </div>\n      <div class=\"space-y-2\">\n        <label class=\"text-sm font-medium\">Email</label>\n        <Input type=\"email\" placeholder=\"Enter your email\" />\n      </div>\n    </div>\n    <DialogFooter>\n      <DialogClose>\n        <Button variant=\"outline\">Cancel</Button>\n      </DialogClose>\n      <Button>Save Changes</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
         }
       ],
       "dependencies": {
@@ -467,6 +786,235 @@
         "input.tsx"
       ]
     },
+    "menu": {
+      "name": "Menu",
+      "fileName": "menu",
+      "description": "A menu component for displaying actions and options. Built on Ark UI Menu - all Ark UI Menu props are supported.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether the component is open",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Default Open",
+          "required": false
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(details: { open: boolean }) => void",
+          "description": "Callback when open state changes",
+          "required": false
+        },
+        {
+          "name": "onSelect",
+          "type": "(details: { value: string | null }) => void",
+          "description": "On Select",
+          "required": false
+        },
+        {
+          "name": "closeOnSelect",
+          "type": "boolean",
+          "description": "Close On Select",
+          "required": false
+        },
+        {
+          "name": "positioning",
+          "type": "any",
+          "description": "Positioning",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "ids",
+          "type": "Partial<{\n    trigger: string;\n    contextTrigger: string;\n    content: string;\n    groupLabel: (id: string) => string;\n    group: (id: string) => string;\n    positioner: string;\n    arrow: string;\n  }>",
+          "description": "Ids",
+          "required": false
+        },
+        {
+          "name": "highlightedValue",
+          "type": "string",
+          "description": "Highlighted Value",
+          "required": false
+        },
+        {
+          "name": "defaultHighlightedValue",
+          "type": "string",
+          "description": "Default Highlighted Value",
+          "required": false
+        },
+        {
+          "name": "onHighlightChange",
+          "type": "(details: { highlightedValue: string | null }) => void",
+          "description": "On Highlight Change",
+          "required": false
+        },
+        {
+          "name": "loopFocus",
+          "type": "boolean",
+          "description": "Loop Focus",
+          "required": false
+        },
+        {
+          "name": "typeahead",
+          "type": "boolean",
+          "description": "Typeahead",
+          "required": false
+        },
+        {
+          "name": "composite",
+          "type": "boolean",
+          "description": "Composite",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Context Menu with Nested Items",
+          "description": "Right-click anywhere in the area to open context menu",
+          "source": "<Menu>\n  <ArkMenu.ContextTrigger class=\"flex h-[150px] w-[300px] items-center justify-center rounded-md border border-border border-dashed bg-muted/50 cursor-default\">\n    <p class=\"text-sm text-muted-foreground\">Right click here</p>\n  </ArkMenu.ContextTrigger>\n  <MenuContent>\n    <MenuItem value=\"view\">\n      <div class=\"i-lucide-eye h-4 w-4 mr-2\" />\n      View\n    </MenuItem>\n    <MenuItem value=\"edit\">\n      <div class=\"i-lucide-pencil h-4 w-4 mr-2\" />\n      Edit\n    </MenuItem>\n    <MenuSeparator />\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class=\"i-lucide-share-2 h-4 w-4 mr-2\" />\n        Share\n        <div class=\"i-lucide-chevron-right h-4 w-4 ml-auto\" />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"email\">\n          <div class=\"i-lucide-mail h-4 w-4 mr-2\" />\n          Email\n        </MenuItem>\n        <MenuItem value=\"link\">\n          <div class=\"i-lucide-link h-4 w-4 mr-2\" />\n          Copy Link\n        </MenuItem>\n        <MenuItem value=\"embed\">\n          <div class=\"i-lucide-code h-4 w-4 mr-2\" />\n          Embed\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class=\"i-lucide-download h-4 w-4 mr-2\" />\n        Export\n        <div class=\"i-lucide-chevron-right h-4 w-4 ml-auto\" />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"pdf\">\n          <div class=\"i-lucide-file-text h-4 w-4 mr-2\" />\n          PDF\n        </MenuItem>\n        <MenuItem value=\"png\">\n          <div class=\"i-lucide-image h-4 w-4 mr-2\" />\n          PNG\n        </MenuItem>\n        <MenuItem value=\"svg\">\n          <div class=\"i-lucide-file-code h-4 w-4 mr-2\" />\n          SVG\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <MenuSeparator />\n    <MenuItem value=\"delete\">\n      <div class=\"i-lucide-trash h-4 w-4 mr-2\" />\n      Delete\n    </MenuItem>\n  </MenuContent>\n</Menu>"
+        },
+        {
+          "title": "Button Trigger with Icons",
+          "description": "Menu with button trigger and icon items",
+          "source": "<Menu>\n  <MenuTrigger variant=\"outline\">\n    <div class=\"i-lucide-settings h-4 w-4 mr-2\" />\n    Actions\n  </MenuTrigger>\n  <MenuContent>\n    <MenuItem value=\"new\">\n      <div class=\"i-lucide-file-plus h-4 w-4 mr-2\" />\n      New File\n    </MenuItem>\n    <MenuItem value=\"open\">\n      <div class=\"i-lucide-folder-open h-4 w-4 mr-2\" />\n      Open File\n    </MenuItem>\n    <MenuItem value=\"save\">\n      <div class=\"i-lucide-save h-4 w-4 mr-2\" />\n      Save\n    </MenuItem>\n    <MenuSeparator />\n    <MenuItem value=\"settings\">\n      <div class=\"i-lucide-settings h-4 w-4 mr-2\" />\n      Settings\n    </MenuItem>\n    <MenuItem value=\"exit\">\n      <div class=\"i-lucide-log-out h-4 w-4 mr-2\" />\n      Exit\n    </MenuItem>\n  </MenuContent>\n</Menu>"
+        }
+      ],
+      "dependencies": {
+        "components": [
+          "button"
+        ],
+        "packages": [
+          "@ark-ui/solid",
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "menu.tsx"
+      ]
+    },
+    "radio-group": {
+      "name": "RadioGroup",
+      "fileName": "radio-group",
+      "description": "A radio group component for selecting a single option from a list. Built on Ark UI RadioGroup - all Ark UI RadioGroup props are supported.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string | null }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "Form",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "ids",
+          "type": "Partial<{\n    root: string;\n    label: string;\n    indicator: string;\n    item: (value: string) => string;\n    itemLabel: (value: string) => string;\n    itemControl: (value: string) => string;\n    itemHiddenInput: (value: string) => string;\n  }>",
+          "description": "Ids",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Orientation",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Horizontal",
+          "description": "A horizontal radio group with text options",
+          "source": "const sizes = [\"Small\", \"Medium\", \"Large\"];\n\nreturn (\n  <RadioGroup\n    defaultValue=\"Medium\"\n    orientation=\"horizontal\"\n    class=\"flex-row gap-4\"\n  >\n    <RadioGroupLabel>Size</RadioGroupLabel>\n    <For each={sizes}>\n      {(size) => <RadioGroupItem value={size}>{size}</RadioGroupItem>}\n    </For>\n  </RadioGroup>\n);"
+        },
+        {
+          "title": "With Icons",
+          "description": "Radio group with icons for each option",
+          "source": "const frameworks = [\n  { value: \"react\", label: \"React\", icon: \"i-lucide-atom\" },\n  { value: \"solid\", label: \"Solid\", icon: \"i-lucide-box\" },\n  { value: \"vue\", label: \"Vue\", icon: \"i-lucide-triangle\" },\n  { value: \"svelte\", label: \"Svelte\", icon: \"i-lucide-zap\" },\n];\n\nreturn (\n  <RadioGroup defaultValue=\"solid\">\n    <RadioGroupLabel>Framework</RadioGroupLabel>\n    <For each={frameworks}>\n      {(framework) => (\n        <RadioGroupItem value={framework.value}>\n          <div class=\"flex items-center gap-2\">\n            <div class={`${framework.icon} h-4 w-4`} />\n            <span>{framework.label}</span>\n          </div>\n        </RadioGroupItem>\n      )}\n    </For>\n  </RadioGroup>\n);"
+        },
+        {
+          "title": "With Description",
+          "description": "Radio group with descriptions and disabled option",
+          "source": "const options = [\n  {\n    value: \"starter\",\n    label: \"Starter\",\n    desc: \"Perfect for beginners\",\n    disabled: false,\n  },\n  {\n    value: \"pro\",\n    label: \"Pro\",\n    desc: \"For professional developers\",\n    disabled: false,\n  },\n  {\n    value: \"enterprise\",\n    label: \"Enterprise\",\n    desc: \"Advanced features for teams\",\n    disabled: true,\n  },\n];\n\nreturn (\n  <RadioGroup defaultValue=\"pro\">\n    <RadioGroupLabel>Select a plan</RadioGroupLabel>\n    <For each={options}>\n      {(option) => (\n        <RadioGroupItem value={option.value} disabled={option.disabled}>\n          <div class=\"flex flex-col gap-0.5\">\n            <span class=\"text-sm font-medium\">{option.label}</span>\n            <span class=\"text-xs text-muted-foreground\">\n              {option.desc}\n            </span>\n          </div>\n        </RadioGroupItem>\n      )}\n    </For>\n  </RadioGroup>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "radio-group.tsx"
+      ]
+    },
     "select": {
       "name": "Select",
       "fileName": "select",
@@ -599,6 +1147,147 @@
         "select.tsx"
       ]
     },
+    "slider": {
+      "name": "Slider",
+      "fileName": "slider",
+      "description": "A slider component for selecting values within a range. Built on Ark UI Slider - all Ark UI Slider props are supported.",
+      "props": [
+        {
+          "name": "value",
+          "type": "number[]",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "number[]",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: number[] }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "onValueChangeEnd",
+          "type": "(details: { value: number[] }) => void",
+          "description": "On Value Change End",
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "Min",
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Max",
+          "required": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "Step",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Orientation",
+          "required": false
+        },
+        {
+          "name": "origin",
+          "type": "\"start\" | \"center\" | \"end\"",
+          "description": "Origin",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "Form",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "JSX.Element",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "description": "Show Value",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple slider with label and value display",
+          "source": "<Slider\n  label=\"Volume\"\n  showValue\n  defaultValue={[50]}\n  max={100}\n  step={1}\n/>"
+        },
+        {
+          "title": "Range Slider",
+          "description": "A slider with two thumbs for selecting a range",
+          "source": "<Slider\n  label=\"Price Range\"\n  showValue\n  defaultValue={[25, 75]}\n  max={100}\n  step={1}\n/>"
+        },
+        {
+          "title": "With Custom Steps",
+          "description": "A slider with decimal step increments",
+          "source": "<Slider\n  label=\"Opacity\"\n  showValue\n  defaultValue={[0.5]}\n  min={0}\n  max={1}\n  step={0.1}\n/>"
+        },
+        {
+          "title": "Disabled",
+          "description": "A disabled slider",
+          "source": "<Slider\n  label=\"Disabled\"\n  showValue\n  defaultValue={[60]}\n  max={100}\n  disabled\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "slider.tsx"
+      ]
+    },
     "tabs": {
       "name": "Tabs",
       "fileName": "tabs",
@@ -712,12 +1401,18 @@
     }
   },
   "componentList": [
+    "accordion",
+    "badge",
     "button",
+    "card",
     "checkbox",
     "dialog",
     "hover-card",
     "input",
+    "menu",
+    "radio-group",
     "select",
+    "slider",
     "tabs"
   ]
 }
