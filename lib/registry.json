@@ -602,7 +602,7 @@
     "tabs": {
       "name": "Tabs",
       "fileName": "tabs",
-      "description": "A tabs component that allows users to switch between different views.",
+      "description": "A tabs component that allows users to switch between different views. Supports multiple variants and smooth animations.",
       "props": [
         {
           "name": "children",
@@ -671,18 +671,39 @@
           "required": false
         }
       ],
-      "variants": [],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "underline"
+          ],
+          "defaultValue": "default"
+        }
+      ],
       "examples": [
         {
-          "title": "Basic Tabs",
-          "description": "Simple tabs with default styling",
-          "source": "<Tabs defaultValue=\"react\">\n  <TabsList>\n    <TabsTrigger value=\"react\">React</TabsTrigger>\n    <TabsTrigger value=\"solid\">Solid</TabsTrigger>\n    <TabsTrigger value=\"vue\">Vue</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"react\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">React</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        React is a JavaScript library for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"solid\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Solid</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        SolidJS is a reactive JavaScript library for building fast UIs.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"vue\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Vue</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        Vue is a progressive framework for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n</Tabs>"
+          "title": "Default Variant",
+          "description": "Pill-style tabs with muted background",
+          "source": "<Tabs defaultValue=\"react\">\n  <TabsList>\n    <TabsIndicator />\n    <TabsTrigger value=\"react\">React</TabsTrigger>\n    <TabsTrigger value=\"solid\">Solid</TabsTrigger>\n    <TabsTrigger value=\"vue\">Vue</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"react\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">React</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        React is a JavaScript library for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"solid\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Solid</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        SolidJS is a reactive JavaScript library for building fast UIs.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"vue\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Vue</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        Vue is a progressive framework for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n</Tabs>"
+        },
+        {
+          "title": "Underline Variant",
+          "description": "Tabs with underline indicator",
+          "source": "<Tabs defaultValue=\"account\">\n  <TabsList variant=\"underline\">\n    <TabsIndicator class=\"!h-[2px] !bottom-0 !top-auto bg-primary rounded-none shadow-none\" />\n    <TabsTrigger value=\"account\" variant=\"underline\">\n      Account\n    </TabsTrigger>\n    <TabsTrigger value=\"password\" variant=\"underline\">\n      Password\n    </TabsTrigger>\n    <TabsTrigger value=\"notifications\" variant=\"underline\">\n      Notifications\n    </TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"account\">\n    <div class=\"p-4\">\n      <h3 class=\"font-semibold mb-2\">Account Settings</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        Manage your account settings and preferences.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"password\">\n    <div class=\"p-4\">\n      <h3 class=\"font-semibold mb-2\">Password</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        Change your password and security settings.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"notifications\">\n    <div class=\"p-4\">\n      <h3 class=\"font-semibold mb-2\">Notifications</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        Configure how you receive notifications.\n      </p>\n    </div>\n  </TabsContent>\n</Tabs>"
+        },
+        {
+          "title": "Disabled Tab",
+          "description": "Tabs with disabled state",
+          "source": "<Tabs defaultValue=\"available\">\n  <TabsList>\n    <TabsIndicator />\n    <TabsTrigger value=\"available\">Available</TabsTrigger>\n    <TabsTrigger value=\"coming-soon\" disabled>\n      Coming Soon\n    </TabsTrigger>\n    <TabsTrigger value=\"enabled\">Enabled</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"available\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <p class=\"text-sm text-muted-foreground\">\n        This tab is currently available.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"coming-soon\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <p class=\"text-sm text-muted-foreground\">\n        This feature is coming soon.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"enabled\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <p class=\"text-sm text-muted-foreground\">\n        This tab is enabled and ready to use.\n      </p>\n    </div>\n  </TabsContent>\n</Tabs>"
         }
       ],
       "dependencies": {
         "components": [],
         "packages": [
-          "@ark-ui/solid"
+          "@ark-ui/solid",
+          "class-variance-authority",
+          "solid-motionone"
         ]
       },
       "files": [
