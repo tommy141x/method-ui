@@ -2,6 +2,7 @@ import type { JSX, Component } from "solid-js";
 import { splitProps } from "solid-js";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn";
+import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const cardVariants = cva("rounded-lg text-card-foreground", {
@@ -163,15 +164,15 @@ export const meta: ComponentMeta<CardProps> = {
           <CardContent>
             <div class="flex flex-col gap-2">
               <div class="flex items-center gap-2">
-                <div class="i-lucide-bell h-4 w-4" />
+                <div class={cn("h-4 w-4", icon("bell"))} />
                 <span class="text-sm">New message from Alice</span>
               </div>
               <div class="flex items-center gap-2">
-                <div class="i-lucide-bell h-4 w-4" />
+                <div class={cn("h-4 w-4", icon("bell"))} />
                 <span class="text-sm">Bob commented on your post</span>
               </div>
               <div class="flex items-center gap-2">
-                <div class="i-lucide-bell h-4 w-4" />
+                <div class={cn("h-4 w-4", icon("bell"))} />
                 <span class="text-sm">Your report is ready</span>
               </div>
             </div>
@@ -281,7 +282,9 @@ export const meta: ComponentMeta<CardProps> = {
             </CardHeader>
             <CardContent>
               <div class="text-xs text-muted-foreground flex items-center gap-1">
-                <div class="i-lucide-trending-up h-3 w-3 text-green-500" />
+                <div
+                  class={cn("h-3 w-3 text-green-500", icon("trending-up"))}
+                />
                 <span>+20.1% from last month</span>
               </div>
             </CardContent>
@@ -293,7 +296,9 @@ export const meta: ComponentMeta<CardProps> = {
             </CardHeader>
             <CardContent>
               <div class="text-xs text-muted-foreground flex items-center gap-1">
-                <div class="i-lucide-trending-up h-3 w-3 text-green-500" />
+                <div
+                  class={cn("h-3 w-3 text-green-500", icon("trending-up"))}
+                />
                 <span>+15.2% from last month</span>
               </div>
             </CardContent>
@@ -305,7 +310,9 @@ export const meta: ComponentMeta<CardProps> = {
             </CardHeader>
             <CardContent>
               <div class="text-xs text-muted-foreground flex items-center gap-1">
-                <div class="i-lucide-trending-down h-3 w-3 text-red-500" />
+                <div
+                  class={cn("h-3 w-3 text-red-500", icon("trending-down"))}
+                />
                 <span>-5.3% from last hour</span>
               </div>
             </CardContent>

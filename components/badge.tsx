@@ -2,6 +2,7 @@ import type { JSX, Component } from "solid-js";
 import { splitProps } from "solid-js";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn";
+import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const badgeVariants = cva(
@@ -88,15 +89,15 @@ export const meta: ComponentMeta<BadgeProps> = {
             variant="secondary"
             class="bg-blue-500 text-white dark:bg-blue-600"
           >
-            <div class="i-lucide-badge-check h-3 w-3" />
+            <div class={cn("h-3 w-3", icon("badge-check"))} />
             Verified
           </Badge>
           <Badge>
-            <div class="i-lucide-star h-3 w-3" />
+            <div class={cn("h-3 w-3", icon("star"))} />
             Featured
           </Badge>
           <Badge variant="destructive">
-            <div class="i-lucide-alert-circle h-3 w-3" />
+            <div class={cn("h-3 w-3", icon("alert-circle"))} />
             Error
           </Badge>
         </div>
@@ -175,7 +176,7 @@ export const meta: ComponentMeta<BadgeProps> = {
             clickable
             onClick={() => console.log("Secondary clicked")}
           >
-            <div class="i-lucide-mouse-pointer-click h-3 w-3" />
+            <div class={cn("h-3 w-3", icon("mouse-pointer-click"))} />
             Interactive
           </Badge>
           <Badge

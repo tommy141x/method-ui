@@ -4,6 +4,7 @@ import { cva } from "class-variance-authority";
 import { Toggle } from "@ark-ui/solid/toggle";
 
 import { cn } from "../lib/cn";
+import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const buttonVariants = cva(
@@ -161,7 +162,7 @@ export const meta: ComponentMeta<ButtonProps> = {
               size="icon"
               class="!rounded-l-md !rounded-r-none"
             >
-              <div class="i-lucide-align-left h-4 w-4" />
+              <div class={cn("h-4 w-4", icon("align-left"))} />
             </Button>
             <Button
               toggle
@@ -171,7 +172,7 @@ export const meta: ComponentMeta<ButtonProps> = {
               size="icon"
               class="rounded-none border-l-0"
             >
-              <div class="i-lucide-align-center h-4 w-4" />
+              <div class={cn("h-4 w-4", icon("align-center"))} />
             </Button>
             <Button
               toggle
@@ -181,7 +182,7 @@ export const meta: ComponentMeta<ButtonProps> = {
               size="icon"
               class="!rounded-r-md !rounded-l-none border-l-0"
             >
-              <div class="i-lucide-align-right h-4 w-4" />
+              <div class={cn("h-4 w-4", icon("align-right"))} />
             </Button>
           </div>
         );

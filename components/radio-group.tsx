@@ -2,6 +2,7 @@ import type { JSX, Component } from "solid-js";
 import { RadioGroup as ArkRadioGroup } from "@ark-ui/solid/radio-group";
 import { Motion } from "solid-motionone";
 import { cn } from "../lib/cn";
+import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 import { For } from "solid-js";
 
@@ -127,10 +128,10 @@ export const meta: ComponentMeta<RadioGroupProps> = {
       description: "Radio group with icons for each option",
       code: () => {
         const frameworks = [
-          { value: "react", label: "React", icon: "i-lucide-atom" },
-          { value: "solid", label: "Solid", icon: "i-lucide-box" },
-          { value: "vue", label: "Vue", icon: "i-lucide-triangle" },
-          { value: "svelte", label: "Svelte", icon: "i-lucide-zap" },
+          { value: "react", label: "React", icon: "atom" },
+          { value: "solid", label: "Solid", icon: "box" },
+          { value: "vue", label: "Vue", icon: "triangle" },
+          { value: "svelte", label: "Svelte", icon: "zap" },
         ];
 
         return (
@@ -140,7 +141,7 @@ export const meta: ComponentMeta<RadioGroupProps> = {
               {(framework) => (
                 <RadioGroupItem value={framework.value}>
                   <div class="flex items-center gap-2">
-                    <div class={`${framework.icon} h-4 w-4`} />
+                    <div class={cn("h-4 w-4", icon(framework.icon))} />
                     <span>{framework.label}</span>
                   </div>
                 </RadioGroupItem>

@@ -177,7 +177,7 @@
         {
           "title": "With Icon",
           "description": "Badge with an icon",
-          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge\n    variant=\"secondary\"\n    class=\"bg-blue-500 text-white dark:bg-blue-600\"\n  >\n    <div class=\"i-lucide-badge-check h-3 w-3\" />\n    Verified\n  </Badge>\n  <Badge>\n    <div class=\"i-lucide-star h-3 w-3\" />\n    Featured\n  </Badge>\n  <Badge variant=\"destructive\">\n    <div class=\"i-lucide-alert-circle h-3 w-3\" />\n    Error\n  </Badge>\n</div>"
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge\n    variant=\"secondary\"\n    class=\"bg-blue-500 text-white dark:bg-blue-600\"\n  >\n    <div class={cn(\"h-3 w-3\", icon(\"badge-check\"))} />\n    Verified\n  </Badge>\n  <Badge>\n    <div class={cn(\"h-3 w-3\", icon(\"star\"))} />\n    Featured\n  </Badge>\n  <Badge variant=\"destructive\">\n    <div class={cn(\"h-3 w-3\", icon(\"alert-circle\"))} />\n    Error\n  </Badge>\n</div>"
         },
         {
           "title": "Notification Badges",
@@ -197,7 +197,7 @@
         {
           "title": "Clickable",
           "description": "Interactive badges with click handlers",
-          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge clickable onClick={() => alert(\"Badge clicked!\")}>\n    Click me\n  </Badge>\n  <Badge\n    variant=\"secondary\"\n    clickable\n    onClick={() => console.log(\"Secondary clicked\")}\n  >\n    <div class=\"i-lucide-mouse-pointer-click h-3 w-3\" />\n    Interactive\n  </Badge>\n  <Badge\n    variant=\"outline\"\n    clickable\n    onClick={() => alert(\"Outline clicked\")}\n  >\n    Clickable\n  </Badge>\n  <Badge>Not clickable</Badge>\n</div>"
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge clickable onClick={() => alert(\"Badge clicked!\")}>\n    Click me\n  </Badge>\n  <Badge\n    variant=\"secondary\"\n    clickable\n    onClick={() => console.log(\"Secondary clicked\")}\n  >\n    <div class={cn(\"h-3 w-3\", icon(\"mouse-pointer-click\"))} />\n    Interactive\n  </Badge>\n  <Badge\n    variant=\"outline\"\n    clickable\n    onClick={() => alert(\"Outline clicked\")}\n  >\n    Clickable\n  </Badge>\n  <Badge>Not clickable</Badge>\n</div>"
         }
       ],
       "dependencies": {
@@ -309,7 +309,7 @@
         {
           "title": "Toggle Group",
           "description": "Multiple toggle buttons styled as a group",
-          "source": "const [selected, setSelected] = createSignal(\"center\");\nreturn (\n  <div class=\"flex\">\n    <Button\n      toggle\n      pressed={selected() === \"left\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"left\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-l-md !rounded-r-none\"\n    >\n      <div class=\"i-lucide-align-left h-4 w-4\" />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"center\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"center\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"rounded-none border-l-0\"\n    >\n      <div class=\"i-lucide-align-center h-4 w-4\" />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"right\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"right\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-r-md !rounded-l-none border-l-0\"\n    >\n      <div class=\"i-lucide-align-right h-4 w-4\" />\n    </Button>\n  </div>\n);"
+          "source": "const [selected, setSelected] = createSignal(\"center\");\nreturn (\n  <div class=\"flex\">\n    <Button\n      toggle\n      pressed={selected() === \"left\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"left\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-l-md !rounded-r-none\"\n    >\n      <div class={cn(\"h-4 w-4\", icon(\"align-left\"))} />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"center\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"center\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"rounded-none border-l-0\"\n    >\n      <div class={cn(\"h-4 w-4\", icon(\"align-center\"))} />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"right\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"right\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-r-md !rounded-l-none border-l-0\"\n    >\n      <div class={cn(\"h-4 w-4\", icon(\"align-right\"))} />\n    </Button>\n  </div>\n);"
         }
       ],
       "dependencies": {
@@ -368,7 +368,7 @@
         {
           "title": "With Footer",
           "description": "Card with header, content, and footer",
-          "source": "<Card class=\"w-[350px]\">\n  <CardHeader>\n    <CardTitle>Notifications</CardTitle>\n    <CardDescription>You have 3 unread messages.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <div class=\"flex flex-col gap-2\">\n      <div class=\"flex items-center gap-2\">\n        <div class=\"i-lucide-bell h-4 w-4\" />\n        <span class=\"text-sm\">New message from Alice</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"i-lucide-bell h-4 w-4\" />\n        <span class=\"text-sm\">Bob commented on your post</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"i-lucide-bell h-4 w-4\" />\n        <span class=\"text-sm\">Your report is ready</span>\n      </div>\n    </div>\n  </CardContent>\n  <CardFooter>\n    <button class=\"text-sm text-primary hover:underline\">\n      Mark all as read\n    </button>\n  </CardFooter>\n</Card>"
+          "source": "<Card class=\"w-[350px]\">\n  <CardHeader>\n    <CardTitle>Notifications</CardTitle>\n    <CardDescription>You have 3 unread messages.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <div class=\"flex flex-col gap-2\">\n      <div class=\"flex items-center gap-2\">\n        <div class={cn(\"h-4 w-4\", icon(\"bell\"))} />\n        <span class=\"text-sm\">New message from Alice</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class={cn(\"h-4 w-4\", icon(\"bell\"))} />\n        <span class=\"text-sm\">Bob commented on your post</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class={cn(\"h-4 w-4\", icon(\"bell\"))} />\n        <span class=\"text-sm\">Your report is ready</span>\n      </div>\n    </div>\n  </CardContent>\n  <CardFooter>\n    <button class=\"text-sm text-primary hover:underline\">\n      Mark all as read\n    </button>\n  </CardFooter>\n</Card>"
         },
         {
           "title": "Variants",
@@ -388,7 +388,7 @@
         {
           "title": "Stats Card",
           "description": "Card displaying statistics",
-          "source": "<div class=\"grid grid-cols-3 gap-4\">\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Total Users</CardDescription>\n      <CardTitle class=\"text-3xl\">1,234</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"i-lucide-trending-up h-3 w-3 text-green-500\" />\n        <span>+20.1% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Revenue</CardDescription>\n      <CardTitle class=\"text-3xl\">$12,345</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"i-lucide-trending-up h-3 w-3 text-green-500\" />\n        <span>+15.2% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Active Now</CardDescription>\n      <CardTitle class=\"text-3xl\">573</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"i-lucide-trending-down h-3 w-3 text-red-500\" />\n        <span>-5.3% from last hour</span>\n      </div>\n    </CardContent>\n  </Card>\n</div>"
+          "source": "<div class=\"grid grid-cols-3 gap-4\">\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Total Users</CardDescription>\n      <CardTitle class=\"text-3xl\">1,234</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div\n          class={cn(\"h-3 w-3 text-green-500\", icon(\"trending-up\"))}\n        />\n        <span>+20.1% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Revenue</CardDescription>\n      <CardTitle class=\"text-3xl\">$12,345</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div\n          class={cn(\"h-3 w-3 text-green-500\", icon(\"trending-up\"))}\n        />\n        <span>+15.2% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Active Now</CardDescription>\n      <CardTitle class=\"text-3xl\">573</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div\n          class={cn(\"h-3 w-3 text-red-500\", icon(\"trending-down\"))}\n        />\n        <span>-5.3% from last hour</span>\n      </div>\n    </CardContent>\n  </Card>\n</div>"
         }
       ],
       "dependencies": {
@@ -494,6 +494,309 @@
       },
       "files": [
         "checkbox.tsx"
+      ]
+    },
+    "color-picker": {
+      "name": "ColorPicker",
+      "fileName": "color-picker",
+      "description": "A comprehensive color picker component with support for different color formats, alpha channel, and preset swatches. Built on Ark UI ColorPicker.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "any",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "any",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: any; valueAsString: string }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "onValueChangeEnd",
+          "type": "(details: { value: any; valueAsString: string }) => void",
+          "description": "On Value Change End",
+          "required": false
+        },
+        {
+          "name": "format",
+          "type": "\"rgba\" | \"hsla\" | \"hsba\"",
+          "description": "Format",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Whether the field is required",
+          "required": false
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Invalid",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether the component is open",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Default Open",
+          "required": false
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(details: { open: boolean }) => void",
+          "description": "Callback when open state changes",
+          "required": false
+        },
+        {
+          "name": "closeOnSelect",
+          "type": "boolean",
+          "description": "Close On Select",
+          "required": false
+        },
+        {
+          "name": "positioning",
+          "type": "any",
+          "description": "Positioning",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "JSX.Element",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "showAlpha",
+          "type": "boolean",
+          "description": "Show Alpha",
+          "required": false
+        },
+        {
+          "name": "showEyeDropper",
+          "type": "boolean",
+          "description": "Show Eye Dropper",
+          "required": false
+        },
+        {
+          "name": "swatches",
+          "type": "string[]",
+          "description": "Swatches",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple color picker with default settings",
+          "source": "<ColorPicker\n  label=\"Choose Color\"\n  defaultValue={parseColor(\"#3b82f6\")}\n/>"
+        },
+        {
+          "title": "Without Alpha",
+          "description": "Color picker without alpha channel slider",
+          "source": "<ColorPicker\n  label=\"Background Color\"\n  defaultValue={parseColor(\"#10b981\")}\n  showAlpha={false}\n/>"
+        },
+        {
+          "title": "Composable with Custom Swatches",
+          "description": "Build custom layouts using composable parts with custom preset colors",
+          "source": "<ColorPicker.Root defaultValue={parseColor(\"#f59e0b\")}>\n  <ColorPicker.Label>Custom Layout</ColorPicker.Label>\n  <ColorPicker.Control>\n    <div class=\"flex gap-2 w-full\">\n      <ColorPicker.Trigger>\n        <ColorPicker.TransparencyGrid />\n        <ColorPicker.ValueSwatch />\n      </ColorPicker.Trigger>\n      <ColorPicker.ChannelInput channel=\"hex\" class=\"flex-1\" />\n    </div>\n  </ColorPicker.Control>\n  <ColorPicker.Positioner>\n    <ColorPicker.Content>\n      <div class=\"flex flex-col gap-3\">\n        <ColorPicker.Area>\n          <ColorPicker.AreaBackground />\n          <ColorPicker.AreaThumb />\n        </ColorPicker.Area>\n        <ColorPicker.ChannelSlider channel=\"hue\">\n          <ColorPicker.ChannelSliderTrack class=\"h-3 rounded-md bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-cyan-500 via-blue-500 via-purple-500 to-red-500\" />\n          <ColorPicker.ChannelSliderThumb class=\"h-4 w-4 rounded-full border-2 border-white shadow-md -translate-x-1/2 -translate-y-1/2\" />\n        </ColorPicker.ChannelSlider>\n        <ColorPicker.SwatchGroup>\n          <For\n            each={[\n              \"#ef4444\",\n              \"#f97316\",\n              \"#22c55e\",\n              \"#3b82f6\",\n              \"#8b5cf6\",\n              \"#ec4899\",\n            ]}\n          >\n            {(color) => (\n              <ColorPicker.SwatchTrigger value={color}>\n                <ColorPicker.Swatch value={color} />\n              </ColorPicker.SwatchTrigger>\n            )}\n          </For>\n        </ColorPicker.SwatchGroup>\n      </div>\n    </ColorPicker.Content>\n  </ColorPicker.Positioner>\n  <ColorPicker.HiddenInput />\n</ColorPicker.Root>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "color-picker.tsx"
+      ]
+    },
+    "date-picker": {
+      "name": "DatePicker",
+      "fileName": "date-picker",
+      "description": "Date picker component built with Ark UI. Supports single date selection, range selection, and multiple date selection with a clean calendar interface.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "any[]",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "any[]",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: any[] }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "description": "Locale",
+          "required": false
+        },
+        {
+          "name": "selectionMode",
+          "type": "\"single\" | \"multiple\" | \"range\"",
+          "description": "Selection Mode",
+          "required": false
+        },
+        {
+          "name": "closeOnSelect",
+          "type": "boolean",
+          "description": "Close On Select",
+          "required": false
+        },
+        {
+          "name": "numOfMonths",
+          "type": "number",
+          "description": "Num Of Months",
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "any",
+          "description": "Min",
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "any",
+          "description": "Max",
+          "required": false
+        },
+        {
+          "name": "positioning",
+          "type": "any",
+          "description": "Positioning",
+          "required": false
+        },
+        {
+          "name": "format",
+          "type": "(date: any, details: any) => string",
+          "description": "Format",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "size",
+          "values": [
+            "default",
+            "sm",
+            "lg"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic Date Picker",
+          "description": "Simple date picker for single date selection",
+          "source": "<DatePicker placeholder=\"Select a date\" />"
+        },
+        {
+          "title": "Date Range Picker",
+          "description": "Pick a date range with start and end dates",
+          "source": "<DatePicker selectionMode=\"range\" />"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "date-picker.tsx"
       ]
     },
     "dialog": {
@@ -623,6 +926,274 @@
         "dialog.tsx"
       ]
     },
+    "file-upload": {
+      "name": "FileUpload",
+      "fileName": "file-upload",
+      "description": "File upload component built with Ark UI. Supports drag and drop, file type restrictions, file size limits, and automatic preview generation for images.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "accept",
+          "type": "string",
+          "description": "Accept",
+          "required": false
+        },
+        {
+          "name": "maxFiles",
+          "type": "number",
+          "description": "Max Files",
+          "required": false
+        },
+        {
+          "name": "maxFileSize",
+          "type": "number",
+          "description": "Max File Size",
+          "required": false
+        },
+        {
+          "name": "minFileSize",
+          "type": "number",
+          "description": "Min File Size",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Whether the field is required",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "onFileChange",
+          "type": "(details: any) => void",
+          "description": "On File Change",
+          "required": false
+        },
+        {
+          "name": "onFileAccept",
+          "type": "(details: any) => void",
+          "description": "On File Accept",
+          "required": false
+        },
+        {
+          "name": "onFileReject",
+          "type": "(details: any) => void",
+          "description": "On File Reject",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "allowDrop",
+          "type": "boolean",
+          "description": "Allow Drop",
+          "required": false
+        },
+        {
+          "name": "directory",
+          "type": "boolean",
+          "description": "Directory",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "size",
+          "values": [
+            "default",
+            "sm",
+            "lg"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic File Upload",
+          "description": "Simple file upload with drag and drop",
+          "source": "<FileUpload maxFiles={5} />"
+        },
+        {
+          "title": "Image Upload Only",
+          "description": "Restrict uploads to image files",
+          "source": "<FileUpload\n  accept=\"image/png,image/jpeg,image/jpg,image/gif\"\n  maxFiles={3}\n  maxFileSize={5 * 1024 * 1024}\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "class-variance-authority",
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "file-upload.tsx"
+      ]
+    },
+    "floating-panel": {
+      "name": "FloatingPanel",
+      "fileName": "floating-panel",
+      "description": "A draggable and resizable floating panel component. Perfect for chat windows, notifications, or any floating UI elements that need to be movable and adjustable.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether the component is open",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Default Open",
+          "required": false
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(details: { open: boolean }) => void",
+          "description": "Callback when open state changes",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "{ width: number; height: number }",
+          "description": "Size",
+          "required": false
+        },
+        {
+          "name": "onSizeChange",
+          "type": "(details: { size: { width: number; height: number } }) => void",
+          "description": "On Size Change",
+          "required": false
+        },
+        {
+          "name": "position",
+          "type": "{ x: number; y: number }",
+          "description": "Position",
+          "required": false
+        },
+        {
+          "name": "onPositionChange",
+          "type": "(details: { position: { x: number; y: number } }) => void",
+          "description": "On Position Change",
+          "required": false
+        },
+        {
+          "name": "minSize",
+          "type": "{ width: number; height: number }",
+          "description": "Min Size",
+          "required": false
+        },
+        {
+          "name": "maxSize",
+          "type": "{ width: number; height: number }",
+          "description": "Max Size",
+          "required": false
+        },
+        {
+          "name": "defaultSize",
+          "type": "{ width: number; height: number }",
+          "description": "Default Size",
+          "required": false
+        },
+        {
+          "name": "defaultPosition",
+          "type": "{ x: number; y: number }",
+          "description": "Default Position",
+          "required": false
+        },
+        {
+          "name": "draggable",
+          "type": "boolean",
+          "description": "Draggable",
+          "required": false
+        },
+        {
+          "name": "resizable",
+          "type": "boolean",
+          "description": "Resizable",
+          "required": false
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "description": "Close On Escape",
+          "required": false
+        },
+        {
+          "name": "allowOverflow",
+          "type": "boolean",
+          "description": "Allow Overflow",
+          "required": false
+        },
+        {
+          "name": "gridSize",
+          "type": "number",
+          "description": "Grid Size",
+          "required": false
+        },
+        {
+          "name": "persistRect",
+          "type": "boolean",
+          "description": "Persist Rect",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Floating Panel",
+          "description": "A simple floating panel with drag and resize capabilities",
+          "source": "<FloatingPanel defaultOpen={false}>\n  <FloatingPanelTrigger>Open Panel</FloatingPanelTrigger>\n  <FloatingPanelContent title=\"Floating Panel\">\n    <p class=\"text-sm text-muted-foreground\">\n      This is a draggable and resizable floating panel. You can drag it\n      by the header and resize it from any edge or corner.\n    </p>\n  </FloatingPanelContent>\n</FloatingPanel>"
+        },
+        {
+          "title": "Chat Window Style",
+          "description": "A floating panel styled as a chat window",
+          "source": "<FloatingPanel\n  defaultOpen={false}\n  defaultSize={{ width: 360, height: 480 }}\n  minSize={{ width: 300, height: 400 }}\n>\n  <FloatingPanelTrigger>Open Chat</FloatingPanelTrigger>\n  <FloatingPanelContent\n    title=\"Support Chat\"\n    headerClass=\"bg-primary/5\"\n    zIndex={150}\n  >\n    <div class=\"flex flex-col gap-3\">\n      <div class=\"flex gap-2\">\n        <div class=\"h-8 w-8 rounded-full bg-muted shrink-0\" />\n        <div class=\"bg-muted rounded-lg px-3 py-2 text-sm\">\n          Hello! How can I help you today?\n        </div>\n      </div>\n      <div class=\"flex gap-2 flex-row-reverse\">\n        <div class=\"h-8 w-8 rounded-full bg-primary shrink-0\" />\n        <div class=\"bg-primary text-primary-foreground rounded-lg px-3 py-2 text-sm\">\n          I need help with my account\n        </div>\n      </div>\n    </div>\n  </FloatingPanelContent>\n</FloatingPanel>"
+        },
+        {
+          "title": "Fixed Size Panel",
+          "description": "A panel with a fixed size (no resizing)",
+          "source": "<FloatingPanel\n  defaultOpen={false}\n  resizable={false}\n  defaultSize={{ width: 400, height: 300 }}\n>\n  <FloatingPanelTrigger>Open Notification</FloatingPanelTrigger>\n  <FloatingPanelContent\n    title=\"Notifications\"\n    showMinimize={false}\n    showMaximize={false}\n    zIndex={200}\n  >\n    <div class=\"space-y-3\">\n      <div class=\"flex gap-3 p-2 rounded-md hover:bg-accent\">\n        <div class=\"h-2 w-2 rounded-full bg-blue-500 mt-2 shrink-0\" />\n        <div>\n          <p class=\"text-sm font-medium\">New message</p>\n          <p class=\"text-xs text-muted-foreground\">\n            You have a new message from John\n          </p>\n        </div>\n      </div>\n      <div class=\"flex gap-3 p-2 rounded-md hover:bg-accent\">\n        <div class=\"h-2 w-2 rounded-full bg-green-500 mt-2 shrink-0\" />\n        <div>\n          <p class=\"text-sm font-medium\">Task completed</p>\n          <p class=\"text-xs text-muted-foreground\">\n            Your export is ready to download\n          </p>\n        </div>\n      </div>\n    </div>\n  </FloatingPanelContent>\n</FloatingPanel>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "floating-panel.tsx"
+      ]
+    },
     "hover-card": {
       "name": "HoverCard",
       "fileName": "hover-card",
@@ -698,18 +1269,54 @@
     "input": {
       "name": "Input",
       "fileName": "input",
-      "description": "A composable form input component built with Ark UI Field. Components: InputRoot (wrapper), InputLabel, Input, Textarea, Select, InputHelperText, InputErrorText, InputRequiredIndicator. Use Input alone for simple cases, or compose with InputRoot for full control over labels, errors, and helper text.",
+      "description": "Form input component built with Ark UI Field. Supports type variants: text, email, password (with toggle), textarea (with autoresize), and tags (multi-value input). Use with Field.Root for labels, helper text, and error states when needed.",
       "props": [
         {
-          "name": "children",
-          "type": "JSX.Element",
-          "description": "Child elements or content",
+          "name": "type",
+          "type": "| \"text\"\n      | \"email\"\n      | \"password\"\n      | \"tags\"\n      | \"textarea\"\n      | \"number\"\n      | \"tel\"\n      | \"url\"\n      | \"search\"\n      | \"combobox\"",
+          "description": "Type of input or element",
           "required": false
         },
         {
-          "name": "invalid",
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "options",
+          "type": "Array<string | { label: string; value: string }>",
+          "description": "Options",
+          "required": false
+        },
+        {
+          "name": "onSelect",
+          "type": "(details: { value: string[] }) => void",
+          "description": "On Select",
+          "required": false
+        },
+        {
+          "name": "clearable",
           "type": "boolean",
-          "description": "Invalid",
+          "description": "Clearable",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "Form",
           "required": false
         },
         {
@@ -731,48 +1338,140 @@
           "required": false
         },
         {
-          "name": "class",
-          "type": "string",
-          "description": "Additional CSS classes",
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Invalid",
+          "required": false
+        },
+        {
+          "name": "autoComplete",
+          "type": "\"current-password\" | \"new-password\"",
+          "description": "Auto Complete",
+          "required": false
+        },
+        {
+          "name": "defaultVisible",
+          "type": "boolean",
+          "description": "Default Visible",
+          "required": false
+        },
+        {
+          "name": "visible",
+          "type": "boolean",
+          "description": "Visible",
+          "required": false
+        },
+        {
+          "name": "onVisibilityChange",
+          "type": "(details: { visible: boolean }) => void",
+          "description": "On Visibility Change",
+          "required": false
+        },
+        {
+          "name": "ignorePasswordManagers",
+          "type": "boolean",
+          "description": "Ignore Password Managers",
+          "required": false
+        },
+        {
+          "name": "autoresize",
+          "type": "boolean",
+          "description": "Autoresize",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string[] }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Max",
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "Max Length",
+          "required": false
+        },
+        {
+          "name": "addOnPaste",
+          "type": "boolean",
+          "description": "Add On Paste",
+          "required": false
+        },
+        {
+          "name": "blurBehavior",
+          "type": "\"add\" | \"clear\"",
+          "description": "Blur Behavior",
+          "required": false
+        },
+        {
+          "name": "delimiter",
+          "type": "string | RegExp",
+          "description": "Delimiter",
+          "required": false
+        },
+        {
+          "name": "editable",
+          "type": "boolean",
+          "description": "Editable",
+          "required": false
+        },
+        {
+          "name": "allowOverflow",
+          "type": "boolean",
+          "description": "Allow Overflow",
+          "required": false
+        },
+        {
+          "name": "validate",
+          "type": "(details: { value: string[]; inputValue: string }) => boolean",
+          "description": "Validate",
           "required": false
         }
       ],
-      "variants": [
-        {
-          "name": "size",
-          "values": [
-            "default",
-            "sm",
-            "lg"
-          ],
-          "defaultValue": "default"
-        }
-      ],
+      "variants": [],
       "examples": [
         {
-          "title": "Simple Input",
-          "description": "A standalone input without Field wrapper",
-          "source": "<Input placeholder=\"Enter text...\" />"
+          "title": "Basic Input",
+          "description": "Standalone input with optional label",
+          "source": "<div class=\"space-y-2\">\n  <label class=\"text-sm font-medium\">Email</label>\n  <Input type=\"email\" placeholder=\"Enter your email\" />\n</div>"
         },
         {
-          "title": "Input with Label",
-          "description": "Complete form field with label and helper text",
-          "source": "<InputRoot>\n  <InputLabel>Email</InputLabel>\n  <Input type=\"email\" placeholder=\"Enter your email\" />\n  <InputHelperText>We'll never share your email</InputHelperText>\n</InputRoot>"
-        },
-        {
-          "title": "Input with Error",
-          "description": "Input with error state and required indicator",
-          "source": "<InputRoot invalid required>\n  <InputLabel>\n    Password\n    <InputRequiredIndicator />\n  </InputLabel>\n  <Input type=\"password\" placeholder=\"Enter password\" />\n  <InputErrorText>Password is required</InputErrorText>\n</InputRoot>"
+          "title": "Password Input",
+          "description": "Password input with show/hide toggle",
+          "source": "<Input type=\"password\" placeholder=\"Enter password\" />"
         },
         {
           "title": "Textarea",
           "description": "Multi-line text input with autoresize",
-          "source": "<InputRoot>\n  <InputLabel>Message</InputLabel>\n  <Textarea autoresize placeholder=\"Enter your message...\" />\n  <InputHelperText>This textarea will grow as you type</InputHelperText>\n</InputRoot>"
+          "source": "<Input type=\"textarea\" autoresize placeholder=\"Enter your message...\" />"
         },
         {
-          "title": "Input Sizes",
-          "description": "Different input sizes",
-          "source": "<div class=\"space-y-4\">\n  <Input placeholder=\"Small input\" size=\"sm\" />\n  <Input placeholder=\"Default input\" size=\"default\" />\n  <Input placeholder=\"Large input\" size=\"lg\" />\n</div>"
+          "title": "Tags Input",
+          "description": "Input for adding multiple tags",
+          "source": "<Input\n  type=\"tags\"\n  defaultValue={[\"React\", \"Solid\", \"Vue\"]}\n  placeholder=\"Add skill...\"\n/>"
+        },
+        {
+          "title": "Combobox Input",
+          "description": "Searchable dropdown input with optional clear button",
+          "source": "<Input\n  type=\"combobox\"\n  options={[\"React\", \"Solid\", \"Vue\", \"Svelte\", \"Angular\"]}\n  placeholder=\"Select a framework...\"\n/>"
         }
       ],
       "dependencies": {
@@ -887,12 +1586,12 @@
         {
           "title": "Context Menu with Nested Items",
           "description": "Right-click anywhere in the area to open context menu",
-          "source": "<Menu>\n  <ArkMenu.ContextTrigger class=\"flex h-[150px] w-[300px] items-center justify-center rounded-md border border-border border-dashed bg-muted/50 cursor-default\">\n    <p class=\"text-sm text-muted-foreground\">Right click here</p>\n  </ArkMenu.ContextTrigger>\n  <MenuContent>\n    <MenuItem value=\"view\">\n      <div class=\"i-lucide-eye h-4 w-4 mr-2\" />\n      View\n    </MenuItem>\n    <MenuItem value=\"edit\">\n      <div class=\"i-lucide-pencil h-4 w-4 mr-2\" />\n      Edit\n    </MenuItem>\n    <MenuSeparator />\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class=\"i-lucide-share-2 h-4 w-4 mr-2\" />\n        Share\n        <div class=\"i-lucide-chevron-right h-4 w-4 ml-auto\" />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"email\">\n          <div class=\"i-lucide-mail h-4 w-4 mr-2\" />\n          Email\n        </MenuItem>\n        <MenuItem value=\"link\">\n          <div class=\"i-lucide-link h-4 w-4 mr-2\" />\n          Copy Link\n        </MenuItem>\n        <MenuItem value=\"embed\">\n          <div class=\"i-lucide-code h-4 w-4 mr-2\" />\n          Embed\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class=\"i-lucide-download h-4 w-4 mr-2\" />\n        Export\n        <div class=\"i-lucide-chevron-right h-4 w-4 ml-auto\" />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"pdf\">\n          <div class=\"i-lucide-file-text h-4 w-4 mr-2\" />\n          PDF\n        </MenuItem>\n        <MenuItem value=\"png\">\n          <div class=\"i-lucide-image h-4 w-4 mr-2\" />\n          PNG\n        </MenuItem>\n        <MenuItem value=\"svg\">\n          <div class=\"i-lucide-file-code h-4 w-4 mr-2\" />\n          SVG\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <MenuSeparator />\n    <MenuItem value=\"delete\">\n      <div class=\"i-lucide-trash h-4 w-4 mr-2\" />\n      Delete\n    </MenuItem>\n  </MenuContent>\n</Menu>"
+          "source": "<Menu>\n  <ArkMenu.ContextTrigger class=\"flex h-[150px] w-[300px] items-center justify-center rounded-md border border-border border-dashed bg-muted/50 cursor-default\">\n    <p class=\"text-sm text-muted-foreground\">Right click here</p>\n  </ArkMenu.ContextTrigger>\n  <MenuContent>\n    <MenuItem value=\"view\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"eye\"))} />\n      View\n    </MenuItem>\n    <MenuItem value=\"edit\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"pencil\"))} />\n      Edit\n    </MenuItem>\n    <MenuSeparator />\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class={cn(\"h-4 w-4 mr-2\", icon(\"share-2\"))} />\n        Share\n        <div class={cn(\"h-4 w-4 ml-auto\", icon(\"chevron-right\"))} />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"email\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"mail\"))} />\n          Email\n        </MenuItem>\n        <MenuItem value=\"link\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"link\"))} />\n          Copy Link\n        </MenuItem>\n        <MenuItem value=\"embed\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"code\"))} />\n          Embed\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class={cn(\"h-4 w-4 mr-2\", icon(\"download\"))} />\n        Export\n        <div class={cn(\"h-4 w-4 ml-auto\", icon(\"chevron-right\"))} />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"pdf\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-text\"))} />\n          PDF\n        </MenuItem>\n        <MenuItem value=\"png\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"image\"))} />\n          PNG\n        </MenuItem>\n        <MenuItem value=\"svg\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-code\"))} />\n          SVG\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <MenuSeparator />\n    <MenuItem value=\"delete\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"trash\"))} />\n      Delete\n    </MenuItem>\n  </MenuContent>\n</Menu>"
         },
         {
           "title": "Button Trigger with Icons",
           "description": "Menu with button trigger and icon items",
-          "source": "<Menu>\n  <MenuTrigger variant=\"outline\">\n    <div class=\"i-lucide-settings h-4 w-4 mr-2\" />\n    Actions\n  </MenuTrigger>\n  <MenuContent>\n    <MenuItem value=\"new\">\n      <div class=\"i-lucide-file-plus h-4 w-4 mr-2\" />\n      New File\n    </MenuItem>\n    <MenuItem value=\"open\">\n      <div class=\"i-lucide-folder-open h-4 w-4 mr-2\" />\n      Open File\n    </MenuItem>\n    <MenuItem value=\"save\">\n      <div class=\"i-lucide-save h-4 w-4 mr-2\" />\n      Save\n    </MenuItem>\n    <MenuSeparator />\n    <MenuItem value=\"settings\">\n      <div class=\"i-lucide-settings h-4 w-4 mr-2\" />\n      Settings\n    </MenuItem>\n    <MenuItem value=\"exit\">\n      <div class=\"i-lucide-log-out h-4 w-4 mr-2\" />\n      Exit\n    </MenuItem>\n  </MenuContent>\n</Menu>"
+          "source": "<Menu>\n  <MenuTrigger variant=\"outline\">\n    <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n    Actions\n  </MenuTrigger>\n  <MenuContent>\n    <MenuItem value=\"new\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-plus\"))} />\n      New File\n    </MenuItem>\n    <MenuItem value=\"open\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"folder-open\"))} />\n      Open File\n    </MenuItem>\n    <MenuItem value=\"save\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"save\"))} />\n      Save\n    </MenuItem>\n    <MenuSeparator />\n    <MenuItem value=\"settings\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n      Settings\n    </MenuItem>\n    <MenuItem value=\"exit\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"log-out\"))} />\n      Exit\n    </MenuItem>\n  </MenuContent>\n</Menu>"
         }
       ],
       "dependencies": {
@@ -906,6 +1605,188 @@
       },
       "files": [
         "menu.tsx"
+      ]
+    },
+    "pin-input": {
+      "name": "PinInput",
+      "fileName": "pin-input",
+      "description": "A pin input component for entering sequences of digits or characters. Built on Ark UI PinInput - all Ark UI PinInput props are supported.",
+      "props": [
+        {
+          "name": "value",
+          "type": "string[]",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string[]; valueAsString: string }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "onValueComplete",
+          "type": "(details: {\n    value: string[];\n    valueAsString: string;\n  }) => void",
+          "description": "On Value Complete",
+          "required": false
+        },
+        {
+          "name": "onValueInvalid",
+          "type": "(details: { value: string }) => void",
+          "description": "On Value Invalid",
+          "required": false
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Count",
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "\"numeric\" | \"alphanumeric\" | \"alphabetic\"",
+          "description": "Type of input or element",
+          "required": false
+        },
+        {
+          "name": "mask",
+          "type": "boolean",
+          "description": "Mask",
+          "required": false
+        },
+        {
+          "name": "otp",
+          "type": "boolean",
+          "description": "Otp",
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Invalid",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Whether the field is required",
+          "required": false
+        },
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "description": "Auto Focus",
+          "required": false
+        },
+        {
+          "name": "blurOnComplete",
+          "type": "boolean",
+          "description": "Blur On Complete",
+          "required": false
+        },
+        {
+          "name": "selectOnFocus",
+          "type": "boolean",
+          "description": "Select On Focus",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "Form",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Pattern",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "JSX.Element",
+          "description": "Label text",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A basic 6-digit pin input",
+          "source": "<PinInput\n  label=\"Enter PIN\"\n  placeholder=\"○\"\n  onValueComplete={(e) => console.log(\"Complete:\", e.valueAsString)}\n/>"
+        },
+        {
+          "title": "4-Digit PIN",
+          "description": "A shorter 4-digit pin input",
+          "source": "<PinInput\n  label=\"Security PIN\"\n  count={4}\n  placeholder=\"○\"\n  onValueComplete={(e) => console.log(\"PIN:\", e.valueAsString)}\n/>"
+        },
+        {
+          "title": "OTP Code",
+          "description": "One-time password input with auto-complete",
+          "source": "<PinInput\n  label=\"Verification Code\"\n  count={6}\n  otp\n  type=\"numeric\"\n  placeholder=\"0\"\n  onValueComplete={(e) => console.log(\"OTP:\", e.valueAsString)}\n/>"
+        },
+        {
+          "title": "Masked Input",
+          "description": "Pin input with masked values for security",
+          "source": "<PinInput\n  label=\"Secure PIN\"\n  count={4}\n  mask\n  type=\"numeric\"\n  placeholder=\"○\"\n  onValueComplete={(e) => console.log(\"Secure PIN entered\")}\n/>"
+        },
+        {
+          "title": "Alphanumeric",
+          "description": "Pin input that accepts letters and numbers",
+          "source": "<PinInput\n  label=\"Activation Code\"\n  count={5}\n  type=\"alphanumeric\"\n  placeholder=\"-\"\n  onValueComplete={(e) => console.log(\"Code:\", e.valueAsString)}\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "pin-input.tsx"
       ]
     },
     "radio-group": {
@@ -996,7 +1877,7 @@
         {
           "title": "With Icons",
           "description": "Radio group with icons for each option",
-          "source": "const frameworks = [\n  { value: \"react\", label: \"React\", icon: \"i-lucide-atom\" },\n  { value: \"solid\", label: \"Solid\", icon: \"i-lucide-box\" },\n  { value: \"vue\", label: \"Vue\", icon: \"i-lucide-triangle\" },\n  { value: \"svelte\", label: \"Svelte\", icon: \"i-lucide-zap\" },\n];\n\nreturn (\n  <RadioGroup defaultValue=\"solid\">\n    <RadioGroupLabel>Framework</RadioGroupLabel>\n    <For each={frameworks}>\n      {(framework) => (\n        <RadioGroupItem value={framework.value}>\n          <div class=\"flex items-center gap-2\">\n            <div class={`${framework.icon} h-4 w-4`} />\n            <span>{framework.label}</span>\n          </div>\n        </RadioGroupItem>\n      )}\n    </For>\n  </RadioGroup>\n);"
+          "source": "const frameworks = [\n  { value: \"react\", label: \"React\", icon: \"atom\" },\n  { value: \"solid\", label: \"Solid\", icon: \"box\" },\n  { value: \"vue\", label: \"Vue\", icon: \"triangle\" },\n  { value: \"svelte\", label: \"Svelte\", icon: \"zap\" },\n];\n\nreturn (\n  <RadioGroup defaultValue=\"solid\">\n    <RadioGroupLabel>Framework</RadioGroupLabel>\n    <For each={frameworks}>\n      {(framework) => (\n        <RadioGroupItem value={framework.value}>\n          <div class=\"flex items-center gap-2\">\n            <div class={cn(\"h-4 w-4\", icon(framework.icon))} />\n            <span>{framework.label}</span>\n          </div>\n        </RadioGroupItem>\n      )}\n    </For>\n  </RadioGroup>\n);"
         },
         {
           "title": "With Description",
@@ -1288,6 +2169,123 @@
         "slider.tsx"
       ]
     },
+    "switch": {
+      "name": "Switch",
+      "fileName": "switch",
+      "description": "A switch component for toggling between on and off states. Built on Ark UI Switch - all Ark UI Switch props are supported.",
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "description": "Checked",
+          "required": false
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "description": "Default Checked",
+          "required": false
+        },
+        {
+          "name": "onCheckedChange",
+          "type": "(details: { checked: boolean }) => void",
+          "description": "On Checked Change",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Invalid",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Whether the field is required",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string | number",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "Form",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A basic switch with text label",
+          "source": "<div class=\"flex items-center gap-2\">\n  <Switch />\n  <span class=\"text-sm\">Enable notifications</span>\n</div>"
+        },
+        {
+          "title": "Default Checked",
+          "description": "A switch that is checked by default",
+          "source": "<div class=\"flex items-center gap-2\">\n  <Switch defaultChecked />\n  <span class=\"text-sm\">Auto-save</span>\n</div>"
+        },
+        {
+          "title": "Disabled",
+          "description": "Disabled switches in both states",
+          "source": "<div class=\"space-y-2\">\n  <div class=\"flex items-center gap-2\">\n    <Switch disabled />\n    <span class=\"text-sm\">Disabled (off)</span>\n  </div>\n  <div class=\"flex items-center gap-2\">\n    <Switch disabled defaultChecked />\n    <span class=\"text-sm\">Disabled (on)</span>\n  </div>\n</div>"
+        },
+        {
+          "title": "With Change Handler",
+          "description": "A switch with a change event handler",
+          "source": "<div class=\"flex items-center gap-2\">\n  <Switch\n    onCheckedChange={(details) =>\n      console.log(\"Checked:\", details.checked)\n    }\n  />\n  <span class=\"text-sm\">Marketing emails</span>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "switch.tsx"
+      ]
+    },
     "tabs": {
       "name": "Tabs",
       "fileName": "tabs",
@@ -1398,6 +2396,406 @@
       "files": [
         "tabs.tsx"
       ]
+    },
+    "toast": {
+      "name": "Toast",
+      "fileName": "toast",
+      "description": "A toast notification component for displaying temporary messages. Built with solid-notifications for flexible positioning and animations.",
+      "props": [
+        {
+          "name": "toasterId",
+          "type": "string",
+          "description": "Toaster Id",
+          "required": false
+        },
+        {
+          "name": "position",
+          "type": "\"top\" | \"bottom\"",
+          "description": "Position",
+          "required": false
+        },
+        {
+          "name": "align",
+          "type": "\"left\" | \"center\" | \"right\"",
+          "description": "Align",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "type": "number | false",
+          "description": "Limit",
+          "required": false
+        },
+        {
+          "name": "reverseToastOrder",
+          "type": "boolean",
+          "description": "Reverse Toast Order",
+          "required": false
+        },
+        {
+          "name": "offsetX",
+          "type": "number",
+          "description": "Offset X",
+          "required": false
+        },
+        {
+          "name": "offsetY",
+          "type": "number",
+          "description": "Offset Y",
+          "required": false
+        },
+        {
+          "name": "gutter",
+          "type": "number",
+          "description": "Gutter",
+          "required": false
+        },
+        {
+          "name": "renderOnWindowInactive",
+          "type": "boolean",
+          "description": "Render On Window Inactive",
+          "required": false
+        },
+        {
+          "name": "pauseOnWindowInactive",
+          "type": "boolean",
+          "description": "Pause On Window Inactive",
+          "required": false
+        },
+        {
+          "name": "toasterStyle",
+          "type": "JSX.CSSProperties",
+          "description": "Toaster Style",
+          "required": false
+        },
+        {
+          "name": "theme",
+          "type": "string | undefined | null",
+          "description": "Theme",
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "\"default\" | \"success\" | \"error\" | \"loading\" | \"warning\" | \"info\"",
+          "description": "Type of input or element",
+          "required": false
+        },
+        {
+          "name": "duration",
+          "type": "number | false",
+          "description": "Duration",
+          "required": false
+        },
+        {
+          "name": "onEnter",
+          "type": "string",
+          "description": "On Enter",
+          "required": false
+        },
+        {
+          "name": "enterDuration",
+          "type": "number",
+          "description": "Enter Duration",
+          "required": false
+        },
+        {
+          "name": "onExit",
+          "type": "string",
+          "description": "On Exit",
+          "required": false
+        },
+        {
+          "name": "exitDuration",
+          "type": "number",
+          "description": "Exit Duration",
+          "required": false
+        },
+        {
+          "name": "onIdle",
+          "type": "string",
+          "description": "On Idle",
+          "required": false
+        },
+        {
+          "name": "style",
+          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
+          "description": "Style",
+          "required": false
+        },
+        {
+          "name": "pauseOnHover",
+          "type": "boolean",
+          "description": "Pause On Hover",
+          "required": false
+        },
+        {
+          "name": "wrapperClass",
+          "type": "| string\n    | ((args: { theme: string | undefined | null; type: string }) => string)",
+          "description": "Wrapper Class",
+          "required": false
+        },
+        {
+          "name": "wrapperStyle",
+          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
+          "description": "Wrapper Style",
+          "required": false
+        },
+        {
+          "name": "enterCallback",
+          "type": "() => void",
+          "description": "Enter Callback",
+          "required": false
+        },
+        {
+          "name": "updateCallback",
+          "type": "() => void",
+          "description": "Update Callback",
+          "required": false
+        },
+        {
+          "name": "exitCallback",
+          "type": "(reason?: boolean | string) => void",
+          "description": "Exit Callback",
+          "required": false
+        },
+        {
+          "name": "showDismissButton",
+          "type": "boolean",
+          "description": "Show Dismiss Button",
+          "required": false
+        },
+        {
+          "name": "dismissButtonClass",
+          "type": "| string\n    | ((args: { theme: string | undefined | null; type: string }) => string)",
+          "description": "Dismiss Button Class",
+          "required": false
+        },
+        {
+          "name": "dismissButtonStyle",
+          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
+          "description": "Dismiss Button Style",
+          "required": false
+        },
+        {
+          "name": "dismissOnClick",
+          "type": "boolean",
+          "description": "Dismiss On Click",
+          "required": false
+        },
+        {
+          "name": "showProgressBar",
+          "type": "boolean",
+          "description": "Show Progress Bar",
+          "required": false
+        },
+        {
+          "name": "progressBarClass",
+          "type": "| string\n    | ((args: { theme: string | undefined | null; type: string }) => string)",
+          "description": "Progress Bar Class",
+          "required": false
+        },
+        {
+          "name": "progressBarStyle",
+          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
+          "description": "Progress Bar Style",
+          "required": false
+        },
+        {
+          "name": "showIcon",
+          "type": "boolean",
+          "description": "Show Icon",
+          "required": false
+        },
+        {
+          "name": "icon",
+          "type": "| JSX.Element\n    | null\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.Element)",
+          "description": "Icon component or class",
+          "required": false
+        },
+        {
+          "name": "dragToDismiss",
+          "type": "boolean",
+          "description": "Drag To Dismiss",
+          "required": false
+        },
+        {
+          "name": "dragTreshold",
+          "type": "number",
+          "description": "Drag Treshold",
+          "required": false
+        },
+        {
+          "name": "ariaLive",
+          "type": "\"polite\" | \"assertive\" | \"off\"",
+          "description": "Aria Live",
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "\"status\" | \"alert\"",
+          "description": "Role",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "success",
+            "error",
+            "warning",
+            "info"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Toast Positions & Types",
+          "description": "Toast notifications with different positions and types",
+          "source": "const ToastExample = () => {\n  const topRight = useToast(\"top-right\");\n  const bottomCenter = useToast(\"bottom-center\");\n  const bottomLeft = useToast(\"bottom-left\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() =>\n          topRight.notify(\"Your changes have been saved\", {\n            type: \"success\",\n          })\n        }\n      >\n        Top Right (Success)\n      </Button>\n      <Button\n        onClick={() =>\n          bottomCenter.notify(\"New updates available\", {\n            type: \"info\",\n          })\n        }\n      >\n        Bottom Center (Info)\n      </Button>\n      <Button\n        onClick={() =>\n          bottomLeft.notify(\"Something went wrong\", {\n            type: \"error\",\n          })\n        }\n      >\n        Bottom Left (Error)\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"top-right\" position=\"top\" align=\"right\" />\n    <Toaster\n      toasterId=\"bottom-center\"\n      position=\"bottom\"\n      align=\"center\"\n    />\n    <Toaster toasterId=\"bottom-left\" position=\"bottom\" align=\"left\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
+        },
+        {
+          "title": "Loading Toast",
+          "description": "Loading toast that auto-closes after completion",
+          "source": "const ToastExample = () => {\n  const { notify, update } = useToast(\"example2\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() => {\n          const { id } = notify(\"Loading your data...\", {\n            type: \"loading\",\n            duration: false,\n            showDismissButton: false,\n          });\n\n          // Simulate async operation\n          setTimeout(() => {\n            update({\n              id,\n              content: \"Data loaded successfully!\",\n              type: \"success\",\n              duration: 5000,\n              showDismissButton: true,\n            });\n          }, 3000);\n        }}\n      >\n        Loading (Spinner)\n      </Button>\n      <Button\n        onClick={() => {\n          const { id } = notify(\"Processing your request...\", {\n            type: \"default\",\n            duration: 3000,\n            showDismissButton: false,\n            showIcon: false,\n            showProgressBar: true,\n          });\n\n          // Simulate async operation\n          setTimeout(() => {\n            update({\n              id,\n              content: \"Request processed!\",\n              type: \"success\",\n              duration: 5000,\n              showDismissButton: true,\n            });\n          }, 3000);\n        }}\n      >\n        Loading (Progress Bar)\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"example2\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
+        },
+        {
+          "title": "Custom Content",
+          "description": "Fully customized toast with JSX content and custom progress bar",
+          "source": "const ToastExample = () => {\n  const { notify, dismiss } = useToast(\"example3\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() => {\n          const { id } = notify(\n            <div class=\"flex items-start justify-between gap-4 w-full\">\n              <div class=\"flex flex-col gap-1 flex-1\">\n                <div class=\"font-semibold\">New message received</div>\n                <div class=\"text-sm opacity-90\">\n                  John Doe sent you a message\n                </div>\n              </div>\n              <Button\n                size=\"sm\"\n                variant=\"ghost\"\n                onClick={() => dismiss({ id })}\n                class=\"shrink-0 self-center -mt-1\"\n                aria-label=\"Dismiss\"\n              >\n                <div class={cn(\"h-4 w-4\", icon(\"x\"))} />\n              </Button>\n            </div>,\n            {\n              duration: false,\n              showDismissButton: false,\n              showIcon: false,\n            },\n          );\n        }}\n      >\n        Custom Message\n      </Button>\n      <Button\n        onClick={() => {\n          notify(\n            (toast) => (\n              <div class=\"relative w-full bg-background rounded-lg border border-border p-3 shadow-lg\">\n                <div class=\"flex items-start justify-between gap-4 w-full\">\n                  <div class=\"flex flex-col gap-1 flex-1\">\n                    <div class=\"font-semibold\">File uploading</div>\n                    <div class=\"text-sm opacity-90\">\n                      upload.pdf •{\" \"}\n                      {Math.round(toast.progressManager.progress())}%\n                      complete\n                    </div>\n                  </div>\n                </div>\n                <div\n                  class=\"absolute left-0 bottom-0 h-1 bg-blue-500 rounded-b-lg transition-all\"\n                  style={{\n                    width: `${toast.progressManager.progress()}%`,\n                  }}\n                />\n              </div>\n            ),\n            {\n              duration: 5000,\n              showDismissButton: false,\n              showIcon: false,\n              showProgressBar: false,\n            },\n          );\n        }}\n      >\n        Custom Progress Bar\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"example3\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority",
+          "solid-notifications"
+        ]
+      },
+      "files": [
+        "toast.tsx"
+      ]
+    },
+    "tooltip": {
+      "name": "Tooltip",
+      "fileName": "tooltip",
+      "description": "A tooltip that provides additional information on hover. Features smooth animations, customizable delays, and flexible positioning.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether the component is open",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Default Open",
+          "required": false
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(details: { open: boolean }) => void",
+          "description": "Callback when open state changes",
+          "required": false
+        },
+        {
+          "name": "openDelay",
+          "type": "number",
+          "description": "Open Delay",
+          "required": false
+        },
+        {
+          "name": "closeDelay",
+          "type": "number",
+          "description": "Close Delay",
+          "required": false
+        },
+        {
+          "name": "positioning",
+          "type": "any",
+          "description": "Positioning",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "description": "Interactive",
+          "required": false
+        },
+        {
+          "name": "closeOnClick",
+          "type": "boolean",
+          "description": "Close On Click",
+          "required": false
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "description": "Close On Escape",
+          "required": false
+        },
+        {
+          "name": "closeOnPointerDown",
+          "type": "boolean",
+          "description": "Close On Pointer Down",
+          "required": false
+        },
+        {
+          "name": "closeOnScroll",
+          "type": "boolean",
+          "description": "Close On Scroll",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Tooltip",
+          "description": "A simple tooltip with default settings",
+          "source": "<Tooltip>\n  <TooltipTrigger>\n    <span class=\"underline decoration-dotted underline-offset-4\">\n      Hover me\n    </span>\n  </TooltipTrigger>\n  <TooltipContent>I am a tooltip!</TooltipContent>\n</Tooltip>"
+        },
+        {
+          "title": "Positioning",
+          "description": "Tooltips positioned on different sides",
+          "source": "<div class=\"flex gap-8 items-center justify-center flex-wrap\">\n  <Tooltip positioning={{ placement: \"left\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Left\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on left</TooltipContent>\n  </Tooltip>\n\n  <Tooltip positioning={{ placement: \"top\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Top\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on top</TooltipContent>\n  </Tooltip>\n\n  <Tooltip positioning={{ placement: \"bottom\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Bottom\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on bottom</TooltipContent>\n  </Tooltip>\n\n  <Tooltip positioning={{ placement: \"right\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Right\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on right</TooltipContent>\n  </Tooltip>\n</div>"
+        },
+        {
+          "title": "Rich Content",
+          "description": "Tooltip with formatted content",
+          "source": "<Tooltip interactive>\n  <TooltipTrigger>\n    <span class=\"underline decoration-dotted underline-offset-4\">\n      Hover for more info\n    </span>\n  </TooltipTrigger>\n  <TooltipContent class=\"max-w-xs\">\n    <div class=\"space-y-1\">\n      <p class=\"font-semibold\">Pro Tip</p>\n      <p class=\"text-xs\">\n        You can hover over this tooltip and interact with its content.\n      </p>\n    </div>\n  </TooltipContent>\n</Tooltip>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "tooltip.tsx"
+      ]
     }
   },
   "componentList": [
@@ -1406,13 +2804,21 @@
     "button",
     "card",
     "checkbox",
+    "color-picker",
+    "date-picker",
     "dialog",
+    "file-upload",
+    "floating-panel",
     "hover-card",
     "input",
     "menu",
+    "pin-input",
     "radio-group",
     "select",
     "slider",
-    "tabs"
+    "switch",
+    "tabs",
+    "toast",
+    "tooltip"
   ]
 }
