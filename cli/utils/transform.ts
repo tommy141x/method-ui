@@ -109,97 +109,18 @@ function getIconLibraryFromConfig(): string {
  * Get the cn function code from templates directory
  * This makes components completely self-contained with no external dependencies
  */
+function getCnImports(): string {
+  return `import type { ClassValue } from "clsx";
+import clsx from "clsx";
+import { unoMerge } from "unocss-merge";`;
+}
+
 function getCnFunctionCode(): string {
-  const cliDir = findCliDirectory();
-
-  if (!cliDir) {
-    // Fallback to hardcoded version if CLI directory not found
-    return `import type { ClassValue } from "clsx";
-import clsx from "clsx";
-import { unoMerge } from "unocss-merge";
-
-function cn(...classLists: ClassValue[]) {
-  return unoMerge(clsx(classLists));
-}`;
-  }
-
-  const cnPath = join(cliDir, "templates", "cn.ts");
-
-  if (!existsSync(cnPath)) {
-    // Fallback to hardcoded version if template file not found
-    return `import type { ClassValue } from "clsx";
-import clsx from "clsx";
-import { unoMerge } from "unocss-merge";
-
+  return `
 // Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
   return unoMerge(clsx(classLists));
 }`;
-  }
-
-  try {
-    const cnFileContent = readFileSync(cnPath, "utf-8");
-    // Transform the export to a local function declaration
-    // Remove comments and extract just the function logic
-    const lines = cnFileContent.split("\n");
-    const importLines = lines.filter((line) =>
-      line.trim().startsWith("import"),
-    );
-    const exportLine = lines.find((line) => line.includes("export const cn"));
-
-    if (exportLine) {
-      // Convert "export const cn = (...args) => body" to "function cn(...args) { return body; }"
-      const arrowMatch = exportLine.match(
-        /export const cn = \((.*?)\) => (.+);?$/,
-      );
-      if (arrowMatch) {
-        const params = arrowMatch[1];
-        const body = arrowMatch[2];
-        const functionDeclaration = `function cn(${params}) {\n  return ${body};\n}`;
-
-        return [
-          ...importLines,
-          "",
-          "// Hardcoded cn function - makes this component completely self-contained",
-          functionDeclaration,
-        ].join("\n");
-      }
-    }
-
-    // Fallback if parsing fails - try a more robust transformation
-    let transformedContent = cnFileContent;
-
-    // Handle the specific case: export const cn = (...args) => body;
-    transformedContent = transformedContent.replace(
-      /export const cn = \((.*?)\) => ([^;]+);?/,
-      "function cn($1) {\n  return $2;\n}",
-    );
-
-    // If that didn't work, try the original approach but fix the closing brace
-    if (transformedContent.includes("export const cn =")) {
-      transformedContent = transformedContent
-        .replace(/export const cn = /g, "function cn")
-        .replace(/=> /g, "{ return ")
-        .replace(/;$/, ""); // Remove trailing semicolon
-
-      // Ensure proper closing brace
-      if (!transformedContent.includes("}")) {
-        transformedContent = transformedContent + "\n}";
-      }
-    }
-
-    return transformedContent;
-  } catch (error) {
-    // Fallback to hardcoded version if reading fails
-    return `import type { ClassValue } from "clsx";
-import clsx from "clsx";
-import { unoMerge } from "unocss-merge";
-
-// Hardcoded cn function - makes this component completely self-contained
-function cn(...classLists: ClassValue[]) {
-  return unoMerge(clsx(classLists));
-}`;
-  }
 }
 
 /**
@@ -426,55 +347,7 @@ export function transformComponent(componentCode: string): string {
     "",
   );
 
-  // Step 4: Get icon library from user's config and inline the icon function
-  const iconLibrary = getIconLibraryFromConfig();
-  const iconFunctionCode = `
-// Icon helper function - returns UnoCSS icon class for your configured icon library
-function icon(name: string): string {
-  return \`i-${iconLibrary}-\${name}\`;
-}`;
-
-  // Remove icon import
-  transformedCode = transformedCode.replace(
-    /import\s*{\s*icon\s*}\s*from\s*["'][^"']*["'];?\s*\n?/g,
-    "",
-  );
-
-  // Step 5: Replace the cn import with the inlined function
-  // Find the last import line to insert the cn function after all imports
-  const lines = transformedCode.split("\n");
-  let lastImportIndex = -1;
-  let inMultilineImport = false;
-
-  for (let i = 0; i < lines.length; i++) {
-    const trimmed = lines[i].trim();
-    if (trimmed.startsWith("import ")) {
-      lastImportIndex = i;
-      inMultilineImport =
-        !trimmed.includes(";") &&
-        !trimmed.includes('from "') &&
-        !trimmed.includes("from '");
-    } else if (inMultilineImport) {
-      lastImportIndex = i;
-      if (
-        trimmed.includes(";") ||
-        trimmed.includes('from "') ||
-        trimmed.includes("from '")
-      ) {
-        inMultilineImport = false;
-      }
-    } else if (
-      trimmed &&
-      !trimmed.startsWith("//") &&
-      !trimmed.startsWith("/*") &&
-      !trimmed.startsWith("*") &&
-      !inMultilineImport
-    ) {
-      break;
-    }
-  }
-
-  // Remove the cn import line
+  // Step 4: Remove the cn import line
   const cnImportMatch = transformedCode.match(
     /^import\s*{\s*cn\s*}\s*from\s*["'][^"']*["'];?\s*\n?/m,
   );
@@ -483,29 +356,89 @@ function icon(name: string): string {
     transformedCode = transformedCode.replace(cnImportMatch[0], "");
   }
 
-  // Insert cn and icon functions after last import
+  // Step 5: Remove icon import
+  transformedCode = transformedCode.replace(
+    /import\s*{\s*icon\s*}\s*from\s*["'][^"']*["'];?\s*\n?/g,
+    "",
+  );
+
+  // Step 6: Add cn imports after the last existing import
+  const lines = transformedCode.split("\n");
+  let lastImportIndex = -1;
+
+  // Find the last import statement
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+
+    // Check if this line contains an import statement
+    if (trimmed.startsWith("import ")) {
+      // Track this as a potential last import
+      let currentIndex = i;
+
+      // Handle multi-line imports - keep going until we find the closing
+      while (currentIndex < lines.length) {
+        const currentLine = lines[currentIndex].trim();
+        if (currentLine.includes("from")) {
+          // Found the from clause, this line ends the import
+          lastImportIndex = currentIndex;
+          break;
+        }
+        currentIndex++;
+      }
+    }
+  }
+
   if (lastImportIndex >= 0) {
     const linesArray = transformedCode.split("\n");
 
-    // Check if component uses icon function
-    const usesIcon = transformedCode.includes("icon(");
-
-    if (usesIcon) {
-      linesArray.splice(
-        lastImportIndex + 1,
-        0,
-        "",
-        getCnFunctionCode(),
-        "",
-        iconFunctionCode,
-        "",
-      );
-    } else {
-      linesArray.splice(lastImportIndex + 1, 0, "", getCnFunctionCode(), "");
-    }
+    // Add cn imports right after the last import
+    linesArray.splice(lastImportIndex + 1, 0, getCnImports());
 
     transformedCode = linesArray.join("\n");
+
+    // Update lastImportIndex to account for added cn imports (3 lines)
+    lastImportIndex += 3;
   }
+
+  // Step 7: Find where to insert function definitions (after all imports)
+  // Re-split lines since we've added imports
+  const finalLines = transformedCode.split("\n");
+  let insertIndex = lastImportIndex + 1;
+
+  // Skip empty lines after imports
+  while (
+    insertIndex < finalLines.length &&
+    finalLines[insertIndex].trim() === ""
+  ) {
+    insertIndex++;
+  }
+
+  // Step 8: Get icon library from user's config and inline the icon function
+  const iconLibrary = getIconLibraryFromConfig();
+  const iconFunctionCode = `
+// Icon helper function - returns UnoCSS icon class for your configured icon library
+function icon(name: string): string {
+  return \`i-${iconLibrary}-\${name}\`;
+}`;
+
+  // Step 9: Insert cn and icon function definitions
+  const usesIcon = transformedCode.includes("icon(");
+
+  if (usesIcon) {
+    finalLines.splice(
+      insertIndex,
+      0,
+      "",
+      getCnFunctionCode(),
+      "",
+      iconFunctionCode,
+      "",
+    );
+  } else {
+    finalLines.splice(insertIndex, 0, "", getCnFunctionCode(), "");
+  }
+
+  transformedCode = finalLines.join("\n");
 
   return transformedCode;
 }

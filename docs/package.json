@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "solid-js": "^1.9.10",
     "solid-motionone": "^1.0.4",
+    "solid-notifications": "^1.2.0",
     "unocss-merge": "^0.6.0",
     "vinxi": "^0.5.8"
   },

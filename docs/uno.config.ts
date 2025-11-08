@@ -44,8 +44,8 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({
       collections: {
-        // This will be replaced with actual icon library configuration
-        // Format: libraryName: () => import("@iconify-json/library/icons.json").then(i => i.default)
+        lucide: () =>
+          import("@iconify-json/lucide/icons.json").then((i) => i.default),
       },
       extraProperties: {
         display: "inline-block",
