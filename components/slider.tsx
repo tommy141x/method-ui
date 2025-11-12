@@ -4,8 +4,8 @@ import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
 type SliderProps = {
-  value?: number[];
   defaultValue?: number[];
+  value?: number[];
   onValueChange?: (details: { value: number[] }) => void;
   onValueChangeEnd?: (details: { value: number[] }) => void;
   min?: number;
@@ -26,10 +26,12 @@ type SliderProps = {
 };
 
 export const Slider: Component<SliderProps> = (props) => {
+  const thumbCount = props.defaultValue?.length || props.value?.length || 1;
+
   return (
     <ArkSlider.Root
-      value={props.value}
       defaultValue={props.defaultValue}
+      value={props.value}
       onValueChange={props.onValueChange}
       onValueChangeEnd={props.onValueChangeEnd}
       min={props.min}
@@ -62,20 +64,28 @@ export const Slider: Component<SliderProps> = (props) => {
         <ArkSlider.Track class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
           <ArkSlider.Range class="absolute h-full bg-primary data-[disabled]:opacity-50" />
         </ArkSlider.Track>
-        <ArkSlider.Context>
-          {(context) => (
-            <>
-              {context().value.map((_, index) => (
-                <ArkSlider.Thumb
-                  index={index}
-                  class="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none"
-                >
-                  <ArkSlider.HiddenInput />
-                </ArkSlider.Thumb>
-              ))}
-            </>
-          )}
-        </ArkSlider.Context>
+        <ArkSlider.Thumb
+          index={0}
+          class="absolute block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+        >
+          <ArkSlider.HiddenInput />
+        </ArkSlider.Thumb>
+        {thumbCount >= 2 && (
+          <ArkSlider.Thumb
+            index={1}
+            class="absolute block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+          >
+            <ArkSlider.HiddenInput />
+          </ArkSlider.Thumb>
+        )}
+        {thumbCount >= 3 && (
+          <ArkSlider.Thumb
+            index={2}
+            class="absolute block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+          >
+            <ArkSlider.HiddenInput />
+          </ArkSlider.Thumb>
+        )}
       </ArkSlider.Control>
     </ArkSlider.Root>
   );
@@ -92,24 +102,10 @@ export const meta: ComponentMeta<SliderProps> = {
       code: () => {
         return (
           <Slider
+            id="slider-basic"
             label="Volume"
             showValue
             defaultValue={[50]}
-            max={100}
-            step={1}
-          />
-        );
-      },
-    },
-    {
-      title: "Range Slider",
-      description: "A slider with two thumbs for selecting a range",
-      code: () => {
-        return (
-          <Slider
-            label="Price Range"
-            showValue
-            defaultValue={[25, 75]}
             max={100}
             step={1}
           />
@@ -122,6 +118,7 @@ export const meta: ComponentMeta<SliderProps> = {
       code: () => {
         return (
           <Slider
+            id="slider-custom-steps"
             label="Opacity"
             showValue
             defaultValue={[0.5]}
@@ -133,11 +130,28 @@ export const meta: ComponentMeta<SliderProps> = {
       },
     },
     {
+      title: "Range Slider",
+      description: "A slider with two thumbs for selecting a range",
+      code: () => {
+        return (
+          <Slider
+            id="slider-range"
+            label="Price Range"
+            showValue
+            defaultValue={[25, 75]}
+            max={100}
+            step={1}
+          />
+        );
+      },
+    },
+    {
       title: "Disabled",
       description: "A disabled slider",
       code: () => {
         return (
           <Slider
+            id="slider-disabled"
             label="Disabled"
             showValue
             defaultValue={[60]}

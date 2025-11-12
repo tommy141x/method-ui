@@ -1485,6 +1485,181 @@
         "input.tsx"
       ]
     },
+    "listbox": {
+      "name": "Listbox",
+      "fileName": "listbox",
+      "description": "A listbox component that allows users to select one or more options from a list. Use Listbox with ListboxItem for simple cases, or compose with ListboxRoot, ListboxContent, and other parts for full control.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string[] }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "selectionMode",
+          "type": "\"single\" | \"multiple\"",
+          "description": "Selection Mode",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "loopFocus",
+          "type": "boolean",
+          "description": "Loop Focus",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple listbox with framework options",
+          "source": "const collection = createListCollection({\n  items: [\"React\", \"Solid\", \"Vue\", \"Svelte\"],\n});\n\nreturn (\n  <ListboxRoot collection={collection}>\n    <ListboxLabel>Select your Framework</ListboxLabel>\n    <ListboxContent>\n      <For each={collection.items}>\n        {(item) => <ListboxItem value={item}>{item}</ListboxItem>}\n      </For>\n    </ListboxContent>\n  </ListboxRoot>\n);"
+        },
+        {
+          "title": "Multiple Selection",
+          "description": "A listbox that allows selecting multiple items",
+          "source": "const collection = createListCollection({\n  items: [\"React\", \"Solid\", \"Vue\", \"Svelte\"],\n});\n\nreturn (\n  <ListboxRoot collection={collection} selectionMode=\"multiple\">\n    <ListboxLabel>Select Frameworks (Multiple)</ListboxLabel>\n    <ListboxContent>\n      <For each={collection.items}>\n        {(item) => <ListboxItem value={item}>{item}</ListboxItem>}\n      </For>\n    </ListboxContent>\n  </ListboxRoot>\n);"
+        },
+        {
+          "title": "With Groups",
+          "description": "A listbox with grouped items",
+          "source": "const collection = createListCollection({\n  items: [\n    { label: \"React\", value: \"react\", type: \"JS\" },\n    { label: \"Solid\", value: \"solid\", type: \"JS\" },\n    { label: \"Vue\", value: \"vue\", type: \"JS\" },\n    { label: \"Svelte\", value: \"svelte\", type: \"JS\" },\n    { label: \"Panda\", value: \"panda\", type: \"CSS\" },\n    { label: \"Tailwind\", value: \"tailwind\", type: \"CSS\" },\n  ],\n  groupBy: (item) => item.type,\n});\n\nreturn (\n  <ListboxRoot collection={collection}>\n    <ListboxLabel>Select your Frameworks</ListboxLabel>\n    <ListboxContent>\n      <For each={collection.group()}>\n        {([type, group]) => (\n          <ListboxItemGroup>\n            <ListboxItemGroupLabel>{type}</ListboxItemGroupLabel>\n            <For each={group}>\n              {(item) => (\n                <ListboxItem value={item}>{item.label}</ListboxItem>\n              )}\n            </For>\n          </ListboxItemGroup>\n        )}\n      </For>\n    </ListboxContent>\n  </ListboxRoot>\n);"
+        },
+        {
+          "title": "With Disabled Items",
+          "description": "A listbox with some disabled options",
+          "source": "const collection = createListCollection({\n  items: [\n    { label: \"React\", value: \"react\" },\n    { label: \"Solid\", value: \"solid\" },\n    { label: \"Svelte\", value: \"svelte\", disabled: true },\n    { label: \"Vue\", value: \"vue\" },\n  ],\n});\n\nreturn (\n  <ListboxRoot collection={collection}>\n    <ListboxLabel>Select your Framework</ListboxLabel>\n    <ListboxContent>\n      <For each={collection.items}>\n        {(item) => <ListboxItem value={item}>{item.label}</ListboxItem>}\n      </For>\n    </ListboxContent>\n  </ListboxRoot>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "listbox.tsx"
+      ]
+    },
+    "marquee": {
+      "name": "Marquee",
+      "fileName": "marquee",
+      "description": "A marquee component for creating smooth, scrolling content with GPU-accelerated animations. Supports horizontal/vertical scrolling, auto-fill, pause on hover, and more.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "autoFill",
+          "type": "boolean",
+          "description": "Auto Fill",
+          "required": false
+        },
+        {
+          "name": "pauseOnInteraction",
+          "type": "boolean",
+          "description": "Pause On Interaction",
+          "required": false
+        },
+        {
+          "name": "reverse",
+          "type": "boolean",
+          "description": "Reverse",
+          "required": false
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "description": "Speed",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "showEdges",
+          "type": "boolean",
+          "description": "Show Edges",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple horizontal marquee with edge gradients",
+          "source": "const items = [\"React\", \"Solid\", \"Vue\", \"Svelte\"];\n\nreturn (\n  <Marquee>\n    <For each={items}>\n      {(item) => (\n        <MarqueeItem style={{ padding: \"0 2rem\" }}>\n          <div class=\"rounded-lg border border-border bg-card px-8 py-4 text-lg font-medium\">\n            {item}\n          </div>\n        </MarqueeItem>\n      )}\n    </For>\n  </Marquee>\n);"
+        },
+        {
+          "title": "Reverse Direction",
+          "description": "Scrolls in the opposite direction",
+          "source": "const items = [\"React\", \"Solid\", \"Vue\", \"Svelte\", \"Angular\", \"Qwik\"];\n\nreturn (\n  <div class=\"space-y-8 w-full overflow-hidden\">\n    <div class=\"w-full overflow-hidden\">\n      <h4 class=\"text-sm font-medium mb-2\">Normal Direction</h4>\n      <Marquee>\n        <For each={items}>\n          {(item) => (\n            <MarqueeItem style={{ padding: \"0 2rem\" }}>\n              <div class=\"px-6 py-3 rounded-md bg-primary text-primary-foreground\">\n                {item}\n              </div>\n            </MarqueeItem>\n          )}\n        </For>\n      </Marquee>\n    </div>\n\n    <div class=\"w-full overflow-hidden\">\n      <h4 class=\"text-sm font-medium mb-2\">Reverse Direction</h4>\n      <Marquee reverse>\n        <For each={items}>\n          {(item) => (\n            <MarqueeItem style={{ padding: \"0 2rem\" }}>\n              <div class=\"px-6 py-3 rounded-md bg-secondary text-secondary-foreground\">\n                {item}\n              </div>\n            </MarqueeItem>\n          )}\n        </For>\n      </Marquee>\n    </div>\n  </div>\n);"
+        },
+        {
+          "title": "Custom Speed",
+          "description": "Control animation speed in pixels per second",
+          "source": "const items = [\"React\", \"Solid\", \"Vue\", \"Svelte\"];\n\nreturn (\n  <div class=\"space-y-8 w-full overflow-hidden\">\n    <div class=\"w-full overflow-hidden\">\n      <h4 class=\"text-sm font-medium mb-2\">Slow (25px/s)</h4>\n      <Marquee speed={25}>\n        <For each={items}>\n          {(item) => (\n            <MarqueeItem style={{ padding: \"0 2rem\" }}>\n              <div class=\"rounded-lg border border-border bg-card px-8 py-4 text-lg font-medium\">\n                {item}\n              </div>\n            </MarqueeItem>\n          )}\n        </For>\n      </Marquee>\n    </div>\n\n    <div class=\"w-full overflow-hidden\">\n      <h4 class=\"text-sm font-medium mb-2\">Fast (200px/s)</h4>\n      <Marquee speed={200}>\n        <For each={items}>\n          {(item) => (\n            <MarqueeItem style={{ padding: \"0 2rem\" }}>\n              <div class=\"rounded-lg border border-border bg-card px-8 py-4 text-lg font-medium\">\n                {item}\n              </div>\n            </MarqueeItem>\n          )}\n        </For>\n      </Marquee>\n    </div>\n  </div>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "marquee.tsx"
+      ]
+    },
     "menu": {
       "name": "Menu",
       "fileName": "menu",
@@ -2034,15 +2209,15 @@
       "description": "A slider component for selecting values within a range. Built on Ark UI Slider - all Ark UI Slider props are supported.",
       "props": [
         {
-          "name": "value",
-          "type": "number[]",
-          "description": "Current value",
-          "required": false
-        },
-        {
           "name": "defaultValue",
           "type": "number[]",
           "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number[]",
+          "description": "Current value",
           "required": false
         },
         {
@@ -2141,22 +2316,22 @@
         {
           "title": "Basic",
           "description": "A simple slider with label and value display",
-          "source": "<Slider\n  label=\"Volume\"\n  showValue\n  defaultValue={[50]}\n  max={100}\n  step={1}\n/>"
-        },
-        {
-          "title": "Range Slider",
-          "description": "A slider with two thumbs for selecting a range",
-          "source": "<Slider\n  label=\"Price Range\"\n  showValue\n  defaultValue={[25, 75]}\n  max={100}\n  step={1}\n/>"
+          "source": "<Slider\n  id=\"slider-basic\"\n  label=\"Volume\"\n  showValue\n  defaultValue={[50]}\n  max={100}\n  step={1}\n/>"
         },
         {
           "title": "With Custom Steps",
           "description": "A slider with decimal step increments",
-          "source": "<Slider\n  label=\"Opacity\"\n  showValue\n  defaultValue={[0.5]}\n  min={0}\n  max={1}\n  step={0.1}\n/>"
+          "source": "<Slider\n  id=\"slider-custom-steps\"\n  label=\"Opacity\"\n  showValue\n  defaultValue={[0.5]}\n  min={0}\n  max={1}\n  step={0.1}\n/>"
+        },
+        {
+          "title": "Range Slider",
+          "description": "A slider with two thumbs for selecting a range",
+          "source": "<Slider\n  id=\"slider-range\"\n  label=\"Price Range\"\n  showValue\n  defaultValue={[25, 75]}\n  max={100}\n  step={1}\n/>"
         },
         {
           "title": "Disabled",
           "description": "A disabled slider",
-          "source": "<Slider\n  label=\"Disabled\"\n  showValue\n  defaultValue={[60]}\n  max={100}\n  disabled\n/>"
+          "source": "<Slider\n  id=\"slider-disabled\"\n  label=\"Disabled\"\n  showValue\n  defaultValue={[60]}\n  max={100}\n  disabled\n/>"
         }
       ],
       "dependencies": {
@@ -2811,6 +2986,8 @@
     "floating-panel",
     "hover-card",
     "input",
+    "listbox",
+    "marquee",
     "menu",
     "pin-input",
     "radio-group",
