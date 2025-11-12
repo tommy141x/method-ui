@@ -112,6 +112,153 @@
         "accordion.tsx"
       ]
     },
+    "angle-slider": {
+      "name": "AngleSlider",
+      "fileName": "angle-slider",
+      "description": "An angle slider component for selecting angular values (0-360 degrees). Built on Ark UI AngleSlider - all Ark UI AngleSlider props are supported.",
+      "props": [
+        {
+          "name": "defaultValue",
+          "type": "number",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: number }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "onValueChangeEnd",
+          "type": "(details: { value: number }) => void",
+          "description": "On Value Change End",
+          "required": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "Step",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Read Only",
+          "required": false
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Invalid",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "JSX.Element",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "description": "Show Value",
+          "required": false
+        },
+        {
+          "name": "showMarkers",
+          "type": "boolean",
+          "description": "Show Markers",
+          "required": false
+        },
+        {
+          "name": "markers",
+          "type": "number[]",
+          "description": "Markers",
+          "required": false
+        },
+        {
+          "name": "centerValue",
+          "type": "| boolean\n    | JSX.Element\n    | ((context: { value: number; valueAsDegree: string }) => JSX.Element)",
+          "description": "Center Value",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Size",
+          "required": false
+        },
+        {
+          "name": "thickness",
+          "type": "number",
+          "description": "Thickness",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple angle slider with the value displayed in the center",
+          "source": "<AngleSlider\n  id=\"angle-slider-basic\"\n  label=\"Wind Direction\"\n  defaultValue={21}\n  centerValue\n/>"
+        },
+        {
+          "title": "Custom Step with Markers",
+          "description": "An angle slider with 45-degree step increments and aligned markers, with wrapping disabled",
+          "source": "<AngleSlider\n  id=\"angle-slider-step\"\n  label=\"Rotation\"\n  defaultValue={90}\n  step={45}\n  markers={[0, 45, 90, 135, 180, 225, 270, 315]}\n  centerValue\n/>"
+        },
+        {
+          "title": "Disabled",
+          "description": "A disabled angle slider with reduced opacity",
+          "source": "<AngleSlider\n  id=\"angle-slider-disabled\"\n  label=\"Disabled\"\n  defaultValue={135}\n  showMarkers\n  disabled\n  centerValue\n/>"
+        },
+        {
+          "title": "Custom Size",
+          "description": "An angle slider with custom size dimensions",
+          "source": "<div class=\"flex flex-col gap-4\">\n  <AngleSlider\n    id=\"angle-slider-size-large\"\n    label=\"Large Slider (300px)\"\n    defaultValue={270}\n    showMarkers\n    centerValue\n    size={300}\n    thickness={24}\n  />\n  <AngleSlider\n    id=\"angle-slider-size-small\"\n    label=\"Small Slider (150px)\"\n    defaultValue={45}\n    showMarkers\n    centerValue\n    size={150}\n    thickness={12}\n  />\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "angle-slider.tsx"
+      ]
+    },
     "badge": {
       "name": "Badge",
       "fileName": "badge",
@@ -1964,6 +2111,215 @@
         "pin-input.tsx"
       ]
     },
+    "progress": {
+      "name": "Progress",
+      "fileName": "progress",
+      "description": "A progress component for displaying completion status with linear and circular variants. Built on Ark UI Progress - all Ark UI Progress props are supported.",
+      "props": [
+        {
+          "name": "value",
+          "type": "number | null",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "number | null",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "Min",
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Max",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: number | null }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "JSX.Element",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "description": "Show Value",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Size",
+          "required": false
+        },
+        {
+          "name": "thickness",
+          "type": "number",
+          "description": "Thickness",
+          "required": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Orientation",
+          "required": false
+        },
+        {
+          "name": "translations",
+          "type": "{\n    value?: (details: { value: number | null; max: number }) => string;\n  }",
+          "description": "Translations",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "linear",
+            "circular"
+          ],
+          "defaultValue": "linear"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Linear (Default)",
+          "description": "A linear progress bar with smooth animation",
+          "source": "const [progress, setProgress] = createSignal(0);\n\nonMount(() => {\n  const interval = setInterval(() => {\n    setProgress((prev) => {\n      if (prev >= 100) return 0;\n      return prev + 0.5;\n    });\n  }, 30);\n\n  onCleanup(() => clearInterval(interval));\n});\n\nreturn (\n  <Progress\n    id=\"progress-linear\"\n    label=\"Loading\"\n    value={progress()}\n    variant=\"linear\"\n  />\n);"
+        },
+        {
+          "title": "Circular",
+          "description": "A circular progress indicator with smooth animation",
+          "source": "const [progress, setProgress] = createSignal(0);\n\nonMount(() => {\n  const interval = setInterval(() => {\n    setProgress((prev) => {\n      if (prev >= 100) return 0;\n      return prev + 0.5;\n    });\n  }, 30);\n\n  onCleanup(() => clearInterval(interval));\n});\n\nreturn (\n  <Progress\n    id=\"progress-circular\"\n    label=\"Loading\"\n    value={progress()}\n    variant=\"circular\"\n  />\n);"
+        },
+        {
+          "title": "Custom Sizes",
+          "description": "Progress indicators with different sizes",
+          "source": "<div class=\"flex flex-col gap-6\">\n  <div class=\"flex flex-col gap-2\">\n    <div class=\"text-sm font-medium\">Linear Variants</div>\n    <Progress\n      id=\"progress-linear-thin\"\n      label=\"Thin\"\n      value={45}\n      variant=\"linear\"\n      thickness={4}\n    />\n    <Progress\n      id=\"progress-linear-medium\"\n      label=\"Medium\"\n      value={65}\n      variant=\"linear\"\n      thickness={8}\n    />\n    <Progress\n      id=\"progress-linear-thick\"\n      label=\"Thick\"\n      value={85}\n      variant=\"linear\"\n      thickness={12}\n    />\n  </div>\n  <div class=\"flex gap-8 items-center\">\n    <div class=\"text-sm font-medium\">Circular Variants</div>\n    <Progress\n      id=\"progress-circular-small\"\n      value={45}\n      variant=\"circular\"\n      size={80}\n      thickness={8}\n    />\n    <Progress\n      id=\"progress-circular-medium\"\n      value={65}\n      variant=\"circular\"\n      size={120}\n      thickness={12}\n    />\n    <Progress\n      id=\"progress-circular-large\"\n      value={85}\n      variant=\"circular\"\n      size={160}\n      thickness={16}\n    />\n  </div>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "progress.tsx"
+      ]
+    },
+    "qr-code": {
+      "name": "QrCode",
+      "fileName": "qr-code",
+      "description": "A QR code component for generating scannable codes. Built on Ark UI QrCode - all Ark UI QrCode props are supported.",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string }) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Size",
+          "required": false
+        },
+        {
+          "name": "encoding",
+          "type": "{\n    ecc?: \"L\" | \"M\" | \"Q\" | \"H\";\n    boostEcc?: boolean;\n  }",
+          "description": "Encoding",
+          "required": false
+        },
+        {
+          "name": "overlay",
+          "type": "JSX.Element",
+          "description": "Overlay",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple QR code with a URL",
+          "source": "<QrCode value=\"https://github.com/ark-ui/ark\" />"
+        },
+        {
+          "title": "With Overlay",
+          "description": "A QR code with a logo overlay in the center",
+          "source": "<QrCode\n  value=\"https://github.com/ark-ui/ark\"\n  encoding={{ ecc: \"H\" }}\n  overlay={\n    <img\n      src=\"https://ark-ui.com/icon-192.png\"\n      alt=\"Ark UI Logo\"\n      class=\"w-full h-full\"\n    />\n  }\n/>"
+        },
+        {
+          "title": "Custom Size",
+          "description": "QR codes with different sizes",
+          "source": "<div class=\"flex gap-8 items-center\">\n  <QrCode value=\"https://github.com/ark-ui/ark\" size={120} />\n  <QrCode value=\"https://github.com/ark-ui/ark\" size={200} />\n  <QrCode value=\"https://github.com/ark-ui/ark\" size={280} />\n</div>"
+        },
+        {
+          "title": "Error Correction",
+          "description": "QR code with high error correction for better reliability",
+          "source": "<QrCode\n  value=\"https://github.com/ark-ui/ark\"\n  encoding={{ ecc: \"H\" }}\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "qr-code.tsx"
+      ]
+    },
     "radio-group": {
       "name": "RadioGroup",
       "fileName": "radio-group",
@@ -2975,6 +3331,7 @@
   },
   "componentList": [
     "accordion",
+    "angle-slider",
     "badge",
     "button",
     "card",
@@ -2990,6 +3347,8 @@
     "marquee",
     "menu",
     "pin-input",
+    "progress",
+    "qr-code",
     "radio-group",
     "select",
     "slider",
