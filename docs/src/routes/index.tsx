@@ -112,11 +112,19 @@ const components: ComponentInfo[] = Object.entries(componentMetadata)
       },
     );
 
+    // Generate default API reference link based on component name
+    // Only use default if apiReference is undefined (not explicitly set)
+    const defaultApiReference = `https://ark-ui.com/docs/components/${fileName}#api-reference`;
+    const apiReference = runtimeMeta.hasOwnProperty("apiReference")
+      ? runtimeMeta.apiReference
+      : defaultApiReference;
+
     return {
       name: fileName,
       meta: {
         name: metadata.name,
         description: metadata.description || runtimeMeta.description,
+        apiReference: apiReference,
         props: metadata.props,
         variants: metadata.variants,
         examples: mergedExamples,
@@ -165,6 +173,31 @@ const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
               {meta().name}
             </h1>
             <p class="text-lg text-muted-foreground">{meta().description}</p>
+            <Show when={meta().apiReference && meta().apiReference !== ""}>
+              <a
+                href={meta().apiReference}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-primary hover:underline inline-flex items-center gap-1 mt-2"
+              >
+                API Reference
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </a>
+            </Show>
           </div>
           <div class="flex gap-2 flex-wrap justify-end">
             <Show when={meta().variants && meta().variants.length > 0}>

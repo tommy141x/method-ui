@@ -685,6 +685,7 @@ export const meta: ComponentMeta<ToasterProps> = {
   name: "Toast",
   description:
     "A toast notification component for displaying temporary messages. Built with solid-notifications for flexible positioning and animations.",
+  apiReference: "https://solid-notifications.vercel.app/components",
   variants: toastVariants,
   examples: [
     {

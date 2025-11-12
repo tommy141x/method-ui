@@ -132,6 +132,7 @@ export const meta: ComponentMeta<CardProps> = {
   name: "Card",
   description:
     "A versatile card component for displaying content. Use Card alone or compose with CardHeader, CardTitle, CardDescription, CardContent, and CardFooter.",
+  apiReference: "",
   variants: cardVariants,
   examples: [
     {

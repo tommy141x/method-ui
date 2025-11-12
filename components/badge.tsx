@@ -66,6 +66,7 @@ export const meta: ComponentMeta<BadgeProps> = {
   name: "Badge",
   description:
     "A badge component for displaying small pieces of information like labels, status, or counts.",
+  apiReference: "",
   variants: badgeVariants,
   examples: [
     {

@@ -97,6 +97,7 @@ export const meta: ComponentMeta<ButtonProps> = {
   name: "Button",
   description:
     "A versatile button component with multiple variants and sizes. Supports toggle mode for stateful buttons.",
+  apiReference: "",
   variants: buttonVariants,
   examples: [
     {

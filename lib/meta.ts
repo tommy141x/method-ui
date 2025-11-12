@@ -19,6 +19,7 @@ export interface ComponentExample {
 export interface ComponentMeta<TProps = any> {
   name: string;
   description: string;
+  apiReference?: string; // Link to API reference documentation. Defaults to https://ark-ui.com/docs/components/{component-name}#api-reference if not specified
   variants?: any; // Pass existing cva variants (e.g., buttonVariants)
   // Props, variants, and examples are auto-extracted at build time
   // Run: bun run generate:metadata

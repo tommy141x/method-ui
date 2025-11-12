@@ -443,6 +443,7 @@ export const meta: ComponentMeta<InputProps> = {
   name: "Input",
   description:
     "Form input component built with Ark UI Field. Supports type variants: text, email, password (with toggle), textarea (with autoresize), and tags (multi-value input). Use with Field.Root for labels, helper text, and error states when needed.",
+  apiReference: "https://ark-ui.com/docs/components/field#api-reference",
   variants: inputVariants,
   examples: [
     {
