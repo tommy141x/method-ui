@@ -2,7 +2,6 @@ import type { JSX, Component } from "solid-js";
 import { splitProps } from "solid-js";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const cardVariants = cva("rounded-lg text-card-foreground", {
@@ -122,8 +121,8 @@ export const CardFooter: Component<CardFooterProps> = (props) => {
   );
 };
 
-// Import components for examples only - these won't be counted as dependencies
-// since they're imported after the component definitions but used only in examples
+// Import components for examples only - won't count as dependencies
+// since they're imported right before the meta export
 import { Button } from "./button";
 import { Input } from "./input";
 import { Badge } from "./badge";
@@ -165,15 +164,15 @@ export const meta: ComponentMeta<CardProps> = {
           <CardContent>
             <div class="flex flex-col gap-2">
               <div class="flex items-center gap-2">
-                <div class={cn("h-4 w-4", icon("bell"))} />
+                <div class="h-4 w-4 i-lucide-bell" />
                 <span class="text-sm">New message from Alice</span>
               </div>
               <div class="flex items-center gap-2">
-                <div class={cn("h-4 w-4", icon("bell"))} />
+                <div class="h-4 w-4 i-lucide-bell" />
                 <span class="text-sm">Bob commented on your post</span>
               </div>
               <div class="flex items-center gap-2">
-                <div class={cn("h-4 w-4", icon("bell"))} />
+                <div class="h-4 w-4 i-lucide-bell" />
                 <span class="text-sm">Your report is ready</span>
               </div>
             </div>
@@ -190,7 +189,7 @@ export const meta: ComponentMeta<CardProps> = {
       title: "Variants",
       description: "Different card variants",
       code: () => (
-        <div class="flex flex-col gap-4 w-full">
+        <div class="flex gap-4 w-full flex-wrap">
           <Card variant="default" class="w-[300px]">
             <CardHeader>
               <CardTitle class="text-lg">Default Card</CardTitle>
@@ -283,9 +282,7 @@ export const meta: ComponentMeta<CardProps> = {
             </CardHeader>
             <CardContent>
               <div class="text-xs text-muted-foreground flex items-center gap-1">
-                <div
-                  class={cn("h-3 w-3 text-green-500", icon("trending-up"))}
-                />
+                <div class="h-3 w-3 text-green-500 i-lucide-trending-up" />
                 <span>+20.1% from last month</span>
               </div>
             </CardContent>
@@ -297,9 +294,7 @@ export const meta: ComponentMeta<CardProps> = {
             </CardHeader>
             <CardContent>
               <div class="text-xs text-muted-foreground flex items-center gap-1">
-                <div
-                  class={cn("h-3 w-3 text-green-500", icon("trending-up"))}
-                />
+                <div class="h-3 w-3 text-green-500 i-lucide-trending-up" />
                 <span>+15.2% from last month</span>
               </div>
             </CardContent>
@@ -311,9 +306,7 @@ export const meta: ComponentMeta<CardProps> = {
             </CardHeader>
             <CardContent>
               <div class="text-xs text-muted-foreground flex items-center gap-1">
-                <div
-                  class={cn("h-3 w-3 text-red-500", icon("trending-down"))}
-                />
+                <div class="h-3 w-3 text-red-500 i-lucide-trending-down" />
                 <span>-5.3% from last hour</span>
               </div>
             </CardContent>

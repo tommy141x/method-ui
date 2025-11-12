@@ -178,6 +178,11 @@ export const TabsIndicator: Component<TabsIndicatorProps> = (props) => {
 export const TabsRoot = Tabs;
 
 // Metadata for documentation
+// Import components for examples only - won't count as dependencies
+// since they're imported right before the meta export
+import { Card, CardHeader, CardTitle, CardContent } from "./card";
+import { Badge } from "./badge";
+
 export const meta: ComponentMeta<TabsProps> = {
   name: "Tabs",
   description:
@@ -196,28 +201,41 @@ export const meta: ComponentMeta<TabsProps> = {
             <TabsTrigger value="vue">Vue</TabsTrigger>
           </TabsList>
           <TabsContent value="react">
-            <div class="p-4 border border-border rounded-md">
-              <h3 class="font-semibold mb-2">React</h3>
-              <p class="text-sm text-muted-foreground">
-                React is a JavaScript library for building user interfaces.
-              </p>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>React</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p class="text-sm text-muted-foreground">
+                  React is a JavaScript library for building user interfaces.
+                </p>
+              </CardContent>
+            </Card>
           </TabsContent>
           <TabsContent value="solid">
-            <div class="p-4 border border-border rounded-md">
-              <h3 class="font-semibold mb-2">Solid</h3>
-              <p class="text-sm text-muted-foreground">
-                SolidJS is a reactive JavaScript library for building fast UIs.
-              </p>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Solid</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p class="text-sm text-muted-foreground">
+                  SolidJS is a reactive JavaScript library for building fast
+                  UIs.
+                </p>
+              </CardContent>
+            </Card>
           </TabsContent>
           <TabsContent value="vue">
-            <div class="p-4 border border-border rounded-md">
-              <h3 class="font-semibold mb-2">Vue</h3>
-              <p class="text-sm text-muted-foreground">
-                Vue is a progressive framework for building user interfaces.
-              </p>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Vue</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p class="text-sm text-muted-foreground">
+                  Vue is a progressive framework for building user interfaces.
+                </p>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       ),

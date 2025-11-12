@@ -4,7 +4,6 @@ import { Menu as ArkMenu } from "@ark-ui/solid/menu";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 import { buttonVariants } from "./button";
 
@@ -197,59 +196,59 @@ export const meta: ComponentMeta<MenuProps> = {
             </ArkMenu.ContextTrigger>
             <MenuContent>
               <MenuItem value="view">
-                <div class={cn("h-4 w-4 mr-2", icon("eye"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-eye" />
                 View
               </MenuItem>
               <MenuItem value="edit">
-                <div class={cn("h-4 w-4 mr-2", icon("pencil"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-pencil" />
                 Edit
               </MenuItem>
               <MenuSeparator />
               <Menu>
                 <ArkMenu.TriggerItem class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground">
-                  <div class={cn("h-4 w-4 mr-2", icon("share-2"))} />
+                  <div class="h-4 w-4 mr-2 i-lucide-share-2" />
                   Share
-                  <div class={cn("h-4 w-4 ml-auto", icon("chevron-right"))} />
+                  <div class="h-4 w-4 ml-auto i-lucide-chevron-right" />
                 </ArkMenu.TriggerItem>
                 <MenuContent>
                   <MenuItem value="email">
-                    <div class={cn("h-4 w-4 mr-2", icon("mail"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-mail" />
                     Email
                   </MenuItem>
                   <MenuItem value="link">
-                    <div class={cn("h-4 w-4 mr-2", icon("link"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-link" />
                     Copy Link
                   </MenuItem>
                   <MenuItem value="embed">
-                    <div class={cn("h-4 w-4 mr-2", icon("code"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-code" />
                     Embed
                   </MenuItem>
                 </MenuContent>
               </Menu>
               <Menu>
                 <ArkMenu.TriggerItem class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground">
-                  <div class={cn("h-4 w-4 mr-2", icon("download"))} />
+                  <div class="h-4 w-4 mr-2 i-lucide-download" />
                   Export
-                  <div class={cn("h-4 w-4 ml-auto", icon("chevron-right"))} />
+                  <div class="h-4 w-4 ml-auto i-lucide-chevron-right" />
                 </ArkMenu.TriggerItem>
                 <MenuContent>
                   <MenuItem value="pdf">
-                    <div class={cn("h-4 w-4 mr-2", icon("file-text"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-file-text" />
                     PDF
                   </MenuItem>
                   <MenuItem value="png">
-                    <div class={cn("h-4 w-4 mr-2", icon("image"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-image" />
                     PNG
                   </MenuItem>
                   <MenuItem value="svg">
-                    <div class={cn("h-4 w-4 mr-2", icon("file-code"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-file-code" />
                     SVG
                   </MenuItem>
                 </MenuContent>
               </Menu>
               <MenuSeparator />
               <MenuItem value="delete">
-                <div class={cn("h-4 w-4 mr-2", icon("trash"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-trash" />
                 Delete
               </MenuItem>
             </MenuContent>
@@ -264,29 +263,29 @@ export const meta: ComponentMeta<MenuProps> = {
         return (
           <Menu>
             <MenuTrigger variant="outline">
-              <div class={cn("h-4 w-4 mr-2", icon("settings"))} />
+              <div class="h-4 w-4 mr-2 i-lucide-settings" />
               Actions
             </MenuTrigger>
             <MenuContent>
               <MenuItem value="new">
-                <div class={cn("h-4 w-4 mr-2", icon("file-plus"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-file-plus" />
                 New File
               </MenuItem>
               <MenuItem value="open">
-                <div class={cn("h-4 w-4 mr-2", icon("folder-open"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-folder-open" />
                 Open File
               </MenuItem>
               <MenuItem value="save">
-                <div class={cn("h-4 w-4 mr-2", icon("save"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-save" />
                 Save
               </MenuItem>
               <MenuSeparator />
               <MenuItem value="settings">
-                <div class={cn("h-4 w-4 mr-2", icon("settings"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-settings" />
                 Settings
               </MenuItem>
               <MenuItem value="exit">
-                <div class={cn("h-4 w-4 mr-2", icon("log-out"))} />
+                <div class="h-4 w-4 mr-2 i-lucide-log-out" />
                 Exit
               </MenuItem>
             </MenuContent>

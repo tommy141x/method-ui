@@ -418,15 +418,15 @@ export const meta: ComponentMeta<SelectProps> = {
         <Select>
           <SelectPlaceholder>Select a Framework</SelectPlaceholder>
           <SelectItem value="react">
-            <div class={cn("h-4 w-4", icon("atom"))} />
+            <div class="h-4 w-4 i-lucide-atom" />
             <span>React</span>
           </SelectItem>
           <SelectItem value="solid">
-            <div class={cn("h-4 w-4", icon("zap"))} />
+            <div class="h-4 w-4 i-lucide-zap" />
             <span>Solid</span>
           </SelectItem>
           <SelectItem value="vue">
-            <div class={cn("h-4 w-4", icon("layers"))} />
+            <div class="h-4 w-4 i-lucide-layers" />
             <span>Vue</span>
           </SelectItem>
         </Select>
@@ -442,15 +442,15 @@ export const meta: ComponentMeta<SelectProps> = {
           <SelectGroup>
             <SelectLabel>Frameworks</SelectLabel>
             <SelectItem value="react">
-              <div class={cn("h-4 w-4", icon("atom"))} />
+              <div class="h-4 w-4 i-lucide-atom" />
               <span>React</span>
             </SelectItem>
             <SelectItem value="solid">
-              <div class={cn("h-4 w-4", icon("zap"))} />
+              <div class="h-4 w-4 i-lucide-zap" />
               <span>Solid</span>
             </SelectItem>
             <SelectItem value="vue">
-              <div class={cn("h-4 w-4", icon("layers"))} />
+              <div class="h-4 w-4 i-lucide-layers" />
               <span>Vue</span>
             </SelectItem>
           </SelectGroup>

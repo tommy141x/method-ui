@@ -207,6 +207,10 @@ export const AccordionIndicator: Component<AccordionIndicatorProps> = (
 
 export const AccordionRoot = Accordion;
 
+// Import components for examples only - won't count as dependencies
+// since they're imported right before the meta export
+import { Badge } from "./badge";
+
 export const meta: ComponentMeta<AccordionProps> = {
   name: "Accordion",
   description:
@@ -316,7 +320,14 @@ export const meta: ComponentMeta<AccordionProps> = {
       code: () => (
         <Accordion defaultValue={["installation"]}>
           <AccordionItem value="installation" variant="outlined">
-            <AccordionTrigger variant="outlined">Installation</AccordionTrigger>
+            <AccordionTrigger variant="outlined">
+              <div class="flex items-center gap-2">
+                Installation
+                <Badge variant="secondary" class="text-[10px] px-1.5 py-0">
+                  New
+                </Badge>
+              </div>
+            </AccordionTrigger>
             <AccordionContent variant="outlined">
               <span class="text-muted-foreground">
                 Install the package using your favorite package manager: npm
@@ -335,7 +346,15 @@ export const meta: ComponentMeta<AccordionProps> = {
           </AccordionItem>
           <AccordionItem value="customization" variant="outlined">
             <AccordionTrigger variant="outlined">
-              Customization
+              <div class="flex items-center gap-2">
+                Customization
+                <Badge
+                  variant="outline"
+                  class="text-[10px] px-1.5 py-0 bg-green-500/10 text-green-700 border-green-500/20"
+                >
+                  Updated
+                </Badge>
+              </div>
             </AccordionTrigger>
             <AccordionContent variant="outlined">
               <span class="text-muted-foreground">

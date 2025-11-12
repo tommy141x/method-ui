@@ -80,6 +80,11 @@ export const HoverCardContent = (props: HoverCardContentProps) => {
   );
 };
 
+// Import components for examples only - won't count as dependencies
+// since they're imported right before the meta export
+import { Button } from "./button";
+import { Badge } from "./badge";
+
 export const meta: ComponentMeta<HoverCardProps> = {
   name: "HoverCard",
   description:
@@ -91,7 +96,7 @@ export const meta: ComponentMeta<HoverCardProps> = {
       code: () => (
         <HoverCard>
           <HoverCardTrigger>
-            <span>Hover over me</span>
+            <Button variant="outline">Hover over me</Button>
           </HoverCardTrigger>
           <HoverCardContent>
             <div>
@@ -105,12 +110,35 @@ export const meta: ComponentMeta<HoverCardProps> = {
       ),
     },
     {
+      title: "With Badge",
+      description: "Hover card triggered by a badge",
+      code: () => (
+        <HoverCard>
+          <HoverCardTrigger>
+            <Badge variant="secondary">
+              <div class="h-3 w-3 i-lucide-info mr-1" />
+              Info
+            </Badge>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <div class="space-y-2">
+              <h4 class="font-semibold">Additional Information</h4>
+              <p class="text-sm text-muted-foreground">
+                Hover cards are perfect for providing contextual information
+                without cluttering the UI.
+              </p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      ),
+    },
+    {
       title: "Custom Positioning",
       description: "Hover card with custom placement and no arrow",
       code: () => (
         <HoverCard positioning={{ placement: "right", gutter: 16 }}>
           <HoverCardTrigger>
-            <span>Hover for right placement</span>
+            <Button variant="ghost">Hover for right placement</Button>
           </HoverCardTrigger>
           <HoverCardContent showArrow={false}>
             <div>

@@ -2,7 +2,7 @@ import type { JSX, Component } from "solid-js";
 import { RadioGroup as ArkRadioGroup } from "@ark-ui/solid/radio-group";
 import { Motion } from "solid-motionone";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
+
 import type { ComponentMeta } from "../lib/meta";
 import { For } from "solid-js";
 
@@ -128,25 +128,39 @@ export const meta: ComponentMeta<RadioGroupProps> = {
       description: "Radio group with icons for each option",
       code: () => {
         const frameworks = [
-          { value: "react", label: "React", icon: "atom" },
-          { value: "solid", label: "Solid", icon: "box" },
-          { value: "vue", label: "Vue", icon: "triangle" },
-          { value: "svelte", label: "Svelte", icon: "zap" },
+          { value: "react", label: "React" },
+          { value: "solid", label: "Solid" },
+          { value: "vue", label: "Vue" },
+          { value: "svelte", label: "Svelte" },
         ];
 
         return (
           <RadioGroup defaultValue="solid">
             <RadioGroupLabel>Framework</RadioGroupLabel>
-            <For each={frameworks}>
-              {(framework) => (
-                <RadioGroupItem value={framework.value}>
-                  <div class="flex items-center gap-2">
-                    <div class={cn("h-4 w-4", icon(framework.icon))} />
-                    <span>{framework.label}</span>
-                  </div>
-                </RadioGroupItem>
-              )}
-            </For>
+            <RadioGroupItem value="react">
+              <div class="flex items-center gap-2">
+                <div class="h-4 w-4 i-lucide-atom" />
+                <span>React</span>
+              </div>
+            </RadioGroupItem>
+            <RadioGroupItem value="solid">
+              <div class="flex items-center gap-2">
+                <div class="h-4 w-4 i-lucide-box" />
+                <span>Solid</span>
+              </div>
+            </RadioGroupItem>
+            <RadioGroupItem value="vue">
+              <div class="flex items-center gap-2">
+                <div class="h-4 w-4 i-lucide-triangle" />
+                <span>Vue</span>
+              </div>
+            </RadioGroupItem>
+            <RadioGroupItem value="svelte">
+              <div class="flex items-center gap-2">
+                <div class="h-4 w-4 i-lucide-zap" />
+                <span>Svelte</span>
+              </div>
+            </RadioGroupItem>
           </RadioGroup>
         );
       },

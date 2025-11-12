@@ -14,7 +14,6 @@ import { Motion, Presence } from "solid-motionone";
 import { cn } from "../lib/cn";
 import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
-import { Button, buttonVariants } from "./button";
 
 /**
  * Helper to create dialog state for controlled dialogs.
@@ -262,11 +261,6 @@ export const DialogFooter = (props: DialogFooterProps) => {
   );
 };
 
-// Import components for examples only - won't count as dependencies
-// since they're imported after component definitions
-import { Input } from "./input";
-import { Badge } from "./badge";
-
 interface DialogCloseProps {
   children?: JSX.Element;
 }
@@ -274,6 +268,12 @@ interface DialogCloseProps {
 export const DialogClose = (props: DialogCloseProps) => {
   return <ArkDialog.CloseTrigger>{props.children}</ArkDialog.CloseTrigger>;
 };
+
+// Import components for examples only - won't count as dependencies
+// since they're imported right before the meta export
+import { Button } from "./button";
+import { Input } from "./input";
+import { Badge } from "./badge";
 
 export const meta: ComponentMeta<DialogProps> = {
   name: "Dialog",

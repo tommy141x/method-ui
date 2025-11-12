@@ -14,7 +14,7 @@ type QrCodeProps = {
     ecc?: "L" | "M" | "Q" | "H";
     boostEcc?: boolean;
   };
-  overlay?: JSX.Element;
+  overlay?: () => JSX.Element;
 };
 
 export const QrCode: Component<QrCodeProps> = (props) => {
@@ -48,7 +48,7 @@ export const QrCode: Component<QrCodeProps> = (props) => {
         {props.overlay && (
           <ArkQrCode.Overlay class="absolute inset-0 flex items-center justify-center z-10">
             <div class="w-16 h-16 rounded-full ring-4 ring-white bg-white flex items-center justify-center overflow-hidden">
-              {props.overlay}
+              {props.overlay()}
             </div>
           </ArkQrCode.Overlay>
         )}
@@ -77,13 +77,13 @@ export const meta: ComponentMeta<QrCodeProps> = {
           <QrCode
             value="https://github.com/ark-ui/ark"
             encoding={{ ecc: "H" }}
-            overlay={
+            overlay={() => (
               <img
                 src="https://ark-ui.com/icon-192.png"
                 alt="Ark UI Logo"
                 class="w-full h-full"
               />
-            }
+            )}
           />
         );
       },

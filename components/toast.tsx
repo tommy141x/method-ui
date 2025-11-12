@@ -679,6 +679,8 @@ export const toast = {
   },
 };
 
+// Import components for examples only - won't count as dependencies
+// since they're imported right before the meta export
 import { Button } from "./button";
 
 export const meta: ComponentMeta<ToasterProps> = {
@@ -835,7 +837,7 @@ export const meta: ComponentMeta<ToasterProps> = {
                         class="shrink-0 self-center -mt-1"
                         aria-label="Dismiss"
                       >
-                        <div class={cn("h-4 w-4", icon("x"))} />
+                        <div class="h-4 w-4 i-lucide-x" />
                       </Button>
                     </div>,
                     {

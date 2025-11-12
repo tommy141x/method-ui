@@ -93,7 +93,7 @@
         {
           "title": "Outlined",
           "description": "Accordion with outlined styling",
-          "source": "<Accordion defaultValue={[\"installation\"]}>\n  <AccordionItem value=\"installation\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">Installation</AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Install the package using your favorite package manager: npm\n        install @ark-ui/solid\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"usage\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">Usage</AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Import the components and start building your accordion UI with\n        full TypeScript support.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"customization\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">\n      Customization\n    </AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Use CVA variants and Tailwind classes to customize the look and\n        feel.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
+          "source": "<Accordion defaultValue={[\"installation\"]}>\n  <AccordionItem value=\"installation\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">\n      <div class=\"flex items-center gap-2\">\n        Installation\n        <Badge variant=\"secondary\" class=\"text-[10px] px-1.5 py-0\">\n          New\n        </Badge>\n      </div>\n    </AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Install the package using your favorite package manager: npm\n        install @ark-ui/solid\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"usage\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">Usage</AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Import the components and start building your accordion UI with\n        full TypeScript support.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"customization\" variant=\"outlined\">\n    <AccordionTrigger variant=\"outlined\">\n      <div class=\"flex items-center gap-2\">\n        Customization\n        <Badge\n          variant=\"outline\"\n          class=\"text-[10px] px-1.5 py-0 bg-green-500/10 text-green-700 border-green-500/20\"\n        >\n          Updated\n        </Badge>\n      </div>\n    </AccordionTrigger>\n    <AccordionContent variant=\"outlined\">\n      <span class=\"text-muted-foreground\">\n        Use CVA variants and Tailwind classes to customize the look and\n        feel.\n      </span>\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
         },
         {
           "title": "Disabled",
@@ -324,7 +324,7 @@
         {
           "title": "With Icon",
           "description": "Badge with an icon",
-          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge\n    variant=\"secondary\"\n    class=\"bg-blue-500 text-white dark:bg-blue-600\"\n  >\n    <div class={cn(\"h-3 w-3\", icon(\"badge-check\"))} />\n    Verified\n  </Badge>\n  <Badge>\n    <div class={cn(\"h-3 w-3\", icon(\"star\"))} />\n    Featured\n  </Badge>\n  <Badge variant=\"destructive\">\n    <div class={cn(\"h-3 w-3\", icon(\"alert-circle\"))} />\n    Error\n  </Badge>\n</div>"
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge\n    variant=\"secondary\"\n    class=\"bg-blue-500 text-white dark:bg-blue-600\"\n  >\n    <div class=\"h-3 w-3 i-lucide-badge-check\" />\n    Verified\n  </Badge>\n  <Badge>\n    <div class=\"h-3 w-3 i-lucide-star\" />\n    Featured\n  </Badge>\n  <Badge variant=\"destructive\">\n    <div class=\"h-3 w-3 i-lucide-alert-circle\" />\n    Error\n  </Badge>\n</div>"
         },
         {
           "title": "Notification Badges",
@@ -344,7 +344,7 @@
         {
           "title": "Clickable",
           "description": "Interactive badges with click handlers",
-          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge clickable onClick={() => alert(\"Badge clicked!\")}>\n    Click me\n  </Badge>\n  <Badge\n    variant=\"secondary\"\n    clickable\n    onClick={() => console.log(\"Secondary clicked\")}\n  >\n    <div class={cn(\"h-3 w-3\", icon(\"mouse-pointer-click\"))} />\n    Interactive\n  </Badge>\n  <Badge\n    variant=\"outline\"\n    clickable\n    onClick={() => alert(\"Outline clicked\")}\n  >\n    Clickable\n  </Badge>\n  <Badge>Not clickable</Badge>\n</div>"
+          "source": "<div class=\"flex flex-wrap gap-2\">\n  <Badge clickable onClick={() => alert(\"Badge clicked!\")}>\n    Click me\n  </Badge>\n  <Badge\n    variant=\"secondary\"\n    clickable\n    onClick={() => console.log(\"Secondary clicked\")}\n  >\n    <div class=\"h-3 w-3 i-lucide-mouse-pointer-click\" />\n    Interactive\n  </Badge>\n  <Badge\n    variant=\"outline\"\n    clickable\n    onClick={() => alert(\"Outline clicked\")}\n  >\n    Clickable\n  </Badge>\n  <Badge>Not clickable</Badge>\n</div>"
         }
       ],
       "dependencies": {
@@ -456,7 +456,7 @@
         {
           "title": "Toggle Group",
           "description": "Multiple toggle buttons styled as a group",
-          "source": "const [selected, setSelected] = createSignal(\"center\");\nreturn (\n  <div class=\"flex\">\n    <Button\n      toggle\n      pressed={selected() === \"left\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"left\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-l-md !rounded-r-none\"\n    >\n      <div class={cn(\"h-4 w-4\", icon(\"align-left\"))} />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"center\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"center\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"rounded-none border-l-0\"\n    >\n      <div class={cn(\"h-4 w-4\", icon(\"align-center\"))} />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"right\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"right\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-r-md !rounded-l-none border-l-0\"\n    >\n      <div class={cn(\"h-4 w-4\", icon(\"align-right\"))} />\n    </Button>\n  </div>\n);"
+          "source": "const [selected, setSelected] = createSignal(\"center\");\nreturn (\n  <div class=\"flex\">\n    <Button\n      toggle\n      pressed={selected() === \"left\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"left\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-l-md !rounded-r-none\"\n    >\n      <div class=\"h-4 w-4 i-lucide-align-left\" />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"center\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"center\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"rounded-none border-l-0\"\n    >\n      <div class=\"h-4 w-4 i-lucide-align-center\" />\n    </Button>\n    <Button\n      toggle\n      pressed={selected() === \"right\"}\n      onPressedChange={(pressed) => pressed && setSelected(\"right\")}\n      variant=\"outline\"\n      size=\"icon\"\n      class=\"!rounded-r-md !rounded-l-none border-l-0\"\n    >\n      <div class=\"h-4 w-4 i-lucide-align-right\" />\n    </Button>\n  </div>\n);"
         }
       ],
       "dependencies": {
@@ -515,12 +515,12 @@
         {
           "title": "With Footer",
           "description": "Card with header, content, and footer",
-          "source": "<Card class=\"w-[350px]\">\n  <CardHeader>\n    <CardTitle>Notifications</CardTitle>\n    <CardDescription>You have 3 unread messages.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <div class=\"flex flex-col gap-2\">\n      <div class=\"flex items-center gap-2\">\n        <div class={cn(\"h-4 w-4\", icon(\"bell\"))} />\n        <span class=\"text-sm\">New message from Alice</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class={cn(\"h-4 w-4\", icon(\"bell\"))} />\n        <span class=\"text-sm\">Bob commented on your post</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class={cn(\"h-4 w-4\", icon(\"bell\"))} />\n        <span class=\"text-sm\">Your report is ready</span>\n      </div>\n    </div>\n  </CardContent>\n  <CardFooter>\n    <button class=\"text-sm text-primary hover:underline\">\n      Mark all as read\n    </button>\n  </CardFooter>\n</Card>"
+          "source": "<Card class=\"w-[350px]\">\n  <CardHeader>\n    <CardTitle>Notifications</CardTitle>\n    <CardDescription>You have 3 unread messages.</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <div class=\"flex flex-col gap-2\">\n      <div class=\"flex items-center gap-2\">\n        <div class=\"h-4 w-4 i-lucide-bell\" />\n        <span class=\"text-sm\">New message from Alice</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"h-4 w-4 i-lucide-bell\" />\n        <span class=\"text-sm\">Bob commented on your post</span>\n      </div>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"h-4 w-4 i-lucide-bell\" />\n        <span class=\"text-sm\">Your report is ready</span>\n      </div>\n    </div>\n  </CardContent>\n  <CardFooter>\n    <button class=\"text-sm text-primary hover:underline\">\n      Mark all as read\n    </button>\n  </CardFooter>\n</Card>"
         },
         {
           "title": "Variants",
           "description": "Different card variants",
-          "source": "<div class=\"flex flex-col gap-4 w-full\">\n  <Card variant=\"default\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Default Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Standard card with default styling.</p>\n    </CardContent>\n  </Card>\n  <Card variant=\"elevated\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Elevated Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Card with enhanced shadow.</p>\n    </CardContent>\n  </Card>\n  <Card variant=\"outlined\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Outlined Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Card with prominent border.</p>\n    </CardContent>\n  </Card>\n</div>"
+          "source": "<div class=\"flex gap-4 w-full flex-wrap\">\n  <Card variant=\"default\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Default Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Standard card with default styling.</p>\n    </CardContent>\n  </Card>\n  <Card variant=\"elevated\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Elevated Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Card with enhanced shadow.</p>\n    </CardContent>\n  </Card>\n  <Card variant=\"outlined\" class=\"w-[300px]\">\n    <CardHeader>\n      <CardTitle class=\"text-lg\">Outlined Card</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <p class=\"text-sm\">Card with prominent border.</p>\n    </CardContent>\n  </Card>\n</div>"
         },
         {
           "title": "Flexible Layout",
@@ -535,7 +535,7 @@
         {
           "title": "Stats Card",
           "description": "Card displaying statistics",
-          "source": "<div class=\"grid grid-cols-3 gap-4\">\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Total Users</CardDescription>\n      <CardTitle class=\"text-3xl\">1,234</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div\n          class={cn(\"h-3 w-3 text-green-500\", icon(\"trending-up\"))}\n        />\n        <span>+20.1% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Revenue</CardDescription>\n      <CardTitle class=\"text-3xl\">$12,345</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div\n          class={cn(\"h-3 w-3 text-green-500\", icon(\"trending-up\"))}\n        />\n        <span>+15.2% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Active Now</CardDescription>\n      <CardTitle class=\"text-3xl\">573</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div\n          class={cn(\"h-3 w-3 text-red-500\", icon(\"trending-down\"))}\n        />\n        <span>-5.3% from last hour</span>\n      </div>\n    </CardContent>\n  </Card>\n</div>"
+          "source": "<div class=\"grid grid-cols-3 gap-4\">\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Total Users</CardDescription>\n      <CardTitle class=\"text-3xl\">1,234</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"h-3 w-3 text-green-500 i-lucide-trending-up\" />\n        <span>+20.1% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Revenue</CardDescription>\n      <CardTitle class=\"text-3xl\">$12,345</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"h-3 w-3 text-green-500 i-lucide-trending-up\" />\n        <span>+15.2% from last month</span>\n      </div>\n    </CardContent>\n  </Card>\n  <Card>\n    <CardHeader class=\"pb-2\">\n      <CardDescription>Active Now</CardDescription>\n      <CardTitle class=\"text-3xl\">573</CardTitle>\n    </CardHeader>\n    <CardContent>\n      <div class=\"text-xs text-muted-foreground flex items-center gap-1\">\n        <div class=\"h-3 w-3 text-red-500 i-lucide-trending-down\" />\n        <span>-5.3% from last hour</span>\n      </div>\n    </CardContent>\n  </Card>\n</div>"
         }
       ],
       "dependencies": {
@@ -1061,9 +1061,7 @@
         }
       ],
       "dependencies": {
-        "components": [
-          "button"
-        ],
+        "components": [],
         "packages": [
           "@ark-ui/solid",
           "solid-motionone"
@@ -1341,6 +1339,134 @@
         "floating-panel.tsx"
       ]
     },
+    "format": {
+      "name": "Format",
+      "fileName": "format",
+      "description": "Format numbers, bytes, and relative times with internationalization support and styling variants.",
+      "props": [
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number | Date",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "description": "Locale",
+          "required": false
+        },
+        {
+          "name": "style",
+          "type": "| \"decimal\"\n    | \"currency\"\n    | \"percent\"\n    | \"unit\"\n    | \"long\"\n    | \"short\"\n    | \"narrow\"",
+          "description": "Style",
+          "required": false
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "description": "Currency",
+          "required": false
+        },
+        {
+          "name": "currencyDisplay",
+          "type": "\"symbol\" | \"narrowSymbol\" | \"code\" | \"name\"",
+          "description": "Currency Display",
+          "required": false
+        },
+        {
+          "name": "unit",
+          "type": "string | \"bit\" | \"byte\"",
+          "description": "Unit",
+          "required": false
+        },
+        {
+          "name": "unitDisplay",
+          "type": "\"short\" | \"long\" | \"narrow\"",
+          "description": "Unit Display",
+          "required": false
+        },
+        {
+          "name": "notation",
+          "type": "\"standard\" | \"scientific\" | \"engineering\" | \"compact\"",
+          "description": "Notation",
+          "required": false
+        },
+        {
+          "name": "compactDisplay",
+          "type": "\"short\" | \"long\"",
+          "description": "Compact Display",
+          "required": false
+        },
+        {
+          "name": "minimumFractionDigits",
+          "type": "number",
+          "description": "Minimum Fraction Digits",
+          "required": false
+        },
+        {
+          "name": "maximumFractionDigits",
+          "type": "number",
+          "description": "Maximum Fraction Digits",
+          "required": false
+        },
+        {
+          "name": "unitSystem",
+          "type": "\"decimal\" | \"binary\"",
+          "description": "Unit System",
+          "required": false
+        },
+        {
+          "name": "numeric",
+          "type": "\"always\" | \"auto\"",
+          "description": "Numeric",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "number",
+            "byte"
+          ],
+          "defaultValue": "number"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Number",
+          "description": "Format numbers with various styles",
+          "source": "<div class=\"flex flex-col gap-2 text-sm\">\n  <div>\n    Number: <Format value={1450.45} class=\"font-bold\" />\n  </div>\n  <div>\n    Currency:{\" \"}\n    <Format\n      variant=\"number\"\n      value={1450.45}\n      style=\"currency\"\n      currency=\"USD\"\n      class=\"font-bold\"\n    />\n  </div>\n  <div>\n    Percent:{\" \"}\n    <Format\n      variant=\"number\"\n      value={0.145}\n      style=\"percent\"\n      class=\"font-bold\"\n    />\n  </div>\n</div>"
+        },
+        {
+          "title": "Byte",
+          "description": "Format byte sizes with automatic unit conversion",
+          "source": "<div class=\"flex flex-col gap-2 text-sm\">\n  <div>\n    Small: <Format variant=\"byte\" value={1450.45} class=\"font-bold\" />\n  </div>\n  <div>\n    Medium:{\" \"}\n    <Format variant=\"byte\" value={1024000} class=\"font-bold\" />\n  </div>\n  <div>\n    Large:{\" \"}\n    <Format\n      variant=\"byte\"\n      value={1048576}\n      unitDisplay=\"long\"\n      class=\"font-bold\"\n    />\n  </div>\n</div>"
+        },
+        {
+          "title": "Relative Time",
+          "description": "Format dates as relative time",
+          "source": "const now = new Date();\nconst yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);\n\nreturn (\n  <div class=\"flex flex-col gap-2 text-sm\">\n    <div>\n      Edited{\" \"}\n      <Format\n        variant=\"relative-time\"\n        value={yesterday}\n        class=\"font-bold\"\n      />\n    </div>\n    <div>\n      Updated{\" \"}\n      <Format\n        variant=\"relative-time\"\n        value={yesterday}\n        style=\"short\"\n        class=\"font-bold\"\n      />\n    </div>\n  </div>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid",
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "format.tsx"
+      ]
+    },
     "hover-card": {
       "name": "HoverCard",
       "fileName": "hover-card",
@@ -1394,12 +1520,17 @@
         {
           "title": "Basic Hover Card",
           "description": "A simple hover card with content",
-          "source": "<HoverCard>\n  <HoverCardTrigger>\n    <span>Hover over me</span>\n  </HoverCardTrigger>\n  <HoverCardContent>\n    <div>\n      <h4 class=\"font-semibold mb-2\">Hover Card</h4>\n      <p class=\"text-sm text-muted-foreground\">\n        This is a hover card with some helpful information.\n      </p>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+          "source": "<HoverCard>\n  <HoverCardTrigger>\n    <Button variant=\"outline\">Hover over me</Button>\n  </HoverCardTrigger>\n  <HoverCardContent>\n    <div>\n      <h4 class=\"font-semibold mb-2\">Hover Card</h4>\n      <p class=\"text-sm text-muted-foreground\">\n        This is a hover card with some helpful information.\n      </p>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+        },
+        {
+          "title": "With Badge",
+          "description": "Hover card triggered by a badge",
+          "source": "<HoverCard>\n  <HoverCardTrigger>\n    <Badge variant=\"secondary\">\n      <div class=\"h-3 w-3 i-lucide-info mr-1\" />\n      Info\n    </Badge>\n  </HoverCardTrigger>\n  <HoverCardContent>\n    <div class=\"space-y-2\">\n      <h4 class=\"font-semibold\">Additional Information</h4>\n      <p class=\"text-sm text-muted-foreground\">\n        Hover cards are perfect for providing contextual information\n        without cluttering the UI.\n      </p>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
         },
         {
           "title": "Custom Positioning",
           "description": "Hover card with custom placement and no arrow",
-          "source": "<HoverCard positioning={{ placement: \"right\", gutter: 16 }}>\n  <HoverCardTrigger>\n    <span>Hover for right placement</span>\n  </HoverCardTrigger>\n  <HoverCardContent showArrow={false}>\n    <div>\n      <h4 class=\"font-semibold mb-2\">Right Positioned</h4>\n      <p class=\"text-sm text-muted-foreground\">\n        This hover card appears to the right with custom spacing.\n      </p>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+          "source": "<HoverCard positioning={{ placement: \"right\", gutter: 16 }}>\n  <HoverCardTrigger>\n    <Button variant=\"ghost\">Hover for right placement</Button>\n  </HoverCardTrigger>\n  <HoverCardContent showArrow={false}>\n    <div>\n      <h4 class=\"font-semibold mb-2\">Right Positioned</h4>\n      <p class=\"text-sm text-muted-foreground\">\n        This hover card appears to the right with custom spacing.\n      </p>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
         }
       ],
       "dependencies": {
@@ -1630,6 +1761,99 @@
       },
       "files": [
         "input.tsx"
+      ]
+    },
+    "json-tree-view": {
+      "name": "JsonTreeView",
+      "fileName": "json-tree-view",
+      "description": "A component for displaying and exploring JSON data in a tree structure. Perfect for debugging, API responses, and configuration viewers.",
+      "props": [
+        {
+          "name": "data",
+          "type": "any",
+          "description": "Data",
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "defaultExpandedDepth",
+          "type": "number",
+          "description": "Default Expanded Depth",
+          "required": false
+        },
+        {
+          "name": "quotesOnKeys",
+          "type": "boolean",
+          "description": "Quotes On Keys",
+          "required": false
+        },
+        {
+          "name": "showNonenumerable",
+          "type": "boolean",
+          "description": "Show Nonenumerable",
+          "required": false
+        },
+        {
+          "name": "maxPreviewItems",
+          "type": "number",
+          "description": "Max Preview Items",
+          "required": false
+        },
+        {
+          "name": "collapseStringsAfterLength",
+          "type": "number",
+          "description": "Collapse Strings After Length",
+          "required": false
+        },
+        {
+          "name": "groupArraysAfterLength",
+          "type": "number",
+          "description": "Group Arrays After Length",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Display JSON data in a tree view with various data types",
+          "source": "<JsonTreeView\n  label=\"User Data\"\n  data={{\n    name: \"John Doe\",\n    age: 30,\n    email: \"john.doe@example.com\",\n    balance: 1234.56,\n    score: -42,\n    isActive: true,\n    isVerified: false,\n    avatar: null,\n    description: undefined,\n    createdAt: new Date(\"2024-01-15T14:22:00.000Z\"),\n    lastLogin: new Date(\"2024-01-12T00:00:00.000Z\"),\n    tags: [\"user\", \"premium\", \"verified\"],\n    scores: [95, 87, 92, 78, 100],\n    address: {\n      street: \"123 Main St\",\n      city: \"Anytown\",\n      state: \"CA\",\n      zip: 12345,\n      coordinates: {\n        lat: 37.7749,\n        lng: -122.4194,\n      },\n    },\n    greet: (name: string) => `Hello, ${name}!`,\n    emailPattern: /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/,\n    lastError: new Error(\"Something went wrong\"),\n    preferences: new Map([\n      [\"theme\", \"dark\"],\n      [\"language\", \"en\"],\n      [\"notifications\", \"enabled\"],\n    ]),\n    visitedPages: new Set([\"/home\", \"/profile\", \"/settings\"]),\n    mixedData: [\n      \"string\",\n      42,\n      true,\n      null,\n      { nested: \"object\" },\n      [1, 2, 3],\n      new Date(),\n    ],\n  }}\n/>"
+        },
+        {
+          "title": "Expand Depth",
+          "description": "Control how many levels are expanded by default",
+          "source": "<JsonTreeView\n  label=\"Configuration\"\n  defaultExpandedDepth={1}\n  data={{\n    server: {\n      host: \"localhost\",\n      port: 3000,\n      ssl: {\n        enabled: true,\n        cert: \"/path/to/cert\",\n        key: \"/path/to/key\",\n      },\n    },\n    database: {\n      host: \"db.example.com\",\n      port: 5432,\n      credentials: {\n        username: \"admin\",\n        password: \"********\",\n      },\n    },\n  }}\n/>"
+        },
+        {
+          "title": "Array Data",
+          "description": "Display arrays and nested structures",
+          "source": "<JsonTreeView\n  label=\"API Response\"\n  data={{\n    users: [\n      { id: 1, name: \"Alice\", active: true },\n      { id: 2, name: \"Bob\", active: false },\n      { id: 3, name: \"Charlie\", active: true },\n    ],\n    meta: {\n      total: 3,\n      page: 1,\n      perPage: 10,\n    },\n  }}\n/>"
+        },
+        {
+          "title": "Mixed Types",
+          "description": "Display various JavaScript data types",
+          "source": "<JsonTreeView\n  label=\"Data Types\"\n  defaultExpandedDepth={2}\n  data={{\n    string: \"Hello World\",\n    number: 42,\n    boolean: true,\n    null: null,\n    undefined: undefined,\n    array: [1, 2, 3, 4, 5],\n    object: {\n      nested: \"value\",\n      deep: {\n        deeper: \"data\",\n      },\n    },\n  }}\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "json-tree-view.tsx"
       ]
     },
     "listbox": {
@@ -1908,12 +2132,12 @@
         {
           "title": "Context Menu with Nested Items",
           "description": "Right-click anywhere in the area to open context menu",
-          "source": "<Menu>\n  <ArkMenu.ContextTrigger class=\"flex h-[150px] w-[300px] items-center justify-center rounded-md border border-border border-dashed bg-muted/50 cursor-default\">\n    <p class=\"text-sm text-muted-foreground\">Right click here</p>\n  </ArkMenu.ContextTrigger>\n  <MenuContent>\n    <MenuItem value=\"view\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"eye\"))} />\n      View\n    </MenuItem>\n    <MenuItem value=\"edit\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"pencil\"))} />\n      Edit\n    </MenuItem>\n    <MenuSeparator />\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class={cn(\"h-4 w-4 mr-2\", icon(\"share-2\"))} />\n        Share\n        <div class={cn(\"h-4 w-4 ml-auto\", icon(\"chevron-right\"))} />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"email\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"mail\"))} />\n          Email\n        </MenuItem>\n        <MenuItem value=\"link\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"link\"))} />\n          Copy Link\n        </MenuItem>\n        <MenuItem value=\"embed\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"code\"))} />\n          Embed\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class={cn(\"h-4 w-4 mr-2\", icon(\"download\"))} />\n        Export\n        <div class={cn(\"h-4 w-4 ml-auto\", icon(\"chevron-right\"))} />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"pdf\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-text\"))} />\n          PDF\n        </MenuItem>\n        <MenuItem value=\"png\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"image\"))} />\n          PNG\n        </MenuItem>\n        <MenuItem value=\"svg\">\n          <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-code\"))} />\n          SVG\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <MenuSeparator />\n    <MenuItem value=\"delete\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"trash\"))} />\n      Delete\n    </MenuItem>\n  </MenuContent>\n</Menu>"
+          "source": "<Menu>\n  <ArkMenu.ContextTrigger class=\"flex h-[150px] w-[300px] items-center justify-center rounded-md border border-border border-dashed bg-muted/50 cursor-default\">\n    <p class=\"text-sm text-muted-foreground\">Right click here</p>\n  </ArkMenu.ContextTrigger>\n  <MenuContent>\n    <MenuItem value=\"view\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-eye\" />\n      View\n    </MenuItem>\n    <MenuItem value=\"edit\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-pencil\" />\n      Edit\n    </MenuItem>\n    <MenuSeparator />\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class=\"h-4 w-4 mr-2 i-lucide-share-2\" />\n        Share\n        <div class=\"h-4 w-4 ml-auto i-lucide-chevron-right\" />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"email\">\n          <div class=\"h-4 w-4 mr-2 i-lucide-mail\" />\n          Email\n        </MenuItem>\n        <MenuItem value=\"link\">\n          <div class=\"h-4 w-4 mr-2 i-lucide-link\" />\n          Copy Link\n        </MenuItem>\n        <MenuItem value=\"embed\">\n          <div class=\"h-4 w-4 mr-2 i-lucide-code\" />\n          Embed\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <Menu>\n      <ArkMenu.TriggerItem class=\"relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground\">\n        <div class=\"h-4 w-4 mr-2 i-lucide-download\" />\n        Export\n        <div class=\"h-4 w-4 ml-auto i-lucide-chevron-right\" />\n      </ArkMenu.TriggerItem>\n      <MenuContent>\n        <MenuItem value=\"pdf\">\n          <div class=\"h-4 w-4 mr-2 i-lucide-file-text\" />\n          PDF\n        </MenuItem>\n        <MenuItem value=\"png\">\n          <div class=\"h-4 w-4 mr-2 i-lucide-image\" />\n          PNG\n        </MenuItem>\n        <MenuItem value=\"svg\">\n          <div class=\"h-4 w-4 mr-2 i-lucide-file-code\" />\n          SVG\n        </MenuItem>\n      </MenuContent>\n    </Menu>\n    <MenuSeparator />\n    <MenuItem value=\"delete\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-trash\" />\n      Delete\n    </MenuItem>\n  </MenuContent>\n</Menu>"
         },
         {
           "title": "Button Trigger with Icons",
           "description": "Menu with button trigger and icon items",
-          "source": "<Menu>\n  <MenuTrigger variant=\"outline\">\n    <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n    Actions\n  </MenuTrigger>\n  <MenuContent>\n    <MenuItem value=\"new\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-plus\"))} />\n      New File\n    </MenuItem>\n    <MenuItem value=\"open\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"folder-open\"))} />\n      Open File\n    </MenuItem>\n    <MenuItem value=\"save\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"save\"))} />\n      Save\n    </MenuItem>\n    <MenuSeparator />\n    <MenuItem value=\"settings\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n      Settings\n    </MenuItem>\n    <MenuItem value=\"exit\">\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"log-out\"))} />\n      Exit\n    </MenuItem>\n  </MenuContent>\n</Menu>"
+          "source": "<Menu>\n  <MenuTrigger variant=\"outline\">\n    <div class=\"h-4 w-4 mr-2 i-lucide-settings\" />\n    Actions\n  </MenuTrigger>\n  <MenuContent>\n    <MenuItem value=\"new\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-file-plus\" />\n      New File\n    </MenuItem>\n    <MenuItem value=\"open\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-folder-open\" />\n      Open File\n    </MenuItem>\n    <MenuItem value=\"save\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-save\" />\n      Save\n    </MenuItem>\n    <MenuSeparator />\n    <MenuItem value=\"settings\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-settings\" />\n      Settings\n    </MenuItem>\n    <MenuItem value=\"exit\">\n      <div class=\"h-4 w-4 mr-2 i-lucide-log-out\" />\n      Exit\n    </MenuItem>\n  </MenuContent>\n</Menu>"
         }
       ],
       "dependencies": {
@@ -2282,7 +2506,7 @@
         },
         {
           "name": "overlay",
-          "type": "JSX.Element",
+          "type": "() => JSX.Element",
           "description": "Overlay",
           "required": false
         }
@@ -2297,7 +2521,7 @@
         {
           "title": "With Overlay",
           "description": "A QR code with a logo overlay in the center",
-          "source": "<QrCode\n  value=\"https://github.com/ark-ui/ark\"\n  encoding={{ ecc: \"H\" }}\n  overlay={\n    <img\n      src=\"https://ark-ui.com/icon-192.png\"\n      alt=\"Ark UI Logo\"\n      class=\"w-full h-full\"\n    />\n  }\n/>"
+          "source": "<QrCode\n  value=\"https://github.com/ark-ui/ark\"\n  encoding={{ ecc: \"H\" }}\n  overlay={() => (\n    <img\n      src=\"https://ark-ui.com/icon-192.png\"\n      alt=\"Ark UI Logo\"\n      class=\"w-full h-full\"\n    />\n  )}\n/>"
         },
         {
           "title": "Custom Size",
@@ -2408,7 +2632,7 @@
         {
           "title": "With Icons",
           "description": "Radio group with icons for each option",
-          "source": "const frameworks = [\n  { value: \"react\", label: \"React\", icon: \"atom\" },\n  { value: \"solid\", label: \"Solid\", icon: \"box\" },\n  { value: \"vue\", label: \"Vue\", icon: \"triangle\" },\n  { value: \"svelte\", label: \"Svelte\", icon: \"zap\" },\n];\n\nreturn (\n  <RadioGroup defaultValue=\"solid\">\n    <RadioGroupLabel>Framework</RadioGroupLabel>\n    <For each={frameworks}>\n      {(framework) => (\n        <RadioGroupItem value={framework.value}>\n          <div class=\"flex items-center gap-2\">\n            <div class={cn(\"h-4 w-4\", icon(framework.icon))} />\n            <span>{framework.label}</span>\n          </div>\n        </RadioGroupItem>\n      )}\n    </For>\n  </RadioGroup>\n);"
+          "source": "const frameworks = [\n  { value: \"react\", label: \"React\" },\n  { value: \"solid\", label: \"Solid\" },\n  { value: \"vue\", label: \"Vue\" },\n  { value: \"svelte\", label: \"Svelte\" },\n];\n\nreturn (\n  <RadioGroup defaultValue=\"solid\">\n    <RadioGroupLabel>Framework</RadioGroupLabel>\n    <RadioGroupItem value=\"react\">\n      <div class=\"flex items-center gap-2\">\n        <div class=\"h-4 w-4 i-lucide-atom\" />\n        <span>React</span>\n      </div>\n    </RadioGroupItem>\n    <RadioGroupItem value=\"solid\">\n      <div class=\"flex items-center gap-2\">\n        <div class=\"h-4 w-4 i-lucide-box\" />\n        <span>Solid</span>\n      </div>\n    </RadioGroupItem>\n    <RadioGroupItem value=\"vue\">\n      <div class=\"flex items-center gap-2\">\n        <div class=\"h-4 w-4 i-lucide-triangle\" />\n        <span>Vue</span>\n      </div>\n    </RadioGroupItem>\n    <RadioGroupItem value=\"svelte\">\n      <div class=\"flex items-center gap-2\">\n        <div class=\"h-4 w-4 i-lucide-zap\" />\n        <span>Svelte</span>\n      </div>\n    </RadioGroupItem>\n  </RadioGroup>\n);"
         },
         {
           "title": "With Description",
@@ -2534,12 +2758,12 @@
         {
           "title": "With Icons",
           "description": "Select items with custom content",
-          "source": "<Select>\n  <SelectPlaceholder>Select a Framework</SelectPlaceholder>\n  <SelectItem value=\"react\">\n    <div class={cn(\"h-4 w-4\", icon(\"atom\"))} />\n    <span>React</span>\n  </SelectItem>\n  <SelectItem value=\"solid\">\n    <div class={cn(\"h-4 w-4\", icon(\"zap\"))} />\n    <span>Solid</span>\n  </SelectItem>\n  <SelectItem value=\"vue\">\n    <div class={cn(\"h-4 w-4\", icon(\"layers\"))} />\n    <span>Vue</span>\n  </SelectItem>\n</Select>"
+          "source": "<Select>\n  <SelectPlaceholder>Select a Framework</SelectPlaceholder>\n  <SelectItem value=\"react\">\n    <div class=\"h-4 w-4 i-lucide-atom\" />\n    <span>React</span>\n  </SelectItem>\n  <SelectItem value=\"solid\">\n    <div class=\"h-4 w-4 i-lucide-zap\" />\n    <span>Solid</span>\n  </SelectItem>\n  <SelectItem value=\"vue\">\n    <div class=\"h-4 w-4 i-lucide-layers\" />\n    <span>Vue</span>\n  </SelectItem>\n</Select>"
         },
         {
           "title": "With Groups",
           "description": "Grouped select with multiple categories",
-          "source": "<Select>\n  <SelectPlaceholder>Select a tool</SelectPlaceholder>\n  <SelectGroup>\n    <SelectLabel>Frameworks</SelectLabel>\n    <SelectItem value=\"react\">\n      <div class={cn(\"h-4 w-4\", icon(\"atom\"))} />\n      <span>React</span>\n    </SelectItem>\n    <SelectItem value=\"solid\">\n      <div class={cn(\"h-4 w-4\", icon(\"zap\"))} />\n      <span>Solid</span>\n    </SelectItem>\n    <SelectItem value=\"vue\">\n      <div class={cn(\"h-4 w-4\", icon(\"layers\"))} />\n      <span>Vue</span>\n    </SelectItem>\n  </SelectGroup>\n  <SelectGroup>\n    <SelectLabel>Styling</SelectLabel>\n    <SelectItem value=\"panda\">Panda</SelectItem>\n    <SelectItem value=\"tailwind\">Tailwind</SelectItem>\n  </SelectGroup>\n</Select>"
+          "source": "<Select>\n  <SelectPlaceholder>Select a tool</SelectPlaceholder>\n  <SelectGroup>\n    <SelectLabel>Frameworks</SelectLabel>\n    <SelectItem value=\"react\">\n      <div class=\"h-4 w-4 i-lucide-atom\" />\n      <span>React</span>\n    </SelectItem>\n    <SelectItem value=\"solid\">\n      <div class=\"h-4 w-4 i-lucide-zap\" />\n      <span>Solid</span>\n    </SelectItem>\n    <SelectItem value=\"vue\">\n      <div class=\"h-4 w-4 i-lucide-layers\" />\n      <span>Vue</span>\n    </SelectItem>\n  </SelectGroup>\n  <SelectGroup>\n    <SelectLabel>Styling</SelectLabel>\n    <SelectItem value=\"panda\">Panda</SelectItem>\n    <SelectItem value=\"tailwind\">Tailwind</SelectItem>\n  </SelectGroup>\n</Select>"
         },
         {
           "title": "Multiple Select",
@@ -2557,6 +2781,69 @@
       },
       "files": [
         "select.tsx"
+      ]
+    },
+    "signature-pad": {
+      "name": "SignaturePad",
+      "fileName": "signature-pad",
+      "description": "A signature pad component for capturing handwritten signatures. Built on Ark UI SignaturePad - all Ark UI SignaturePad props are supported.",
+      "props": [
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "JSX.Element",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "showClearButton",
+          "type": "boolean",
+          "description": "Show Clear Button",
+          "required": false
+        },
+        {
+          "name": "showGuide",
+          "type": "boolean",
+          "description": "Show Guide",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple signature pad with label and clear button",
+          "source": "<SignaturePad label=\"Sign below\" />"
+        },
+        {
+          "title": "With Image Preview",
+          "description": "Display a preview of the signature as an image",
+          "source": "const [imageUrl, setImageUrl] = createSignal(\"\");\n\nreturn (\n  <div class=\"flex flex-col gap-4 w-full max-w-2xl\">\n    <SignaturePad\n      label=\"Sign below\"\n      onDrawEnd={(details) =>\n        details.getDataUrl(\"image/png\").then((url) => setImageUrl(url))\n      }\n    />\n    <Show when={imageUrl()}>\n      <div class=\"border border-input rounded-lg p-4\">\n        <p class=\"text-sm font-medium mb-2\">Preview:</p>\n        <img\n          src={imageUrl()}\n          alt=\"Signature\"\n          class=\"max-w-full h-auto\"\n        />\n      </div>\n    </Show>\n  </div>\n);"
+        },
+        {
+          "title": "Custom Stroke Color",
+          "description": "Signature pad with custom stroke color",
+          "source": "<SignaturePad\n  label=\"Sign in blue\"\n  drawing={{ fill: \"#3b82f6\", size: 2 }}\n/>"
+        },
+        {
+          "title": "Composable",
+          "description": "Build custom layouts with composable parts",
+          "source": "<SignaturePadRoot class=\"w-full max-w-2xl\">\n  <SignaturePadLabel>Please sign here</SignaturePadLabel>\n  <SignaturePadControl class=\"h-64\">\n    <SignaturePadSegment />\n    <SignaturePadClearTrigger class=\"absolute top-2 right-2\">\n      Reset\n    </SignaturePadClearTrigger>\n    <SignaturePadGuide class=\"absolute bottom-16 left-0 right-0\" />\n  </SignaturePadControl>\n</SignaturePadRoot>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "signature-pad.tsx"
       ]
     },
     "slider": {
@@ -2903,7 +3190,7 @@
         {
           "title": "Default Variant",
           "description": "Pill-style tabs with muted background",
-          "source": "<Tabs defaultValue=\"react\">\n  <TabsList>\n    <TabsIndicator />\n    <TabsTrigger value=\"react\">React</TabsTrigger>\n    <TabsTrigger value=\"solid\">Solid</TabsTrigger>\n    <TabsTrigger value=\"vue\">Vue</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"react\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">React</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        React is a JavaScript library for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"solid\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Solid</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        SolidJS is a reactive JavaScript library for building fast UIs.\n      </p>\n    </div>\n  </TabsContent>\n  <TabsContent value=\"vue\">\n    <div class=\"p-4 border border-border rounded-md\">\n      <h3 class=\"font-semibold mb-2\">Vue</h3>\n      <p class=\"text-sm text-muted-foreground\">\n        Vue is a progressive framework for building user interfaces.\n      </p>\n    </div>\n  </TabsContent>\n</Tabs>"
+          "source": "<Tabs defaultValue=\"react\">\n  <TabsList>\n    <TabsIndicator />\n    <TabsTrigger value=\"react\">React</TabsTrigger>\n    <TabsTrigger value=\"solid\">Solid</TabsTrigger>\n    <TabsTrigger value=\"vue\">Vue</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"react\">\n    <Card>\n      <CardHeader>\n        <CardTitle>React</CardTitle>\n      </CardHeader>\n      <CardContent>\n        <p class=\"text-sm text-muted-foreground\">\n          React is a JavaScript library for building user interfaces.\n        </p>\n      </CardContent>\n    </Card>\n  </TabsContent>\n  <TabsContent value=\"solid\">\n    <Card>\n      <CardHeader>\n        <CardTitle>Solid</CardTitle>\n      </CardHeader>\n      <CardContent>\n        <p class=\"text-sm text-muted-foreground\">\n          SolidJS is a reactive JavaScript library for building fast\n          UIs.\n        </p>\n      </CardContent>\n    </Card>\n  </TabsContent>\n  <TabsContent value=\"vue\">\n    <Card>\n      <CardHeader>\n        <CardTitle>Vue</CardTitle>\n      </CardHeader>\n      <CardContent>\n        <p class=\"text-sm text-muted-foreground\">\n          Vue is a progressive framework for building user interfaces.\n        </p>\n      </CardContent>\n    </Card>\n  </TabsContent>\n</Tabs>"
         },
         {
           "title": "Underline Variant",
@@ -3201,7 +3488,7 @@
         {
           "title": "Custom Content",
           "description": "Fully customized toast with JSX content and custom progress bar",
-          "source": "const ToastExample = () => {\n  const { notify, dismiss } = useToast(\"example3\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() => {\n          const { id } = notify(\n            <div class=\"flex items-start justify-between gap-4 w-full\">\n              <div class=\"flex flex-col gap-1 flex-1\">\n                <div class=\"font-semibold\">New message received</div>\n                <div class=\"text-sm opacity-90\">\n                  John Doe sent you a message\n                </div>\n              </div>\n              <Button\n                size=\"sm\"\n                variant=\"ghost\"\n                onClick={() => dismiss({ id })}\n                class=\"shrink-0 self-center -mt-1\"\n                aria-label=\"Dismiss\"\n              >\n                <div class={cn(\"h-4 w-4\", icon(\"x\"))} />\n              </Button>\n            </div>,\n            {\n              duration: false,\n              showDismissButton: false,\n              showIcon: false,\n            },\n          );\n        }}\n      >\n        Custom Message\n      </Button>\n      <Button\n        onClick={() => {\n          notify(\n            (toast) => (\n              <div class=\"relative w-full bg-background rounded-lg border border-border p-3 shadow-lg\">\n                <div class=\"flex items-start justify-between gap-4 w-full\">\n                  <div class=\"flex flex-col gap-1 flex-1\">\n                    <div class=\"font-semibold\">File uploading</div>\n                    <div class=\"text-sm opacity-90\">\n                      upload.pdf •{\" \"}\n                      {Math.round(toast.progressManager.progress())}%\n                      complete\n                    </div>\n                  </div>\n                </div>\n                <div\n                  class=\"absolute left-0 bottom-0 h-1 bg-blue-500 rounded-b-lg transition-all\"\n                  style={{\n                    width: `${toast.progressManager.progress()}%`,\n                  }}\n                />\n              </div>\n            ),\n            {\n              duration: 5000,\n              showDismissButton: false,\n              showIcon: false,\n              showProgressBar: false,\n            },\n          );\n        }}\n      >\n        Custom Progress Bar\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"example3\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
+          "source": "const ToastExample = () => {\n  const { notify, dismiss } = useToast(\"example3\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() => {\n          const { id } = notify(\n            <div class=\"flex items-start justify-between gap-4 w-full\">\n              <div class=\"flex flex-col gap-1 flex-1\">\n                <div class=\"font-semibold\">New message received</div>\n                <div class=\"text-sm opacity-90\">\n                  John Doe sent you a message\n                </div>\n              </div>\n              <Button\n                size=\"sm\"\n                variant=\"ghost\"\n                onClick={() => dismiss({ id })}\n                class=\"shrink-0 self-center -mt-1\"\n                aria-label=\"Dismiss\"\n              >\n                <div class=\"h-4 w-4 i-lucide-x\" />\n              </Button>\n            </div>,\n            {\n              duration: false,\n              showDismissButton: false,\n              showIcon: false,\n            },\n          );\n        }}\n      >\n        Custom Message\n      </Button>\n      <Button\n        onClick={() => {\n          notify(\n            (toast) => (\n              <div class=\"relative w-full bg-background rounded-lg border border-border p-3 shadow-lg\">\n                <div class=\"flex items-start justify-between gap-4 w-full\">\n                  <div class=\"flex flex-col gap-1 flex-1\">\n                    <div class=\"font-semibold\">File uploading</div>\n                    <div class=\"text-sm opacity-90\">\n                      upload.pdf •{\" \"}\n                      {Math.round(toast.progressManager.progress())}%\n                      complete\n                    </div>\n                  </div>\n                </div>\n                <div\n                  class=\"absolute left-0 bottom-0 h-1 bg-blue-500 rounded-b-lg transition-all\"\n                  style={{\n                    width: `${toast.progressManager.progress()}%`,\n                  }}\n                />\n              </div>\n            ),\n            {\n              duration: 5000,\n              showDismissButton: false,\n              showIcon: false,\n              showProgressBar: false,\n            },\n          );\n        }}\n      >\n        Custom Progress Bar\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"example3\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
         }
       ],
       "dependencies": {
@@ -3304,17 +3591,22 @@
         {
           "title": "Basic Tooltip",
           "description": "A simple tooltip with default settings",
-          "source": "<Tooltip>\n  <TooltipTrigger>\n    <span class=\"underline decoration-dotted underline-offset-4\">\n      Hover me\n    </span>\n  </TooltipTrigger>\n  <TooltipContent>I am a tooltip!</TooltipContent>\n</Tooltip>"
+          "source": "<Tooltip>\n  <TooltipTrigger>\n    <Button variant=\"outline\">Hover me</Button>\n  </TooltipTrigger>\n  <TooltipContent>I am a tooltip!</TooltipContent>\n</Tooltip>"
         },
         {
-          "title": "Positioning",
-          "description": "Tooltips positioned on different sides",
-          "source": "<div class=\"flex gap-8 items-center justify-center flex-wrap\">\n  <Tooltip positioning={{ placement: \"left\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Left\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on left</TooltipContent>\n  </Tooltip>\n\n  <Tooltip positioning={{ placement: \"top\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Top\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on top</TooltipContent>\n  </Tooltip>\n\n  <Tooltip positioning={{ placement: \"bottom\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Bottom\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on bottom</TooltipContent>\n  </Tooltip>\n\n  <Tooltip positioning={{ placement: \"right\" }}>\n    <TooltipTrigger>\n      <span class=\"underline decoration-dotted underline-offset-4\">\n        Right\n      </span>\n    </TooltipTrigger>\n    <TooltipContent>Tooltip on right</TooltipContent>\n  </Tooltip>\n</div>"
+          "title": "On Buttons",
+          "description": "Tooltips on interactive button elements",
+          "source": "<div class=\"flex gap-4 items-center\">\n  <Tooltip>\n    <TooltipTrigger>\n      <Button variant=\"default\">\n        <div class=\"h-4 w-4 i-lucide-save\" />\n      </Button>\n    </TooltipTrigger>\n    <TooltipContent>Save changes</TooltipContent>\n  </Tooltip>\n\n  <Tooltip>\n    <TooltipTrigger>\n      <Button variant=\"outline\">\n        <div class=\"h-4 w-4 i-lucide-trash\" />\n      </Button>\n    </TooltipTrigger>\n    <TooltipContent>Delete item</TooltipContent>\n  </Tooltip>\n\n  <Tooltip>\n    <TooltipTrigger>\n      <Button variant=\"ghost\">\n        <div class=\"h-4 w-4 i-lucide-info\" />\n      </Button>\n    </TooltipTrigger>\n    <TooltipContent>More information</TooltipContent>\n  </Tooltip>\n</div>"
+        },
+        {
+          "title": "On Badges",
+          "description": "Tooltips providing context for status badges",
+          "source": "<div class=\"flex gap-4 items-center flex-wrap\">\n  <Tooltip>\n    <TooltipTrigger>\n      <Badge variant=\"default\">\n        <div class=\"h-3 w-3 i-lucide-check-circle mr-1\" />\n        Active\n      </Badge>\n    </TooltipTrigger>\n    <TooltipContent>Service is running normally</TooltipContent>\n  </Tooltip>\n\n  <Tooltip>\n    <TooltipTrigger>\n      <Badge variant=\"secondary\">\n        <div class=\"h-3 w-3 i-lucide-clock mr-1\" />\n        Pending\n      </Badge>\n    </TooltipTrigger>\n    <TooltipContent>Awaiting approval</TooltipContent>\n  </Tooltip>\n\n  <Tooltip>\n    <TooltipTrigger>\n      <Badge variant=\"destructive\">\n        <div class=\"h-3 w-3 i-lucide-alert-circle mr-1\" />\n        Error\n      </Badge>\n    </TooltipTrigger>\n    <TooltipContent>Service encountered an error</TooltipContent>\n  </Tooltip>\n</div>"
         },
         {
           "title": "Rich Content",
           "description": "Tooltip with formatted content",
-          "source": "<Tooltip interactive>\n  <TooltipTrigger>\n    <span class=\"underline decoration-dotted underline-offset-4\">\n      Hover for more info\n    </span>\n  </TooltipTrigger>\n  <TooltipContent class=\"max-w-xs\">\n    <div class=\"space-y-1\">\n      <p class=\"font-semibold\">Pro Tip</p>\n      <p class=\"text-xs\">\n        You can hover over this tooltip and interact with its content.\n      </p>\n    </div>\n  </TooltipContent>\n</Tooltip>"
+          "source": "<Tooltip interactive>\n  <TooltipTrigger>\n    <Button variant=\"outline\">\n      <div class=\"h-4 w-4 i-lucide-help-circle mr-2\" />\n      Hover for more info\n    </Button>\n  </TooltipTrigger>\n  <TooltipContent class=\"max-w-xs\">\n    <div class=\"space-y-1\">\n      <p class=\"font-semibold\">Pro Tip</p>\n      <p class=\"text-xs\">\n        You can hover over this tooltip and interact with its content.\n      </p>\n    </div>\n  </TooltipContent>\n</Tooltip>"
         }
       ],
       "dependencies": {
@@ -3326,6 +3618,118 @@
       },
       "files": [
         "tooltip.tsx"
+      ]
+    },
+    "tree-view": {
+      "name": "TreeView",
+      "fileName": "tree-view",
+      "description": "A tree view component that displays hierarchical data in an expandable structure. Perfect for file explorers, navigation menus, and nested lists.",
+      "props": [
+        {
+          "name": "collection",
+          "type": "ReturnType<typeof createTreeCollection<TreeNode>>",
+          "description": "Collection",
+          "required": false
+        },
+        {
+          "name": "data",
+          "type": "TreeNode[]",
+          "description": "Data",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Label text",
+          "required": false
+        },
+        {
+          "name": "expandedValue",
+          "type": "string[]",
+          "description": "Expanded Value",
+          "required": false
+        },
+        {
+          "name": "defaultExpandedValue",
+          "type": "string[]",
+          "description": "Default Expanded Value",
+          "required": false
+        },
+        {
+          "name": "selectedValue",
+          "type": "string[]",
+          "description": "Selected Value",
+          "required": false
+        },
+        {
+          "name": "defaultSelectedValue",
+          "type": "string[]",
+          "description": "Default Selected Value",
+          "required": false
+        },
+        {
+          "name": "onExpandedChange",
+          "type": "(details: { expandedValue: string[] }) => void",
+          "description": "On Expanded Change",
+          "required": false
+        },
+        {
+          "name": "onSelectionChange",
+          "type": "(details: { selectedValue: string[] }) => void",
+          "description": "On Selection Change",
+          "required": false
+        },
+        {
+          "name": "selectionMode",
+          "type": "\"single\" | \"multiple\"",
+          "description": "Selection Mode",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "renderBranch",
+          "type": "(node: TreeNode) => JSX.Element",
+          "description": "Render Branch",
+          "required": false
+        },
+        {
+          "name": "renderItem",
+          "type": "(node: TreeNode) => JSX.Element",
+          "description": "Render Item",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "A simple tree view with folders and files",
+          "source": "<TreeView\n  label=\"Project Files\"\n  data={[\n    {\n      id: \"node_modules\",\n      name: \"node_modules\",\n      children: [\n        { id: \"node_modules/zag-js\", name: \"zag-js\" },\n        {\n          id: \"node_modules/@types\",\n          name: \"@types\",\n          children: [\n            { id: \"node_modules/@types/react\", name: \"react\" },\n            {\n              id: \"node_modules/@types/react-dom\",\n              name: \"react-dom\",\n            },\n          ],\n        },\n      ],\n    },\n    {\n      id: \"src\",\n      name: \"src\",\n      children: [\n        { id: \"src/app.tsx\", name: \"app.tsx\" },\n        { id: \"src/index.ts\", name: \"index.ts\" },\n      ],\n    },\n    { id: \"package.json\", name: \"package.json\" },\n    { id: \"readme.md\", name: \"README.md\" },\n  ]}\n/>"
+        },
+        {
+          "title": "With Selection",
+          "description": "Tree view with single selection enabled",
+          "source": "<TreeView\n  label=\"Documentation\"\n  selectionMode=\"single\"\n  defaultSelectedValue={[\"docs/getting-started\"]}\n  data={[\n    {\n      id: \"docs\",\n      name: \"Documentation\",\n      children: [\n        { id: \"docs/getting-started\", name: \"Getting Started\" },\n        { id: \"docs/installation\", name: \"Installation\" },\n      ],\n    },\n    {\n      id: \"examples\",\n      name: \"Examples\",\n      children: [\n        { id: \"examples/react\", name: \"React Examples\" },\n        { id: \"examples/vue\", name: \"Vue Examples\" },\n      ],\n    },\n  ]}\n/>"
+        },
+        {
+          "title": "Custom Rendering",
+          "description": "Customize how branches and items are rendered",
+          "source": "<TreeView\n  label=\"Source Code\"\n  defaultExpandedValue={[\"components\"]}\n  data={[\n    {\n      id: \"components\",\n      name: \"components\",\n      children: [\n        { id: \"components/button.tsx\", name: \"button.tsx\" },\n        { id: \"components/input.tsx\", name: \"input.tsx\" },\n      ],\n    },\n    {\n      id: \"lib\",\n      name: \"lib\",\n      children: [\n        { id: \"lib/utils.ts\", name: \"utils.ts\" },\n        { id: \"lib/cn.ts\", name: \"cn.ts\" },\n      ],\n    },\n  ]}\n  renderBranch={(node) => (\n    <>\n      <div class=\"h-4 w-4 i-lucide-folder-open\" />\n      <span class=\"font-semibold\">{node.name}</span>\n    </>\n  )}\n  renderItem={(node) => (\n    <>\n      <div class=\"h-4 w-4 i-lucide-file-code\" />\n      <span class=\"text-muted-foreground\">{node.name}</span>\n    </>\n  )}\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "@ark-ui/solid"
+        ]
+      },
+      "files": [
+        "tree-view.tsx"
       ]
     }
   },
@@ -3341,8 +3745,10 @@
     "dialog",
     "file-upload",
     "floating-panel",
+    "format",
     "hover-card",
     "input",
+    "json-tree-view",
     "listbox",
     "marquee",
     "menu",
@@ -3351,10 +3757,12 @@
     "qr-code",
     "radio-group",
     "select",
+    "signature-pad",
     "slider",
     "switch",
     "tabs",
     "toast",
-    "tooltip"
+    "tooltip",
+    "tree-view"
   ]
 }

@@ -27,6 +27,18 @@ import {
   TabsIndicator,
 } from "../components/tabs";
 import { Input } from "../components/input";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../components/tooltip";
+import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "../components/hover-card";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "../components/accordion";
 import { cn } from "@lib/cn";
 import { icon } from "@lib/icon";
 
@@ -140,6 +152,7 @@ const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
 ) => {
   const [showCode, setShowCode] = createSignal<Record<number, boolean>>({});
   const [selectedTab, setSelectedTab] = createSignal("0");
+  const [copied, setCopied] = createSignal(false);
 
   const meta = () => props.componentInfo.meta;
 
@@ -218,26 +231,34 @@ const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
         {/* Install Command */}
         <Card class="mb-6">
           <CardContent class="pt-6">
+            <p class="text-sm text-muted-foreground mb-2">
+              Install this component
+            </p>
             <div class="flex items-center justify-between gap-4">
-              <div class="flex-1">
-                <p class="text-sm text-muted-foreground mb-2">
-                  Install this component
-                </p>
-                <code class="text-sm bg-muted px-3 py-2 rounded font-mono block">
-                  bunx method@latest add {props.componentInfo.name}
-                </code>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    `bunx method@latest add ${props.componentInfo.name}`,
-                  );
-                }}
-              >
-                <div class={cn("h-4 w-4", icon("copy"))} />
-              </Button>
+              <code class="text-sm bg-muted px-3 py-2 rounded font-mono block flex-1">
+                bunx method@latest add {props.componentInfo.name}
+              </code>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={(e) => {
+                      const btn = e.currentTarget;
+                      navigator.clipboard.writeText(
+                        `bunx method@latest add ${props.componentInfo.name}`,
+                      );
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 1000);
+                    }}
+                  >
+                    <div
+                      class={cn("h-4 w-4", icon(copied() ? "check" : "copy"))}
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Copy install command</TooltipContent>
+              </Tooltip>
             </div>
           </CardContent>
         </Card>
@@ -299,17 +320,23 @@ const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
                             <span class="text-xs font-medium text-muted-foreground">
                               TypeScript
                             </span>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => {
-                                navigator.clipboard.writeText(
-                                  example().source || example().code.toString(),
-                                );
-                              }}
-                            >
-                              <div class={cn("h-3 w-3", icon("copy"))} />
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(
+                                      example().source ||
+                                        example().code.toString(),
+                                    );
+                                  }}
+                                >
+                                  <div class={cn("h-3 w-3", icon("copy"))} />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Copy code</TooltipContent>
+                            </Tooltip>
                           </div>
                           <pre class="p-4 text-sm overflow-x-auto">
                             <code class="language-tsx text-foreground">
@@ -399,74 +426,92 @@ const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
 
       {/* Props Table */}
       <Show when={meta().props && meta().props.length > 0}>
-        <Card>
-          <CardHeader>
-            <CardTitle class="text-lg">Props</CardTitle>
-            <CardDescription>
-              Component API reference and prop types
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div class="overflow-x-auto">
-              <table class="w-full text-sm">
-                <thead>
-                  <tr class="border-b border-border">
-                    <th class="text-left py-3 px-4 font-semibold text-foreground">
-                      Prop
-                    </th>
-                    <th class="text-left py-3 px-4 font-semibold text-foreground">
-                      Type
-                    </th>
-                    <th class="text-left py-3 px-4 font-semibold text-foreground">
-                      Default
-                    </th>
-                    <th class="text-left py-3 px-4 font-semibold text-foreground">
-                      Description
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <For each={meta().props}>
-                    {(prop) => (
-                      <tr class="border-b border-border/50 hover:bg-muted/50 transition-colors">
-                        <td class="py-3 px-4">
-                          <code class="text-xs font-mono bg-muted px-1.5 py-0.5 rounded">
-                            {prop.name}
-                          </code>
-                          <Show when={prop.required}>
-                            <Badge variant="destructive" class="ml-2 text-xs">
-                              required
-                            </Badge>
-                          </Show>
-                        </td>
-                        <td class="py-3 px-4">
-                          <code class="text-xs font-mono text-muted-foreground">
-                            {prop.type}
-                          </code>
-                        </td>
-                        <td class="py-3 px-4">
-                          <Show
-                            when={prop.defaultValue}
-                            fallback={
-                              <span class="text-muted-foreground">-</span>
-                            }
-                          >
-                            <code class="text-xs font-mono text-muted-foreground">
-                              {prop.defaultValue}
-                            </code>
-                          </Show>
-                        </td>
-                        <td class="py-3 px-4 text-muted-foreground">
-                          {prop.description || "-"}
-                        </td>
-                      </tr>
-                    )}
-                  </For>
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+        <Accordion collapsible defaultValue={["props"]}>
+          <AccordionItem value="props">
+            <Card>
+              <CardHeader class="pb-3">
+                <AccordionTrigger class="hover:no-underline">
+                  <div class="flex items-center justify-between w-full pr-4">
+                    <div>
+                      <CardTitle class="text-lg">Props</CardTitle>
+                      <CardDescription class="mt-1">
+                        Component API reference and prop types
+                      </CardDescription>
+                    </div>
+                    <Badge variant="secondary" class="ml-4">
+                      {meta().props.length}
+                    </Badge>
+                  </div>
+                </AccordionTrigger>
+              </CardHeader>
+              <AccordionContent>
+                <CardContent class="pt-0">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b border-border">
+                          <th class="text-left py-3 px-4 font-semibold text-foreground">
+                            Prop
+                          </th>
+                          <th class="text-left py-3 px-4 font-semibold text-foreground">
+                            Type
+                          </th>
+                          <th class="text-left py-3 px-4 font-semibold text-foreground">
+                            Default
+                          </th>
+                          <th class="text-left py-3 px-4 font-semibold text-foreground">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <For each={meta().props}>
+                          {(prop) => (
+                            <tr class="border-b border-border/50 hover:bg-muted/50 transition-colors">
+                              <td class="py-3 px-4">
+                                <code class="text-xs font-mono bg-muted px-1.5 py-0.5 rounded">
+                                  {prop.name}
+                                </code>
+                                <Show when={prop.required}>
+                                  <Badge
+                                    variant="destructive"
+                                    class="ml-2 text-xs"
+                                  >
+                                    required
+                                  </Badge>
+                                </Show>
+                              </td>
+                              <td class="py-3 px-4">
+                                <code class="text-xs font-mono text-muted-foreground">
+                                  {prop.type}
+                                </code>
+                              </td>
+                              <td class="py-3 px-4">
+                                <Show
+                                  when={prop.defaultValue}
+                                  fallback={
+                                    <span class="text-muted-foreground">-</span>
+                                  }
+                                >
+                                  <code class="text-xs font-mono text-muted-foreground">
+                                    {prop.defaultValue}
+                                  </code>
+                                </Show>
+                              </td>
+                              <td class="py-3 px-4 text-muted-foreground">
+                                {prop.description || "-"}
+                              </td>
+                            </tr>
+                          )}
+                        </For>
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </AccordionContent>
+            </Card>
+          </AccordionItem>
+        </Accordion>
       </Show>
     </div>
   );
@@ -602,51 +647,6 @@ export default function Home() {
                       No components found
                     </div>
                   </Show>
-                </CardContent>
-              </Card>
-
-              {/* Info Card */}
-              <Card class="mt-4">
-                <CardContent class="pt-6 space-y-3">
-                  <div class="flex items-start gap-2">
-                    <div
-                      class={cn(
-                        "h-4 w-4 mt-0.5 text-green-500",
-                        icon("check-circle"),
-                      )}
-                    />
-                    <div>
-                      <p class="text-xs font-medium">SSR Ready</p>
-                      <p class="text-xs text-muted-foreground">
-                        Full server-side rendering support
-                      </p>
-                    </div>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <div
-                      class={cn("h-4 w-4 mt-0.5 text-blue-500", icon("zap"))}
-                    />
-                    <div>
-                      <p class="text-xs font-medium">Built with Ark UI</p>
-                      <p class="text-xs text-muted-foreground">
-                        Accessible & customizable primitives
-                      </p>
-                    </div>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <div
-                      class={cn(
-                        "h-4 w-4 mt-0.5 text-purple-500",
-                        icon("sparkles"),
-                      )}
-                    />
-                    <div>
-                      <p class="text-xs font-medium">UnoCSS Powered</p>
-                      <p class="text-xs text-muted-foreground">
-                        Instant on-demand atomic CSS
-                      </p>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>

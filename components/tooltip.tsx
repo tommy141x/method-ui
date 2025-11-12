@@ -80,6 +80,11 @@ export const TooltipContent = (props: TooltipContentProps) => {
   );
 };
 
+// Import components for examples only - won't count as dependencies
+// since they're imported right before the meta export
+import { Button } from "./button";
+import { Badge } from "./badge";
+
 export const meta: ComponentMeta<TooltipProps> = {
   name: "Tooltip",
   description:
@@ -91,53 +96,79 @@ export const meta: ComponentMeta<TooltipProps> = {
       code: () => (
         <Tooltip>
           <TooltipTrigger>
-            <span class="underline decoration-dotted underline-offset-4">
-              Hover me
-            </span>
+            <Button variant="outline">Hover me</Button>
           </TooltipTrigger>
           <TooltipContent>I am a tooltip!</TooltipContent>
         </Tooltip>
       ),
     },
     {
-      title: "Positioning",
-      description: "Tooltips positioned on different sides",
+      title: "On Buttons",
+      description: "Tooltips on interactive button elements",
       code: () => (
-        <div class="flex gap-8 items-center justify-center flex-wrap">
-          <Tooltip positioning={{ placement: "left" }}>
+        <div class="flex gap-4 items-center">
+          <Tooltip>
             <TooltipTrigger>
-              <span class="underline decoration-dotted underline-offset-4">
-                Left
-              </span>
+              <Button variant="default">
+                <div class="h-4 w-4 i-lucide-save" />
+              </Button>
             </TooltipTrigger>
-            <TooltipContent>Tooltip on left</TooltipContent>
+            <TooltipContent>Save changes</TooltipContent>
           </Tooltip>
 
-          <Tooltip positioning={{ placement: "top" }}>
+          <Tooltip>
             <TooltipTrigger>
-              <span class="underline decoration-dotted underline-offset-4">
-                Top
-              </span>
+              <Button variant="outline">
+                <div class="h-4 w-4 i-lucide-trash" />
+              </Button>
             </TooltipTrigger>
-            <TooltipContent>Tooltip on top</TooltipContent>
+            <TooltipContent>Delete item</TooltipContent>
           </Tooltip>
 
-          <Tooltip positioning={{ placement: "bottom" }}>
+          <Tooltip>
             <TooltipTrigger>
-              <span class="underline decoration-dotted underline-offset-4">
-                Bottom
-              </span>
+              <Button variant="ghost">
+                <div class="h-4 w-4 i-lucide-info" />
+              </Button>
             </TooltipTrigger>
-            <TooltipContent>Tooltip on bottom</TooltipContent>
+            <TooltipContent>More information</TooltipContent>
+          </Tooltip>
+        </div>
+      ),
+    },
+    {
+      title: "On Badges",
+      description: "Tooltips providing context for status badges",
+      code: () => (
+        <div class="flex gap-4 items-center flex-wrap">
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant="default">
+                <div class="h-3 w-3 i-lucide-check-circle mr-1" />
+                Active
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>Service is running normally</TooltipContent>
           </Tooltip>
 
-          <Tooltip positioning={{ placement: "right" }}>
+          <Tooltip>
             <TooltipTrigger>
-              <span class="underline decoration-dotted underline-offset-4">
-                Right
-              </span>
+              <Badge variant="secondary">
+                <div class="h-3 w-3 i-lucide-clock mr-1" />
+                Pending
+              </Badge>
             </TooltipTrigger>
-            <TooltipContent>Tooltip on right</TooltipContent>
+            <TooltipContent>Awaiting approval</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant="destructive">
+                <div class="h-3 w-3 i-lucide-alert-circle mr-1" />
+                Error
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>Service encountered an error</TooltipContent>
           </Tooltip>
         </div>
       ),
@@ -148,9 +179,10 @@ export const meta: ComponentMeta<TooltipProps> = {
       code: () => (
         <Tooltip interactive>
           <TooltipTrigger>
-            <span class="underline decoration-dotted underline-offset-4">
+            <Button variant="outline">
+              <div class="h-4 w-4 i-lucide-help-circle mr-2" />
               Hover for more info
-            </span>
+            </Button>
           </TooltipTrigger>
           <TooltipContent class="max-w-xs">
             <div class="space-y-1">
