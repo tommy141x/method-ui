@@ -1,902 +1,522 @@
 /**
- * Toast Component - Notification system using solid-notifications
+ * Toaster Component - Toast notification system using Ark UI
  *
  * SETUP INSTRUCTIONS:
  *
- * 1. Wrap your app with ToastProvider and add the Toaster component:
+ * 1. Create a toaster instance in your app:
  *
- *    import { ToastContainer } from "./components/toast";
+ *    import { createToaster } from "./components/toaster";
+ *
+ *    const toaster = createToaster({
+ *      placement: "bottom-end",
+ *      overlap: true,
+ *      gap: 16,
+ *    });
+ *
+ * 2. Add the Toaster component to your app root:
+ *
+ *    import { Toaster } from "./components/toaster";
  *
  *    export default function App() {
  *      return (
- *        <ToastContainer>
+ *        <>
+ *          <Toaster toaster={toaster} />
  *          {/* Your app content *\/}
- *        </ToastContainer>
+ *        </>
  *      );
  *    }
  *
- * 2. Use toast notifications in your components:
+ * 3. Use toast notifications anywhere in your app:
  *
- *    Using the hook:
- *    import { useToast } from "./components/toast";
+ *    toaster.create({
+ *      title: "Success!",
+ *      description: "Your changes have been saved.",
+ *      type: "success",
+ *    });
  *
- *    const { notify } = useToast();
- *    notify("Hello world!", { type: "success" });
- *
- *    Using helper functions:
- *    import { toast } from "./components/toast";
- *
- *    toast.success("Operation successful!");
- *    toast.error("Something went wrong!");
- *    toast.warning("Please be careful!");
- *    toast.info("Did you know?");
- *    toast.loading("Processing...");
- *
- *    Using global API (no imports needed in component):
- *    import { showToast } from "./components/toast";
- *
- *    showToast("Hello world!", { type: "success", duration: 5000 });
+ *    // Or use convenience methods:
+ *    toaster.success({ title: "Success!", description: "Done!" });
+ *    toaster.error({ title: "Error", description: "Something went wrong" });
+ *    toaster.warning({ title: "Warning", description: "Be careful" });
+ *    toaster.info({ title: "Info", description: "FYI" });
  *
  * FEATURES:
- * - Multiple toast types (default, success, error, warning, info, loading)
+ * - Multiple toast types (success, error, warning, info, loading)
  * - Customizable duration and position
  * - Promise-based toasts for async operations
- * - Custom JSX content support
- * - Update and dismiss toasts programmatically
- * - Dark mode support via CSS variables
- * - Keyboard shortcuts (Alt+T to focus, Escape to dismiss)
- * - Pause on hover and window blur
- * - Drag to dismiss
+ * - Action and cancel buttons
+ * - Dismiss toasts programmatically
+ * - Stacking and overlap animations
+ * - Pause on hover
+ * - Maximum visible toasts with queueing
+ * - Dark mode support
  */
 
 import type { JSX, Component } from "solid-js";
-import { splitProps, mergeProps, createSignal } from "solid-js";
-import { Portal } from "solid-js/web";
-import { cva } from "class-variance-authority";
+import { splitProps, Show, For } from "solid-js";
 import {
-  ToastProvider as SolidToastProvider,
-  Toaster as SolidToaster,
-  useToast,
-  showToast,
-} from "solid-notifications";
+  Toast as ArkToast,
+  Toaster as ArkToaster,
+  createToaster as arkCreateToaster,
+} from "@ark-ui/solid/toast";
+import type {
+  CreateToasterProps,
+  CreateToasterReturn,
+  ToasterProps as ArkToasterProps,
+} from "@ark-ui/solid/toast";
 import { cn } from "../lib/cn";
 import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
-const toastVariants = cva("", {
-  variants: {
-    variant: {
-      default: "",
-      success: "",
-      error: "",
-      warning: "",
-      info: "",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+// Re-export createToaster from Ark UI with proper types
+export const createToaster = (props: CreateToasterProps) => {
+  return arkCreateToaster(props);
+};
 
-// Toast icon map - defined at module level so UnoCSS extractor can find icon() calls
-const TOAST_ICONS = {
-  success: icon("circle-check"),
-  error: icon("circle-x"),
-  warning: icon("triangle-alert"),
-  info: icon("info"),
-  loading: icon("loader-circle"),
-  default: icon("bell"),
-} as const;
+export type ToasterInstance = CreateToasterReturn;
 
+// Toast component props
 export interface ToastProps {
-  variant?: "default" | "success" | "error" | "warning" | "info";
-  duration?: number | false;
-  position?:
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right";
-}
-
-/**
- * Toaster component props
- */
-export interface ToasterProps {
-  toasterId?: string;
-  position?: "top" | "bottom";
-  align?: "left" | "center" | "right";
+  /**
+   * The toaster instance created with createToaster
+   */
+  toaster: CreateToasterReturn;
+  /**
+   * Additional CSS classes
+   */
   class?: string;
-  // Toaster config
-  limit?: number | false;
-  reverseToastOrder?: boolean;
-  offsetX?: number;
-  offsetY?: number;
-  gutter?: number;
-  renderOnWindowInactive?: boolean;
-  pauseOnWindowInactive?: boolean;
-  toasterStyle?: JSX.CSSProperties;
-  // Toast config
-  theme?: string | undefined | null;
-  type?: "default" | "success" | "error" | "loading" | "warning" | "info";
-  duration?: number | false;
-  onEnter?: string;
-  enterDuration?: number;
-  onExit?: string;
-  exitDuration?: number;
-  onIdle?: string;
-  style?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  pauseOnHover?: boolean;
-  wrapperClass?:
-    | string
-    | ((args: { theme: string | undefined | null; type: string }) => string);
-  wrapperStyle?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  enterCallback?: () => void;
-  updateCallback?: () => void;
-  exitCallback?: (reason?: boolean | string) => void;
-  showDismissButton?: boolean;
-  dismissButtonClass?:
-    | string
-    | ((args: { theme: string | undefined | null; type: string }) => string);
-  dismissButtonStyle?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  dismissOnClick?: boolean;
-  showProgressBar?: boolean;
-  progressBarClass?:
-    | string
-    | ((args: { theme: string | undefined | null; type: string }) => string);
-  progressBarStyle?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  showIcon?: boolean;
-  icon?:
-    | JSX.Element
-    | null
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.Element);
-  dragToDismiss?: boolean;
-  dragTreshold?: number;
-  ariaLive?: "polite" | "assertive" | "off";
-  role?: "status" | "alert";
+  /**
+   * The document's text/writing direction
+   */
+  dir?: "ltr" | "rtl";
+  /**
+   * A root node to correctly resolve document in custom environments (e.g., iframes, Electron)
+   */
+  getRootNode?: () => Node | ShadowRoot | Document;
 }
 
-/**
- * Toaster - Container for rendering toast notifications
- * Place this component where you want toasts to appear
- */
-export const Toaster: Component<ToasterProps> = (props) => {
-  const merged = mergeProps(
-    {
-      position: "top" as const,
-      align: "right" as const,
-      toasterId: "default",
-      offsetX: 16,
-      offsetY: 16,
-      gutter: 8,
-      duration: 5000,
-      showIcon: true,
-      showDismissButton: true,
-      showProgressBar: true,
-    },
-    props,
+// Toast type icons
+const ToastIcon: Component<{ type?: string }> = (props) => {
+  return (
+    <Show when={props.type}>
+      <div class="shrink-0 mt-0.5">
+        <Show when={props.type === "success"}>
+          <div
+            class={cn(
+              "h-5 w-5 text-green-600 dark:text-green-400",
+              icon("circle-check"),
+            )}
+          />
+        </Show>
+        <Show when={props.type === "error"}>
+          <div class={cn("h-5 w-5 text-destructive", icon("circle-x"))} />
+        </Show>
+        <Show when={props.type === "warning"}>
+          <div
+            class={cn(
+              "h-5 w-5 text-yellow-600 dark:text-yellow-400",
+              icon("triangle-alert"),
+            )}
+          />
+        </Show>
+        <Show when={props.type === "info"}>
+          <div class={cn("h-5 w-5 text-primary", icon("info"))} />
+        </Show>
+        <Show when={props.type === "loading"}>
+          <div
+            class={cn(
+              "h-5 w-5 animate-spin text-primary",
+              icon("loader-circle"),
+            )}
+          />
+        </Show>
+      </div>
+    </Show>
   );
+};
 
-  const [local, others] = splitProps(merged, [
-    "toasterId",
-    "position",
-    "align",
-    "class",
-    "toasterStyle",
-  ]);
-
-  console.log("Toaster component rendering with toasterId:", local.toasterId);
+// Main Toast component
+export const Toast: Component<ToastProps> = (props) => {
+  const [local, others] = splitProps(props, ["toaster", "class"]);
 
   return (
     <>
       <style>
         {`
-          /* Solid Notifications CSS Variables */
-          :root {
-            --sn-z-index: 999999;
-            --sn-color-default: hsl(var(--foreground));
-            --sn-color-success: #22c55e;
-            --sn-color-error: #ef4444;
-            --sn-color-warning: #f59e0b;
-            --sn-color-info: #3b82f6;
-
-            --sn-wrapper-max-width: 24rem;
-            --sn-wrapper-min-width: 18rem;
-            --sn-wrapper-transition-duration: 0.3s;
-
-            --sn-toast-bg-color: hsl(var(--background));
-            --sn-toast-gap: 0.75rem;
-            --sn-toast-font-size: 0.875rem;
-            --sn-toast-line-height: 1.5;
-            --sn-toast-padding: 0.75rem;
-            --sn-toast-text-color: hsl(var(--foreground));
-            --sn-toast-border-radius: 0.5rem;
-            --sn-toast-box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-
-            --sn-dismiss-btn-size: 1.5rem;
-            --sn-dismiss-btn-border-radius: 0.25rem;
-            --sn-dismiss-btn-transition: opacity 0.3s;
-            --sn-dismiss-btn-margin: 0;
-            --sn-dismiss-btn-color: hsl(var(--muted-foreground));
-            --sn-dismiss-btn-hover-color: hsl(var(--foreground));
-
-            --sn-progress-bar-height: 0.25rem;
-            --sn-progress-bar-color: hsl(var(--primary));
-
-            --sn-icon-size: 1.25rem;
-            --sn-icon-margin: 0.125rem 0 0 0;
-            --sn-icon-stroke: currentColor;
-            --sn-icon-fill: hsl(var(--foreground));
+          /* Toast group positioning */
+          [data-scope="toast"][data-part="group"] {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
           }
 
-          .dark {
-            --sn-toast-box-shadow: inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.075),
-              0 0 0 1px hsla(0, 0%, 0%, 0.05), 0 0.3px 0.4px hsla(0, 0%, 0%, 0.02),
-              0 0.9px 1.5px hsla(0, 0%, 0%, 0.045), 0 3.5px 6px hsla(0, 0%, 0%, 0.09);
+          /* Toast animations and positioning */
+          [data-scope="toast"][data-part="root"] {
+            pointer-events: auto;
+            position: relative;
+            width: 356px;
+            max-width: calc(100vw - 32px);
+            translate: var(--x) var(--y);
+            scale: var(--scale);
+            z-index: var(--z-index);
+            height: var(--height);
+            opacity: var(--opacity);
+            will-change: translate, opacity, scale;
+            transition:
+              translate 400ms,
+              scale 400ms,
+              opacity 400ms,
+              height 400ms;
+            transition-timing-function: cubic-bezier(0.21, 1.02, 0.73, 1);
           }
 
-          /* Base toast structure */
-          .sn-toaster {
-            position: fixed !important;
-            z-index: var(--sn-z-index) !important;
-            pointer-events: none !important;
+          [data-scope="toast"][data-part="root"][data-state="closed"] {
+            transition:
+              translate 400ms,
+              scale 400ms,
+              opacity 200ms;
+            transition-timing-function: cubic-bezier(0.06, 0.71, 0.55, 1);
           }
 
-          .sn-toast-wrapper {
-            pointer-events: auto !important;
-            transition: all var(--sn-wrapper-transition-duration) cubic-bezier(0.4, 0, 0.2, 1) !important;
-            max-width: var(--sn-wrapper-max-width) !important;
-            min-width: var(--sn-wrapper-min-width) !important;
-            border: none !important;
-            outline: none !important;
-            position: absolute !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
-            height: auto !important;
-            min-height: 0 !important;
-            max-height: none !important;
-            display: flex !important;
-            flex-direction: column !important;
-            line-height: 1 !important;
-          }
-
-          /* Center-aligned toasters need transform on wrapper */
-          .sn-toaster[style*="left: 50%"] .sn-toast-wrapper {
-            transform: translateX(-50%) !important;
-          }
-
-          .sn-toast-wrapper::before,
-          .sn-toast-wrapper::after {
-            display: none !important;
-            content: none !important;
-          }
-
-          .sn-toast {
-            display: flex !important;
-            align-items: flex-start !important;
-            gap: var(--sn-toast-gap) !important;
-            width: 100% !important;
-            padding: var(--sn-toast-padding) !important;
-            border-radius: var(--sn-toast-border-radius) !important;
-            background-color: var(--sn-toast-bg-color) !important;
-            color: var(--sn-toast-text-color) !important;
-            font-size: var(--sn-toast-font-size) !important;
-            line-height: var(--sn-toast-line-height) !important;
-            box-shadow: var(--sn-toast-box-shadow) !important;
-            margin: 0 !important;
-            border: 1px solid hsl(var(--border)) !important;
-            outline: none !important;
-          }
-
-          .sn-toast::before,
-          .sn-toast::after {
-            display: none !important;
-            content: none !important;
-          }
-
-          /* Toast type variants */
-          .sn-type-success {
-            --sn-progress-bar-color: var(--sn-color-success);
-            --sn-icon-fill: var(--sn-color-success);
-          }
-
-          .sn-type-success .sn-toast {
-            border-color: var(--sn-color-success) !important;
-          }
-
-          .sn-type-success .sn-toast > div:first-child {
-            color: var(--sn-color-success) !important;
-          }
-
-          .sn-type-error {
-            --sn-progress-bar-color: var(--sn-color-error);
-            --sn-icon-fill: var(--sn-color-error);
-          }
-
-          .sn-type-error .sn-toast {
-            border-color: var(--sn-color-error) !important;
-          }
-
-          .sn-type-error .sn-toast > div:first-child {
-            color: var(--sn-color-error) !important;
-          }
-
-          .sn-type-warning {
-            --sn-progress-bar-color: var(--sn-color-warning);
-            --sn-icon-fill: var(--sn-color-warning);
-          }
-
-          .sn-type-warning .sn-toast {
-            border-color: var(--sn-color-warning) !important;
-          }
-
-          .sn-type-warning .sn-toast > div:first-child {
-            color: var(--sn-color-warning) !important;
-          }
-
-          .sn-type-info {
-            --sn-progress-bar-color: var(--sn-color-info);
-            --sn-icon-fill: var(--sn-color-info);
-          }
-
-          .sn-type-info .sn-toast {
-            border-color: var(--sn-color-info) !important;
-          }
-
-          .sn-type-info .sn-toast > div:first-child {
-            color: var(--sn-color-info) !important;
-          }
-
-          /* Dismiss button */
-          .sn-dismiss-button {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            width: var(--sn-dismiss-btn-size);
-            height: var(--sn-dismiss-btn-size);
-            border-radius: var(--sn-dismiss-btn-border-radius);
-            opacity: 0.7;
-            transition: var(--sn-dismiss-btn-transition);
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--sn-dismiss-btn-color);
-            margin: var(--sn-dismiss-btn-margin);
-          }
-
-          .sn-dismiss-button:hover {
-            opacity: 1;
-          }
-
-          .sn-dismiss-button:focus {
-            outline: none;
-            opacity: 1;
-          }
-
-          /* Hide any default content in dismiss button including SVG */
-          .sn-dismiss-button > *,
-          .sn-dismiss-button svg {
-            display: none !important;
-          }
-
-          .sn-dismiss-button::before {
-            content: "×";
-            font-size: 1.25rem;
-            line-height: 1;
-          }
-
-
-
-          /* Progress bar */
-          .sn-progress-bar {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            height: var(--sn-progress-bar-height) !important;
-            background-color: var(--sn-progress-bar-color) !important;
-            border-radius: 0 0 var(--sn-toast-border-radius) var(--sn-toast-border-radius) !important;
-            transition: width 0.1s linear !important;
-            z-index: 1 !important;
-          }
-
-          /* Animations */
-          @keyframes SNSlideInRight {
-            from {
-              transform: translateX(100%);
-              opacity: 0;
+          /* Mobile responsive */
+          @media (max-width: 640px) {
+            [data-scope="toast"][data-part="group"] {
+              width: 100%;
+              left: 0 !important;
+              right: 0 !important;
             }
-            to {
-              transform: translateX(0);
-              opacity: 1;
-            }
-          }
 
-          @keyframes SNSlideOutRight {
-            from {
-              transform: translateX(0);
-              opacity: 1;
+            [data-scope="toast"][data-part="root"] {
+              width: calc(100% - var(--gap) * 2);
+              margin: 0 auto;
             }
-            to {
-              transform: translateX(100%);
-              opacity: 0;
-            }
-          }
-
-          @keyframes SNSlideInLeft {
-            from {
-              transform: translateX(-100%);
-              opacity: 0;
-            }
-            to {
-              transform: translateX(0);
-              opacity: 1;
-            }
-          }
-
-          @keyframes SNSlideOutLeft {
-            from {
-              transform: translateX(0);
-              opacity: 1;
-            }
-            to {
-              transform: translateX(-100%);
-              opacity: 0;
-            }
-          }
-
-          @keyframes SNSlideInTop {
-            from {
-              transform: translateY(-100%);
-              opacity: 0;
-            }
-            to {
-              transform: translateY(0);
-              opacity: 1;
-            }
-          }
-
-          @keyframes SNSlideOutTop {
-            from {
-              transform: translateY(0);
-              opacity: 1;
-            }
-            to {
-              transform: translateY(-100%);
-              opacity: 0;
-            }
-          }
-
-          @keyframes SNSlideInBottom {
-            from {
-              transform: translateY(100%);
-              opacity: 0;
-            }
-            to {
-              transform: translateY(0);
-              opacity: 1;
-            }
-          }
-
-          @keyframes SNSlideOutBottom {
-            from {
-              transform: translateY(0);
-              opacity: 1;
-            }
-            to {
-              transform: translateY(100%);
-              opacity: 0;
-            }
-          }
-
-          .sn-state-right-top-entering,
-          .sn-state-right-bottom-entering {
-            animation: SNSlideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          }
-
-          .sn-state-right-top-exiting,
-          .sn-state-right-bottom-exiting {
-            animation: SNSlideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          }
-
-          .sn-state-left-top-entering,
-          .sn-state-left-bottom-entering {
-            animation: SNSlideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          }
-
-          .sn-state-left-top-exiting,
-          .sn-state-left-bottom-exiting {
-            animation: SNSlideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          }
-
-          .sn-state-center-top-entering {
-            animation: SNSlideInTop 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          }
-
-          .sn-state-center-top-exiting {
-            animation: SNSlideOutTop 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          }
-
-          .sn-state-center-bottom-entering {
-            animation: SNSlideInBottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-          }
-
-          .sn-state-center-bottom-exiting {
-            animation: SNSlideOutBottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
           }
         `}
       </style>
-      <Portal mount={document.body}>
-        <SolidToaster
-          toasterId={local.toasterId}
-          positionY={local.position}
-          positionX={local.align}
-          toasterStyle={{
-            [local.position]: "16px",
-            ...(local.align === "left" && { left: "16px" }),
-            ...(local.align === "right" && { right: "16px" }),
-            ...(local.align === "center" && {
-              left: "50%",
-              right: "auto",
-            }),
-          }}
-          wrapperClass={cn("sn-toast-wrapper", local.class)}
-          class="sn-toast"
-          icon={(args) => {
-            const iconClass = TOAST_ICONS[args.type] || TOAST_ICONS.default;
-            return (
-              <div
-                class={cn(
-                  "shrink-0 flex items-center justify-center self-start",
-                  args.type === "loading" && "animate-spin",
-                  iconClass,
-                )}
-                style={{
-                  width: "var(--sn-icon-size)",
-                  height: "var(--sn-icon-size)",
-                  margin: "var(--sn-icon-margin)",
-                  color: "var(--sn-icon-fill)",
-                  "margin-top": "2px",
-                }}
-              />
-            );
-          }}
-          progressBarClass="sn-progress-bar"
-          dismissButtonClass="sn-dismiss-button"
-          {...others}
-        />
-      </Portal>
+      <ArkToaster toaster={local.toaster} {...others}>
+        {(toast) => (
+          <ArkToast.Root
+            class={cn(
+              "group relative flex w-full items-start gap-3 border border-border bg-background p-4 shadow-lg",
+              "data-[type=success]:border-green-600/50 dark:data-[type=success]:border-green-400/50",
+              "data-[type=error]:border-destructive/50",
+              "data-[type=warning]:border-yellow-600/50 dark:data-[type=warning]:border-yellow-400/50",
+              "data-[type=info]:border-primary/50",
+              "data-[type=loading]:border-primary/50",
+              local.class,
+            )}
+            style={{
+              "border-radius": "var(--radius)",
+            }}
+          >
+            <ToastIcon type={toast().type} />
+
+            <div class="flex-1 space-y-1">
+              <ArkToast.Title class="text-sm font-semibold text-foreground">
+                {toast().title}
+              </ArkToast.Title>
+              <Show when={toast().description}>
+                <ArkToast.Description class="text-sm text-muted-foreground">
+                  {toast().description}
+                </ArkToast.Description>
+              </Show>
+
+              <Show when={toast().action}>
+                <div class="flex gap-2 mt-3">
+                  <ArkToast.ActionTrigger class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+                    {toast().action!.label}
+                  </ArkToast.ActionTrigger>
+                </div>
+              </Show>
+            </div>
+
+            <Show when={toast().type !== "loading"}>
+              <ArkToast.CloseTrigger class="absolute right-2 top-2 rounded-sm p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:opacity-100">
+                <div class={cn("h-4 w-4", icon("x"))} />
+              </ArkToast.CloseTrigger>
+            </Show>
+          </ArkToast.Root>
+        )}
+      </ArkToaster>
     </>
   );
 };
 
-/**
- * ToastContainer - Combined ToastProvider + Toaster component
- * Wrap your entire app with this component to enable toast notifications
- *
- * @example
- * <ToastContainer>
- *   <App />
- * </ToastContainer>
- */
-export const ToastContainer: Component<{
-  children?: JSX.Element;
-  position?: "top" | "bottom";
-  align?: "left" | "center" | "right";
-}> = (props) => {
-  const [local, others] = splitProps(props, ["children", "position", "align"]);
-
-  return (
-    <SolidToastProvider>
-      {local.children}
-      <Toaster
-        position={local.position}
-        align={local.align}
-        toasterId="default"
-      />
-    </SolidToastProvider>
-  );
-};
-
-/**
- * Re-export ToastProvider for advanced usage
- */
-export { SolidToastProvider as ToastProvider };
-
-/**
- * useToast - Hook to access toast notification functions
- * Returns { notify, update, dismiss, remove, promise, getQueue, clearQueue }
- */
-export { useToast };
-
-/**
- * showToast - Global function to show toast notifications
- * Can be called from anywhere without hooks
- */
-export { showToast };
-
-/**
- * Helper function to show different toast types
- */
-export const toast = {
-  success: (message: string, options?: any) =>
-    showToast(message, { type: "success", toasterId: "default", ...options }),
-  error: (message: string, options?: any) =>
-    showToast(message, { type: "error", toasterId: "default", ...options }),
-  warning: (message: string, options?: any) =>
-    showToast(message, { type: "warning", toasterId: "default", ...options }),
-  info: (message: string, options?: any) =>
-    showToast(message, { type: "info", toasterId: "default", ...options }),
-  loading: (message: string, options?: any) =>
-    showToast(message, {
-      type: "loading",
-      duration: false,
-      toasterId: "default",
-      ...options,
-    }),
-  promise: async <T,>(
-    promise: Promise<T>,
-    messages: {
-      pending: string;
-      success: string | ((data: T) => string);
-      error: string | ((error: any) => string);
-    },
-    options?: any,
-  ) => {
-    const { promiseToast } = await import("solid-notifications");
-    return promiseToast(promise, messages, {
-      toasterId: "default",
-      ...options,
-    });
-  },
-};
-
-// Import components for examples only - won't count as dependencies
-// since they're imported right before the meta export
+// Import components for examples
 import { Button } from "./button";
 
-export const meta: ComponentMeta<ToasterProps> = {
+export const meta: ComponentMeta<ToastProps> = {
   name: "Toast",
   description:
-    "A toast notification component for displaying temporary messages. Built with solid-notifications for flexible positioning and animations.",
-  apiReference: "https://solid-notifications.vercel.app/components",
-  variants: toastVariants,
+    "A toast notification system built on Ark UI. Features stacking, gestures, promise handling, and full customization.",
   examples: [
     {
-      title: "Toast Positions & Types",
-      description: "Toast notifications with different positions and types",
+      title: "Setup",
+      description: "Create toaster instances for different positions",
       code: () => {
-        const ToastExample = () => {
-          const topRight = useToast("top-right");
-          const bottomCenter = useToast("bottom-center");
-          const bottomLeft = useToast("bottom-left");
-          return (
-            <div class="flex flex-wrap gap-2">
-              <Button
-                onClick={() =>
-                  topRight.notify("Your changes have been saved", {
-                    type: "success",
-                  })
-                }
-              >
-                Top Right (Success)
-              </Button>
-              <Button
-                onClick={() =>
-                  bottomCenter.notify("New updates available", {
-                    type: "info",
-                  })
-                }
-              >
-                Bottom Center (Info)
-              </Button>
-              <Button
-                onClick={() =>
-                  bottomLeft.notify("Something went wrong", {
-                    type: "error",
-                  })
-                }
-              >
-                Bottom Left (Error)
-              </Button>
-            </div>
-          );
-        };
+        const toasterBottomRight = createToaster({
+          placement: "bottom-end",
+          overlap: true,
+          gap: 16,
+        });
+
+        const toasterBottom = createToaster({
+          placement: "bottom",
+          overlap: true,
+          gap: 16,
+        });
+
+        const toasterTopRight = createToaster({
+          placement: "top-end",
+          overlap: true,
+          gap: 16,
+        });
+
+        const toasterTop = createToaster({
+          placement: "top",
+          overlap: true,
+          gap: 16,
+        });
+
+        const toasterBottomLeft = createToaster({
+          placement: "bottom-start",
+          overlap: true,
+          gap: 16,
+        });
 
         return (
-          <SolidToastProvider>
-            <Toaster toasterId="top-right" position="top" align="right" />
-            <Toaster
-              toasterId="bottom-center"
-              position="bottom"
-              align="center"
-            />
-            <Toaster toasterId="bottom-left" position="bottom" align="left" />
-            <ToastExample />
-          </SolidToastProvider>
+          <>
+            <Toast toaster={toasterBottomRight} />
+            <Toast toaster={toasterBottom} />
+            <Toast toaster={toasterTopRight} />
+            <Toast toaster={toasterTop} />
+            <Toast toaster={toasterBottomLeft} />
+            <div class="space-y-4">
+              <p class="text-sm text-muted-foreground mb-2">
+                Multiple toaster instances for different positions!
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <Button
+                  onClick={() =>
+                    toasterBottomRight.create({
+                      title: "Bottom Right",
+                      description: "Default position (bottom-right)",
+                      type: "info",
+                    })
+                  }
+                >
+                  Bottom Right
+                </Button>
+                <Button
+                  onClick={() =>
+                    toasterBottom.create({
+                      title: "Bottom Center",
+                      description: "Centered at the bottom",
+                      type: "success",
+                    })
+                  }
+                >
+                  Bottom Center
+                </Button>
+                <Button
+                  onClick={() =>
+                    toasterTopRight.create({
+                      title: "Top Right",
+                      description: "Top right position",
+                      type: "warning",
+                    })
+                  }
+                >
+                  Top Right
+                </Button>
+                <Button
+                  onClick={() =>
+                    toasterTop.create({
+                      title: "Top Center",
+                      description: "Centered at the top",
+                      type: "error",
+                    })
+                  }
+                >
+                  Top Center
+                </Button>
+                <Button
+                  onClick={() =>
+                    toasterBottomLeft.create({
+                      title: "Bottom Left",
+                      description: "Bottom left position",
+                    })
+                  }
+                >
+                  Bottom Left
+                </Button>
+              </div>
+            </div>
+          </>
         );
       },
     },
     {
-      title: "Loading Toast",
-      description: "Loading toast that auto-closes after completion",
+      title: "Promise & Update Toasts",
+      description: "Handle async operations and update toasts dynamically",
       code: () => {
-        const ToastExample = () => {
-          const { notify, update } = useToast("example2");
-          return (
-            <div class="flex flex-wrap gap-2">
+        const toaster = createToaster({
+          placement: "bottom-end",
+          overlap: true,
+          gap: 16,
+        });
+
+        const uploadFile = () => {
+          return new Promise<void>((resolve, reject) => {
+            setTimeout(() => {
+              Math.random() > 0.5
+                ? resolve()
+                : reject(new Error("Upload failed"));
+            }, 2000);
+          });
+        };
+
+        let toastId: string | undefined;
+
+        return (
+          <>
+            <Toast toaster={toaster} />
+            <div class="flex gap-2">
+              <Button
+                onClick={() =>
+                  toaster.promise(uploadFile, {
+                    loading: {
+                      title: "Uploading...",
+                      description: "Please wait while we process your request.",
+                    },
+                    success: {
+                      title: "Success!",
+                      description:
+                        "Your request has been processed successfully.",
+                    },
+                    error: {
+                      title: "Failed",
+                      description: "Something went wrong. Please try again.",
+                    },
+                  })
+                }
+              >
+                Promise Toast
+              </Button>
               <Button
                 onClick={() => {
-                  const { id } = notify("Loading your data...", {
+                  toastId = toaster.create({
+                    title: "Loading",
+                    description: "Processing your request...",
                     type: "loading",
-                    duration: false,
-                    showDismissButton: false,
+                    duration: Infinity,
                   });
-
-                  // Simulate async operation
-                  setTimeout(() => {
-                    update({
-                      id,
-                      content: "Data loaded successfully!",
-                      type: "success",
-                      duration: 5000,
-                      showDismissButton: true,
-                    });
-                  }, 3000);
                 }}
               >
-                Loading (Spinner)
+                Create
               </Button>
               <Button
                 onClick={() => {
-                  const { id } = notify("Processing your request...", {
-                    type: "default",
-                    duration: 3000,
-                    showDismissButton: false,
-                    showIcon: false,
-                    showProgressBar: true,
-                  });
-
-                  // Simulate async operation
-                  setTimeout(() => {
-                    update({
-                      id,
-                      content: "Request processed!",
+                  if (toastId) {
+                    toaster.update(toastId, {
+                      title: "Success!",
+                      description: "Your request has been processed.",
                       type: "success",
-                      duration: 5000,
-                      showDismissButton: true,
+                      duration: 3000,
                     });
-                  }, 3000);
+                  }
                 }}
               >
-                Loading (Progress Bar)
+                Update
               </Button>
             </div>
-          );
-        };
-
-        return (
-          <SolidToastProvider>
-            <Toaster toasterId="example2" />
-            <ToastExample />
-          </SolidToastProvider>
+          </>
         );
       },
     },
     {
-      title: "Custom Content",
-      description:
-        "Fully customized toast with JSX content and custom progress bar",
+      title: "Duration & Limits",
+      description: "Control duration and maximum visible toasts",
+
       code: () => {
-        const ToastExample = () => {
-          const { notify, dismiss } = useToast("example3");
-          return (
-            <div class="flex flex-wrap gap-2">
-              <Button
-                onClick={() => {
-                  const { id } = notify(
-                    <div class="flex items-start justify-between gap-4 w-full">
-                      <div class="flex flex-col gap-1 flex-1">
-                        <div class="font-semibold">New message received</div>
-                        <div class="text-sm opacity-90">
-                          John Doe sent you a message
-                        </div>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => dismiss({ id })}
-                        class="shrink-0 self-center -mt-1"
-                        aria-label="Dismiss"
-                      >
-                        <div class="h-4 w-4 i-lucide-x" />
-                      </Button>
-                    </div>,
-                    {
-                      duration: false,
-                      showDismissButton: false,
-                      showIcon: false,
-                    },
-                  );
-                }}
-              >
-                Custom Message
-              </Button>
-              <Button
-                onClick={() => {
-                  notify(
-                    (toast) => (
-                      <div class="relative w-full bg-background rounded-lg border border-border p-3 shadow-lg">
-                        <div class="flex items-start justify-between gap-4 w-full">
-                          <div class="flex flex-col gap-1 flex-1">
-                            <div class="font-semibold">File uploading</div>
-                            <div class="text-sm opacity-90">
-                              upload.pdf •{" "}
-                              {Math.round(toast.progressManager.progress())}%
-                              complete
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="absolute left-0 bottom-0 h-1 bg-blue-500 rounded-b-lg transition-all"
-                          style={{
-                            width: `${toast.progressManager.progress()}%`,
-                          }}
-                        />
-                      </div>
-                    ),
-                    {
-                      duration: 5000,
-                      showDismissButton: false,
-                      showIcon: false,
-                      showProgressBar: false,
-                    },
-                  );
-                }}
-              >
-                Custom Progress Bar
-              </Button>
-            </div>
-          );
-        };
+        const toaster = createToaster({
+          placement: "bottom-end",
+          overlap: true,
+          gap: 16,
+          max: 3,
+        });
 
         return (
-          <SolidToastProvider>
-            <Toaster toasterId="example3" />
-            <ToastExample />
-          </SolidToastProvider>
+          <>
+            <Toast toaster={toaster} />
+            <div class="space-y-3">
+              <div class="flex flex-wrap gap-2">
+                <Button
+                  onClick={() =>
+                    toaster.create({
+                      title: "Quick toast",
+                      description: "Disappears in 1 second",
+                      duration: 1000,
+                    })
+                  }
+                >
+                  1s
+                </Button>
+                <Button
+                  onClick={() =>
+                    toaster.create({
+                      title: "Long toast",
+                      description: "Stays for 10 seconds",
+                      duration: 10000,
+                    })
+                  }
+                >
+                  10s
+                </Button>
+                <Button
+                  onClick={() =>
+                    toaster.create({
+                      title: "Persistent",
+                      description: "Stays until dismissed",
+                      duration: Infinity,
+                    })
+                  }
+                >
+                  ∞
+                </Button>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <Button
+                  onClick={() =>
+                    toaster.create({
+                      title: `Toast ${Date.now()}`,
+                      description: "Max 3 visible at once",
+                      type: "info",
+                    })
+                  }
+                >
+                  Add Toast
+                </Button>
+                <Button
+                  onClick={() => {
+                    for (let i = 1; i <= 5; i++) {
+                      toaster.create({
+                        title: `Toast ${i}`,
+                        description: `Toast number ${i}`,
+                        type: "info",
+                      });
+                    }
+                  }}
+                >
+                  Add 5 Toasts
+                </Button>
+              </div>
+            </div>
+          </>
         );
       },
     },
   ],
 };
 
-export default Toaster;
+export default Toast;

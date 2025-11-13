@@ -24,4 +24,5 @@ export interface ComponentMeta<TProps = any> {
   // Props, variants, and examples are auto-extracted at build time
   // Run: bun run generate:metadata
   examples: ComponentExample[];
+  hidden?: boolean; // Hide this component from docs navigation and component list
 }

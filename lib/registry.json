@@ -548,6 +548,163 @@
         "card.tsx"
       ]
     },
+    "chart": {
+      "name": "Chart",
+      "fileName": "chart",
+      "description": "A powerful chart component built with Apache ECharts. Supports multiple chart types including bar, line, pie, scatter, radar, gauge, funnel, and candlestick charts. Automatically integrates with your design system",
+      "props": [
+        {
+          "name": "option",
+          "type": "ECOption",
+          "description": "Option",
+          "required": true
+        },
+        {
+          "name": "theme",
+          "type": "string | object",
+          "description": "Theme",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "description": "Loading",
+          "required": false
+        },
+        {
+          "name": "loadingOption",
+          "type": "object",
+          "description": "Loading Option",
+          "required": false
+        },
+        {
+          "name": "onChartReady",
+          "type": "(chart: echarts.ECharts) => void",
+          "description": "On Chart Ready",
+          "required": false
+        },
+        {
+          "name": "onEvents",
+          "type": "Record<string, (params: any) => void>",
+          "description": "On Events",
+          "required": false
+        },
+        {
+          "name": "notMerge",
+          "type": "boolean",
+          "description": "Not Merge",
+          "required": false
+        },
+        {
+          "name": "lazyUpdate",
+          "type": "boolean",
+          "description": "Lazy Update",
+          "required": false
+        },
+        {
+          "name": "showLoading",
+          "type": "boolean",
+          "description": "Show Loading",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "style",
+          "type": "JSX.CSSProperties",
+          "description": "Style",
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id",
+          "required": false
+        },
+        {
+          "name": "autoResize",
+          "type": "boolean",
+          "description": "Auto Resize",
+          "required": false
+        },
+        {
+          "name": "useTheme",
+          "type": "boolean",
+          "description": "Use Theme",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "bar",
+            "line",
+            "pie",
+            "scatter",
+            "radar",
+            "gauge",
+            "funnel",
+            "candlestick",
+            "tree",
+            "mixed"
+          ],
+          "defaultValue": "bar"
+        },
+        {
+          "name": "size",
+          "values": [
+            "sm",
+            "md",
+            "lg",
+            "xl",
+            "full"
+          ],
+          "defaultValue": "md"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Dynamic Line Chart with Gradient",
+          "description": "Real-time updating line chart with gradient fill",
+          "source": "const initialData = Array.from(\n  { length: 20 },\n  () => Math.floor(Math.random() * 100) + 20,\n);\nconst [data, setData] = createSignal(initialData);\nlet chartRef: any;\n\nonMount(() => {\n  const interval = setInterval(() => {\n    setData((prev) => {\n      if (!prev || prev.length === 0) return initialData;\n      const newData = [...prev.slice(1)];\n      newData.push(Math.floor(Math.random() * 100) + 20);\n      return newData;\n    });\n  }, 1000);\n\n  onCleanup(() => clearInterval(interval));\n});\n\ncreateEffect(() => {\n  const currentData = data();\n  if (chartRef && currentData) {\n    chartRef.setOption({\n      series: [\n        {\n          name: \"Value\",\n          data: currentData,\n        },\n      ],\n    });\n  }\n});\n\nreturn (\n  <Chart\n    variant=\"line\"\n    option={{\n      title: {\n        text: \"Real-time Data Stream\",\n      },\n      tooltip: {\n        trigger: \"axis\",\n      },\n      xAxis: {\n        type: \"category\",\n        boundaryGap: false,\n        data: Array.from({ length: 20 }, (_, i) => i),\n      },\n      yAxis: {\n        type: \"value\",\n        boundaryGap: [0, \"10%\"],\n      },\n      series: [\n        {\n          name: \"Value\",\n          type: \"line\",\n          smooth: true,\n          symbol: \"none\",\n          areaStyle: {\n            color: {\n              type: \"linear\",\n              x: 0,\n              y: 0,\n              x2: 0,\n              y2: 1,\n              colorStops: [\n                {\n                  offset: 0,\n                  color: \"rgba(59, 130, 246, 0.5)\",\n                },\n                {\n                  offset: 1,\n                  color: \"rgba(59, 130, 246, 0.05)\",\n                },\n              ],\n            },\n          },\n          data: initialData,\n        },\n      ],\n    }}\n    onChartReady={(chart) => {\n      chartRef = chart;\n    }}\n    id=\"gradient-line-chart\"\n  />\n);"
+        },
+        {
+          "title": "Interactive Bar Chart with Gradient",
+          "description": "Bar chart with gradient colors and zoom interaction",
+          "source": "const dataAxis = [\n  \"A\",\n  \"B\",\n  \"C\",\n  \"D\",\n  \"E\",\n  \"F\",\n  \"G\",\n  \"H\",\n  \"I\",\n  \"J\",\n  \"K\",\n  \"L\",\n  \"M\",\n  \"N\",\n  \"O\",\n  \"P\",\n  \"Q\",\n  \"R\",\n  \"S\",\n  \"T\",\n];\nconst data = [\n  220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122,\n  133, 334, 198, 123, 125, 220,\n];\n\nlet chartRef: any;\n\nreturn (\n  <Chart\n    variant=\"bar\"\n    option={{\n      title: {\n        text: \"Click Bar to Zoom\",\n      },\n      xAxis: {\n        data: dataAxis,\n        axisLabel: {\n          inside: true,\n        },\n        axisTick: {\n          show: false,\n        },\n        axisLine: {\n          show: false,\n        },\n        z: 10,\n      },\n      yAxis: {\n        axisLine: {\n          show: false,\n        },\n        axisTick: {\n          show: false,\n        },\n      },\n      dataZoom: [\n        {\n          type: \"inside\",\n        },\n      ],\n      series: [\n        {\n          type: \"bar\",\n          showBackground: true,\n          backgroundStyle: {\n            color: \"rgba(180, 180, 180, 0.2)\",\n          },\n          data: data,\n        },\n      ],\n    }}\n    onChartReady={(chart) => {\n      chartRef = chart;\n      chart.on(\"click\", (params: any) => {\n        const zoomSize = 6;\n        chart.dispatchAction({\n          type: \"dataZoom\",\n          startValue:\n            dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],\n          endValue:\n            dataAxis[\n              Math.min(params.dataIndex + zoomSize / 2, data.length - 1)\n            ],\n        });\n      });\n    }}\n    id=\"interactive-bar-chart\"\n  />\n);"
+        },
+        {
+          "title": "Pie Chart",
+          "description": "A pie chart showing data distribution with theme colors",
+          "source": "<Chart\n  variant=\"pie\"\n  option={{\n    title: {\n      text: \"Market Share\",\n      left: \"center\",\n    },\n    tooltip: {\n      trigger: \"item\",\n      formatter: \"{a} <br/>{b}: {c} ({d}%)\",\n    },\n    legend: {\n      orient: \"vertical\",\n      left: \"left\",\n    },\n    series: [\n      {\n        name: \"Products\",\n        type: \"pie\",\n        radius: \"50%\",\n        data: [\n          { value: 335, name: \"Product A\" },\n          { value: 310, name: \"Product B\" },\n          { value: 234, name: \"Product C\" },\n          { value: 135, name: \"Product D\" },\n          { value: 1548, name: \"Product E\" },\n        ],\n      },\n    ],\n  }}\n  id=\"pie-chart\"\n/>"
+        },
+        {
+          "title": "Heatmap Chart",
+          "description": "Interactive heatmap with perlin noise data",
+          "source": "const generateHeatmapData = () => {\n  const data: any[] = [];\n  // Simple pseudo-random noise with smoothing for better visual appearance\n  const random2D = (x: number, y: number) => {\n    const hash = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;\n    return hash - Math.floor(hash);\n  };\n\n  const smoothNoise = (x: number, y: number) => {\n    const fracX = x - Math.floor(x);\n    const fracY = y - Math.floor(y);\n\n    const x1 = Math.floor(x);\n    const y1 = Math.floor(y);\n    const x2 = x1 + 1;\n    const y2 = y1 + 1;\n\n    // Interpolate between corner values\n    const v1 = random2D(x1, y1);\n    const v2 = random2D(x2, y1);\n    const v3 = random2D(x1, y2);\n    const v4 = random2D(x2, y2);\n\n    const i1 = v1 * (1 - fracX) + v2 * fracX;\n    const i2 = v3 * (1 - fracX) + v4 * fracX;\n\n    return i1 * (1 - fracY) + i2 * fracY;\n  };\n\n  for (let i = 0; i < 50; i++) {\n    for (let j = 0; j < 50; j++) {\n      const value = smoothNoise(i * 0.15, j * 0.15);\n      data.push([i, j, value]);\n    }\n  }\n  return data;\n};\n\nreturn (\n  <Chart\n    variant=\"scatter\"\n    size=\"lg\"\n    option={{\n      title: {\n        text: \"Heatmap Visualization\",\n      },\n      tooltip: {\n        position: \"top\",\n      },\n      grid: {\n        height: \"70%\",\n        top: \"15%\",\n      },\n      xAxis: {\n        type: \"category\",\n        data: Array.from({ length: 50 }, (_, i) => i.toString()),\n        splitArea: {\n          show: true,\n        },\n      },\n      yAxis: {\n        type: \"category\",\n        data: Array.from({ length: 50 }, (_, i) => i.toString()),\n        splitArea: {\n          show: true,\n        },\n      },\n      visualMap: {\n        min: 0,\n        max: 1,\n        calculable: true,\n        orient: \"horizontal\",\n        left: \"center\",\n        bottom: \"5%\",\n        inRange: {\n          color: [\n            \"#313695\",\n            \"#4575b4\",\n            \"#74add1\",\n            \"#abd9e9\",\n            \"#e0f3f8\",\n            \"#ffffbf\",\n            \"#fee090\",\n            \"#fdae61\",\n            \"#f46d43\",\n            \"#d73027\",\n            \"#a50026\",\n          ],\n        },\n      },\n      series: [\n        {\n          name: \"Heatmap\",\n          type: \"heatmap\",\n          data: generateHeatmapData(),\n          emphasis: {\n            itemStyle: {\n              shadowBlur: 10,\n              shadowColor: \"rgba(0, 0, 0, 0.5)\",\n            },\n          },\n        },\n      ],\n    }}\n    id=\"heatmap-chart\"\n  />\n);"
+        },
+        {
+          "title": "Organization Tree Chart",
+          "description": "Hierarchical tree visualization of an organization structure",
+          "source": "<Chart\n  size=\"lg\"\n  option={{\n    tooltip: {\n      trigger: \"item\",\n      triggerOn: \"mousemove\",\n    },\n    series: [\n      {\n        type: \"tree\",\n        data: [\n          {\n            name: \"CEO\",\n            children: [\n              {\n                name: \"CTO\",\n                children: [\n                  {\n                    name: \"Engineering\",\n                    children: [\n                      { name: \"Frontend Team\" },\n                      { name: \"Backend Team\" },\n                      { name: \"DevOps Team\" },\n                    ],\n                  },\n                  {\n                    name: \"Product\",\n                    children: [\n                      { name: \"Design Team\" },\n                      { name: \"Research Team\" },\n                    ],\n                  },\n                ],\n              },\n              {\n                name: \"CFO\",\n                children: [\n                  {\n                    name: \"Finance\",\n                    children: [\n                      { name: \"Accounting\" },\n                      { name: \"Treasury\" },\n                    ],\n                  },\n                  {\n                    name: \"Legal\",\n                    children: [{ name: \"Compliance\" }],\n                  },\n                ],\n              },\n              {\n                name: \"CMO\",\n                children: [\n                  {\n                    name: \"Marketing\",\n                    children: [\n                      { name: \"Content Team\" },\n                      { name: \"Social Media\" },\n                      { name: \"SEO Team\" },\n                    ],\n                  },\n                  {\n                    name: \"Sales\",\n                    children: [\n                      { name: \"Enterprise Sales\" },\n                      { name: \"SMB Sales\" },\n                    ],\n                  },\n                ],\n              },\n            ],\n          },\n        ],\n        top: \"5%\",\n        left: \"7%\",\n        bottom: \"2%\",\n        right: \"20%\",\n        symbolSize: 7,\n        label: {\n          position: \"left\",\n          verticalAlign: \"middle\",\n          align: \"right\",\n          fontSize: 12,\n        },\n        leaves: {\n          label: {\n            position: \"right\",\n            verticalAlign: \"middle\",\n            align: \"left\",\n          },\n        },\n        emphasis: {\n          focus: \"descendant\",\n        },\n        expandAndCollapse: true,\n        animationDuration: 550,\n        animationDurationUpdate: 750,\n      },\n    ],\n  }}\n  id=\"tree-chart\"\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority",
+          "echarts"
+        ]
+      },
+      "files": [
+        "chart.tsx"
+      ]
+    },
     "checkbox": {
       "name": "Checkbox",
       "fileName": "checkbox",
@@ -3215,28 +3372,44 @@
         "tabs.tsx"
       ]
     },
+    "theme": {
+      "name": "Theme",
+      "fileName": "theme",
+      "description": "A flexible theme system that treats all themes equally. Define any number of themes and let users build custom controls with the provided utilities.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": true
+        },
+        {
+          "name": "config",
+          "type": "ThemeConfig",
+          "description": "Config",
+          "required": true
+        }
+      ],
+      "variants": [],
+      "examples": [],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "theme.tsx"
+      ]
+    },
     "toast": {
       "name": "Toast",
       "fileName": "toast",
-      "description": "A toast notification component for displaying temporary messages. Built with solid-notifications for flexible positioning and animations.",
+      "description": "A toast notification system built on Ark UI. Features stacking, gestures, promise handling, and full customization.",
       "props": [
         {
-          "name": "toasterId",
-          "type": "string",
-          "description": "Toaster Id",
-          "required": false
-        },
-        {
-          "name": "position",
-          "type": "\"top\" | \"bottom\"",
-          "description": "Position",
-          "required": false
-        },
-        {
-          "name": "align",
-          "type": "\"left\" | \"center\" | \"right\"",
-          "description": "Align",
-          "required": false
+          "name": "toaster",
+          "type": "CreateToasterReturn",
+          "description": "Toaster",
+          "required": true
         },
         {
           "name": "class",
@@ -3245,257 +3418,40 @@
           "required": false
         },
         {
-          "name": "limit",
-          "type": "number | false",
-          "description": "Limit",
+          "name": "dir",
+          "type": "\"ltr\" | \"rtl\"",
+          "description": "Dir",
           "required": false
         },
         {
-          "name": "reverseToastOrder",
-          "type": "boolean",
-          "description": "Reverse Toast Order",
-          "required": false
-        },
-        {
-          "name": "offsetX",
-          "type": "number",
-          "description": "Offset X",
-          "required": false
-        },
-        {
-          "name": "offsetY",
-          "type": "number",
-          "description": "Offset Y",
-          "required": false
-        },
-        {
-          "name": "gutter",
-          "type": "number",
-          "description": "Gutter",
-          "required": false
-        },
-        {
-          "name": "renderOnWindowInactive",
-          "type": "boolean",
-          "description": "Render On Window Inactive",
-          "required": false
-        },
-        {
-          "name": "pauseOnWindowInactive",
-          "type": "boolean",
-          "description": "Pause On Window Inactive",
-          "required": false
-        },
-        {
-          "name": "toasterStyle",
-          "type": "JSX.CSSProperties",
-          "description": "Toaster Style",
-          "required": false
-        },
-        {
-          "name": "theme",
-          "type": "string | undefined | null",
-          "description": "Theme",
-          "required": false
-        },
-        {
-          "name": "type",
-          "type": "\"default\" | \"success\" | \"error\" | \"loading\" | \"warning\" | \"info\"",
-          "description": "Type of input or element",
-          "required": false
-        },
-        {
-          "name": "duration",
-          "type": "number | false",
-          "description": "Duration",
-          "required": false
-        },
-        {
-          "name": "onEnter",
-          "type": "string",
-          "description": "On Enter",
-          "required": false
-        },
-        {
-          "name": "enterDuration",
-          "type": "number",
-          "description": "Enter Duration",
-          "required": false
-        },
-        {
-          "name": "onExit",
-          "type": "string",
-          "description": "On Exit",
-          "required": false
-        },
-        {
-          "name": "exitDuration",
-          "type": "number",
-          "description": "Exit Duration",
-          "required": false
-        },
-        {
-          "name": "onIdle",
-          "type": "string",
-          "description": "On Idle",
-          "required": false
-        },
-        {
-          "name": "style",
-          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
-          "description": "Style",
-          "required": false
-        },
-        {
-          "name": "pauseOnHover",
-          "type": "boolean",
-          "description": "Pause On Hover",
-          "required": false
-        },
-        {
-          "name": "wrapperClass",
-          "type": "| string\n    | ((args: { theme: string | undefined | null; type: string }) => string)",
-          "description": "Wrapper Class",
-          "required": false
-        },
-        {
-          "name": "wrapperStyle",
-          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
-          "description": "Wrapper Style",
-          "required": false
-        },
-        {
-          "name": "enterCallback",
-          "type": "() => void",
-          "description": "Enter Callback",
-          "required": false
-        },
-        {
-          "name": "updateCallback",
-          "type": "() => void",
-          "description": "Update Callback",
-          "required": false
-        },
-        {
-          "name": "exitCallback",
-          "type": "(reason?: boolean | string) => void",
-          "description": "Exit Callback",
-          "required": false
-        },
-        {
-          "name": "showDismissButton",
-          "type": "boolean",
-          "description": "Show Dismiss Button",
-          "required": false
-        },
-        {
-          "name": "dismissButtonClass",
-          "type": "| string\n    | ((args: { theme: string | undefined | null; type: string }) => string)",
-          "description": "Dismiss Button Class",
-          "required": false
-        },
-        {
-          "name": "dismissButtonStyle",
-          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
-          "description": "Dismiss Button Style",
-          "required": false
-        },
-        {
-          "name": "dismissOnClick",
-          "type": "boolean",
-          "description": "Dismiss On Click",
-          "required": false
-        },
-        {
-          "name": "showProgressBar",
-          "type": "boolean",
-          "description": "Show Progress Bar",
-          "required": false
-        },
-        {
-          "name": "progressBarClass",
-          "type": "| string\n    | ((args: { theme: string | undefined | null; type: string }) => string)",
-          "description": "Progress Bar Class",
-          "required": false
-        },
-        {
-          "name": "progressBarStyle",
-          "type": "| JSX.CSSProperties\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.CSSProperties)",
-          "description": "Progress Bar Style",
-          "required": false
-        },
-        {
-          "name": "showIcon",
-          "type": "boolean",
-          "description": "Show Icon",
-          "required": false
-        },
-        {
-          "name": "icon",
-          "type": "| JSX.Element\n    | null\n    | ((args: {\n        theme: string | undefined | null;\n        type: string;\n      }) => JSX.Element)",
-          "description": "Icon component or class",
-          "required": false
-        },
-        {
-          "name": "dragToDismiss",
-          "type": "boolean",
-          "description": "Drag To Dismiss",
-          "required": false
-        },
-        {
-          "name": "dragTreshold",
-          "type": "number",
-          "description": "Drag Treshold",
-          "required": false
-        },
-        {
-          "name": "ariaLive",
-          "type": "\"polite\" | \"assertive\" | \"off\"",
-          "description": "Aria Live",
-          "required": false
-        },
-        {
-          "name": "role",
-          "type": "\"status\" | \"alert\"",
-          "description": "Role",
+          "name": "getRootNode",
+          "type": "() => Node | ShadowRoot | Document",
+          "description": "Get Root Node",
           "required": false
         }
       ],
-      "variants": [
-        {
-          "name": "variant",
-          "values": [
-            "default",
-            "success",
-            "error",
-            "warning",
-            "info"
-          ],
-          "defaultValue": "default"
-        }
-      ],
+      "variants": [],
       "examples": [
         {
-          "title": "Toast Positions & Types",
-          "description": "Toast notifications with different positions and types",
-          "source": "const ToastExample = () => {\n  const topRight = useToast(\"top-right\");\n  const bottomCenter = useToast(\"bottom-center\");\n  const bottomLeft = useToast(\"bottom-left\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() =>\n          topRight.notify(\"Your changes have been saved\", {\n            type: \"success\",\n          })\n        }\n      >\n        Top Right (Success)\n      </Button>\n      <Button\n        onClick={() =>\n          bottomCenter.notify(\"New updates available\", {\n            type: \"info\",\n          })\n        }\n      >\n        Bottom Center (Info)\n      </Button>\n      <Button\n        onClick={() =>\n          bottomLeft.notify(\"Something went wrong\", {\n            type: \"error\",\n          })\n        }\n      >\n        Bottom Left (Error)\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"top-right\" position=\"top\" align=\"right\" />\n    <Toaster\n      toasterId=\"bottom-center\"\n      position=\"bottom\"\n      align=\"center\"\n    />\n    <Toaster toasterId=\"bottom-left\" position=\"bottom\" align=\"left\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
+          "title": "Setup",
+          "description": "Create toaster instances for different positions",
+          "source": "const toasterBottomRight = createToaster({\n  placement: \"bottom-end\",\n  overlap: true,\n  gap: 16,\n});\n\nconst toasterBottom = createToaster({\n  placement: \"bottom\",\n  overlap: true,\n  gap: 16,\n});\n\nconst toasterTopRight = createToaster({\n  placement: \"top-end\",\n  overlap: true,\n  gap: 16,\n});\n\nconst toasterTop = createToaster({\n  placement: \"top\",\n  overlap: true,\n  gap: 16,\n});\n\nconst toasterBottomLeft = createToaster({\n  placement: \"bottom-start\",\n  overlap: true,\n  gap: 16,\n});\n\nreturn (\n  <>\n    <Toast toaster={toasterBottomRight} />\n    <Toast toaster={toasterBottom} />\n    <Toast toaster={toasterTopRight} />\n    <Toast toaster={toasterTop} />\n    <Toast toaster={toasterBottomLeft} />\n    <div class=\"space-y-4\">\n      <p class=\"text-sm text-muted-foreground mb-2\">\n        Multiple toaster instances for different positions!\n      </p>\n      <div class=\"flex flex-wrap gap-2\">\n        <Button\n          onClick={() =>\n            toasterBottomRight.create({\n              title: \"Bottom Right\",\n              description: \"Default position (bottom-right)\",\n              type: \"info\",\n            })\n          }\n        >\n          Bottom Right\n        </Button>\n        <Button\n          onClick={() =>\n            toasterBottom.create({\n              title: \"Bottom Center\",\n              description: \"Centered at the bottom\",\n              type: \"success\",\n            })\n          }\n        >\n          Bottom Center\n        </Button>\n        <Button\n          onClick={() =>\n            toasterTopRight.create({\n              title: \"Top Right\",\n              description: \"Top right position\",\n              type: \"warning\",\n            })\n          }\n        >\n          Top Right\n        </Button>\n        <Button\n          onClick={() =>\n            toasterTop.create({\n              title: \"Top Center\",\n              description: \"Centered at the top\",\n              type: \"error\",\n            })\n          }\n        >\n          Top Center\n        </Button>\n        <Button\n          onClick={() =>\n            toasterBottomLeft.create({\n              title: \"Bottom Left\",\n              description: \"Bottom left position\",\n            })\n          }\n        >\n          Bottom Left\n        </Button>\n      </div>\n    </div>\n  </>\n);"
         },
         {
-          "title": "Loading Toast",
-          "description": "Loading toast that auto-closes after completion",
-          "source": "const ToastExample = () => {\n  const { notify, update } = useToast(\"example2\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() => {\n          const { id } = notify(\"Loading your data...\", {\n            type: \"loading\",\n            duration: false,\n            showDismissButton: false,\n          });\n\n          // Simulate async operation\n          setTimeout(() => {\n            update({\n              id,\n              content: \"Data loaded successfully!\",\n              type: \"success\",\n              duration: 5000,\n              showDismissButton: true,\n            });\n          }, 3000);\n        }}\n      >\n        Loading (Spinner)\n      </Button>\n      <Button\n        onClick={() => {\n          const { id } = notify(\"Processing your request...\", {\n            type: \"default\",\n            duration: 3000,\n            showDismissButton: false,\n            showIcon: false,\n            showProgressBar: true,\n          });\n\n          // Simulate async operation\n          setTimeout(() => {\n            update({\n              id,\n              content: \"Request processed!\",\n              type: \"success\",\n              duration: 5000,\n              showDismissButton: true,\n            });\n          }, 3000);\n        }}\n      >\n        Loading (Progress Bar)\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"example2\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
+          "title": "Promise & Update Toasts",
+          "description": "Handle async operations and update toasts dynamically",
+          "source": "const toaster = createToaster({\n  placement: \"bottom-end\",\n  overlap: true,\n  gap: 16,\n});\n\nconst uploadFile = () => {\n  return new Promise<void>((resolve, reject) => {\n    setTimeout(() => {\n      Math.random() > 0.5\n        ? resolve()\n        : reject(new Error(\"Upload failed\"));\n    }, 2000);\n  });\n};\n\nlet toastId: string | undefined;\n\nreturn (\n  <>\n    <Toast toaster={toaster} />\n    <div class=\"flex gap-2\">\n      <Button\n        onClick={() =>\n          toaster.promise(uploadFile, {\n            loading: {\n              title: \"Uploading...\",\n              description: \"Please wait while we process your request.\",\n            },\n            success: {\n              title: \"Success!\",\n              description:\n                \"Your request has been processed successfully.\",\n            },\n            error: {\n              title: \"Failed\",\n              description: \"Something went wrong. Please try again.\",\n            },\n          })\n        }\n      >\n        Promise Toast\n      </Button>\n      <Button\n        onClick={() => {\n          toastId = toaster.create({\n            title: \"Loading\",\n            description: \"Processing your request...\",\n            type: \"loading\",\n            duration: Infinity,\n          });\n        }}\n      >\n        Create\n      </Button>\n      <Button\n        onClick={() => {\n          if (toastId) {\n            toaster.update(toastId, {\n              title: \"Success!\",\n              description: \"Your request has been processed.\",\n              type: \"success\",\n              duration: 3000,\n            });\n          }\n        }}\n      >\n        Update\n      </Button>\n    </div>\n  </>\n);"
         },
         {
-          "title": "Custom Content",
-          "description": "Fully customized toast with JSX content and custom progress bar",
-          "source": "const ToastExample = () => {\n  const { notify, dismiss } = useToast(\"example3\");\n  return (\n    <div class=\"flex flex-wrap gap-2\">\n      <Button\n        onClick={() => {\n          const { id } = notify(\n            <div class=\"flex items-start justify-between gap-4 w-full\">\n              <div class=\"flex flex-col gap-1 flex-1\">\n                <div class=\"font-semibold\">New message received</div>\n                <div class=\"text-sm opacity-90\">\n                  John Doe sent you a message\n                </div>\n              </div>\n              <Button\n                size=\"sm\"\n                variant=\"ghost\"\n                onClick={() => dismiss({ id })}\n                class=\"shrink-0 self-center -mt-1\"\n                aria-label=\"Dismiss\"\n              >\n                <div class=\"h-4 w-4 i-lucide-x\" />\n              </Button>\n            </div>,\n            {\n              duration: false,\n              showDismissButton: false,\n              showIcon: false,\n            },\n          );\n        }}\n      >\n        Custom Message\n      </Button>\n      <Button\n        onClick={() => {\n          notify(\n            (toast) => (\n              <div class=\"relative w-full bg-background rounded-lg border border-border p-3 shadow-lg\">\n                <div class=\"flex items-start justify-between gap-4 w-full\">\n                  <div class=\"flex flex-col gap-1 flex-1\">\n                    <div class=\"font-semibold\">File uploading</div>\n                    <div class=\"text-sm opacity-90\">\n                      upload.pdf •{\" \"}\n                      {Math.round(toast.progressManager.progress())}%\n                      complete\n                    </div>\n                  </div>\n                </div>\n                <div\n                  class=\"absolute left-0 bottom-0 h-1 bg-blue-500 rounded-b-lg transition-all\"\n                  style={{\n                    width: `${toast.progressManager.progress()}%`,\n                  }}\n                />\n              </div>\n            ),\n            {\n              duration: 5000,\n              showDismissButton: false,\n              showIcon: false,\n              showProgressBar: false,\n            },\n          );\n        }}\n      >\n        Custom Progress Bar\n      </Button>\n    </div>\n  );\n};\n\nreturn (\n  <SolidToastProvider>\n    <Toaster toasterId=\"example3\" />\n    <ToastExample />\n  </SolidToastProvider>\n);"
+          "title": "Duration & Limits",
+          "description": "Control duration and maximum visible toasts",
+          "source": "const toaster = createToaster({\n  placement: \"bottom-end\",\n  overlap: true,\n  gap: 16,\n  max: 3,\n});\n\nreturn (\n  <>\n    <Toast toaster={toaster} />\n    <div class=\"space-y-3\">\n      <div class=\"flex flex-wrap gap-2\">\n        <Button\n          onClick={() =>\n            toaster.create({\n              title: \"Quick toast\",\n              description: \"Disappears in 1 second\",\n              duration: 1000,\n            })\n          }\n        >\n          1s\n        </Button>\n        <Button\n          onClick={() =>\n            toaster.create({\n              title: \"Long toast\",\n              description: \"Stays for 10 seconds\",\n              duration: 10000,\n            })\n          }\n        >\n          10s\n        </Button>\n        <Button\n          onClick={() =>\n            toaster.create({\n              title: \"Persistent\",\n              description: \"Stays until dismissed\",\n              duration: Infinity,\n            })\n          }\n        >\n          ∞\n        </Button>\n      </div>\n      <div class=\"flex flex-wrap gap-2\">\n        <Button\n          onClick={() =>\n            toaster.create({\n              title: `Toast ${Date.now()}`,\n              description: \"Max 3 visible at once\",\n              type: \"info\",\n            })\n          }\n        >\n          Add Toast\n        </Button>\n        <Button\n          onClick={() => {\n            for (let i = 1; i <= 5; i++) {\n              toaster.create({\n                title: `Toast ${i}`,\n                description: `Toast number ${i}`,\n                type: \"info\",\n              });\n            }\n          }}\n        >\n          Add 5 Toasts\n        </Button>\n      </div>\n    </div>\n  </>\n);"
         }
       ],
       "dependencies": {
         "components": [],
         "packages": [
-          "class-variance-authority",
-          "solid-notifications"
+          "@ark-ui/solid"
         ]
       },
       "files": [
@@ -3739,6 +3695,7 @@
     "badge",
     "button",
     "card",
+    "chart",
     "checkbox",
     "color-picker",
     "date-picker",
@@ -3761,6 +3718,7 @@
     "slider",
     "switch",
     "tabs",
+    "theme",
     "toast",
     "tooltip",
     "tree-view"

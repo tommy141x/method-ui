@@ -41,6 +41,9 @@ export default defineConfig({
       fonts: {
         sans: "Inter:400,500,600,700",
         mono: "JetBrains Mono:400,500,600,700",
+        display: "Space Grotesk:400,500,600,700",
+        retro: "Press Start 2P", // Remove :400
+        serif: "Merriweather:400,700",
       },
     }),
   ],
@@ -87,8 +90,11 @@ export default defineConfig({
       sm: "calc(var(--radius) - 4px)",
     },
     fontFamily: {
-      sans: ["Inter", "sans-serif"],
+      sans: ["var(--font-sans)", "Inter", "sans-serif"],
       mono: ["JetBrains Mono", "monospace"],
+      display: ["Space Grotesk", "sans-serif"],
+      retro: ["Press Start 2P", "monospace"],
+      serif: ["Merriweather", "serif"],
     },
   },
   safelist: ["sr-only", "not-sr-only"],
