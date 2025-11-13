@@ -1,15 +1,5 @@
-import {
-  Component,
-  For,
-  Index,
-  createSignal,
-  Show,
-  createEffect,
-  onMount,
-} from "solid-js";
-import { useSearchParams } from "@solidjs/router";
-import metadataJson from "@lib/registry.json";
-import { ThemeToggle } from "../components/theme-toggle";
+import { A } from "@solidjs/router";
+import { Navbar } from "../components/navbar";
 import { Button } from "../components/button";
 import {
   Card,
@@ -19,682 +9,152 @@ import {
   CardContent,
 } from "../components/card";
 import { Badge } from "../components/badge";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-  TabsIndicator,
-} from "../components/tabs";
-import { Input } from "../components/input";
-import { Tooltip, TooltipTrigger, TooltipContent } from "../components/tooltip";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "../components/hover-card";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "../components/accordion";
-import { cn } from "@lib/cn";
-import { icon } from "@lib/icon";
-
-const componentMetadata = metadataJson.componentMetadata;
-
-/**
- * Remove excess indentation from source code
- */
-function dedent(code: string): string {
-  const lines = code.split("\n");
-
-  // Remove leading/trailing empty lines
-  while (lines.length > 0 && lines[0].trim() === "") {
-    lines.shift();
-  }
-  while (lines.length > 0 && lines[lines.length - 1].trim() === "") {
-    lines.pop();
-  }
-
-  if (lines.length === 0) return "";
-
-  // Find minimum indentation
-  const nonEmptyLines = lines.filter((line) => line.trim().length > 0);
-  if (nonEmptyLines.length === 0) return code;
-
-  const minIndent = Math.min(
-    ...nonEmptyLines.map((line) => {
-      const match = line.match(/^\s*/);
-      return match ? match[0].length : 0;
-    }),
-  );
-
-  // Remove minimum indentation from all lines
-  return lines.map((line) => line.slice(minIndent)).join("\n");
-}
-
-// Dynamically import all components
-const componentModules = import.meta.glob("../../../components/*.tsx", {
-  eager: true,
-}) as Record<string, any>;
-
-interface ComponentInfo {
-  name: string;
-  meta: any;
-  Component: any;
-}
-
-// Build component registry from generated metadata and imports
-const components: ComponentInfo[] = Object.entries(componentMetadata)
-  .map(([fileName, metadata]) => {
-    // Find the matching component module
-    const modulePath = `../../../components/${fileName}.tsx`;
-    const module = componentModules[modulePath];
-
-    if (!module) {
-      console.warn(`Could not find module for ${fileName}`);
-      return null;
-    }
-
-    // Get the component export (usually PascalCase)
-    const componentName = metadata.name;
-    const Component = module[componentName] || module.default;
-
-    if (!Component) {
-      console.warn(`Could not find component export for ${componentName}`);
-      return null;
-    }
-
-    // Merge runtime meta with generated metadata
-    const runtimeMeta = module.meta || {};
-
-    // Merge runtime examples (code functions) with generated sources
-    const mergedExamples = (metadata.examples || []).map(
-      (generatedExample: any, index: number) => {
-        const runtimeExample = runtimeMeta.examples?.[index];
-        return {
-          ...generatedExample,
-          code: runtimeExample?.code,
-          source: generatedExample?.source
-            ? dedent(generatedExample.source)
-            : runtimeExample?.source,
-        };
-      },
-    );
-
-    // Generate default API reference link based on component name
-    // Only use default if apiReference is undefined (not explicitly set)
-    const defaultApiReference = `https://ark-ui.com/docs/components/${fileName}#api-reference`;
-    const apiReference = runtimeMeta.hasOwnProperty("apiReference")
-      ? runtimeMeta.apiReference
-      : defaultApiReference;
-
-    return {
-      name: fileName,
-      meta: {
-        name: metadata.name,
-        description: metadata.description || runtimeMeta.description,
-        apiReference: apiReference,
-        props: metadata.props,
-        variants: metadata.variants,
-        examples: mergedExamples,
-        dependencies: metadata.dependencies,
-      },
-      Component,
-    };
-  })
-  .filter(Boolean) as ComponentInfo[];
-
-const ComponentShowcase: Component<{ componentInfo: ComponentInfo }> = (
-  props,
-) => {
-  const [showCode, setShowCode] = createSignal<Record<number, boolean>>({});
-  const [selectedTab, setSelectedTab] = createSignal("0");
-  const [copied, setCopied] = createSignal(false);
-
-  const meta = () => props.componentInfo.meta;
-
-  const toggleCode = (index: number) => {
-    setShowCode((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
-
-  // Force tab selection after mount to trigger indicator positioning
-  onMount(() => {
-    setTimeout(() => {
-      setSelectedTab("0");
-    }, 0);
-  });
-
-  // Reset tab when component changes
-  createEffect(() => {
-    props.componentInfo.name; // track changes
-    setSelectedTab("0");
-    setTimeout(() => {
-      setSelectedTab("0");
-    }, 0);
-  });
-
-  return (
-    <div class="space-y-6">
-      {/* Component Header */}
-      <div>
-        <div class="flex items-start justify-between mb-4">
-          <div class="flex-1">
-            <h1 class="text-4xl font-bold text-foreground mb-2">
-              {meta().name}
-            </h1>
-            <p class="text-lg text-muted-foreground">{meta().description}</p>
-            <Show when={meta().apiReference && meta().apiReference !== ""}>
-              <a
-                href={meta().apiReference}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm text-primary hover:underline inline-flex items-center gap-1 mt-2"
-              >
-                API Reference
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" y1="14" x2="21" y2="3" />
-                </svg>
-              </a>
-            </Show>
-          </div>
-          <div class="flex gap-2 flex-wrap justify-end">
-            <Show when={meta().variants && meta().variants.length > 0}>
-              <Badge variant="secondary">
-                {meta().variants.length} Variant
-                {meta().variants.length !== 1 ? "s" : ""}
-              </Badge>
-            </Show>
-            <Show when={meta().examples.length > 0}>
-              <Badge variant="secondary">
-                {meta().examples.length} Example
-                {meta().examples.length !== 1 ? "s" : ""}
-              </Badge>
-            </Show>
-          </div>
-        </div>
-
-        {/* Install Command */}
-        <Card class="mb-6">
-          <CardContent class="pt-6">
-            <p class="text-sm text-muted-foreground mb-2">
-              Install this component
-            </p>
-            <div class="flex items-center justify-between gap-4">
-              <code class="text-sm bg-muted px-3 py-2 rounded font-mono block flex-1">
-                bunx method@latest add {props.componentInfo.name}
-              </code>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={(e) => {
-                      const btn = e.currentTarget;
-                      navigator.clipboard.writeText(
-                        `bunx method@latest add ${props.componentInfo.name}`,
-                      );
-                      setCopied(true);
-                      setTimeout(() => setCopied(false), 1000);
-                    }}
-                  >
-                    <div
-                      class={cn("h-4 w-4", icon(copied() ? "check" : "copy"))}
-                    />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Copy install command</TooltipContent>
-              </Tooltip>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Examples Section */}
-      <Show when={meta().examples.length > 0}>
-        <div>
-          <h2 class="text-2xl font-semibold mb-4">Examples</h2>
-          <Tabs
-            value={selectedTab()}
-            onValueChange={(e) => setSelectedTab(e.value)}
-          >
-            <TabsList class="mb-4">
-              <Index each={meta().examples}>
-                {(example, index) => (
-                  <TabsTrigger value={index.toString()}>
-                    {example().title}
-                  </TabsTrigger>
-                )}
-              </Index>
-              <TabsIndicator />
-            </TabsList>
-
-            <Index each={meta().examples}>
-              {(example, index) => (
-                <TabsContent value={index.toString()}>
-                  <Card>
-                    <CardHeader>
-                      <div class="flex items-center justify-between">
-                        <div>
-                          <CardTitle>{example().title}</CardTitle>
-                          <Show when={example().description}>
-                            <CardDescription class="mt-2">
-                              {example().description}
-                            </CardDescription>
-                          </Show>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => toggleCode(index)}
-                        >
-                          <div class={cn("h-4 w-4 mr-2", icon("code"))} />
-                          {showCode()[index] ? "Hide" : "Show"} Code
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      {/* Example Preview */}
-                      <div class="border border-border rounded-lg p-8 bg-background flex items-center justify-center min-h-32 mb-4">
-                        {example().code()}
-                      </div>
-
-                      {/* Code Display */}
-                      <Show when={showCode()[index]}>
-                        <div class="border border-border rounded-lg bg-muted/50 overflow-hidden">
-                          <div class="flex items-center justify-between px-4 py-2 border-b border-border bg-muted">
-                            <span class="text-xs font-medium text-muted-foreground">
-                              TypeScript
-                            </span>
-                            <Tooltip>
-                              <TooltipTrigger>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => {
-                                    navigator.clipboard.writeText(
-                                      example().source ||
-                                        example().code.toString(),
-                                    );
-                                  }}
-                                >
-                                  <div class={cn("h-3 w-3", icon("copy"))} />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Copy code</TooltipContent>
-                            </Tooltip>
-                          </div>
-                          <pre class="p-4 text-sm overflow-x-auto">
-                            <code class="language-tsx text-foreground">
-                              {example().source || example().code.toString()}
-                            </code>
-                          </pre>
-                        </div>
-                      </Show>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              )}
-            </Index>
-          </Tabs>
-        </div>
-      </Show>
-
-      {/* Component Details */}
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Component Dependencies */}
-        <Show when={meta().dependencies?.components?.length > 0}>
-          <Card>
-            <CardHeader>
-              <CardTitle class="text-lg">Dependencies</CardTitle>
-              <CardDescription>
-                These components are automatically installed
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div class="flex flex-wrap gap-2">
-                <For each={meta().dependencies.components}>
-                  {(dep) => (
-                    <Badge variant="secondary" class="font-mono">
-                      {dep}
-                    </Badge>
-                  )}
-                </For>
-              </div>
-            </CardContent>
-          </Card>
-        </Show>
-
-        {/* Variants Info */}
-        <Show when={meta().variants && meta().variants.length > 0}>
-          <Card>
-            <CardHeader>
-              <CardTitle class="text-lg">Variants</CardTitle>
-              <CardDescription>
-                Available style variants for this component
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div class="space-y-3">
-                <For each={meta().variants}>
-                  {(variant) => (
-                    <div class="space-y-1">
-                      <div class="flex items-center gap-2">
-                        <span class="font-mono text-sm font-medium">
-                          {variant.name}
-                        </span>
-                        <Show when={variant.defaultValue}>
-                          <Badge variant="secondary" class="text-xs">
-                            default: {variant.defaultValue}
-                          </Badge>
-                        </Show>
-                      </div>
-                      <div class="flex flex-wrap gap-1.5">
-                        <For each={variant.values}>
-                          {(value) => (
-                            <Badge
-                              variant="outline"
-                              class="text-xs font-mono font-normal"
-                            >
-                              {value}
-                            </Badge>
-                          )}
-                        </For>
-                      </div>
-                    </div>
-                  )}
-                </For>
-              </div>
-            </CardContent>
-          </Card>
-        </Show>
-      </div>
-
-      {/* Props Table */}
-      <Show when={meta().props && meta().props.length > 0}>
-        <Accordion collapsible defaultValue={["props"]}>
-          <AccordionItem value="props">
-            <Card>
-              <CardHeader class="pb-3">
-                <AccordionTrigger class="hover:no-underline">
-                  <div class="flex items-center justify-between w-full pr-4">
-                    <div>
-                      <CardTitle class="text-lg">Props</CardTitle>
-                      <CardDescription class="mt-1">
-                        Component API reference and prop types
-                      </CardDescription>
-                    </div>
-                    <Badge variant="secondary" class="ml-4">
-                      {meta().props.length}
-                    </Badge>
-                  </div>
-                </AccordionTrigger>
-              </CardHeader>
-              <AccordionContent>
-                <CardContent class="pt-0">
-                  <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                      <thead>
-                        <tr class="border-b border-border">
-                          <th class="text-left py-3 px-4 font-semibold text-foreground">
-                            Prop
-                          </th>
-                          <th class="text-left py-3 px-4 font-semibold text-foreground">
-                            Type
-                          </th>
-                          <th class="text-left py-3 px-4 font-semibold text-foreground">
-                            Default
-                          </th>
-                          <th class="text-left py-3 px-4 font-semibold text-foreground">
-                            Description
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <For each={meta().props}>
-                          {(prop) => (
-                            <tr class="border-b border-border/50 hover:bg-muted/50 transition-colors">
-                              <td class="py-3 px-4">
-                                <code class="text-xs font-mono bg-muted px-1.5 py-0.5 rounded">
-                                  {prop.name}
-                                </code>
-                                <Show when={prop.required}>
-                                  <Badge
-                                    variant="destructive"
-                                    class="ml-2 text-xs"
-                                  >
-                                    required
-                                  </Badge>
-                                </Show>
-                              </td>
-                              <td class="py-3 px-4">
-                                <code class="text-xs font-mono text-muted-foreground">
-                                  {prop.type}
-                                </code>
-                              </td>
-                              <td class="py-3 px-4">
-                                <Show
-                                  when={prop.defaultValue}
-                                  fallback={
-                                    <span class="text-muted-foreground">-</span>
-                                  }
-                                >
-                                  <code class="text-xs font-mono text-muted-foreground">
-                                    {prop.defaultValue}
-                                  </code>
-                                </Show>
-                              </td>
-                              <td class="py-3 px-4 text-muted-foreground">
-                                {prop.description || "-"}
-                              </td>
-                            </tr>
-                          )}
-                        </For>
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </AccordionContent>
-            </Card>
-          </AccordionItem>
-        </Accordion>
-      </Show>
-    </div>
-  );
-};
 
 export default function Home() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const [selectedComponent, setSelectedComponent] = createSignal<string | null>(
-    searchParams.component ||
-      (components.length > 0 ? components[0].name : null),
-  );
-  const [searchQuery, setSearchQuery] = createSignal("");
-  const [sidebarOpen, setSidebarOpen] = createSignal(true);
-
-  // Sync URL with selected component
-  createEffect(() => {
-    const component = selectedComponent();
-    if (component) {
-      setSearchParams({ component });
-    }
-  });
-
-  // Sync selected component with URL on mount and changes
-  createEffect(() => {
-    const urlComponent = searchParams.component;
-    if (urlComponent && components.some((c) => c.name === urlComponent)) {
-      setSelectedComponent(urlComponent);
-    }
-  });
-
-  const filteredComponents = () => {
-    const query = searchQuery().toLowerCase();
-    if (!query) return components;
-    return components.filter(
-      (c) =>
-        c.meta.name.toLowerCase().includes(query) ||
-        c.meta.description?.toLowerCase().includes(query),
-    );
-  };
-
-  const currentComponent = () => {
-    return components.find((c) => c.name === selectedComponent());
-  };
-
   return (
     <div class="min-h-screen bg-background">
-      {/* Top Navigation */}
-      <header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              class="lg:hidden"
-              onClick={() => setSidebarOpen(!sidebarOpen())}
-            >
-              <div class={cn("h-5 w-5", icon(sidebarOpen() ? "x" : "menu"))} />
-            </Button>
-            <div>
-              <h1 class="text-xl font-bold">Method UI</h1>
-              <p class="text-xs text-muted-foreground hidden sm:block">
-                Component library for SolidJS
+      <Navbar />
+
+      {/* Hero Section */}
+      <section class="container mx-auto px-4 py-20 md:py-32">
+        <div class="max-w-4xl mx-auto text-center space-y-6">
+          <Badge variant="secondary" class="mb-4">
+            Built with SolidJS & Ark UI
+          </Badge>
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tight">
+            Build beautiful apps with{" "}
+            <span class="text-primary">Method UI</span>
+          </h1>
+          <p class="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+            A comprehensive component library for SolidJS. Beautifully designed,
+            accessible, and customizable components for your next project.
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-4 pt-6">
+            <A href="/docs">
+              <Button size="lg" class="text-lg px-8">
+                Get Started
+              </Button>
+            </A>
+            <A href="/components/button">
+              <Button size="lg" variant="outline" class="text-lg px-8">
+                View Components
+              </Button>
+            </A>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section class="container mx-auto px-4 py-20 border-t border-border">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Method UI?</h2>
+            <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Everything you need to build modern web applications
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>🎨 Customizable</CardTitle>
+                <CardDescription>
+                  Fully themeable components with CSS variables and variants.
+                  Make it yours with minimal effort.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>♿ Accessible</CardTitle>
+                <CardDescription>
+                  Built on top of Ark UI with WAI-ARIA compliance. Keyboard
+                  navigation and screen reader support out of the box.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>⚡ Fast</CardTitle>
+                <CardDescription>
+                  Powered by SolidJS for blazing fast performance. Fine-grained
+                  reactivity with no virtual DOM overhead.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>📦 Ready to Use</CardTitle>
+                <CardDescription>
+                  Copy and paste components directly into your project. No
+                  package installation required.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>🎯 TypeScript</CardTitle>
+                <CardDescription>
+                  Fully typed components with excellent IDE support. Catch
+                  errors early with type safety.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>🌙 Dark Mode</CardTitle>
+                <CardDescription>
+                  Built-in dark mode support with automatic theme switching.
+                  Beautiful in both light and dark themes.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Start Section */}
+      <section class="container mx-auto px-4 py-20 border-t border-border">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Quick Start</h2>
+            <p class="text-lg text-muted-foreground">
+              Get up and running in minutes
+            </p>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Installation</CardTitle>
+              <CardDescription>
+                Add Method UI to your SolidJS project
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-4">
+              <div class="bg-muted rounded-lg p-4 font-mono text-sm">
+                npm install @ark-ui/solid solid-js
+              </div>
+              <p class="text-sm text-muted-foreground">
+                Then browse the components in the docs and copy the code you
+                need into your project.
               </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <Badge variant="secondary" class="hidden sm:inline-flex">
-              {components.length} Components
-            </Badge>
-            <ThemeToggle />
-          </div>
+              <A href="/docs">
+                <Button>Browse Components</Button>
+              </A>
+            </CardContent>
+          </Card>
         </div>
-      </header>
-
-      <div class="container mx-auto px-4 py-6">
-        <div class="flex gap-6">
-          {/* Sidebar */}
-          <aside
-            class={cn(
-              "w-64 shrink-0 space-y-4 transition-all duration-300",
-              sidebarOpen() ? "block" : "hidden lg:block",
-            )}
-          >
-            {/* Search */}
-            <div class="sticky top-20">
-              <Input
-                type="search"
-                placeholder="Search components..."
-                value={searchQuery()}
-                onInput={(e) => setSearchQuery(e.currentTarget.value)}
-                class="mb-4"
-              />
-
-              {/* Component List */}
-              <Card>
-                <CardHeader class="pb-3">
-                  <CardTitle class="text-sm font-medium">Components</CardTitle>
-                </CardHeader>
-                <CardContent class="space-y-1 max-h-[calc(100vh-16rem)] overflow-y-auto">
-                  <For each={filteredComponents()}>
-                    {(component) => (
-                      <Button
-                        variant={
-                          selectedComponent() === component.name
-                            ? "secondary"
-                            : "ghost"
-                        }
-                        class="w-full justify-start"
-                        onClick={() => {
-                          setSelectedComponent(component.name);
-                          if (window.innerWidth < 1024) {
-                            setSidebarOpen(false);
-                          }
-                        }}
-                      >
-                        <div class="flex items-center gap-2 w-full">
-                          <span class="text-sm">{component.meta.name}</span>
-                          <Show when={component.meta.examples.length > 0}>
-                            <Badge
-                              variant="outline"
-                              class="ml-auto text-xs font-normal"
-                            >
-                              {component.meta.examples.length}
-                            </Badge>
-                          </Show>
-                        </div>
-                      </Button>
-                    )}
-                  </For>
-                  <Show when={filteredComponents().length === 0}>
-                    <div class="text-center py-8 text-muted-foreground text-sm">
-                      No components found
-                    </div>
-                  </Show>
-                </CardContent>
-              </Card>
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <main class="flex-1 min-w-0">
-            <Show
-              when={currentComponent()}
-              fallback={
-                <Card>
-                  <CardContent class="py-12 text-center">
-                    <div
-                      class={cn(
-                        "h-12 w-12 mx-auto mb-4 text-muted-foreground",
-                        icon("box"),
-                      )}
-                    />
-                    <h2 class="text-xl font-semibold mb-2">
-                      No Component Selected
-                    </h2>
-                    <p class="text-muted-foreground">
-                      Select a component from the sidebar to view its
-                      documentation
-                    </p>
-                  </CardContent>
-                </Card>
-              }
-            >
-              <ComponentShowcase componentInfo={currentComponent()!} />
-            </Show>
-          </main>
-        </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <footer class="border-t border-border mt-12">
-        <div class="container mx-auto px-4 py-8 text-center text-sm text-muted-foreground">
-          <p>
-            Built with <span class="text-red-500">♥</span> using SolidJS, Ark
-            UI, and UnoCSS
-          </p>
-          <p class="mt-2">
-            Components auto-discovered from{" "}
-            <code class="px-1.5 py-0.5 bg-muted rounded text-xs">
-              ../components
-            </code>
-          </p>
+      <footer class="container mx-auto px-4 py-12 border-t border-border">
+        <div class="max-w-6xl mx-auto text-center text-muted-foreground">
+          <p>Built with ❤️ using SolidJS and Ark UI</p>
         </div>
       </footer>
     </div>
