@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, createEffect, Show } from "solid-js";
+import { For, Show } from "solid-js";
 import { Title, Meta } from "@solidjs/meta";
 import { Navbar } from "../components/navbar";
 import { Button } from "../components/button";
@@ -10,201 +10,11 @@ import {
   CardContent,
 } from "../components/card";
 import { Badge } from "../components/badge";
+import { useTheme } from "../components/theme";
 import { cn } from "@lib/cn";
 
-interface ThemeColors {
-  primary?: string;
-  primaryForeground?: string;
-  secondary?: string;
-  secondaryForeground?: string;
-  accent?: string;
-  accentForeground?: string;
-  muted?: string;
-  mutedForeground?: string;
-  background?: string;
-  foreground?: string;
-  card?: string;
-  cardForeground?: string;
-  popover?: string;
-  popoverForeground?: string;
-  border?: string;
-  input?: string;
-  ring?: string;
-  destructive?: string;
-  destructiveForeground?: string;
-  radius?: string;
-}
-
-interface Theme {
-  name: string;
-  id: string;
-  description: string;
-  cssVars: {
-    light: ThemeColors;
-    dark: ThemeColors;
-  };
-}
-
 export default function Themes() {
-  const [selectedTheme, setSelectedTheme] = createSignal("default");
-  const [mounted, setMounted] = createSignal(false);
-
-  const themes: Theme[] = [
-    {
-      name: "Default",
-      id: "default",
-      description: "The default Method UI theme",
-      cssVars: {
-        light: {
-          primary: "221.2 83.2% 53.3%",
-        },
-        dark: {
-          primary: "221.2 83.2% 53.3%",
-        },
-      },
-    },
-    {
-      name: "Slate",
-      id: "slate",
-      description: "A cool, professional slate theme",
-      cssVars: {
-        light: {
-          primary: "215.4 16.3% 46.9%",
-          ring: "215.4 16.3% 46.9%",
-        },
-        dark: {
-          primary: "215.4 16.3% 56.9%",
-          ring: "215.4 16.3% 56.9%",
-        },
-      },
-    },
-    {
-      name: "Rose",
-      id: "rose",
-      description: "A warm, elegant rose theme",
-      cssVars: {
-        light: {
-          primary: "346.8 77.2% 49.8%",
-          ring: "346.8 77.2% 49.8%",
-        },
-        dark: {
-          primary: "346.8 77.2% 59.8%",
-          ring: "346.8 77.2% 59.8%",
-        },
-      },
-    },
-    {
-      name: "Blue",
-      id: "blue",
-      description: "A vibrant, modern blue theme",
-      cssVars: {
-        light: {
-          primary: "221.2 83.2% 53.3%",
-          ring: "221.2 83.2% 53.3%",
-        },
-        dark: {
-          primary: "217.2 91.2% 59.8%",
-          ring: "217.2 91.2% 59.8%",
-        },
-      },
-    },
-    {
-      name: "Green",
-      id: "green",
-      description: "A fresh, natural green theme",
-      cssVars: {
-        light: {
-          primary: "142.1 76.2% 36.3%",
-          ring: "142.1 76.2% 36.3%",
-        },
-        dark: {
-          primary: "142.1 70.6% 45.3%",
-          ring: "142.1 70.6% 45.3%",
-        },
-      },
-    },
-    {
-      name: "Orange",
-      id: "orange",
-      description: "An energetic, warm orange theme",
-      cssVars: {
-        light: {
-          primary: "24.6 95% 53.1%",
-          ring: "24.6 95% 53.1%",
-        },
-        dark: {
-          primary: "20.5 90.2% 48.2%",
-          ring: "20.5 90.2% 48.2%",
-        },
-      },
-    },
-  ];
-
-  const applyTheme = (themeId: string) => {
-    const theme = themes.find((t) => t.id === themeId);
-    if (!theme) return;
-
-    const root = document.documentElement;
-
-    // Set data attribute for the theme
-    root.setAttribute("data-theme", themeId);
-
-    // Apply light mode variables
-    const lightVars = theme.cssVars.light;
-    Object.entries(lightVars).forEach(([key, value]) => {
-      if (value) {
-        const cssVar = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
-        root.style.setProperty(cssVar, value);
-      }
-    });
-
-    // Apply dark mode variables using a style tag
-    const existingStyle = document.getElementById("theme-dark-mode");
-    if (existingStyle) {
-      existingStyle.remove();
-    }
-
-    const darkVars = theme.cssVars.dark;
-    const darkVarEntries = Object.entries(darkVars).filter(
-      ([_, value]) => value,
-    );
-
-    if (darkVarEntries.length > 0) {
-      const style = document.createElement("style");
-      style.id = "theme-dark-mode";
-      const darkCss = darkVarEntries
-        .map(([key, value]) => {
-          const cssVar = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
-          return `  ${cssVar}: ${value};`;
-        })
-        .join("\n");
-      style.textContent = `.dark {\n${darkCss}\n}`;
-      document.head.appendChild(style);
-    }
-
-    localStorage.setItem("theme-color", themeId);
-  };
-
-  const handleThemeChange = (themeId: string) => {
-    setSelectedTheme(themeId);
-    applyTheme(themeId);
-  };
-
-  // Apply theme on mount (client only)
-  onMount(() => {
-    const savedTheme = localStorage.getItem("theme-color") || "default";
-    setSelectedTheme(savedTheme);
-    applyTheme(savedTheme);
-    setMounted(true);
-  });
-
-  // Apply theme when it changes (client only)
-  createEffect(() => {
-    if (mounted()) {
-      const theme = selectedTheme();
-      applyTheme(theme);
-    }
-  });
+  const { theme, setTheme, themes, mounted } = useTheme();
 
   return (
     <div class="min-h-screen bg-background">
@@ -229,64 +39,125 @@ export default function Themes() {
           </p>
         </div>
 
-        {/* Theme Selector */}
+        {/* Theme Gallery */}
         <div class="mb-12">
-          <h2 class="text-2xl font-bold mb-6">Theme Gallery</h2>
+          <h2 class="text-2xl font-bold mb-6">Available Themes</h2>
+          <p class="text-muted-foreground mb-6">
+            Choose from our curated collection of themes. Each theme can be
+            further customized with CSS variables.
+          </p>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <For each={themes}>
-              {(theme) => (
-                <div
-                  class="cursor-pointer"
-                  onClick={() => handleThemeChange(theme.id)}
+            <For each={themes()}>
+              {(themeOption) => (
+                <button
+                  onClick={() => setTheme(themeOption.id)}
+                  class="text-left"
                 >
                   <Card
                     class={cn(
-                      "transition-all hover:shadow-lg",
-                      selectedTheme() === theme.id && "ring-2 ring-primary",
+                      "cursor-pointer transition-all hover:shadow-lg",
+                      theme() === themeOption.id && "ring-2 ring-primary",
                     )}
                   >
                     <CardHeader>
                       <div class="flex items-start justify-between mb-4">
                         <div class="flex-1">
-                          <CardTitle>{theme.name}</CardTitle>
+                          <CardTitle>{themeOption.name}</CardTitle>
                           <CardDescription class="mt-2">
-                            {theme.description}
+                            {themeOption.description}
                           </CardDescription>
                         </div>
-                        {selectedTheme() === theme.id && (
+                        <Show when={theme() === themeOption.id}>
                           <Badge variant="default">Active</Badge>
-                        )}
+                        </Show>
                       </div>
-                      {/* Color Palette Preview */}
-                      <div class="flex gap-2">
-                        <div
-                          class="w-8 h-8 rounded-full border-2 border-border"
-                          style={{
-                            "background-color": `hsl(${theme.cssVars.light.primary || "221.2 83.2% 53.3%"})`,
-                          }}
-                          title="Primary (Light Mode)"
-                        />
-                        <div
-                          class="w-8 h-8 rounded-full border-2 border-border"
-                          style={{
-                            "background-color": `hsl(${theme.cssVars.dark.primary || "221.2 83.2% 53.3%"})`,
-                          }}
-                          title="Primary (Dark Mode)"
-                        />
-                        <div
-                          class="w-8 h-8 rounded-full border-2 border-border"
-                          style={{
-                            "background-color": `hsl(${theme.cssVars.light.ring || theme.cssVars.light.primary || "221.2 83.2% 53.3%"})`,
-                          }}
-                          title="Ring/Focus (Light Mode)"
-                        />
+                      {/* Color Preview */}
+                      <div class="flex gap-2 items-center">
+                        <Show
+                          when={themeOption.cssVars?.primary}
+                          fallback={
+                            <div class="flex gap-2 items-center">
+                              <div class="w-10 h-10 rounded-full border-2 border-border shadow-sm bg-gradient-to-br from-blue-500 to-purple-600" />
+                              <div class="text-xs text-muted-foreground">
+                                Base Theme
+                              </div>
+                            </div>
+                          }
+                        >
+                          <div
+                            class="w-10 h-10 rounded-full border-2 border-border shadow-sm"
+                            style={{
+                              "background-color": `hsl(${themeOption.cssVars?.primary})`,
+                            }}
+                            title="Primary Color"
+                          />
+                          <div class="text-xs text-muted-foreground">
+                            Primary Color
+                          </div>
+                        </Show>
                       </div>
                     </CardHeader>
                   </Card>
-                </div>
+                </button>
               )}
             </For>
           </div>
+        </div>
+
+        {/* Live Preview */}
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold mb-6">Live Preview</h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Current Theme Preview</CardTitle>
+              <CardDescription>
+                See how components look with the selected theme
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-4">
+              {/* Buttons */}
+              <div>
+                <h3 class="text-sm font-medium mb-3">Buttons</h3>
+                <div class="flex flex-wrap gap-2">
+                  <Button variant="default">Primary</Button>
+                  <Button variant="secondary">Secondary</Button>
+                  <Button variant="destructive">Destructive</Button>
+                  <Button variant="outline">Outline</Button>
+                  <Button variant="ghost">Ghost</Button>
+                </div>
+              </div>
+
+              {/* Badges */}
+              <div>
+                <h3 class="text-sm font-medium mb-3">Badges</h3>
+                <div class="flex flex-wrap gap-2">
+                  <Badge>Default</Badge>
+                  <Badge variant="secondary">Secondary</Badge>
+                  <Badge variant="destructive">Destructive</Badge>
+                  <Badge variant="outline">Outline</Badge>
+                </div>
+              </div>
+
+              {/* Cards */}
+              <div>
+                <h3 class="text-sm font-medium mb-3">Card</h3>
+                <Card class="max-w-md bg-muted">
+                  <CardHeader>
+                    <CardTitle>Card Title</CardTitle>
+                    <CardDescription>
+                      This is a card with the current theme applied
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p class="text-sm">
+                      Cards automatically inherit the theme colors and adapt to
+                      your selected color scheme.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Customization Guide */}
@@ -295,184 +166,260 @@ export default function Themes() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Using CSS Variables</CardTitle>
+              <CardTitle>Available CSS Variables</CardTitle>
               <CardDescription>
-                Method UI uses CSS variables for theming. You can customize any
-                theme by overriding these variables in your global CSS.
+                Method UI uses CSS variables for theming. All variables are
+                defined in :root and can be overridden in theme classes.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div class="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto">
-                <pre>
-                  {(() => {
-                    const theme = themes.find((t) => t.id === selectedTheme());
-                    if (!theme)
-                      return "/* Select a theme to see CSS variables */";
-
-                    const lightVars = theme.cssVars.light;
-                    const darkVars = theme.cssVars.dark;
-
-                    // Default values from global.css
-                    const defaults = {
-                      light: {
-                        background: "0 0% 100%",
-                        foreground: "222.2 84% 4.9%",
-                        card: "0 0% 98%",
-                        cardForeground: "222.2 84% 4.9%",
-                        popover: "0 0% 100%",
-                        popoverForeground: "222.2 84% 4.9%",
-                        primary: "221.2 83.2% 53.3%",
-                        primaryForeground: "210 40% 98%",
-                        secondary: "210 40% 96%",
-                        secondaryForeground: "222.2 84% 4.9%",
-                        muted: "210 40% 96%",
-                        mutedForeground: "215.4 16.3% 46.9%",
-                        accent: "210 40% 96%",
-                        accentForeground: "222.2 84% 4.9%",
-                        destructive: "0 84.2% 60.2%",
-                        destructiveForeground: "210 40% 98%",
-                        border: "214.3 31.8% 91.4%",
-                        input: "214.3 31.8% 91.4%",
-                        ring: "221.2 83.2% 53.3%",
-                        radius: "0.5rem",
-                      },
-                      dark: {
-                        background: "222.2 84% 4.9%",
-                        foreground: "210 40% 98%",
-                        card: "222.2 47% 11.2%",
-                        cardForeground: "210 40% 98%",
-                        popover: "222.2 84% 4.9%",
-                        popoverForeground: "210 40% 98%",
-                        primary: "221.2 83.2% 53.3%",
-                        primaryForeground: "210 40% 98%",
-                        secondary: "217.2 32.6% 17.5%",
-                        secondaryForeground: "210 40% 98%",
-                        muted: "217.2 32.6% 17.5%",
-                        mutedForeground: "215 20.2% 65.1%",
-                        accent: "217.2 32.6% 17.5%",
-                        accentForeground: "210 40% 98%",
-                        destructive: "0 62.8% 30.6%",
-                        destructiveForeground: "210 40% 98%",
-                        border: "217.2 32.6% 17.5%",
-                        input: "217.2 32.6% 17.5%",
-                        ring: "224.3 76.3% 94.1%",
-                      },
-                    };
-
-                    let css = `/* Add to your global.css */\n:root {\n`;
-                    css += `  --background: ${lightVars.background || defaults.light.background};\n`;
-                    css += `  --foreground: ${lightVars.foreground || defaults.light.foreground};\n`;
-                    css += `  --card: ${lightVars.card || defaults.light.card};\n`;
-                    css += `  --card-foreground: ${lightVars.cardForeground || defaults.light.cardForeground};\n`;
-                    css += `  --popover: ${lightVars.popover || defaults.light.popover};\n`;
-                    css += `  --popover-foreground: ${lightVars.popoverForeground || defaults.light.popoverForeground};\n`;
-                    css += `  --primary: ${lightVars.primary || defaults.light.primary};\n`;
-                    css += `  --primary-foreground: ${lightVars.primaryForeground || defaults.light.primaryForeground};\n`;
-                    css += `  --secondary: ${lightVars.secondary || defaults.light.secondary};\n`;
-                    css += `  --secondary-foreground: ${lightVars.secondaryForeground || defaults.light.secondaryForeground};\n`;
-                    css += `  --muted: ${lightVars.muted || defaults.light.muted};\n`;
-                    css += `  --muted-foreground: ${lightVars.mutedForeground || defaults.light.mutedForeground};\n`;
-                    css += `  --accent: ${lightVars.accent || defaults.light.accent};\n`;
-                    css += `  --accent-foreground: ${lightVars.accentForeground || defaults.light.accentForeground};\n`;
-                    css += `  --destructive: ${lightVars.destructive || defaults.light.destructive};\n`;
-                    css += `  --destructive-foreground: ${lightVars.destructiveForeground || defaults.light.destructiveForeground};\n`;
-                    css += `  --border: ${lightVars.border || defaults.light.border};\n`;
-                    css += `  --input: ${lightVars.input || defaults.light.input};\n`;
-                    css += `  --ring: ${lightVars.ring || defaults.light.ring};\n`;
-                    css += `  --radius: ${lightVars.radius || defaults.light.radius};\n`;
-                    css += `}\n`;
-
-                    css += `\n.dark {\n`;
-                    css += `  --background: ${darkVars.background || defaults.dark.background};\n`;
-                    css += `  --foreground: ${darkVars.foreground || defaults.dark.foreground};\n`;
-                    css += `  --card: ${darkVars.card || defaults.dark.card};\n`;
-                    css += `  --card-foreground: ${darkVars.cardForeground || defaults.dark.cardForeground};\n`;
-                    css += `  --popover: ${darkVars.popover || defaults.dark.popover};\n`;
-                    css += `  --popover-foreground: ${darkVars.popoverForeground || defaults.dark.popoverForeground};\n`;
-                    css += `  --primary: ${darkVars.primary || defaults.dark.primary};\n`;
-                    css += `  --primary-foreground: ${darkVars.primaryForeground || defaults.dark.primaryForeground};\n`;
-                    css += `  --secondary: ${darkVars.secondary || defaults.dark.secondary};\n`;
-                    css += `  --secondary-foreground: ${darkVars.secondaryForeground || defaults.dark.secondaryForeground};\n`;
-                    css += `  --muted: ${darkVars.muted || defaults.dark.muted};\n`;
-                    css += `  --muted-foreground: ${darkVars.mutedForeground || defaults.dark.mutedForeground};\n`;
-                    css += `  --accent: ${darkVars.accent || defaults.dark.accent};\n`;
-                    css += `  --accent-foreground: ${darkVars.accentForeground || defaults.dark.accentForeground};\n`;
-                    css += `  --destructive: ${darkVars.destructive || defaults.dark.destructive};\n`;
-                    css += `  --destructive-foreground: ${darkVars.destructiveForeground || defaults.dark.destructiveForeground};\n`;
-                    css += `  --border: ${darkVars.border || defaults.dark.border};\n`;
-                    css += `  --input: ${darkVars.input || defaults.dark.input};\n`;
-                    css += `  --ring: ${darkVars.ring || defaults.dark.ring};\n`;
-                    css += `}`;
-
-                    return css;
-                  })()}
-                </pre>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --background
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --foreground
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --primary
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --primary-foreground
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --secondary
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --secondary-foreground
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --muted
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --muted-foreground
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --accent
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --accent-foreground
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --destructive
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --destructive-foreground
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --border
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --input
+                </div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">--ring</div>
+                <div class="bg-muted p-2 rounded font-mono text-xs">
+                  --radius
+                </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Creating a Custom Theme</CardTitle>
+              <CardTitle>Method 1: Define Themes in CSS</CardTitle>
               <CardDescription>
-                Follow these steps to create your own custom theme
+                Create theme classes in your global.css file. This is the
+                recommended approach for themes you want to use across your
+                entire app.
               </CardDescription>
             </CardHeader>
             <CardContent class="space-y-4">
               <div>
-                <h3 class="font-semibold mb-2">1. Choose Your Colors</h3>
-                <p class="text-sm text-muted-foreground">
-                  Select your primary, secondary, and accent colors. Use HSL
-                  format for better color manipulation.
-                </p>
+                <h3 class="text-sm font-medium mb-2">
+                  Step 1: Add theme classes to global.css
+                </h3>
+                <div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
+                  <pre class="whitespace-pre-wrap">
+                    {`/* In your global.css */
+
+/* Purple theme - only override what you want to change */
+.purple {
+  --primary: 262.1 83.3% 57.8%;
+  --ring: 262.1 83.3% 57.8%;
+}
+
+/* Midnight theme - full dark theme with custom colors */
+.midnight {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --border: 217.2 32.6% 17.5%;
+}
+
+/* Warm theme - subtle color adjustments */
+.warm {
+  --primary: 24.6 95% 53.1%;
+  --accent: 45 93.4% 47.5%;
+}`}
+                  </pre>
+                </div>
               </div>
+
               <div>
-                <h3 class="font-semibold mb-2">2. Define CSS Variables</h3>
-                <p class="text-sm text-muted-foreground">
-                  Override the default CSS variables in your global stylesheet
-                  with your chosen colors.
-                </p>
-              </div>
-              <div>
-                <h3 class="font-semibold mb-2">3. Test Dark Mode</h3>
-                <p class="text-sm text-muted-foreground">
-                  Make sure to define dark mode variants in the .dark selector
-                  for a complete theme.
-                </p>
-              </div>
-              <div>
-                <h3 class="font-semibold mb-2">4. Adjust Component Variants</h3>
-                <p class="text-sm text-muted-foreground">
-                  Fine-tune individual component variants if needed to match
-                  your design system.
-                </p>
+                <h3 class="text-sm font-medium mb-2">
+                  Step 2: Register themes in ThemeProvider
+                </h3>
+                <div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
+                  <pre class="whitespace-pre-wrap">
+                    {`import { ThemeProvider } from '@/components/theme';
+
+const themes = [
+  { id: 'light', name: 'Light' },
+  { id: 'dark', name: 'Dark' },
+  { id: 'purple', name: 'Purple' },
+  { id: 'midnight', name: 'Midnight' },
+  { id: 'warm', name: 'Warm' },
+];
+
+<ThemeProvider config={{ themes, defaultTheme: 'light' }}>
+  <App />
+</ThemeProvider>`}
+                  </pre>
+                </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Color Palette Generator</CardTitle>
+              <CardTitle>Method 2: Define Themes Inline</CardTitle>
               <CardDescription>
-                Coming soon: An interactive tool to generate custom color
-                palettes for your theme
+                Pass CSS variables directly in your theme configuration. Great
+                for dynamic themes or when you don't want to modify CSS files.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Button variant="outline" disabled>
-                Launch Color Generator (Coming Soon)
-              </Button>
+            <CardContent class="space-y-4">
+              <div>
+                <h3 class="text-sm font-medium mb-2">
+                  Define themes with cssVars property
+                </h3>
+                <div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
+                  <pre class="whitespace-pre-wrap">
+                    {`import { ThemeProvider } from '@/components/theme';
+
+const themes = [
+  {
+    id: 'light',
+    name: 'Light Mode',
+    description: 'Clean and bright',
+  },
+  {
+    id: 'dark',
+    name: 'Dark Mode',
+    description: 'Easy on the eyes',
+  },
+  {
+    id: 'custom-blue',
+    name: 'Ocean Blue',
+    description: 'Custom blue accent',
+    cssVars: {
+      primary: '217.2 91.2% 59.8%',
+      ring: '217.2 91.2% 59.8%',
+    }
+  },
+  {
+    id: 'rose',
+    name: 'Rose',
+    description: 'Warm and elegant',
+    cssVars: {
+      primary: '346.8 77.2% 49.8%',
+      ring: '346.8 77.2% 49.8%',
+    }
+  },
+];
+
+<ThemeProvider config={{ themes }}>
+  <App />
+</ThemeProvider>`}
+                  </pre>
+                </div>
+              </div>
+
+              <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
+                <div class="flex gap-2 items-start">
+                  <div class="i-lucide-info size-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <div class="text-sm">
+                    <strong class="text-blue-500">Tip:</strong> Inline cssVars
+                    override CSS-defined themes. If a theme has both a CSS class
+                    and cssVars defined, the cssVars take precedence.
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Best Practices</CardTitle>
+              <CardDescription>
+                Tips for creating maintainable themes
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="space-y-4">
+              <div>
+                <h3 class="text-sm font-medium mb-2">
+                  ✅ Do: Override only what you need
+                </h3>
+                <p class="text-sm text-muted-foreground mb-2">
+                  Theme classes only need to define variables that differ from
+                  :root. Everything else automatically inherits.
+                </p>
+                <div class="bg-muted p-3 rounded font-mono text-xs">
+                  <pre>{`.my-theme {
+  --primary: 346.8 77.2% 49.8%;
+  /* All other vars inherit from :root */
+}`}</pre>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-medium mb-2">
+                  ✅ Do: Use HSL color format
+                </h3>
+                <p class="text-sm text-muted-foreground mb-2">
+                  HSL (Hue Saturation Lightness) makes it easier to create color
+                  variations and maintain consistency.
+                </p>
+                <div class="bg-muted p-3 rounded font-mono text-xs">
+                  <pre>{`--primary: 221.2 83.2% 53.3%;
+/* Not: #3b82f6 */`}</pre>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-medium mb-2">
+                  ✅ Do: Test in both light and dark contexts
+                </h3>
+                <p class="text-sm text-muted-foreground">
+                  Color themes should work well when applied on top of both
+                  light and dark base themes. Test your custom colors in both
+                  contexts.
+                </p>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-medium mb-2">
+                  ❌ Don't: Redefine all variables
+                </h3>
+                <p class="text-sm text-muted-foreground">
+                  You don't need to copy all variables from :root into your
+                  theme. Only define what changes.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer class="container mx-auto px-4 py-12 border-t border-border mt-12">
-        <div class="max-w-6xl mx-auto text-center text-muted-foreground">
-          <p>Built with ❤️ using SolidJS and Ark UI</p>
-        </div>
-      </footer>
     </div>
   );
 }

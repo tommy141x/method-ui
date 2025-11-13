@@ -8,20 +8,45 @@ import metadataJson from "@lib/registry.json";
 
 const componentMetadata = metadataJson.componentMetadata;
 
-// Build simplified component list
-const components = Object.entries(componentMetadata).map(
-  ([fileName, metadata]) => ({
-    name: fileName,
-    displayName: metadata.name,
-    description: metadata.description,
-    exampleCount: metadata.examples?.length || 0,
-  }),
-);
+// Dynamically import all components to check for hidden flag
+const componentModules = import.meta.glob("../../../components/*.tsx", {
+  eager: true,
+}) as Record<string, any>;
+
+// Build simplified component list, filtering out hidden components
+const components = Object.entries(componentMetadata)
+  .map(([fileName, metadata]) => {
+    // Check if component is hidden in runtime meta
+    const modulePath = `../../../components/${fileName}.tsx`;
+    const module = componentModules[modulePath];
+    const runtimeMeta = module?.meta || {};
+
+    if (runtimeMeta.hidden) {
+      return null;
+    }
+
+    return {
+      name: fileName,
+      displayName: metadata.name,
+      description: metadata.description,
+      exampleCount: metadata.examples?.length || 0,
+    };
+  })
+  .filter((c): c is NonNullable<typeof c> => c !== null);
 
 const docsSections = [
-  { name: "Introduction", href: "/docs", icon: "book-open" },
-  { name: "Installation", href: "/docs/installation", icon: "download" },
-  { name: "Getting Started", href: "/docs/getting-started", icon: "rocket" },
+  { name: "Introduction", href: "/docs", iconClass: "i-lucide-book-open" },
+  {
+    name: "Installation",
+    href: "/docs/installation",
+    iconClass: "i-lucide-download",
+  },
+  {
+    name: "Getting Started",
+    href: "/docs/getting-started",
+    iconClass: "i-lucide-rocket",
+  },
+  { name: "Theming", href: "/docs/theming", iconClass: "i-lucide-palette" },
 ];
 
 export function DocsSidebar() {
@@ -47,9 +72,7 @@ export function DocsSidebar() {
                     variant={isActive(section.href) ? "secondary" : "ghost"}
                     class="w-full justify-start text-sm"
                   >
-                    <div
-                      class={cn("h-4 w-4 mr-2", `i-lucide-${section.icon}`)}
-                    />
+                    <div class={cn("h-4 w-4 mr-2", section.iconClass)} />
                     {section.name}
                   </Button>
                 </A>

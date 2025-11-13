@@ -108,6 +108,11 @@ const components: ComponentInfo[] = Object.entries(componentMetadata)
     // Merge runtime meta with generated metadata
     const runtimeMeta = module.meta || {};
 
+    // Skip hidden components
+    if (runtimeMeta.hidden) {
+      return null;
+    }
+
     // Merge runtime examples (code functions) with generated sources
     const mergedExamples = (metadata.examples || []).map(
       (generatedExample: any, index: number) => {
@@ -383,7 +388,9 @@ export default function ComponentPage() {
                                 <CardContent>
                                   {/* Example Preview */}
                                   <div class="border border-border rounded-lg p-8 bg-background flex items-center justify-center min-h-32 mb-4">
-                                    {example().code()}
+                                    {typeof example().code === "function"
+                                      ? example().code()
+                                      : null}
                                   </div>
 
                                   {/* Code Display */}
@@ -401,7 +408,10 @@ export default function ComponentPage() {
                                               onClick={() => {
                                                 navigator.clipboard.writeText(
                                                   example().source ||
-                                                    example().code.toString(),
+                                                    (typeof example().code ===
+                                                    "function"
+                                                      ? example().code.toString()
+                                                      : ""),
                                                 );
                                               }}
                                             >
@@ -421,7 +431,10 @@ export default function ComponentPage() {
                                       <pre class="p-4 text-sm overflow-x-auto">
                                         <code class="language-tsx text-foreground">
                                           {example().source ||
-                                            example().code.toString()}
+                                            (typeof example().code ===
+                                            "function"
+                                              ? example().code.toString()
+                                              : "")}
                                         </code>
                                       </pre>
                                     </div>

@@ -1,9 +1,25 @@
-import { Component } from "solid-js";
-import { useTheme } from "../lib/theme-provider";
+import { Component, Show } from "solid-js";
+import { useTheme } from "./theme";
 import { Button } from "./button";
 
 export const ThemeToggle: Component = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme, currentTheme } = useTheme();
+
+  const toggleTheme = () => {
+    // Cycle through base (dark) -> light -> base
+    if (theme() === "base") {
+      setTheme("light");
+    } else if (theme() === "light") {
+      setTheme("base");
+    } else {
+      // If on a custom theme, go back to base
+      setTheme("base");
+    }
+  };
+
+  const isBaseTheme = () => theme() === "base";
+  const isLightTheme = () => theme() === "light";
+  const isCustomTheme = () => !isBaseTheme() && !isLightTheme();
 
   return (
     <Button
@@ -12,22 +28,22 @@ export const ThemeToggle: Component = () => {
       size="icon"
       class="fixed top-4 right-4 z-50"
       aria-label="Toggle theme"
-      title={`Switch to ${theme() === "light" ? "dark" : "light"} mode`}
+      title={currentTheme()?.name || theme()}
     >
-      <div
-        class={`i-lucide-sun w-4 h-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${
-          theme() === "light"
-            ? "opacity-100 rotate-0 scale-100"
-            : "opacity-0 rotate-90 scale-0"
-        }`}
-      />
-      <div
-        class={`i-lucide-moon w-4 h-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${
-          theme() === "dark"
-            ? "opacity-100 rotate-0 scale-100"
-            : "opacity-0 -rotate-90 scale-0"
-        }`}
-      />
+      {/* Moon icon for base theme (dark) */}
+      <Show when={isBaseTheme()}>
+        <div class="i-lucide-moon w-4 h-4 transition-all duration-200" />
+      </Show>
+
+      {/* Sun icon for light theme */}
+      <Show when={isLightTheme()}>
+        <div class="i-lucide-sun w-4 h-4 transition-all duration-200" />
+      </Show>
+
+      {/* Primary color circle for custom themes */}
+      <Show when={isCustomTheme()}>
+        <div class="w-4 h-4 rounded-full bg-primary border-2 border-primary-foreground transition-all duration-200" />
+      </Show>
     </Button>
   );
 };

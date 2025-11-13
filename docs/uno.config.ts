@@ -57,6 +57,7 @@ export default defineConfig({
       fonts: {
         sans: "Inter:400,500,600,700",
         mono: "JetBrains Mono:400,500,600,700",
+        retro: "Press Start 2P:400,500,600,700",
       },
     }),
   ],
@@ -103,8 +104,9 @@ export default defineConfig({
       sm: "calc(var(--radius) - 4px)",
     },
     fontFamily: {
-      sans: ["Inter", "sans-serif"],
+      sans: ["var(--font-sans)", "Inter", "sans-serif"],
       mono: ["JetBrains Mono", "monospace"],
+      retro: ["Press Start 2P", "monospace"],
     },
   },
   safelist: ["sr-only", "not-sr-only"],
