@@ -1,4 +1,5 @@
-import { createSignal, For } from "solid-js";
+import { createSignal, For, onMount, createEffect, Show } from "solid-js";
+import { Title, Meta } from "@solidjs/meta";
 import { Navbar } from "../components/navbar";
 import { Button } from "../components/button";
 import {
@@ -11,80 +12,208 @@ import {
 import { Badge } from "../components/badge";
 import { cn } from "@lib/cn";
 
+interface ThemeColors {
+  primary?: string;
+  primaryForeground?: string;
+  secondary?: string;
+  secondaryForeground?: string;
+  accent?: string;
+  accentForeground?: string;
+  muted?: string;
+  mutedForeground?: string;
+  background?: string;
+  foreground?: string;
+  card?: string;
+  cardForeground?: string;
+  popover?: string;
+  popoverForeground?: string;
+  border?: string;
+  input?: string;
+  ring?: string;
+  destructive?: string;
+  destructiveForeground?: string;
+  radius?: string;
+}
+
+interface Theme {
+  name: string;
+  id: string;
+  description: string;
+  cssVars: {
+    light: ThemeColors;
+    dark: ThemeColors;
+  };
+}
+
 export default function Themes() {
   const [selectedTheme, setSelectedTheme] = createSignal("default");
+  const [mounted, setMounted] = createSignal(false);
 
-  const themes = [
+  const themes: Theme[] = [
     {
       name: "Default",
       id: "default",
       description: "The default Method UI theme",
-      colors: {
-        primary: "hsl(222.2 47.4% 11.2%)",
-        background: "hsl(0 0% 100%)",
-        foreground: "hsl(222.2 84% 4.9%)",
-        muted: "hsl(210 40% 96.1%)",
+      cssVars: {
+        light: {
+          primary: "221.2 83.2% 53.3%",
+        },
+        dark: {
+          primary: "221.2 83.2% 53.3%",
+        },
       },
     },
     {
       name: "Slate",
       id: "slate",
       description: "A cool, professional slate theme",
-      colors: {
-        primary: "hsl(215.4 16.3% 46.9%)",
-        background: "hsl(0 0% 100%)",
-        foreground: "hsl(222.2 84% 4.9%)",
-        muted: "hsl(210 40% 96.1%)",
+      cssVars: {
+        light: {
+          primary: "215.4 16.3% 46.9%",
+          ring: "215.4 16.3% 46.9%",
+        },
+        dark: {
+          primary: "215.4 16.3% 56.9%",
+          ring: "215.4 16.3% 56.9%",
+        },
       },
     },
     {
       name: "Rose",
       id: "rose",
       description: "A warm, elegant rose theme",
-      colors: {
-        primary: "hsl(346.8 77.2% 49.8%)",
-        background: "hsl(0 0% 100%)",
-        foreground: "hsl(240 10% 3.9%)",
-        muted: "hsl(240 4.8% 95.9%)",
+      cssVars: {
+        light: {
+          primary: "346.8 77.2% 49.8%",
+          ring: "346.8 77.2% 49.8%",
+        },
+        dark: {
+          primary: "346.8 77.2% 59.8%",
+          ring: "346.8 77.2% 59.8%",
+        },
       },
     },
     {
       name: "Blue",
       id: "blue",
       description: "A vibrant, modern blue theme",
-      colors: {
-        primary: "hsl(221.2 83.2% 53.3%)",
-        background: "hsl(0 0% 100%)",
-        foreground: "hsl(222.2 84% 4.9%)",
-        muted: "hsl(210 40% 96.1%)",
+      cssVars: {
+        light: {
+          primary: "221.2 83.2% 53.3%",
+          ring: "221.2 83.2% 53.3%",
+        },
+        dark: {
+          primary: "217.2 91.2% 59.8%",
+          ring: "217.2 91.2% 59.8%",
+        },
       },
     },
     {
       name: "Green",
       id: "green",
       description: "A fresh, natural green theme",
-      colors: {
-        primary: "hsl(142.1 76.2% 36.3%)",
-        background: "hsl(0 0% 100%)",
-        foreground: "hsl(240 10% 3.9%)",
-        muted: "hsl(240 4.8% 95.9%)",
+      cssVars: {
+        light: {
+          primary: "142.1 76.2% 36.3%",
+          ring: "142.1 76.2% 36.3%",
+        },
+        dark: {
+          primary: "142.1 70.6% 45.3%",
+          ring: "142.1 70.6% 45.3%",
+        },
       },
     },
     {
       name: "Orange",
       id: "orange",
       description: "An energetic, warm orange theme",
-      colors: {
-        primary: "hsl(24.6 95% 53.1%)",
-        background: "hsl(0 0% 100%)",
-        foreground: "hsl(20 14.3% 4.1%)",
-        muted: "hsl(60 4.8% 95.9%)",
+      cssVars: {
+        light: {
+          primary: "24.6 95% 53.1%",
+          ring: "24.6 95% 53.1%",
+        },
+        dark: {
+          primary: "20.5 90.2% 48.2%",
+          ring: "20.5 90.2% 48.2%",
+        },
       },
     },
   ];
 
+  const applyTheme = (themeId: string) => {
+    const theme = themes.find((t) => t.id === themeId);
+    if (!theme) return;
+
+    const root = document.documentElement;
+
+    // Set data attribute for the theme
+    root.setAttribute("data-theme", themeId);
+
+    // Apply light mode variables
+    const lightVars = theme.cssVars.light;
+    Object.entries(lightVars).forEach(([key, value]) => {
+      if (value) {
+        const cssVar = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
+        root.style.setProperty(cssVar, value);
+      }
+    });
+
+    // Apply dark mode variables using a style tag
+    const existingStyle = document.getElementById("theme-dark-mode");
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    const darkVars = theme.cssVars.dark;
+    const darkVarEntries = Object.entries(darkVars).filter(
+      ([_, value]) => value,
+    );
+
+    if (darkVarEntries.length > 0) {
+      const style = document.createElement("style");
+      style.id = "theme-dark-mode";
+      const darkCss = darkVarEntries
+        .map(([key, value]) => {
+          const cssVar = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
+          return `  ${cssVar}: ${value};`;
+        })
+        .join("\n");
+      style.textContent = `.dark {\n${darkCss}\n}`;
+      document.head.appendChild(style);
+    }
+
+    localStorage.setItem("theme-color", themeId);
+  };
+
+  const handleThemeChange = (themeId: string) => {
+    setSelectedTheme(themeId);
+    applyTheme(themeId);
+  };
+
+  // Apply theme on mount (client only)
+  onMount(() => {
+    const savedTheme = localStorage.getItem("theme-color") || "default";
+    setSelectedTheme(savedTheme);
+    applyTheme(savedTheme);
+    setMounted(true);
+  });
+
+  // Apply theme when it changes (client only)
+  createEffect(() => {
+    if (mounted()) {
+      const theme = selectedTheme();
+      applyTheme(theme);
+    }
+  });
+
   return (
     <div class="min-h-screen bg-background">
+      <Title>Themes - Method UI</Title>
+      <Meta
+        name="description"
+        content="Customize the look and feel of your application with Method UI themes. Choose from pre-built color schemes or create your own."
+      />
+
       <Navbar />
 
       <div class="container mx-auto px-4 py-12">
@@ -108,7 +237,7 @@ export default function Themes() {
               {(theme) => (
                 <div
                   class="cursor-pointer"
-                  onClick={() => setSelectedTheme(theme.id)}
+                  onClick={() => handleThemeChange(theme.id)}
                 >
                   <Card
                     class={cn(
@@ -132,27 +261,24 @@ export default function Themes() {
                       <div class="flex gap-2">
                         <div
                           class="w-8 h-8 rounded-full border-2 border-border"
-                          style={{ "background-color": theme.colors.primary }}
-                          title="Primary"
+                          style={{
+                            "background-color": `hsl(${theme.cssVars.light.primary || "221.2 83.2% 53.3%"})`,
+                          }}
+                          title="Primary (Light Mode)"
                         />
                         <div
                           class="w-8 h-8 rounded-full border-2 border-border"
                           style={{
-                            "background-color": theme.colors.background,
+                            "background-color": `hsl(${theme.cssVars.dark.primary || "221.2 83.2% 53.3%"})`,
                           }}
-                          title="Background"
+                          title="Primary (Dark Mode)"
                         />
                         <div
                           class="w-8 h-8 rounded-full border-2 border-border"
                           style={{
-                            "background-color": theme.colors.foreground,
+                            "background-color": `hsl(${theme.cssVars.light.ring || theme.cssVars.light.primary || "221.2 83.2% 53.3%"})`,
                           }}
-                          title="Foreground"
-                        />
-                        <div
-                          class="w-8 h-8 rounded-full border-2 border-border"
-                          style={{ "background-color": theme.colors.muted }}
-                          title="Muted"
+                          title="Ring/Focus (Light Mode)"
                         />
                       </div>
                     </CardHeader>
@@ -177,43 +303,110 @@ export default function Themes() {
             </CardHeader>
             <CardContent>
               <div class="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto">
-                <pre>{`/* In your global.css */
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-  --radius: 0.5rem;
-}
+                <pre>
+                  {(() => {
+                    const theme = themes.find((t) => t.id === selectedTheme());
+                    if (!theme)
+                      return "/* Select a theme to see CSS variables */";
 
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
-}`}</pre>
+                    const lightVars = theme.cssVars.light;
+                    const darkVars = theme.cssVars.dark;
+
+                    // Default values from global.css
+                    const defaults = {
+                      light: {
+                        background: "0 0% 100%",
+                        foreground: "222.2 84% 4.9%",
+                        card: "0 0% 98%",
+                        cardForeground: "222.2 84% 4.9%",
+                        popover: "0 0% 100%",
+                        popoverForeground: "222.2 84% 4.9%",
+                        primary: "221.2 83.2% 53.3%",
+                        primaryForeground: "210 40% 98%",
+                        secondary: "210 40% 96%",
+                        secondaryForeground: "222.2 84% 4.9%",
+                        muted: "210 40% 96%",
+                        mutedForeground: "215.4 16.3% 46.9%",
+                        accent: "210 40% 96%",
+                        accentForeground: "222.2 84% 4.9%",
+                        destructive: "0 84.2% 60.2%",
+                        destructiveForeground: "210 40% 98%",
+                        border: "214.3 31.8% 91.4%",
+                        input: "214.3 31.8% 91.4%",
+                        ring: "221.2 83.2% 53.3%",
+                        radius: "0.5rem",
+                      },
+                      dark: {
+                        background: "222.2 84% 4.9%",
+                        foreground: "210 40% 98%",
+                        card: "222.2 47% 11.2%",
+                        cardForeground: "210 40% 98%",
+                        popover: "222.2 84% 4.9%",
+                        popoverForeground: "210 40% 98%",
+                        primary: "221.2 83.2% 53.3%",
+                        primaryForeground: "210 40% 98%",
+                        secondary: "217.2 32.6% 17.5%",
+                        secondaryForeground: "210 40% 98%",
+                        muted: "217.2 32.6% 17.5%",
+                        mutedForeground: "215 20.2% 65.1%",
+                        accent: "217.2 32.6% 17.5%",
+                        accentForeground: "210 40% 98%",
+                        destructive: "0 62.8% 30.6%",
+                        destructiveForeground: "210 40% 98%",
+                        border: "217.2 32.6% 17.5%",
+                        input: "217.2 32.6% 17.5%",
+                        ring: "224.3 76.3% 94.1%",
+                      },
+                    };
+
+                    let css = `/* Add to your global.css */\n:root {\n`;
+                    css += `  --background: ${lightVars.background || defaults.light.background};\n`;
+                    css += `  --foreground: ${lightVars.foreground || defaults.light.foreground};\n`;
+                    css += `  --card: ${lightVars.card || defaults.light.card};\n`;
+                    css += `  --card-foreground: ${lightVars.cardForeground || defaults.light.cardForeground};\n`;
+                    css += `  --popover: ${lightVars.popover || defaults.light.popover};\n`;
+                    css += `  --popover-foreground: ${lightVars.popoverForeground || defaults.light.popoverForeground};\n`;
+                    css += `  --primary: ${lightVars.primary || defaults.light.primary};\n`;
+                    css += `  --primary-foreground: ${lightVars.primaryForeground || defaults.light.primaryForeground};\n`;
+                    css += `  --secondary: ${lightVars.secondary || defaults.light.secondary};\n`;
+                    css += `  --secondary-foreground: ${lightVars.secondaryForeground || defaults.light.secondaryForeground};\n`;
+                    css += `  --muted: ${lightVars.muted || defaults.light.muted};\n`;
+                    css += `  --muted-foreground: ${lightVars.mutedForeground || defaults.light.mutedForeground};\n`;
+                    css += `  --accent: ${lightVars.accent || defaults.light.accent};\n`;
+                    css += `  --accent-foreground: ${lightVars.accentForeground || defaults.light.accentForeground};\n`;
+                    css += `  --destructive: ${lightVars.destructive || defaults.light.destructive};\n`;
+                    css += `  --destructive-foreground: ${lightVars.destructiveForeground || defaults.light.destructiveForeground};\n`;
+                    css += `  --border: ${lightVars.border || defaults.light.border};\n`;
+                    css += `  --input: ${lightVars.input || defaults.light.input};\n`;
+                    css += `  --ring: ${lightVars.ring || defaults.light.ring};\n`;
+                    css += `  --radius: ${lightVars.radius || defaults.light.radius};\n`;
+                    css += `}\n`;
+
+                    css += `\n.dark {\n`;
+                    css += `  --background: ${darkVars.background || defaults.dark.background};\n`;
+                    css += `  --foreground: ${darkVars.foreground || defaults.dark.foreground};\n`;
+                    css += `  --card: ${darkVars.card || defaults.dark.card};\n`;
+                    css += `  --card-foreground: ${darkVars.cardForeground || defaults.dark.cardForeground};\n`;
+                    css += `  --popover: ${darkVars.popover || defaults.dark.popover};\n`;
+                    css += `  --popover-foreground: ${darkVars.popoverForeground || defaults.dark.popoverForeground};\n`;
+                    css += `  --primary: ${darkVars.primary || defaults.dark.primary};\n`;
+                    css += `  --primary-foreground: ${darkVars.primaryForeground || defaults.dark.primaryForeground};\n`;
+                    css += `  --secondary: ${darkVars.secondary || defaults.dark.secondary};\n`;
+                    css += `  --secondary-foreground: ${darkVars.secondaryForeground || defaults.dark.secondaryForeground};\n`;
+                    css += `  --muted: ${darkVars.muted || defaults.dark.muted};\n`;
+                    css += `  --muted-foreground: ${darkVars.mutedForeground || defaults.dark.mutedForeground};\n`;
+                    css += `  --accent: ${darkVars.accent || defaults.dark.accent};\n`;
+                    css += `  --accent-foreground: ${darkVars.accentForeground || defaults.dark.accentForeground};\n`;
+                    css += `  --destructive: ${darkVars.destructive || defaults.dark.destructive};\n`;
+                    css += `  --destructive-foreground: ${darkVars.destructiveForeground || defaults.dark.destructiveForeground};\n`;
+                    css += `  --border: ${darkVars.border || defaults.dark.border};\n`;
+                    css += `  --input: ${darkVars.input || defaults.dark.input};\n`;
+                    css += `  --ring: ${darkVars.ring || defaults.dark.ring};\n`;
+                    css += `}`;
+
+                    return css;
+                  })()}
+                </pre>
               </div>
             </CardContent>
           </Card>
