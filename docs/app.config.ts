@@ -1,4 +1,5 @@
 import { defineConfig } from "@solidjs/start/config";
+import { setupPlugins } from "@responsive-image/vite-plugin";
 import UnoCSS from "unocss/vite";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
@@ -11,6 +12,10 @@ export default defineConfig({
     plugins: [
       UnoCSS({
         mode: "global",
+      }),
+      setupPlugins({
+        include: /^[^?]+\.jpg\?.*responsive.*$/,
+        lqip: { type: "inline" },
       }),
     ],
     resolve: {

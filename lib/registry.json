@@ -1939,6 +1939,118 @@
         "dialog.tsx"
       ]
     },
+    "editor": {
+      "name": "Editor",
+      "fileName": "editor",
+      "description": "A rich text editor built with TipTap, featuring a customizable toolbar with common formatting options.",
+      "props": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Content to display",
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text",
+          "required": false
+        },
+        {
+          "name": "editable",
+          "type": "boolean",
+          "description": "Editable",
+          "required": false
+        },
+        {
+          "name": "showToolbar",
+          "type": "boolean",
+          "description": "Show Toolbar",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "minHeight",
+          "type": "string",
+          "description": "Min Height",
+          "required": false
+        },
+        {
+          "name": "maxHeight",
+          "type": "string",
+          "description": "Max Height",
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(html: string) => void",
+          "description": "Change event handler",
+          "required": false
+        },
+        {
+          "name": "onReady",
+          "type": "(editor: TiptapEditor) => void",
+          "description": "On Ready",
+          "required": false
+        },
+        {
+          "name": "onFocus",
+          "type": "() => void",
+          "description": "Focus event handler",
+          "required": false
+        },
+        {
+          "name": "onBlur",
+          "type": "() => void",
+          "description": "Blur event handler",
+          "required": false
+        },
+        {
+          "name": "extensions",
+          "type": "{\n    link?: boolean;\n    underline?: boolean;\n    typography?: boolean;\n  }",
+          "description": "Extensions",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Editor",
+          "description": "A simple editor with default settings",
+          "source": "const [content, setContent] = createSignal(\"\");\nreturn (\n  <div class=\"space-y-4\">\n    <Editor\n      placeholder=\"Start typing...\"\n      onChange={setContent}\n      minHeight=\"200px\"\n    />\n    <div class=\"text-sm text-muted-foreground\">\n      Character count: {content().length}\n    </div>\n  </div>\n);"
+        },
+        {
+          "title": "With Initial Content",
+          "description": "Editor with pre-populated content",
+          "source": "const initialContent =\n  \"<h2>Welcome to the Editor</h2><p>This is some <strong>initial content</strong> with <em>formatting</em>.</p>\";\nreturn <Editor content={initialContent} />;"
+        },
+        {
+          "title": "Read-only Mode",
+          "description": "Editor in non-editable mode for displaying content",
+          "source": "const content =\n  \"<h2>Documentation Overview</h2><p>This is a read-only editor displaying formatted content. Perfect for showing rich text without editing capabilities.</p><h3>Features</h3><ul><li>Text formatting support</li><li>Headings and lists</li><li>Code blocks and quotes</li><li>Links and emphasis</li></ul><blockquote>This content cannot be edited but maintains all the rich formatting options.</blockquote><p>Use this mode for displaying documentation, previews, or any content that should be <strong>read-only</strong>.</p>\";\nreturn (\n  <Editor\n    content={content}\n    editable={false}\n    showToolbar={false}\n    minHeight=\"300px\"\n  />\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [
+          "button",
+          "tooltip"
+        ],
+        "packages": [
+          "@tiptap/extension-typography",
+          "@tiptap/extensions",
+          "@tiptap/starter-kit",
+          "solid-tiptap"
+        ]
+      },
+      "files": [
+        "editor.tsx"
+      ]
+    },
     "file-upload": {
       "name": "FileUpload",
       "fileName": "file-upload",
@@ -2515,6 +2627,139 @@
       },
       "files": [
         "hover-card.tsx"
+      ]
+    },
+    "image": {
+      "name": "Image",
+      "fileName": "image",
+      "description": "A responsive image component powered by @responsive-image/solid. Automatically generates optimized images in multiple sizes and formats (WebP, AVIF) with Low Quality Image Placeholders (LQIP). Supports both local images (processed at build time) and regular image URLs. \\n\\n**Setup Required**: Add the Vite plugin to your `app.config.ts`:\\n\\n```typescript\\nimport { setupPlugins } from ",
+      "props": [
+        {
+          "name": "src",
+          "type": "ImageData | string",
+          "description": "Src",
+          "required": true
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "Alt",
+          "required": true
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "layout",
+          "type": "\"responsive\" | \"fixed\"",
+          "description": "Layout",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "description": "Width",
+          "required": false
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "description": "Height",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Size",
+          "required": false
+        },
+        {
+          "name": "sizes",
+          "type": "string",
+          "description": "Sizes",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "\"lazy\" | \"eager\"",
+          "description": "Loading",
+          "required": false
+        },
+        {
+          "name": "decoding",
+          "type": "\"async\" | \"sync\" | \"auto\"",
+          "description": "Decoding",
+          "required": false
+        },
+        {
+          "name": "fetchpriority",
+          "type": "\"high\" | \"low\" | \"auto\"",
+          "description": "Fetchpriority",
+          "required": false
+        },
+        {
+          "name": "objectFit",
+          "type": "\"contain\" | \"cover\" | \"fill\" | \"none\" | \"scale-down\"",
+          "description": "Object Fit",
+          "required": false
+        },
+        {
+          "name": "objectPosition",
+          "type": "string",
+          "description": "Object Position",
+          "required": false
+        },
+        {
+          "name": "priority",
+          "type": "boolean",
+          "description": "Priority",
+          "required": false
+        },
+        {
+          "name": "onLoad",
+          "type": "(event: Event) => void",
+          "description": "On Load",
+          "required": false
+        },
+        {
+          "name": "onError",
+          "type": "(event: Event) => void",
+          "description": "On Error",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Responsive Image",
+          "description": "Automatically fills container width with optimized sizes",
+          "source": "<Image\n  src=\"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200\"\n  alt=\"Mountain landscape\"\n/>"
+        },
+        {
+          "title": "Fixed Size Image",
+          "description": "Render an image with fixed dimensions and 2x for retina",
+          "source": "<Image\n  src=\"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400\"\n  alt=\"Mountain landscape\"\n  width={400}\n  layout=\"fixed\"\n/>"
+        },
+        {
+          "title": "Priority Image (LCP)",
+          "description": "Disable lazy loading for above-the-fold hero images",
+          "source": "<Image\n  src=\"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200\"\n  alt=\"Hero image\"\n  priority\n  objectFit=\"cover\"\n/>"
+        },
+        {
+          "title": "Custom Object Fit",
+          "description": "Control how the image fits within its container",
+          "source": "<div class=\"h-96\">\n  <Image\n    src=\"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200\"\n    alt=\"Mountain landscape\"\n    objectFit=\"cover\"\n    objectPosition=\"center\"\n    class=\"h-full\"\n  />\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "image.tsx"
       ]
     },
     "input": {
@@ -5032,6 +5277,237 @@
         "tree-view.tsx"
       ]
     },
+    "video": {
+      "name": "Video",
+      "fileName": "video",
+      "description": "A comprehensive video player component powered by Plyr. Supports HTML5 video, YouTube, and Vimeo with features like captions, keyboard shortcuts, preview thumbnails, quality selection, speed controls, and full event handling. Fully themed to match your design system.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "options",
+          "type": "any",
+          "description": "Options",
+          "required": false
+        },
+        {
+          "name": "provider",
+          "type": "\"html5\" | \"youtube\" | \"vimeo\"",
+          "description": "Provider",
+          "required": false
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Src",
+          "required": false
+        },
+        {
+          "name": "poster",
+          "type": "string",
+          "description": "Poster",
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title text",
+          "required": false
+        },
+        {
+          "name": "autoplay",
+          "type": "boolean",
+          "description": "Autoplay",
+          "required": false
+        },
+        {
+          "name": "muted",
+          "type": "boolean",
+          "description": "Muted",
+          "required": false
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "description": "Loop",
+          "required": false
+        },
+        {
+          "name": "controls",
+          "type": "boolean",
+          "description": "Controls",
+          "required": false
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "description": "Speed",
+          "required": false
+        },
+        {
+          "name": "quality",
+          "type": "number",
+          "description": "Quality",
+          "required": false
+        },
+        {
+          "name": "volume",
+          "type": "number",
+          "description": "Volume",
+          "required": false
+        },
+        {
+          "name": "clickToPlay",
+          "type": "boolean",
+          "description": "Click To Play",
+          "required": false
+        },
+        {
+          "name": "hideControls",
+          "type": "boolean",
+          "description": "Hide Controls",
+          "required": false
+        },
+        {
+          "name": "keyboard",
+          "type": "boolean | { focused: boolean; global: boolean }",
+          "description": "Keyboard",
+          "required": false
+        },
+        {
+          "name": "tooltips",
+          "type": "boolean | { controls: boolean; seek: boolean }",
+          "description": "Tooltips",
+          "required": false
+        },
+        {
+          "name": "captions",
+          "type": "{\n    active?: boolean;\n    language?: string;\n    update?: boolean;\n  }",
+          "description": "Captions",
+          "required": false
+        },
+        {
+          "name": "fullscreen",
+          "type": "{\n    enabled?: boolean;\n    fallback?: boolean | \"force\";\n    iosNative?: boolean;\n    container?: string;\n  }",
+          "description": "Fullscreen",
+          "required": false
+        },
+        {
+          "name": "previewThumbnails",
+          "type": "{\n    enabled: boolean;\n    src: string | string[];\n    withCredentials?: boolean;\n  }",
+          "description": "Preview Thumbnails",
+          "required": false
+        },
+        {
+          "name": "onReady",
+          "type": "(player: any) => void",
+          "description": "On Ready",
+          "required": false
+        },
+        {
+          "name": "onPlay",
+          "type": "(event: any) => void",
+          "description": "On Play",
+          "required": false
+        },
+        {
+          "name": "onPause",
+          "type": "(event: any) => void",
+          "description": "On Pause",
+          "required": false
+        },
+        {
+          "name": "onEnded",
+          "type": "(event: any) => void",
+          "description": "On Ended",
+          "required": false
+        },
+        {
+          "name": "onError",
+          "type": "(event: any) => void",
+          "description": "On Error",
+          "required": false
+        },
+        {
+          "name": "onTimeUpdate",
+          "type": "(event: any) => void",
+          "description": "On Time Update",
+          "required": false
+        },
+        {
+          "name": "onSeeking",
+          "type": "(event: any) => void",
+          "description": "On Seeking",
+          "required": false
+        },
+        {
+          "name": "onSeeked",
+          "type": "(event: any) => void",
+          "description": "On Seeked",
+          "required": false
+        },
+        {
+          "name": "onVolumeChange",
+          "type": "(event: any) => void",
+          "description": "On Volume Change",
+          "required": false
+        },
+        {
+          "name": "onQualityChange",
+          "type": "(event: any) => void",
+          "description": "On Quality Change",
+          "required": false
+        },
+        {
+          "name": "onRateChange",
+          "type": "(event: any) => void",
+          "description": "On Rate Change",
+          "required": false
+        },
+        {
+          "name": "onEnterFullscreen",
+          "type": "(event: any) => void",
+          "description": "On Enter Fullscreen",
+          "required": false
+        },
+        {
+          "name": "onExitFullscreen",
+          "type": "(event: any) => void",
+          "description": "On Exit Fullscreen",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic HTML5 Video",
+          "description": "Simple HTML5 video player",
+          "source": "<Video src=\"https://media.tommy-johnston.com/api/assets/b5fa48f2-6a24-4392-8026-777f973b4c73/video/playback?key=ZB3A5C98YCJugb5uFXvlgZ9EIgDWVH_xZlfORxjWS8UFFR7ZIunQmr7nkEZ9X_1TUuM&c=mMYFI4Rfq6e%2FfAhoj0OHCGU%3D\" />"
+        },
+        {
+          "title": "YouTube Video",
+          "description": "Embedded YouTube video with Plyr controls",
+          "source": "<Video\n  provider=\"youtube\"\n  src=\"T9mZdGRVc-c\"\n  options={{\n    youtube: { noCookie: true },\n  }}\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "video.tsx"
+      ]
+    },
     "wobble-card": {
       "name": "WobbleCard",
       "fileName": "wobble-card",
@@ -5081,74 +5557,6 @@
       "files": [
         "wobble-card.tsx"
       ]
-    },
-    "video": {
-      "name": "Video",
-      "fileName": "video",
-      "description": "A video player component powered by Plyr. Supports HTML5 video, YouTube, and Vimeo with a clean interface.",
-      "props": [
-        {
-          "name": "children",
-          "type": "JSX.Element",
-          "description": "Child elements or content",
-          "required": false
-        },
-        {
-          "name": "class",
-          "type": "string",
-          "description": "Additional CSS classes",
-          "required": false
-        },
-        {
-          "name": "options",
-          "type": "any",
-          "description": "Options",
-          "required": false
-        },
-        {
-          "name": "provider",
-          "type": "\"html5\" | \"youtube\" | \"vimeo\"",
-          "description": "Provider",
-          "required": false
-        },
-        {
-          "name": "src",
-          "type": "string",
-          "description": "Src",
-          "required": false
-        },
-        {
-          "name": "poster",
-          "type": "string",
-          "description": "Poster",
-          "required": false
-        }
-      ],
-      "variants": [],
-      "examples": [
-        {
-          "title": "Basic HTML5 Video",
-          "description": "Simple HTML5 video player",
-          "source": "<Video\n  src=\"https://cdn.plyr.io/static/demo.mp4\"\n  poster=\"https://cdn.plyr.io/static/demo.jpg\"\n  class=\"max-w-2xl\"\n>\n  <track\n    kind=\"captions\"\n    label=\"English\"\n    srclang=\"en\"\n    src=\"https://cdn.plyr.io/static/demo.vtt\"\n    default\n  />\n</Video>"
-        },
-        {
-          "title": "YouTube Video",
-          "description": "Embedded YouTube video with Plyr controls",
-          "source": "<Video\n  provider=\"youtube\"\n  src=\"bTqVqk7FSmY\"\n  class=\"max-w-2xl\"\n  options={{\n    youtube: { noCookie: true },\n  }}\n/>"
-        },
-        {
-          "title": "Vimeo Video",
-          "description": "Embedded Vimeo video with Plyr controls",
-          "source": "<Video\n  provider=\"vimeo\"\n  src=\"76979871\"\n  class=\"max-w-2xl\"\n  options={{\n    vimeo: { byline: false, portrait: false, title: false },\n  }}\n/>"
-        }
-      ],
-      "dependencies": {
-        "components": [],
-        "packages": []
-      },
-      "files": [
-        "video.tsx"
-      ]
     }
   },
   "componentList": [
@@ -5170,11 +5578,13 @@
     "date-picker",
     "device",
     "dialog",
+    "editor",
     "file-upload",
     "floating-panel",
     "format",
     "highlighter",
     "hover-card",
+    "image",
     "input",
     "json-tree-view",
     "kbd",
@@ -5201,7 +5611,7 @@
     "toast",
     "tooltip",
     "tree-view",
-    "wobble-card",
-    "video"
+    "video",
+    "wobble-card"
   ]
 }

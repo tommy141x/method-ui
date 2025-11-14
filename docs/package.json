@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ark-ui/solid": "^5.27.1",
+    "@responsive-image/vite-plugin": "^2.0.2",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "^1.2.0",
