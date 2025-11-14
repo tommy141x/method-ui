@@ -8,7 +8,11 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   vite: {
-    plugins: [UnoCSS()],
+    plugins: [
+      UnoCSS({
+        mode: "global",
+      }),
+    ],
     resolve: {
       alias: {
         "~": resolve(__dirname, "./src"),

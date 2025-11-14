@@ -39,6 +39,8 @@ export interface ThemeDefinition {
   extends?: string;
   /** Font family to use (e.g., "Inter", "Space Grotesk", "Press Start 2P") */
   font?: string;
+  /** Base font size as percentage (e.g., "87.5%" for 14px, "100%" for 16px) */
+  fontSize?: string;
 }
 
 /**
@@ -148,6 +150,11 @@ export const ThemeProvider: Component<ThemeProviderProps> = (props) => {
       mergedVars["font-sans"] = themeDef.font;
     }
 
+    // Add fontSize if specified
+    if (themeDef.fontSize) {
+      mergedVars["font-size"] = themeDef.fontSize;
+    }
+
     return mergedVars;
   };
 
@@ -203,15 +210,29 @@ export const ThemeProvider: Component<ThemeProviderProps> = (props) => {
       const style = document.createElement("style");
       style.id = "theme-vars-override";
 
-      const cssVarEntries = Object.entries(mergedVars)
-        .map(([key, value]) => {
-          const cssVar = key.startsWith("--") ? key : `--${key}`;
-          return `  ${cssVar}: ${value};`;
-        })
-        .join("\n");
+      // Separate fontSize from other CSS vars - it needs to go on html element
+      const { "font-size": fontSize, ...otherVars } = mergedVars;
 
-      // Apply to :root so it has proper cascade and can be used by body
-      style.textContent = `:root {\n${cssVarEntries}\n}`;
+      let cssContent = "";
+
+      // Apply fontSize to html element for proper rem scaling
+      if (fontSize) {
+        cssContent += `html {\n  font-size: ${fontSize};\n}\n`;
+      }
+
+      // Apply other CSS vars to :root
+      if (Object.keys(otherVars).length > 0) {
+        const cssVarEntries = Object.entries(otherVars)
+          .map(([key, value]) => {
+            const cssVar = key.startsWith("--") ? key : `--${key}`;
+            return `  ${cssVar}: ${value};`;
+          })
+          .join("\n");
+
+        cssContent += `:root {\n${cssVarEntries}\n}`;
+      }
+
+      style.textContent = cssContent;
       document.head.appendChild(style);
     }
   };

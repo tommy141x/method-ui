@@ -128,7 +128,7 @@ export const ColorPicker: Component<ColorPickerProps> & {
                         easing: [0.16, 1, 0.3, 1],
                       }}
                     >
-                      <ArkColorPicker.Content class="z-50 w-full min-w-[300px] max-w-sm rounded-md border border-border bg-popover p-4 shadow-md outline-none">
+                      <ArkColorPicker.Content class="z-50 w-full min-w-[300px] max-w-sm rounded-md border border-border bg-background p-4 shadow-md outline-none">
                         <div class="flex flex-col gap-3">
                           <ArkColorPicker.Area class="h-40 w-full rounded-lg border border-border relative">
                             <div class="absolute inset-0 overflow-hidden rounded-lg">
@@ -321,7 +321,7 @@ const ColorPickerContent: Component<{
               >
                 <ArkColorPicker.Content
                   class={cn(
-                    "z-50 w-full min-w-[300px] max-w-sm rounded-md border border-border bg-popover p-4 shadow-md outline-none",
+                    "z-50 w-full min-w-[300px] max-w-sm rounded-md border border-border bg-background p-4 shadow-md outline-none",
                     props.class,
                   )}
                 >

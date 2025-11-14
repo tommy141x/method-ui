@@ -2,9 +2,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
 import { MetaProvider } from "@solidjs/meta";
-import "@unocss/reset/tailwind.css";
 import "./global.css";
-import "uno.css";
 import { ThemeProvider, type ThemeDefinition } from "./components/theme";
 
 const themes: ThemeDefinition[] = [
@@ -50,6 +48,11 @@ const themes: ThemeDefinition[] = [
       "primary-foreground": "210 40% 98%",
       destructive: "346.8 95.2% 50.8%",
       ring: "346.8 77.2% 59.8%",
+      "chart-1": "346.8 77.2% 59.8%",
+      "chart-2": "346.8 95.2% 50.8%",
+      "chart-3": "346.8 77.2% 59.8%",
+      "chart-4": "346.8 95.2% 50.8%",
+      "chart-5": "346.8 77.2% 59.8%",
     },
   },
   {
@@ -62,6 +65,11 @@ const themes: ThemeDefinition[] = [
       "primary-foreground": "210 40% 98%",
       destructive: "20 100% 39%",
       ring: "20.5 90.2% 48.2%",
+      "chart-1": "20.5 90.2% 48.2%",
+      "chart-2": "20 100% 39%",
+      "chart-3": "20.5 90.2% 48.2%",
+      "chart-4": "20 100% 39%",
+      "chart-5": "20.5 90.2% 48.2%",
     },
   },
   {
@@ -70,6 +78,7 @@ const themes: ThemeDefinition[] = [
     description: "Nostalgic retro vibes",
     extends: "base",
     font: '"Press Start 2P", monospace',
+    fontSize: "83.5%",
     cssVars: {
       radius: "none",
     },
@@ -80,6 +89,7 @@ const themes: ThemeDefinition[] = [
     description: "Retro theme on light background",
     extends: "light",
     font: '"Press Start 2P", monospace',
+    fontSize: "83.5%",
     cssVars: {
       radius: "none",
     },

@@ -9,7 +9,7 @@ const cardVariants = cva("rounded-lg text-card-foreground", {
     variant: {
       default: "bg-card shadow-sm",
       elevated: "bg-card shadow-xl",
-      outlined: "bg-card border-2 border-border shadow-none",
+      outlined: "bg-card border-2 border-primary shadow-none",
     },
   },
   defaultVariants: {

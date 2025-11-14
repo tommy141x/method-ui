@@ -19,21 +19,41 @@ interface CheckboxProps {
   class?: string;
 }
 
-export const Checkbox = (props: CheckboxProps) => {
-  const [local, others] = splitProps(props, ["children", "class"]);
+export const Checkbox = (
+  props: CheckboxProps & { size?: "sm" | "md" | "lg" },
+) => {
+  const [local, others] = splitProps(props, ["children", "class", "size"]);
+
+  const sizes = {
+    sm: { control: "h-4 w-4", icon: "h-3 w-3", label: "text-sm" },
+    md: { control: "h-5 w-5", icon: "h-4 w-4", label: "text-base" },
+    lg: { control: "h-6 w-6", icon: "h-5 w-5", label: "text-lg" },
+  };
+
+  const currentSize = sizes[local.size || "md"];
 
   return (
     <ArkCheckbox.Root
       class={cn("flex items-center gap-2", local.class)}
       {...others}
     >
-      <ArkCheckbox.Control class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-all duration-200 ease-out hover:border-ring hover:shadow-sm">
+      <ArkCheckbox.Control
+        class={cn(
+          "peer shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-all duration-200 ease-out hover:border-ring hover:shadow-sm",
+          currentSize.control,
+        )}
+      >
         <ArkCheckbox.Indicator class="flex items-center justify-center w-full h-full transition-all duration-200 ease-out data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
-          <div class={cn("h-3 w-3", icon("check"))} />
+          <div class={cn(currentSize.icon, icon("check"))} />
         </ArkCheckbox.Indicator>
       </ArkCheckbox.Control>
       <Show when={local.children}>
-        <ArkCheckbox.Label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors duration-150 cursor-pointer select-none">
+        <ArkCheckbox.Label
+          class={cn(
+            "font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors duration-150 cursor-pointer select-none",
+            currentSize.label,
+          )}
+        >
           {local.children}
         </ArkCheckbox.Label>
       </Show>
@@ -52,7 +72,7 @@ export const CheckboxLabel = (props: {
   return (
     <ArkCheckbox.Label
       class={cn(
-        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors duration-150 cursor-pointer select-none",
+        "text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors duration-150 cursor-pointer select-none",
         local.class,
       )}
       {...others}
@@ -68,7 +88,7 @@ export const CheckboxControl = (props: {
   return (
     <ArkCheckbox.Control
       class={cn(
-        "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-all duration-200 ease-out hover:border-ring hover:shadow-sm",
+        "peer h-5 w-5 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-all duration-200 ease-out hover:border-ring hover:shadow-sm",
         local.class,
       )}
       {...others}
@@ -97,7 +117,7 @@ export const CheckboxIndicator = (props: {
     >
       {local.children || (
         <div
-          class={cn("h-3 w-3", icon(local.indeterminate ? "minus" : "check"))}
+          class={cn("h-4 w-4", icon(local.indeterminate ? "minus" : "check"))}
         />
       )}
     </ArkCheckbox.Indicator>
@@ -134,6 +154,18 @@ export const meta: ComponentMeta<CheckboxProps> = {
       title: "Basic Checkbox",
       description: "A simple checkbox with label",
       code: () => <Checkbox>Accept terms and conditions</Checkbox>,
+    },
+
+    {
+      title: "Checkbox Sizes",
+      description: "Checkboxes in different sizes",
+      code: () => (
+        <div class="flex flex-col gap-4">
+          <Checkbox size="sm">Small checkbox</Checkbox>
+          <Checkbox size="md">Medium checkbox (default)</Checkbox>
+          <Checkbox size="lg">Large checkbox</Checkbox>
+        </div>
+      ),
     },
 
     {

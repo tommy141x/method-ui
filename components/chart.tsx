@@ -116,6 +116,66 @@ const getCSSVariable = (variable: string): string => {
   return value ? `hsl(${value})` : "";
 };
 
+// Helper to convert HSL CSS variable to RGBA for canvas gradients
+const getCSSVariableAsRGBA = (variable: string, alpha: number = 1): string => {
+  if (typeof window === "undefined") return `rgba(0, 0, 0, ${alpha})`;
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(variable)
+    .trim();
+
+  if (!value) return `rgba(0, 0, 0, ${alpha})`;
+
+  // Parse HSL values (format: "h s% l%" or "h s l")
+  const hslMatch = value.match(/(\d+\.?\d*)\s+(\d+\.?\d*)%?\s+(\d+\.?\d*)%?/);
+  if (!hslMatch) return `rgba(0, 0, 0, ${alpha})`;
+
+  const h = parseFloat(hslMatch[1]);
+  const s = parseFloat(hslMatch[2]) / 100;
+  const l = parseFloat(hslMatch[3]) / 100;
+
+  // Convert HSL to RGB
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+
+  let r = 0,
+    g = 0,
+    b = 0;
+  if (h >= 0 && h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (h >= 60 && h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (h >= 120 && h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (h >= 180 && h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (h >= 240 && h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else if (h >= 300 && h < 360) {
+    r = c;
+    g = 0;
+    b = x;
+  }
+
+  const rgb = [
+    Math.round((r + m) * 255),
+    Math.round((g + m) * 255),
+    Math.round((b + m) * 255),
+  ];
+
+  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+};
+
 // Create theme based on CSS variables
 const createThemeFromCSSVariables = () => {
   const background = getCSSVariable("--background");
@@ -1398,11 +1458,11 @@ export const meta: ComponentMeta<ChartProps> = {
                       colorStops: [
                         {
                           offset: 0,
-                          color: "rgba(59, 130, 246, 0.5)",
+                          color: getCSSVariableAsRGBA("--chart-1", 1.0),
                         },
                         {
                           offset: 1,
-                          color: "rgba(59, 130, 246, 0.05)",
+                          color: getCSSVariableAsRGBA("--chart-1", 0.05),
                         },
                       ],
                     },

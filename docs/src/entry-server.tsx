@@ -1,5 +1,6 @@
 // @refresh reload
 import { createHandler, StartServer } from "@solidjs/start/server";
+import "virtual:uno.css";
 
 export default createHandler(() => (
   <StartServer

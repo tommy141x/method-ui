@@ -79,7 +79,7 @@ export const DatePicker = (props: DatePickerProps) => {
       numOfMonths={props.numOfMonths}
       min={props.min}
       max={props.max}
-      positioning={props.positioning || { sameWidth: true }}
+      positioning={props.positioning || { fitViewport: true }}
       format={props.format}
     >
       <ArkDatePicker.Control class="relative flex gap-2 items-center">
@@ -174,9 +174,9 @@ export const DatePicker = (props: DatePickerProps) => {
                       </ArkDatePicker.ViewControl>
                     </div>
 
-                    <ArkDatePicker.Table class="w-full border-collapse">
+                    <ArkDatePicker.Table class="border-collapse table-fixed">
                       <ArkDatePicker.TableHead>
-                        <ArkDatePicker.TableRow class="flex w-full">
+                        <ArkDatePicker.TableRow class="flex">
                           <Index each={context().weekDays}>
                             {(weekDay) => (
                               <ArkDatePicker.TableHeader class="flex-1 text-xs font-medium text-muted-foreground p-2 text-center">
@@ -190,14 +190,14 @@ export const DatePicker = (props: DatePickerProps) => {
                       <ArkDatePicker.TableBody>
                         <Index each={context().weeks}>
                           {(week) => (
-                            <ArkDatePicker.TableRow class="flex w-full gap-1 mt-1">
+                            <ArkDatePicker.TableRow class="flex gap-1 mt-1 flex-nowrap">
                               <Index each={week()}>
                                 {(day) => (
                                   <ArkDatePicker.TableCell
                                     value={day()}
                                     class="flex-1 p-0"
                                   >
-                                    <ArkDatePicker.TableCellTrigger class="flex items-center justify-center w-full h-9 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[today]:border data-[today]:border-primary data-[outside-range]:text-muted-foreground data-[outside-range]:opacity-50 data-[in-range]:bg-accent data-[range-start]:rounded-r-none data-[range-end]:rounded-l-none transition-colors">
+                                    <ArkDatePicker.TableCellTrigger class="flex items-center justify-center h-9 w-9 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[today]:border data-[today]:border-primary data-[outside-range]:text-muted-foreground data-[outside-range]:opacity-50 data-[in-range]:bg-accent data-[range-start]:rounded-r-none data-[range-end]:rounded-l-none transition-colors">
                                       {day().day}
                                     </ArkDatePicker.TableCellTrigger>
                                   </ArkDatePicker.TableCell>
@@ -251,7 +251,7 @@ export const DatePicker = (props: DatePickerProps) => {
                       </ArkDatePicker.ViewControl>
                     </div>
 
-                    <ArkDatePicker.Table class="w-full">
+                    <ArkDatePicker.Table class="table-fixed">
                       <ArkDatePicker.TableBody>
                         <Index
                           each={context().getMonthsGrid({
@@ -260,14 +260,14 @@ export const DatePicker = (props: DatePickerProps) => {
                           })}
                         >
                           {(months) => (
-                            <ArkDatePicker.TableRow class="flex w-full gap-2 mt-2">
+                            <ArkDatePicker.TableRow class="flex gap-2 mt-2">
                               <Index each={months()}>
                                 {(month) => (
                                   <ArkDatePicker.TableCell
                                     value={month().value}
                                     class="flex-1"
                                   >
-                                    <ArkDatePicker.TableCellTrigger class="w-full h-10 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground transition-colors">
+                                    <ArkDatePicker.TableCellTrigger class="h-10 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground transition-colors">
                                       {month().label}
                                     </ArkDatePicker.TableCellTrigger>
                                   </ArkDatePicker.TableCell>
@@ -321,18 +321,18 @@ export const DatePicker = (props: DatePickerProps) => {
                       </ArkDatePicker.ViewControl>
                     </div>
 
-                    <ArkDatePicker.Table class="w-full">
+                    <ArkDatePicker.Table class="table-fixed">
                       <ArkDatePicker.TableBody>
                         <Index each={context().getYearsGrid({ columns: 4 })}>
                           {(years) => (
-                            <ArkDatePicker.TableRow class="flex w-full gap-2 mt-2">
+                            <ArkDatePicker.TableRow class="flex gap-2 mt-2">
                               <Index each={years()}>
                                 {(year) => (
                                   <ArkDatePicker.TableCell
                                     value={year().value}
                                     class="flex-1"
                                   >
-                                    <ArkDatePicker.TableCellTrigger class="w-full h-10 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground transition-colors">
+                                    <ArkDatePicker.TableCellTrigger class="h-10 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground transition-colors">
                                       {year().label}
                                     </ArkDatePicker.TableCellTrigger>
                                   </ArkDatePicker.TableCell>

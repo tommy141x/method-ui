@@ -72,8 +72,10 @@ export function DocsSidebar() {
                     variant={isActive(section.href) ? "secondary" : "ghost"}
                     class="w-full justify-start text-sm"
                   >
-                    <div class={cn("h-4 w-4 mr-2", section.iconClass)} />
-                    {section.name}
+                    <div
+                      class={cn("h-4 w-4 mr-2 shrink-0", section.iconClass)}
+                    />
+                    <span class="truncate">{section.name}</span>
                   </Button>
                 </A>
               )}
@@ -103,12 +105,14 @@ export function DocsSidebar() {
                     }
                     class="w-full justify-start"
                   >
-                    <div class="flex items-center gap-2 w-full">
-                      <span class="text-sm">{component.displayName}</span>
+                    <div class="flex items-center gap-2 w-full min-w-0">
+                      <span class="text-sm truncate">
+                        {component.displayName}
+                      </span>
                       {component.exampleCount > 0 && (
                         <Badge
                           variant="outline"
-                          class="ml-auto text-xs font-normal"
+                          class="ml-auto text-xs font-normal shrink-0"
                         >
                           {component.exampleCount}
                         </Badge>

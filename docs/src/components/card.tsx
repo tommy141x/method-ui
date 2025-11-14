@@ -128,5 +128,4 @@ export const CardFooter: Component<CardFooterProps> = (props) => {
   );
 };
 
-
 export default Card;

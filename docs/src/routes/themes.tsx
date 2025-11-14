@@ -51,33 +51,37 @@ export default function Themes() {
               {(themeOption) => (
                 <button
                   onClick={() => setTheme(themeOption.id)}
-                  class="text-left"
+                  class="text-left h-full"
                 >
                   <Card
                     class={cn(
-                      "cursor-pointer transition-all hover:shadow-lg",
+                      "cursor-pointer transition-all hover:shadow-lg h-full flex flex-col",
                       theme() === themeOption.id && "ring-2 ring-primary",
                     )}
                   >
-                    <CardHeader>
-                      <div class="flex items-start justify-between mb-4">
-                        <div class="flex-1">
-                          <CardTitle>{themeOption.name}</CardTitle>
-                          <CardDescription class="mt-2">
+                    <CardHeader class="flex-1 flex flex-col justify-between min-h-[180px]">
+                      <div class="flex items-start justify-between mb-4 gap-2">
+                        <div class="flex-1 min-w-0">
+                          <CardTitle class="line-clamp-2 break-words">
+                            {themeOption.name}
+                          </CardTitle>
+                          <CardDescription class="mt-2 line-clamp-3 break-words min-h-[3.6em]">
                             {themeOption.description}
                           </CardDescription>
                         </div>
                         <Show when={theme() === themeOption.id}>
-                          <Badge variant="default">Active</Badge>
+                          <Badge variant="default" class="flex-shrink-0">
+                            Active
+                          </Badge>
                         </Show>
                       </div>
                       {/* Color Preview */}
-                      <div class="flex gap-2 items-center">
+                      <div class="flex gap-2 items-center mt-auto">
                         <Show
                           when={themeOption.cssVars?.primary}
                           fallback={
                             <div class="flex gap-2 items-center">
-                              <div class="w-10 h-10 rounded-full border-2 border-border shadow-sm bg-gradient-to-br from-blue-500 to-purple-600" />
+                              <div class="w-10 h-10 rounded-full border-2 border-border shadow-sm bg-gradient-to-br from-blue-500 to-purple-600 flex-shrink-0" />
                               <div class="text-xs text-muted-foreground">
                                 Base Theme
                               </div>
@@ -85,7 +89,7 @@ export default function Themes() {
                           }
                         >
                           <div
-                            class="w-10 h-10 rounded-full border-2 border-border shadow-sm"
+                            class="w-10 h-10 rounded-full border-2 border-border shadow-sm flex-shrink-0"
                             style={{
                               "background-color": `hsl(${themeOption.cssVars?.primary})`,
                             }}

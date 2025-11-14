@@ -41,9 +41,7 @@ export default defineConfig({
       fonts: {
         sans: "Inter:400,500,600,700",
         mono: "JetBrains Mono:400,500,600,700",
-        display: "Space Grotesk:400,500,600,700",
-        retro: "Press Start 2P", // Remove :400
-        serif: "Merriweather:400,700",
+        retro: "Press Start 2P",
       },
     }),
   ],
