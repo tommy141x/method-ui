@@ -4,6 +4,62 @@
   "name": "method-ui",
   "version": "0.1.0",
   "componentMetadata": {
+    "3d-card": {
+      "name": "3dCard",
+      "fileName": "3d-card",
+      "description": "An interactive 3D card component with mouse-tracking tilt and shine effects. SSR compatible with graceful fallback.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "intensity",
+          "type": "\"subtle\" | \"normal\" | \"strong\"",
+          "description": "Intensity",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Whether the component is disabled",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Product Card",
+          "description": "3D card showcasing a product",
+          "source": "<div class=\"flex justify-center p-8\">\n  <Card3D intensity=\"normal\" class=\"w-[400px]\">\n    <div class=\"rounded-2xl bg-card border border-border overflow-hidden\">\n      <div class=\"aspect-video bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center\">\n        <div class=\"h-24 w-24 i-lucide-box text-white\" />\n      </div>\n      <div class=\"p-6\">\n        <h3 class=\"text-xl font-bold mb-2\">Premium Product</h3>\n        <p class=\"text-muted-foreground mb-4\">\n          Experience the next level of interaction with this premium 3D\n          card component.\n        </p>\n        <div class=\"flex items-center justify-between\">\n          <span class=\"text-2xl font-bold\">$99</span>\n          <button class=\"px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90\">\n            Add to Cart\n          </button>\n        </div>\n      </div>\n    </div>\n  </Card3D>\n</div>"
+        },
+        {
+          "title": "Comet Effect",
+          "description": "Interactive card with tilt and shine effect",
+          "source": "<div class=\"flex justify-center p-8\">\n  <Card3D class=\"w-[350px]\">\n    <div class=\"rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 p-8 text-white\">\n      <h3 class=\"text-2xl font-bold mb-2\">3D Card</h3>\n      <p class=\"text-white/90 mb-4\">\n        Hover over this card to see the 3D tilt effect with a dynamic\n        shine overlay.\n      </p>\n      <div class=\"flex gap-2\">\n        <div class=\"px-3 py-1 rounded-full bg-white/20 text-sm\">\n          Interactive\n        </div>\n        <div class=\"px-3 py-1 rounded-full bg-white/20 text-sm\">\n          3D Effect\n        </div>\n      </div>\n    </div>\n  </Card3D>\n</div>"
+        },
+        {
+          "title": "Intensity Levels",
+          "description": "Different intensity levels for the 3D effect",
+          "source": "<div class=\"grid grid-cols-1 md:grid-cols-3 gap-6 p-8\">\n  <Card3D intensity=\"subtle\" class=\"w-full\">\n    <div class=\"rounded-2xl bg-blue-500 p-6 text-white text-center\">\n      <h4 class=\"text-lg font-bold mb-2\">Subtle</h4>\n      <p class=\"text-sm text-white/80\">Minimal 3D effect</p>\n    </div>\n  </Card3D>\n  <Card3D intensity=\"normal\" class=\"w-full\">\n    <div class=\"rounded-2xl bg-green-500 p-6 text-white text-center\">\n      <h4 class=\"text-lg font-bold mb-2\">Normal</h4>\n      <p class=\"text-sm text-white/80\">Balanced effect</p>\n    </div>\n  </Card3D>\n  <Card3D intensity=\"strong\" class=\"w-full\">\n    <div class=\"rounded-2xl bg-orange-500 p-6 text-white text-center\">\n      <h4 class=\"text-lg font-bold mb-2\">Strong</h4>\n      <p class=\"text-sm text-white/80\">Dramatic effect</p>\n    </div>\n  </Card3D>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "3d-card.tsx"
+      ]
+    },
     "accordion": {
       "name": "Accordion",
       "fileName": "accordion",
@@ -110,6 +166,76 @@
       },
       "files": [
         "accordion.tsx"
+      ]
+    },
+    "alert": {
+      "name": "Alert",
+      "fileName": "alert",
+      "description": "An alert component for displaying important messages with optional icons, titles, and descriptions. Supports multiple variants for different message types.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "VariantProps<typeof alertVariants>[\"variant\"]",
+          "description": "Visual style variant",
+          "required": false,
+          "defaultValue": "\"default\""
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "destructive",
+            "success",
+            "warning",
+            "info"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple alerts with title and description",
+          "source": "<div class=\"flex flex-col gap-4\">\n  <Alert>\n    <div>\n      <AlertTitle>Heads up!</AlertTitle>\n      <AlertDescription>\n        You can add components to your app using the cli.\n      </AlertDescription>\n    </div>\n  </Alert>\n  <Alert variant=\"info\">\n    <div>\n      <AlertTitle>Information</AlertTitle>\n      <AlertDescription>\n        A new version of the app is available.\n      </AlertDescription>\n    </div>\n  </Alert>\n</div>"
+        },
+        {
+          "title": "Variants",
+          "description": "Different alert variants for various message types",
+          "source": "<div class=\"flex flex-col gap-4\">\n  <Alert variant=\"destructive\">\n    <div>\n      <AlertTitle>Error</AlertTitle>\n      <AlertDescription>\n        Your session has expired. Please log in again.\n      </AlertDescription>\n    </div>\n  </Alert>\n  <Alert variant=\"success\">\n    <div>\n      <AlertTitle>Success!</AlertTitle>\n      <AlertDescription>\n        Your changes have been saved successfully.\n      </AlertDescription>\n    </div>\n  </Alert>\n  <Alert variant=\"warning\">\n    <div>\n      <AlertTitle>Warning</AlertTitle>\n      <AlertDescription>\n        Your storage is almost full. Consider upgrading your plan.\n      </AlertDescription>\n    </div>\n  </Alert>\n</div>"
+        },
+        {
+          "title": "With Icons",
+          "description": "Alerts with icons positioned to the left",
+          "source": "<div class=\"flex flex-col gap-4\">\n  <Alert>\n    <div class=\"h-5 w-5 i-lucide-terminal shrink-0\" />\n    <div>\n      <AlertTitle>Heads up!</AlertTitle>\n      <AlertDescription>\n        You can add components to your app using the cli.\n      </AlertDescription>\n    </div>\n  </Alert>\n  <Alert variant=\"destructive\">\n    <div class=\"h-5 w-5 i-lucide-alert-circle shrink-0\" />\n    <div>\n      <AlertTitle>Error</AlertTitle>\n      <AlertDescription>\n        Your session has expired. Please log in again.\n      </AlertDescription>\n    </div>\n  </Alert>\n  <Alert variant=\"success\">\n    <div class=\"h-5 w-5 i-lucide-check-circle shrink-0\" />\n    <div>\n      <AlertTitle>Success!</AlertTitle>\n      <AlertDescription>\n        Your changes have been saved successfully.\n      </AlertDescription>\n    </div>\n  </Alert>\n  <Alert variant=\"warning\">\n    <div class=\"h-5 w-5 i-lucide-alert-triangle shrink-0\" />\n    <div>\n      <AlertTitle>Warning</AlertTitle>\n      <AlertDescription>\n        Your storage is almost full. Consider upgrading your plan.\n      </AlertDescription>\n    </div>\n  </Alert>\n</div>"
+        },
+        {
+          "title": "Title Only",
+          "description": "Alert with just a title",
+          "source": "<div class=\"flex flex-col gap-4\">\n  <Alert>\n    <div class=\"h-5 w-5 i-lucide-bell shrink-0\" />\n    <div>\n      <AlertTitle>You have 3 unread notifications</AlertTitle>\n    </div>\n  </Alert>\n  <Alert variant=\"success\">\n    <div class=\"h-5 w-5 i-lucide-check-circle shrink-0\" />\n    <div>\n      <AlertTitle>Payment successful</AlertTitle>\n    </div>\n  </Alert>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "alert.tsx"
       ]
     },
     "angle-slider": {
@@ -259,6 +385,167 @@
         "angle-slider.tsx"
       ]
     },
+    "aspect-ratio": {
+      "name": "AspectRatio",
+      "fileName": "aspect-ratio",
+      "description": "A component for maintaining consistent aspect ratios for media content like images and videos.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "ratio",
+          "type": "number",
+          "description": "Ratio",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Aspect ratio with custom content",
+          "source": "<AspectRatio ratio={16 / 9} class=\"bg-muted rounded-lg\">\n  <div class=\"flex items-center justify-center h-full\">\n    <div class=\"text-center\">\n      <div class=\"h-12 w-12 i-lucide-image mx-auto mb-2 text-muted-foreground\" />\n      <p class=\"text-sm text-muted-foreground\">16:9 Aspect Ratio</p>\n    </div>\n  </div>\n</AspectRatio>"
+        },
+        {
+          "title": "Different Ratios",
+          "description": "Common aspect ratios",
+          "source": "<div class=\"grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl\">\n  <div>\n    <p class=\"text-sm font-medium mb-2\">16:9 (Widescreen)</p>\n    <AspectRatio ratio={16 / 9} class=\"bg-muted rounded-lg\">\n      <div class=\"flex items-center justify-center h-full bg-gradient-to-br from-blue-500 to-cyan-500\">\n        <span class=\"text-white font-mono text-lg font-semibold\">\n          16:9\n        </span>\n      </div>\n    </AspectRatio>\n  </div>\n  <div>\n    <p class=\"text-sm font-medium mb-2\">4:3 (Standard)</p>\n    <AspectRatio ratio={4 / 3} class=\"bg-muted rounded-lg\">\n      <div class=\"flex items-center justify-center h-full bg-gradient-to-br from-green-500 to-emerald-500\">\n        <span class=\"text-white font-mono text-lg font-semibold\">\n          4:3\n        </span>\n      </div>\n    </AspectRatio>\n  </div>\n  <div>\n    <p class=\"text-sm font-medium mb-2\">1:1 (Square)</p>\n    <AspectRatio ratio={1 / 1} class=\"bg-muted rounded-lg\">\n      <div class=\"flex items-center justify-center h-full bg-gradient-to-br from-orange-500 to-red-500\">\n        <span class=\"text-white font-mono text-lg font-semibold\">\n          1:1\n        </span>\n      </div>\n    </AspectRatio>\n  </div>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "aspect-ratio.tsx"
+      ]
+    },
+    "award": {
+      "name": "Award",
+      "fileName": "award",
+      "description": "A versatile award component with multiple variants including stamps, awards with laurel wreaths, certificates, and badges. Perfect for displaying achievements, recognitions, and accomplishments.",
+      "props": [
+        {
+          "name": "variant",
+          "type": "VariantProps<typeof awardVariants>[\"variant\"]",
+          "description": "Visual style variant",
+          "required": false,
+          "defaultValue": "\"award\""
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title text",
+          "required": true
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "description": "Subtitle",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Description text",
+          "required": false
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "description": "Date",
+          "required": false
+        },
+        {
+          "name": "recipient",
+          "type": "string",
+          "description": "Recipient",
+          "required": false
+        },
+        {
+          "name": "level",
+          "type": "\"bronze\" | \"silver\" | \"gold\" | \"platinum\"",
+          "description": "Level",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "showIcon",
+          "type": "boolean",
+          "description": "Show Icon",
+          "required": false
+        },
+        {
+          "name": "customIcon",
+          "type": "JSX.Element",
+          "description": "Custom Icon",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "stamp",
+            "award",
+            "certificate",
+            "badge"
+          ],
+          "defaultValue": "award"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Award Variants",
+          "description": "Different award styles",
+          "source": "<div class=\"grid grid-cols-2 gap-8 w-full\">\n  <Award\n    variant=\"award\"\n    title=\"Excellence\"\n    subtitle=\"Outstanding Achievement\"\n    recipient=\"John Doe\"\n    date=\"2024\"\n    level=\"gold\"\n  />\n  <Award\n    variant=\"certificate\"\n    title=\"Achievement\"\n    subtitle=\"For demonstrating exceptional skills\"\n    recipient=\"Jane Smith\"\n    date=\"January 15, 2024\"\n  />\n</div>"
+        },
+        {
+          "title": "Stamp",
+          "description": "Circular stamp style award",
+          "source": "<div class=\"flex gap-4 justify-center\">\n  <Award\n    variant=\"stamp\"\n    title=\"APPROVED\"\n    subtitle=\"CERTIFIED • 2024\"\n    recipient=\"Official\"\n    date=\"Jan 2024\"\n    showIcon\n  />\n</div>"
+        },
+        {
+          "title": "Badge",
+          "description": "Horizontal badge style",
+          "source": "<div class=\"flex flex-col gap-4\">\n  <Award\n    variant=\"badge\"\n    title=\"Champion\"\n    subtitle=\"First Place Winner\"\n    recipient=\"Alice Johnson\"\n    date=\"2024\"\n  />\n  <Award\n    variant=\"badge\"\n    title=\"Expert\"\n    subtitle=\"Top Contributor\"\n    recipient=\"Bob Wilson\"\n    date=\"Dec 2023\"\n  />\n</div>"
+        },
+        {
+          "title": "Award Levels",
+          "description": "Different achievement levels",
+          "source": "<div class=\"grid grid-cols-2 gap-6\">\n  <Award\n    variant=\"award\"\n    title=\"Bronze\"\n    subtitle=\"Third Place\"\n    level=\"bronze\"\n    recipient=\"Participant\"\n    date=\"2024\"\n    class=\"w-[300px]\"\n  />\n  <Award\n    variant=\"award\"\n    title=\"Silver\"\n    subtitle=\"Second Place\"\n    level=\"silver\"\n    recipient=\"Runner Up\"\n    date=\"2024\"\n    class=\"w-[300px]\"\n  />\n  <Award\n    variant=\"award\"\n    title=\"Gold\"\n    subtitle=\"First Place\"\n    level=\"gold\"\n    recipient=\"Champion\"\n    date=\"2024\"\n    class=\"w-[300px]\"\n  />\n  <Award\n    variant=\"award\"\n    title=\"Platinum\"\n    subtitle=\"Grand Champion\"\n    level=\"platinum\"\n    recipient=\"Elite Winner\"\n    date=\"2024\"\n    class=\"w-[300px]\"\n  />\n</div>"
+        },
+        {
+          "title": "Certificate",
+          "description": "Formal certificate style",
+          "source": "<Award\n  variant=\"certificate\"\n  title=\"Completion\"\n  subtitle=\"has successfully completed the advanced training program with distinction\"\n  recipient=\"Emily Rodriguez\"\n  date=\"March 20, 2024\"\n  class=\"max-w-md mx-auto\"\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "award.tsx"
+      ]
+    },
     "badge": {
       "name": "Badge",
       "fileName": "badge",
@@ -355,6 +642,279 @@
       },
       "files": [
         "badge.tsx"
+      ]
+    },
+    "blur-fade": {
+      "name": "BlurFade",
+      "fileName": "blur-fade",
+      "description": "An animation component that reveals elements with a blur and fade effect as they enter the viewport. Supports multiple directions and customizable timing.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": true
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Duration",
+          "required": false
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "Delay",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "description": "Offset",
+          "required": false
+        },
+        {
+          "name": "direction",
+          "type": "\"up\" | \"down\" | \"left\" | \"right\"",
+          "description": "Direction",
+          "required": false
+        },
+        {
+          "name": "inView",
+          "type": "boolean",
+          "description": "In View",
+          "required": false
+        },
+        {
+          "name": "inViewMargin",
+          "type": "string",
+          "description": "In View Margin",
+          "required": false
+        },
+        {
+          "name": "blur",
+          "type": "string",
+          "description": "Blur",
+          "required": false
+        },
+        {
+          "name": "trigger",
+          "type": "boolean",
+          "description": "Trigger",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple blur fade animation",
+          "source": "<div class=\"space-y-8 p-8\">\n  <BlurFade>\n    <div class=\"rounded-lg bg-card p-6 border\">\n      <h3 class=\"text-xl font-bold mb-2\">Fade In</h3>\n      <p class=\"text-muted-foreground\">\n        This element fades in with a blur effect\n      </p>\n    </div>\n  </BlurFade>\n</div>"
+        },
+        {
+          "title": "Directions",
+          "description": "Different animation directions",
+          "source": "<div class=\"grid grid-cols-2 gap-4 p-8\">\n  <BlurFade direction=\"up\">\n    <div class=\"rounded-lg bg-primary/10 p-4 text-center\">\n      <div class=\"h-4 w-4 mx-auto mb-2 i-lucide-arrow-up\" />\n      <p class=\"text-sm font-medium\">Up</p>\n    </div>\n  </BlurFade>\n  <BlurFade direction=\"down\">\n    <div class=\"rounded-lg bg-primary/10 p-4 text-center\">\n      <div class=\"h-4 w-4 mx-auto mb-2 i-lucide-arrow-down\" />\n      <p class=\"text-sm font-medium\">Down</p>\n    </div>\n  </BlurFade>\n  <BlurFade direction=\"left\">\n    <div class=\"rounded-lg bg-primary/10 p-4 text-center\">\n      <div class=\"h-4 w-4 mx-auto mb-2 i-lucide-arrow-left\" />\n      <p class=\"text-sm font-medium\">Left</p>\n    </div>\n  </BlurFade>\n  <BlurFade direction=\"right\">\n    <div class=\"rounded-lg bg-primary/10 p-4 text-center\">\n      <div class=\"h-4 w-4 mx-auto mb-2 i-lucide-arrow-right\" />\n      <p class=\"text-sm font-medium\">Right</p>\n    </div>\n  </BlurFade>\n</div>"
+        },
+        {
+          "title": "Staggered",
+          "description": "Multiple elements with staggered delays",
+          "source": "<div class=\"space-y-4 p-8\">\n  <BlurFade delay={0}>\n    <div class=\"rounded-lg bg-card border p-4\">\n      <p class=\"font-medium\">First element (no delay)</p>\n    </div>\n  </BlurFade>\n  <BlurFade delay={0.2}>\n    <div class=\"rounded-lg bg-card border p-4\">\n      <p class=\"font-medium\">Second element (0.2s delay)</p>\n    </div>\n  </BlurFade>\n  <BlurFade delay={0.4}>\n    <div class=\"rounded-lg bg-card border p-4\">\n      <p class=\"font-medium\">Third element (0.4s delay)</p>\n    </div>\n  </BlurFade>\n  <BlurFade delay={0.6}>\n    <div class=\"rounded-lg bg-card border p-4\">\n      <p class=\"font-medium\">Fourth element (0.6s delay)</p>\n    </div>\n  </BlurFade>\n</div>"
+        },
+        {
+          "title": "Custom Timing",
+          "description": "Control duration and blur amount",
+          "source": "<div class=\"grid grid-cols-2 gap-4 p-8\">\n  <BlurFade duration={0.2} blur=\"2px\">\n    <div class=\"rounded-lg bg-card border p-4 text-center\">\n      <p class=\"text-sm font-medium mb-1\">Fast & Subtle</p>\n      <p class=\"text-xs text-muted-foreground\">0.2s, 2px blur</p>\n    </div>\n  </BlurFade>\n  <BlurFade duration={1.5} blur=\"20px\">\n    <div class=\"rounded-lg bg-card border p-4 text-center\">\n      <p class=\"text-sm font-medium mb-1\">Slow & Dramatic</p>\n      <p class=\"text-xs text-muted-foreground\">1.5s, 20px blur</p>\n    </div>\n  </BlurFade>\n</div>"
+        },
+        {
+          "title": "Card List",
+          "description": "Staggered card animations",
+          "source": "<div class=\"space-y-4 p-8 max-w-md\">\n  <BlurFade delay={0} direction=\"right\">\n    <div class=\"flex items-center gap-4 rounded-lg bg-card border p-4\">\n      <div class=\"h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center\">\n        <div class=\"h-6 w-6 i-lucide-user\" />\n      </div>\n      <div class=\"flex-1\">\n        <h4 class=\"font-semibold\">John Doe</h4>\n        <p class=\"text-sm text-muted-foreground\">Software Engineer</p>\n      </div>\n    </div>\n  </BlurFade>\n  <BlurFade delay={0.15} direction=\"right\">\n    <div class=\"flex items-center gap-4 rounded-lg bg-card border p-4\">\n      <div class=\"h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center\">\n        <div class=\"h-6 w-6 i-lucide-user\" />\n      </div>\n      <div class=\"flex-1\">\n        <h4 class=\"font-semibold\">Jane Smith</h4>\n        <p class=\"text-sm text-muted-foreground\">Product Designer</p>\n      </div>\n    </div>\n  </BlurFade>\n  <BlurFade delay={0.3} direction=\"right\">\n    <div class=\"flex items-center gap-4 rounded-lg bg-card border p-4\">\n      <div class=\"h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center\">\n        <div class=\"h-6 w-6 i-lucide-user\" />\n      </div>\n      <div class=\"flex-1\">\n        <h4 class=\"font-semibold\">Bob Johnson</h4>\n        <p class=\"text-sm text-muted-foreground\">Marketing Manager</p>\n      </div>\n    </div>\n  </BlurFade>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "blur-fade.tsx"
+      ]
+    },
+    "book": {
+      "name": "Book",
+      "fileName": "book",
+      "description": "A 3D book component with multiple variants and customizable styling. Features realistic depth, spine text, bookmarks, and hover animations.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "\"default\" | \"simple\" | \"hardcover\" | \"notebook\"",
+          "description": "Visual style variant",
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "Color",
+          "required": false
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "description": "Text Color",
+          "required": false
+        },
+        {
+          "name": "depth",
+          "type": "number",
+          "description": "Depth",
+          "required": false
+        },
+        {
+          "name": "illustration",
+          "type": "JSX.Element",
+          "description": "Illustration",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "description": "Width",
+          "required": false
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "description": "Height",
+          "required": false
+        },
+        {
+          "name": "spineText",
+          "type": "string",
+          "description": "Spine Text",
+          "required": false
+        },
+        {
+          "name": "bookmark",
+          "type": "boolean",
+          "description": "Bookmark",
+          "required": false
+        },
+        {
+          "name": "bookmarkColor",
+          "type": "string",
+          "description": "Bookmark Color",
+          "required": false
+        },
+        {
+          "name": "animation",
+          "type": "VariantProps<typeof bookVariants>[\"animation\"]",
+          "description": "Animation",
+          "required": false,
+          "defaultValue": "\"default\""
+        },
+        {
+          "name": "size",
+          "type": "VariantProps<typeof bookVariants>[\"size\"]",
+          "description": "Size",
+          "required": false,
+          "defaultValue": "\"md\""
+        },
+        {
+          "name": "orientation",
+          "type": "\"portrait\" | \"landscape\"",
+          "description": "Orientation",
+          "required": false
+        },
+        {
+          "name": "pages",
+          "type": "number",
+          "description": "Pages",
+          "required": false
+        },
+        {
+          "name": "author",
+          "type": "string",
+          "description": "Author",
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title text",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "animation",
+          "values": [
+            "default",
+            "none"
+          ],
+          "defaultValue": "default"
+        },
+        {
+          "name": "size",
+          "values": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "xl"
+          ],
+          "defaultValue": "md"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple book with title and author",
+          "source": "<div class=\"flex justify-center p-8\">\n  <Book\n    title=\"The Great Book\"\n    author=\"John Doe\"\n    color=\"#2563eb\"\n    textColor=\"white\"\n  />\n</div>"
+        },
+        {
+          "title": "Variants",
+          "description": "Different book styles",
+          "source": "<div class=\"flex gap-8 justify-center items-end p-8\">\n  <Book\n    variant=\"default\"\n    title=\"Default\"\n    color=\"#059669\"\n    textColor=\"white\"\n    size=\"sm\"\n  />\n  <Book\n    variant=\"hardcover\"\n    title=\"Hardcover\"\n    color=\"#dc2626\"\n    textColor=\"white\"\n    size=\"sm\"\n  />\n  <Book\n    variant=\"notebook\"\n    title=\"Notebook\"\n    color=\"#7c3aed\"\n    textColor=\"white\"\n    size=\"sm\"\n  />\n</div>"
+        },
+        {
+          "title": "Sizes",
+          "description": "Different book sizes",
+          "source": "<div class=\"flex gap-6 justify-center items-end p-8\">\n  <Book title=\"XS\" size=\"xs\" color=\"#f59e0b\" textColor=\"white\" />\n  <Book title=\"SM\" size=\"sm\" color=\"#ec4899\" textColor=\"white\" />\n  <Book title=\"MD\" size=\"md\" color=\"#8b5cf6\" textColor=\"white\" />\n  <Book title=\"LG\" size=\"lg\" color=\"#06b6d4\" textColor=\"white\" />\n</div>"
+        },
+        {
+          "title": "With Features",
+          "description": "Book with bookmark, spine text, and pages",
+          "source": "<div class=\"flex justify-center p-8\">\n  <Book\n    title=\"Advanced Features\"\n    author=\"Jane Smith\"\n    spineText=\"ADVANCED FEATURES\"\n    bookmark\n    bookmarkColor=\"#fbbf24\"\n    pages={256}\n    color=\"#1e40af\"\n    textColor=\"white\"\n    size=\"lg\"\n  />\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "book.tsx"
       ]
     },
     "button": {
@@ -1025,17 +1585,17 @@
         {
           "title": "Basic Command Menu",
           "description": "A simple command menu with static items and groups",
-          "source": "const [selected, setSelected] = createSignal<string>(\"\");\n\nreturn (\n  <div class=\"flex flex-col gap-4\">\n    <Command\n      class=\"rounded-lg border shadow-md md:min-w-[450px]\"\n      onSelect={(value) => setSelected(value)}\n    >\n      <CommandInput placeholder=\"Type a command or search...\" />\n      <CommandList>\n        <CommandEmpty>No results found.</CommandEmpty>\n        <CommandGroup heading=\"Suggestions\">\n          <CommandItem value=\"calendar\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"calendar\"))} />\n            <span>Calendar</span>\n          </CommandItem>\n          <CommandItem value=\"search-emoji\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"smile\"))} />\n            <span>Search Emoji</span>\n          </CommandItem>\n          <CommandItem value=\"calculator\" disabled>\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"calculator\"))} />\n            <span>Calculator</span>\n          </CommandItem>\n        </CommandGroup>\n        <CommandSeparator />\n        <CommandGroup heading=\"Settings\">\n          <CommandItem value=\"profile\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"user\"))} />\n            <span>Profile</span>\n            <CommandShortcut>⌘P</CommandShortcut>\n          </CommandItem>\n          <CommandItem value=\"billing\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"credit-card\"))} />\n            <span>Billing</span>\n            <CommandShortcut>⌘B</CommandShortcut>\n          </CommandItem>\n          <CommandItem value=\"settings\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n            <span>Settings</span>\n            <CommandShortcut>⌘S</CommandShortcut>\n          </CommandItem>\n        </CommandGroup>\n      </CommandList>\n    </Command>\n    <Show when={selected()}>\n      <p class=\"text-sm text-muted-foreground\">\n        Selected: <strong>{selected()}</strong>\n      </p>\n    </Show>\n  </div>\n);"
+          "source": "const [selected, setSelected] = createSignal<string>(\"\");\n\nreturn (\n  <div class=\"flex flex-col gap-4\">\n    <Command\n      class=\"rounded-lg border shadow-md md:min-w-[450px]\"\n      onSelect={(value) => setSelected(value)}\n    >\n      <CommandInput placeholder=\"Type a command or search...\" />\n      <CommandList>\n        <CommandEmpty>No results found.</CommandEmpty>\n        <CommandGroup heading=\"Suggestions\">\n          <CommandItem value=\"calendar\">\n            <div class=\"h-4 w-4 mr-2 i-lucide-calendar\" />\n            <span>Calendar</span>\n          </CommandItem>\n          <CommandItem value=\"search-emoji\">\n            <div class=\"h-4 w-4 mr-2 i-lucide-smile\" />\n            <span>Search Emoji</span>\n          </CommandItem>\n          <CommandItem value=\"calculator\" disabled>\n            <div class=\"h-4 w-4 mr-2 i-lucide-calculator\" />\n            <span>Calculator</span>\n          </CommandItem>\n        </CommandGroup>\n        <CommandSeparator />\n        <CommandGroup heading=\"Settings\">\n          <CommandItem value=\"profile\">\n            <div class=\"h-4 w-4 mr-2 i-lucide-user\" />\n            <span>Profile</span>\n            <CommandShortcut>⌘P</CommandShortcut>\n          </CommandItem>\n          <CommandItem value=\"billing\">\n            <div class=\"h-4 w-4 mr-2 i-lucide-credit-card\" />\n            <span>Billing</span>\n            <CommandShortcut>⌘B</CommandShortcut>\n          </CommandItem>\n          <CommandItem value=\"settings\">\n            <div class=\"h-4 w-4 mr-2 i-lucide-settings\" />\n            <span>Settings</span>\n            <CommandShortcut>⌘S</CommandShortcut>\n          </CommandItem>\n        </CommandGroup>\n      </CommandList>\n    </Command>\n    <Show when={selected()}>\n      <p class=\"text-sm text-muted-foreground\">\n        Selected: <strong>{selected()}</strong>\n      </p>\n    </Show>\n  </div>\n);"
         },
         {
           "title": "Command Dialog",
           "description": "Command menu in a modal dialog with keyboard shortcut",
-          "source": "const [open, setOpen] = createSignal(false);\n\n// Keyboard shortcut to open (Cmd+K or Ctrl+K)\ncreateEffect(() => {\n  if (typeof window === \"undefined\") return;\n\n  const handleKeyDown = (e: KeyboardEvent) => {\n    if ((e.metaKey || e.ctrlKey) && e.key === \"k\") {\n      e.preventDefault();\n      setOpen((prev) => !prev);\n    }\n  };\n\n  window.addEventListener(\"keydown\", handleKeyDown);\n  return () => window.removeEventListener(\"keydown\", handleKeyDown);\n});\n\nreturn (\n  <>\n    <div class=\"flex flex-col gap-4\">\n      <p class=\"text-sm text-muted-foreground\">\n        Press{\" \"}\n        <kbd class=\"pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100\">\n          <span class=\"text-xs\">⌘</span>K\n        </kbd>{\" \"}\n        to open the command menu\n      </p>\n      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>\n    </div>\n\n    <CommandDialog open={open()} onOpenChange={setOpen}>\n      <Command>\n        <CommandInput placeholder=\"Type a command or search...\" />\n        <CommandList>\n          <CommandEmpty>No results found.</CommandEmpty>\n          <CommandGroup heading=\"Suggestions\">\n            <CommandItem\n              value=\"calendar\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"calendar\"))} />\n              <span>Calendar</span>\n            </CommandItem>\n            <CommandItem\n              value=\"search-emoji\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"smile\"))} />\n              <span>Search Emoji</span>\n            </CommandItem>\n            <CommandItem\n              value=\"calculator\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"calculator\"))} />\n              <span>Calculator</span>\n            </CommandItem>\n          </CommandGroup>\n          <CommandSeparator />\n          <CommandGroup heading=\"Settings\">\n            <CommandItem\n              value=\"profile\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"user\"))} />\n              <span>Profile</span>\n              <CommandShortcut>⌘P</CommandShortcut>\n            </CommandItem>\n            <CommandItem\n              value=\"billing\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"credit-card\"))} />\n              <span>Billing</span>\n              <CommandShortcut>⌘B</CommandShortcut>\n            </CommandItem>\n            <CommandItem\n              value=\"settings\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n              <span>Settings</span>\n              <CommandShortcut>⌘S</CommandShortcut>\n            </CommandItem>\n          </CommandGroup>\n        </CommandList>\n      </Command>\n    </CommandDialog>\n  </>\n);"
+          "source": "const [open, setOpen] = createSignal(false);\n\n// Keyboard shortcut to open (Cmd+K or Ctrl+K)\ncreateEffect(() => {\n  if (typeof window === \"undefined\") return;\n\n  const handleKeyDown = (e: KeyboardEvent) => {\n    if ((e.metaKey || e.ctrlKey) && e.key === \"k\") {\n      e.preventDefault();\n      setOpen((prev) => !prev);\n    }\n  };\n\n  window.addEventListener(\"keydown\", handleKeyDown);\n  return () => window.removeEventListener(\"keydown\", handleKeyDown);\n});\n\nreturn (\n  <>\n    <div class=\"flex flex-col gap-4\">\n      <p class=\"text-sm text-muted-foreground\">\n        Press{\" \"}\n        <kbd class=\"pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100\">\n          <span class=\"text-xs\">⌘</span>K\n        </kbd>{\" \"}\n        to open the command menu\n      </p>\n      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>\n    </div>\n\n    <CommandDialog open={open()} onOpenChange={setOpen}>\n      <Command>\n        <CommandInput placeholder=\"Type a command or search...\" />\n        <CommandList>\n          <CommandEmpty>No results found.</CommandEmpty>\n          <CommandGroup heading=\"Suggestions\">\n            <CommandItem\n              value=\"calendar\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class=\"h-4 w-4 mr-2 i-lucide-calendar\" />\n              <span>Calendar</span>\n            </CommandItem>\n            <CommandItem\n              value=\"search-emoji\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class=\"h-4 w-4 mr-2 i-lucide-smile\" />\n              <span>Search Emoji</span>\n            </CommandItem>\n            <CommandItem\n              value=\"calculator\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class=\"h-4 w-4 mr-2 i-lucide-calculator\" />\n              <span>Calculator</span>\n            </CommandItem>\n          </CommandGroup>\n          <CommandSeparator />\n          <CommandGroup heading=\"Settings\">\n            <CommandItem\n              value=\"profile\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class=\"h-4 w-4 mr-2 i-lucide-user\" />\n              <span>Profile</span>\n              <CommandShortcut>⌘P</CommandShortcut>\n            </CommandItem>\n            <CommandItem\n              value=\"billing\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class=\"h-4 w-4 mr-2 i-lucide-credit-card\" />\n              <span>Billing</span>\n              <CommandShortcut>⌘B</CommandShortcut>\n            </CommandItem>\n            <CommandItem\n              value=\"settings\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class=\"h-4 w-4 mr-2 i-lucide-settings\" />\n              <span>Settings</span>\n              <CommandShortcut>⌘S</CommandShortcut>\n            </CommandItem>\n          </CommandGroup>\n        </CommandList>\n      </Command>\n    </CommandDialog>\n  </>\n);"
         },
         {
           "title": "With Async Search",
           "description": "Command menu with async data loading (simulated API)",
-          "source": "const mockData = [\n  { id: 1, title: \"React Documentation\", category: \"Frameworks\" },\n  { id: 2, title: \"Solid.js Guide\", category: \"Frameworks\" },\n  { id: 3, title: \"Vue.js Tutorial\", category: \"Frameworks\" },\n  { id: 4, title: \"Svelte Handbook\", category: \"Frameworks\" },\n  { id: 5, title: \"TypeScript Docs\", category: \"Languages\" },\n  { id: 6, title: \"JavaScript Guide\", category: \"Languages\" },\n  { id: 7, title: \"CSS Tricks\", category: \"Styling\" },\n  { id: 8, title: \"Tailwind CSS\", category: \"Styling\" },\n];\n\nconst [items, setItems] = createSignal<typeof mockData>([]);\nconst [loading, setLoading] = createSignal(false);\nlet searchTimeout: number | undefined;\n\nconst fakeApiSearch = (query: string): Promise<typeof mockData> => {\n  return new Promise((resolve) => {\n    setTimeout(() => {\n      const filtered = mockData.filter(\n        (item) =>\n          item.title.toLowerCase().includes(query.toLowerCase()) ||\n          item.category.toLowerCase().includes(query.toLowerCase()),\n      );\n      resolve(filtered);\n    }, 400);\n  });\n};\n\n// Show first 4 items initially\nonMount(() => {\n  setItems(mockData.slice(0, 4));\n});\n\nconst handleSearch = (value: string) => {\n  clearTimeout(searchTimeout);\n\n  if (!value) {\n    setItems(mockData.slice(0, 4));\n    setLoading(false);\n    return;\n  }\n\n  setLoading(true);\n  searchTimeout = setTimeout(async () => {\n    try {\n      const results = await fakeApiSearch(value);\n      setItems(results);\n    } catch (error) {\n      console.error(\"Search failed:\", error);\n    } finally {\n      setLoading(false);\n    }\n  }, 300) as unknown as number;\n};\n\nreturn (\n  <Command\n    class=\"rounded-lg border shadow-md md:min-w-[450px]\"\n    onValueChange={handleSearch}\n    loading={loading}\n  >\n    <CommandInput placeholder=\"Search documentation...\" />\n    <CommandList>\n      <CommandEmpty>No results found.</CommandEmpty>\n      <CommandGroup heading=\"Results\">\n        <For each={items()}>\n          {(item) => (\n            <CommandItem value={item.title}>\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-text\"))} />\n              <div class=\"flex flex-col gap-0.5 overflow-hidden\">\n                <span class=\"truncate\">{item.title}</span>\n                <span class=\"text-xs text-muted-foreground truncate\">\n                  {item.category}\n                </span>\n              </div>\n            </CommandItem>\n          )}\n        </For>\n      </CommandGroup>\n    </CommandList>\n  </Command>\n);"
+          "source": "const mockData = [\n  { id: 1, title: \"React Documentation\", category: \"Frameworks\" },\n  { id: 2, title: \"Solid.js Guide\", category: \"Frameworks\" },\n  { id: 3, title: \"Vue.js Tutorial\", category: \"Frameworks\" },\n  { id: 4, title: \"Svelte Handbook\", category: \"Frameworks\" },\n  { id: 5, title: \"TypeScript Docs\", category: \"Languages\" },\n  { id: 6, title: \"JavaScript Guide\", category: \"Languages\" },\n  { id: 7, title: \"CSS Tricks\", category: \"Styling\" },\n  { id: 8, title: \"Tailwind CSS\", category: \"Styling\" },\n];\n\nconst [items, setItems] = createSignal<typeof mockData>([]);\nconst [loading, setLoading] = createSignal(false);\nlet searchTimeout: number | undefined;\n\nconst fakeApiSearch = (query: string): Promise<typeof mockData> => {\n  return new Promise((resolve) => {\n    setTimeout(() => {\n      const filtered = mockData.filter(\n        (item) =>\n          item.title.toLowerCase().includes(query.toLowerCase()) ||\n          item.category.toLowerCase().includes(query.toLowerCase()),\n      );\n      resolve(filtered);\n    }, 400);\n  });\n};\n\n// Show first 4 items initially\nonMount(() => {\n  setItems(mockData.slice(0, 4));\n});\n\nconst handleSearch = (value: string) => {\n  clearTimeout(searchTimeout);\n\n  if (!value) {\n    setItems(mockData.slice(0, 4));\n    setLoading(false);\n    return;\n  }\n\n  setLoading(true);\n  searchTimeout = setTimeout(async () => {\n    try {\n      const results = await fakeApiSearch(value);\n      setItems(results);\n    } catch (error) {\n      console.error(\"Search failed:\", error);\n    } finally {\n      setLoading(false);\n    }\n  }, 300) as unknown as number;\n};\n\nreturn (\n  <Command\n    class=\"rounded-lg border shadow-md md:min-w-[450px]\"\n    onValueChange={handleSearch}\n    loading={loading}\n  >\n    <CommandInput placeholder=\"Search documentation...\" />\n    <CommandList>\n      <CommandEmpty>No results found.</CommandEmpty>\n      <CommandGroup heading=\"Results\">\n        <For each={items()}>\n          {(item) => (\n            <CommandItem value={item.title}>\n              <div class=\"h-4 w-4 mr-2 i-lucide-file-text\" />\n              <div class=\"flex flex-col gap-0.5 overflow-hidden\">\n                <span class=\"truncate\">{item.title}</span>\n                <span class=\"text-xs text-muted-foreground truncate\">\n                  {item.category}\n                </span>\n              </div>\n            </CommandItem>\n          )}\n        </For>\n      </CommandGroup>\n    </CommandList>\n  </Command>\n);"
         }
       ],
       "dependencies": {
@@ -1188,6 +1748,70 @@
       },
       "files": [
         "date-picker.tsx"
+      ]
+    },
+    "device": {
+      "name": "Device",
+      "fileName": "device",
+      "description": "SVG device mockups for showcasing your designs. Includes MacBook, iMac, iPhone, and iPad variants with support for custom content via src prop.",
+      "props": [
+        {
+          "name": "variant",
+          "type": "VariantProps<typeof deviceVariants>[\"variant\"]",
+          "description": "Visual style variant",
+          "required": false,
+          "defaultValue": "\"macbook\""
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Src",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "variant",
+          "values": [
+            "macbook",
+            "imac",
+            "iphone",
+            "ipad"
+          ],
+          "defaultValue": "macbook"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Variants",
+          "description": "Different device mockups",
+          "source": "<div class=\"grid grid-cols-2 gap-8 items-center\">\n  <Device variant=\"iphone\" class=\"w-32 mx-auto\" />\n  <Device variant=\"ipad\" class=\"w-full\" />\n  <Device variant=\"macbook\" class=\"w-full col-span-2\" />\n</div>"
+        },
+        {
+          "title": "With Content",
+          "description": "Devices displaying custom images",
+          "source": "<div class=\"space-y-8\">\n  <Device\n    variant=\"macbook\"\n    src=\"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop\"\n    class=\"w-full max-w-2xl mx-auto\"\n  />\n  <div class=\"flex gap-8 justify-center items-end\">\n    <Device\n      variant=\"iphone\"\n      src=\"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&h=400&auto=format&fit=crop\"\n      class=\"w-32\"\n    />\n    <Device\n      variant=\"ipad\"\n      src=\"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop\"\n      class=\"w-80\"\n    />\n  </div>\n</div>"
+        },
+        {
+          "title": "Presentation",
+          "description": "Showcase on colored background",
+          "source": "<div class=\"bg-gradient-to-br from-primary/20 to-accent p-12 rounded-lg\">\n  <div class=\"grid grid-cols-3 gap-6 items-end\">\n    <Device variant=\"iphone\" class=\"w-full\" />\n    <Device variant=\"macbook\" class=\"w-full col-span-2\" />\n  </div>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "device.tsx"
       ]
     },
     "dialog": {
@@ -1709,6 +2333,111 @@
       },
       "files": [
         "format.tsx"
+      ]
+    },
+    "highlighter": {
+      "name": "Highlighter",
+      "fileName": "highlighter",
+      "description": "An animated text highlighter using rough-notation for hand-drawn style annotations. Supports various annotation types like highlight, underline, box, circle, and more.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "AnnotationType",
+          "description": "Type of input or element",
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "Color",
+          "required": false
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "description": "Stroke Width",
+          "required": false
+        },
+        {
+          "name": "animationDuration",
+          "type": "number",
+          "description": "Animation Duration",
+          "required": false
+        },
+        {
+          "name": "iterations",
+          "type": "number",
+          "description": "Iterations",
+          "required": false
+        },
+        {
+          "name": "padding",
+          "type": "number",
+          "description": "Padding",
+          "required": false
+        },
+        {
+          "name": "multiline",
+          "type": "boolean",
+          "description": "Multiline",
+          "required": false
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "Delay",
+          "required": false
+        },
+        {
+          "name": "reanimateOnScroll",
+          "type": "boolean",
+          "description": "Reanimate On Scroll",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Highlight",
+          "description": "Simple text highlighting with CSS variable colors",
+          "source": "<div class=\"text-center p-8\">\n  <p class=\"text-xl\">\n    This is{\" \"}\n    <Highlighter color=\"hsl(var(--muted))\">\n      highlighted text\n    </Highlighter>{\" \"}\n    with an{\" \"}\n    <Highlighter type=\"underline\" color=\"hsl(var(--primary))\">\n      underline\n    </Highlighter>{\" \"}\n    in a sentence.\n  </p>\n</div>"
+        },
+        {
+          "title": "Annotation Types",
+          "description": "Different annotation styles",
+          "source": "<div class=\"flex flex-col gap-6 p-8\">\n  <p class=\"text-lg\">\n    <Highlighter type=\"highlight\" color=\"#fbbf24\">\n      Highlight\n    </Highlighter>{\" \"}\n    makes text stand out with a background color.\n  </p>\n  <p class=\"text-lg\">\n    <Highlighter type=\"underline\" color=\"#3b82f6\">\n      Underline\n    </Highlighter>{\" \"}\n    draws a line beneath the text.\n  </p>\n  <p class=\"text-lg\">\n    <Highlighter type=\"box\" color=\"#10b981\">\n      Box\n    </Highlighter>{\" \"}\n    surrounds the text with a rectangle.\n  </p>\n  <p class=\"text-lg\">\n    <Highlighter type=\"circle\" color=\"#8b5cf6\">\n      Circle\n    </Highlighter>{\" \"}\n    draws a circle around short text.\n  </p>\n  <p class=\"text-lg\">\n    <Highlighter type=\"strike-through\" color=\"#ef4444\">\n      Strike-through\n    </Highlighter>{\" \"}\n    crosses out the text.\n  </p>\n</div>"
+        },
+        {
+          "title": "Custom Styling",
+          "description": "Customize colors, stroke width, and animation",
+          "source": "<div class=\"flex flex-col gap-6 p-8\">\n  <p class=\"text-xl\">\n    <Highlighter\n      type=\"highlight\"\n      color=\"#ec4899\"\n      strokeWidth={4}\n      animationDuration={1200}\n    >\n      Bold pink highlight\n    </Highlighter>\n  </p>\n  <p class=\"text-xl\">\n    <Highlighter\n      type=\"underline\"\n      color=\"#06b6d4\"\n      strokeWidth={3}\n      iterations={3}\n    >\n      Triple underline\n    </Highlighter>\n  </p>\n  <p class=\"text-xl\">\n    <Highlighter\n      type=\"box\"\n      color=\"#f97316\"\n      strokeWidth={2}\n      padding={10}\n    >\n      Box with extra padding\n    </Highlighter>\n  </p>\n</div>"
+        },
+        {
+          "title": "In Context",
+          "description": "Highlighting key points in content",
+          "source": "<div class=\"max-w-2xl mx-auto p-8\">\n  <h2 class=\"text-3xl font-bold mb-4\">\n    Why Choose{\" \"}\n    <Highlighter type=\"highlight\" color=\"#fbbf24\">\n      Method UI\n    </Highlighter>\n    ?\n  </h2>\n  <p class=\"text-lg mb-4\">\n    Method UI provides a comprehensive set of{\" \"}\n    <Highlighter type=\"underline\" color=\"#3b82f6\">\n      beautifully designed components\n    </Highlighter>{\" \"}\n    that are both{\" \"}\n    <Highlighter type=\"box\" color=\"#10b981\">\n      easy to use\n    </Highlighter>{\" \"}\n    and highly customizable.\n  </p>\n  <p class=\"text-lg\">\n    Built with{\" \"}\n    <Highlighter type=\"circle\" color=\"#8b5cf6\">\n      SolidJS\n    </Highlighter>\n    , it offers excellent performance and a great developer experience.\n  </p>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "rough-notation"
+        ]
+      },
+      "files": [
+        "highlighter.tsx"
       ]
     },
     "hover-card": {
@@ -2463,6 +3192,97 @@
         "menu.tsx"
       ]
     },
+    "number-ticker": {
+      "name": "NumberTicker",
+      "fileName": "number-ticker",
+      "description": "An animated number counter that smoothly animates from a start value to an end value when it enters the viewport. Perfect for showcasing statistics and metrics.",
+      "props": [
+        {
+          "name": "value",
+          "type": "number",
+          "description": "Current value",
+          "required": true
+        },
+        {
+          "name": "startValue",
+          "type": "number",
+          "description": "Start Value",
+          "required": false
+        },
+        {
+          "name": "direction",
+          "type": "\"up\" | \"down\"",
+          "description": "Direction",
+          "required": false
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "Delay",
+          "required": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Duration",
+          "required": false
+        },
+        {
+          "name": "decimalPlaces",
+          "type": "number",
+          "description": "Decimal Places",
+          "required": false
+        },
+        {
+          "name": "ease",
+          "type": "number",
+          "description": "Ease",
+          "required": false
+        },
+        {
+          "name": "reanimateOnScroll",
+          "type": "boolean",
+          "description": "Reanimate On Scroll",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple number counter animating upward",
+          "source": "<div class=\"flex flex-col items-center gap-4 p-8\">\n  <NumberTicker value={12345} class=\"text-4xl font-bold\" />\n  <p class=\"text-sm text-muted-foreground\">\n    Number animates when scrolled into view\n  </p>\n</div>"
+        },
+        {
+          "title": "Statistics Cards",
+          "description": "Number tickers showing various statistics",
+          "source": "<div class=\"grid grid-cols-1 md:grid-cols-3 gap-4\">\n  <div class=\"rounded-lg border border-border p-6 text-center\">\n    <div class=\"h-12 w-12 i-lucide-users mx-auto mb-3 text-blue-500\" />\n    <NumberTicker value={1234} class=\"text-3xl font-bold block mb-2\" />\n    <p class=\"text-sm text-muted-foreground\">Total Users</p>\n  </div>\n  <div class=\"rounded-lg border border-border p-6 text-center\">\n    <div class=\"h-12 w-12 i-lucide-trending-up mx-auto mb-3 text-green-500\" />\n    <NumberTicker\n      value={98.5}\n      decimalPlaces={1}\n      class=\"text-3xl font-bold block mb-2\"\n    />\n    <p class=\"text-sm text-muted-foreground\">Success Rate %</p>\n  </div>\n  <div class=\"rounded-lg border border-border p-6 text-center\">\n    <div class=\"h-12 w-12 i-lucide-activity mx-auto mb-3 text-purple-500\" />\n    <NumberTicker value={45678} class=\"text-3xl font-bold block mb-2\" />\n    <p class=\"text-sm text-muted-foreground\">Active Sessions</p>\n  </div>\n</div>"
+        },
+        {
+          "title": "With Decimals",
+          "description": "Number ticker with decimal places",
+          "source": "<div class=\"flex flex-col items-center gap-4 p-8\">\n  <div class=\"text-center\">\n    <NumberTicker\n      value={99.99}\n      decimalPlaces={2}\n      class=\"text-5xl font-bold\"\n    />\n    <p class=\"text-sm text-muted-foreground mt-2\">Price in USD</p>\n  </div>\n</div>"
+        },
+        {
+          "title": "Custom Duration & Ease",
+          "description": "Control animation speed and easing strength",
+          "source": "<div class=\"grid grid-cols-1 md:grid-cols-3 gap-6 p-8\">\n  <div class=\"text-center\">\n    <p class=\"text-sm text-muted-foreground mb-2\">Fast (1s)</p>\n    <NumberTicker\n      value={5000}\n      duration={1000}\n      class=\"text-4xl font-bold\"\n    />\n  </div>\n  <div class=\"text-center\">\n    <p class=\"text-sm text-muted-foreground mb-2\">Slow (3s)</p>\n    <NumberTicker\n      value={5000}\n      duration={3000}\n      class=\"text-4xl font-bold\"\n    />\n  </div>\n  <div class=\"text-center\">\n    <p class=\"text-sm text-muted-foreground mb-2\">\n      Slow + Strong Ease (3s)\n    </p>\n    <NumberTicker\n      value={5000}\n      duration={3000}\n      ease={8}\n      class=\"text-4xl font-bold\"\n    />\n  </div>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "number-ticker.tsx"
+      ]
+    },
     "pin-input": {
       "name": "PinInput",
       "fileName": "pin-input",
@@ -2765,6 +3585,68 @@
       },
       "files": [
         "progress.tsx"
+      ]
+    },
+    "progressive-blur": {
+      "name": "ProgressiveBlur",
+      "fileName": "progressive-blur",
+      "description": "A progressive blur effect overlay that creates a smooth gradient blur transition. Perfect for fading content at the edges of scrollable areas or creating depth effects.",
+      "props": [
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "height",
+          "type": "string",
+          "description": "Height",
+          "required": false
+        },
+        {
+          "name": "position",
+          "type": "\"top\" | \"bottom\" | \"both\"",
+          "description": "Position",
+          "required": false
+        },
+        {
+          "name": "blurLevels",
+          "type": "number[]",
+          "description": "Blur Levels",
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Bottom Fade",
+          "description": "Blur effect fading from bottom",
+          "source": "<div class=\"relative h-96 overflow-hidden rounded-lg border bg-card\">\n  <div class=\"p-6 space-y-4\">\n    <h3 class=\"text-xl font-bold\">Scrollable Content</h3>\n    <p class=\"text-muted-foreground\">\n      This content has a progressive blur effect at the bottom, creating\n      a smooth fade that indicates more content below.\n    </p>\n    <div class=\"space-y-2\">\n      {Array.from({ length: 20 }).map((_, i) => (\n        <div class=\"p-3 rounded bg-muted\">Item {i + 1}</div>\n      ))}\n    </div>\n  </div>\n  <ProgressiveBlur position=\"bottom\" height=\"40%\" />\n</div>"
+        },
+        {
+          "title": "Top Fade",
+          "description": "Blur effect fading from top",
+          "source": "<div class=\"relative h-96 overflow-hidden rounded-lg border bg-card\">\n  <div class=\"p-6 space-y-4\">\n    <div class=\"space-y-2\">\n      {Array.from({ length: 20 }).map((_, i) => (\n        <div class=\"p-3 rounded bg-muted\">Item {i + 1}</div>\n      ))}\n    </div>\n  </div>\n  <ProgressiveBlur position=\"top\" height=\"30%\" />\n</div>"
+        },
+        {
+          "title": "Custom Height",
+          "description": "Control the blur area height",
+          "source": "<div class=\"grid grid-cols-2 gap-4\">\n  <div class=\"relative h-64 overflow-hidden rounded-lg border bg-card\">\n    <div class=\"p-4 space-y-2\">\n      <h4 class=\"font-semibold mb-2\">Small (20%)</h4>\n      {Array.from({ length: 15 }).map((_, i) => (\n        <div class=\"p-2 rounded bg-muted text-sm\">Item {i + 1}</div>\n      ))}\n    </div>\n    <ProgressiveBlur position=\"bottom\" height=\"20%\" />\n  </div>\n  <div class=\"relative h-64 overflow-hidden rounded-lg border bg-card\">\n    <div class=\"p-4 space-y-2\">\n      <h4 class=\"font-semibold mb-2\">Large (50%)</h4>\n      {Array.from({ length: 15 }).map((_, i) => (\n        <div class=\"p-2 rounded bg-muted text-sm\">Item {i + 1}</div>\n      ))}\n    </div>\n    <ProgressiveBlur position=\"bottom\" height=\"50%\" />\n  </div>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "progressive-blur.tsx"
       ]
     },
     "qr-code": {
@@ -3200,12 +4082,12 @@
         {
           "title": "With Menu Items",
           "description": "Sidebar with clickable menu items and icons",
-          "source": "const items = [\n  { title: \"Home\", icon: \"home\", active: true },\n  { title: \"Inbox\", icon: \"inbox\", active: false },\n  { title: \"Calendar\", icon: \"calendar\", active: false },\n  { title: \"Search\", icon: \"search\", active: false },\n  { title: \"Settings\", icon: \"settings\", active: false },\n];\n\nreturn (\n  <div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n    <Sidebar>\n      <SidebarHeader>\n        <div class=\"flex items-center gap-2\">\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n            <span class=\"text-sm font-bold\">A</span>\n          </div>\n          <span class=\"font-semibold\">Application</span>\n        </div>\n      </SidebarHeader>\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel>Menu</SidebarGroupLabel>\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <For each={items}>\n                {(item) => (\n                  <SidebarMenuItem>\n                    <SidebarMenuButton\n                      isActive={item.active}\n                      tooltip={item.title}\n                    >\n                      <div class={cn(\"h-4 w-4\", icon(item.icon))} />\n                      <span>{item.title}</span>\n                    </SidebarMenuButton>\n                  </SidebarMenuItem>\n                )}\n              </For>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n    </Sidebar>\n    <div class=\"flex-1 p-6\">\n      <h2 class=\"text-2xl font-bold\">Dashboard</h2>\n      <p class=\"text-muted-foreground\">Welcome to your dashboard.</p>\n    </div>\n  </div>\n);"
+          "source": "<div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n  <Sidebar>\n    <SidebarHeader>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n          <span class=\"text-sm font-bold\">A</span>\n        </div>\n        <span class=\"font-semibold\">Application</span>\n      </div>\n    </SidebarHeader>\n    <SidebarContent>\n      <SidebarGroup>\n        <SidebarGroupLabel>Menu</SidebarGroupLabel>\n        <SidebarGroupContent>\n          <SidebarMenu>\n            <SidebarMenuItem>\n              <SidebarMenuButton isActive={true} tooltip=\"Home\">\n                <div class=\"h-4 w-4 i-lucide-home\" />\n                <span>Home</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Inbox\">\n                <div class=\"h-4 w-4 i-lucide-inbox\" />\n                <span>Inbox</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Calendar\">\n                <div class=\"h-4 w-4 i-lucide-calendar\" />\n                <span>Calendar</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Search\">\n                <div class=\"h-4 w-4 i-lucide-search\" />\n                <span>Search</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Settings\">\n                <div class=\"h-4 w-4 i-lucide-settings\" />\n                <span>Settings</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n          </SidebarMenu>\n        </SidebarGroupContent>\n      </SidebarGroup>\n    </SidebarContent>\n  </Sidebar>\n  <div class=\"flex-1 p-6\">\n    <h2 class=\"text-2xl font-bold\">Dashboard</h2>\n    <p class=\"text-muted-foreground\">Welcome to your dashboard.</p>\n  </div>\n</div>"
         },
         {
           "title": "Collapsible Sidebar",
           "description": "Sidebar with collapse/expand functionality",
-          "source": "const [collapsed, setCollapsed] = createSignal(false);\n\nconst items = [\n  { title: \"Dashboard\", icon: \"layout-dashboard\" },\n  { title: \"Projects\", icon: \"folder\" },\n  { title: \"Team\", icon: \"users\" },\n  { title: \"Analytics\", icon: \"bar-chart\" },\n];\n\nreturn (\n  <div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n    <Sidebar collapsed={collapsed()} onCollapsedChange={setCollapsed}>\n      <SidebarHeader>\n        <div class=\"flex items-center gap-2\">\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n            <span class=\"text-sm font-bold\">W</span>\n          </div>\n          {!collapsed() && <span class=\"font-semibold\">Workspace</span>}\n        </div>\n      </SidebarHeader>\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel>Navigation</SidebarGroupLabel>\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <For each={items}>\n                {(item) => (\n                  <SidebarMenuItem>\n                    <SidebarMenuButton tooltip={item.title}>\n                      <div class={cn(\"h-4 w-4\", icon(item.icon))} />\n                      {!collapsed() && <span>{item.title}</span>}\n                    </SidebarMenuButton>\n                  </SidebarMenuItem>\n                )}\n              </For>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter>\n        <Show\n          when={!collapsed()}\n          fallback={\n            <div class=\"flex justify-center\">\n              <SidebarTrigger>\n                <Button variant=\"ghost\" size=\"icon\">\n                  <div\n                    class={cn(\n                      \"h-4 w-4 transition-transform rotate-180\",\n                      icon(\"panel-left\"),\n                    )}\n                  />\n                </Button>\n              </SidebarTrigger>\n            </div>\n          }\n        >\n          <div class=\"flex items-center gap-2\">\n            <div class=\"flex h-8 w-8 items-center justify-center rounded-full bg-muted\">\n              <div class={cn(\"h-4 w-4\", icon(\"user\"))} />\n            </div>\n            <div class=\"flex flex-col flex-1\">\n              <span class=\"text-sm font-medium\">John Doe</span>\n              <span class=\"text-xs text-muted-foreground\">\n                john@example.com\n              </span>\n            </div>\n            <SidebarTrigger class=\"ml-auto\">\n              <Button variant=\"ghost\" size=\"icon\">\n                <div class={cn(\"h-4 w-4\", icon(\"panel-left\"))} />\n              </Button>\n            </SidebarTrigger>\n          </div>\n        </Show>\n      </SidebarFooter>\n    </Sidebar>\n    <div class=\"flex-1 p-6\">\n      <div class=\"flex items-center justify-between mb-4\">\n        <h2 class=\"text-2xl font-bold\">Content Area</h2>\n        <Button onClick={() => setCollapsed(!collapsed())}>\n          Toggle Sidebar\n        </Button>\n      </div>\n      <p class=\"text-muted-foreground\">\n        Click the button or use the sidebar toggle to collapse/expand\n        the sidebar.\n      </p>\n    </div>\n  </div>\n);"
+          "source": "const [collapsed, setCollapsed] = createSignal(false);\n\nreturn (\n  <div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n    <Sidebar collapsed={collapsed()} onCollapsedChange={setCollapsed}>\n      <SidebarHeader>\n        <div class=\"flex items-center gap-2\">\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n            <span class=\"text-sm font-bold\">W</span>\n          </div>\n          {!collapsed() && <span class=\"font-semibold\">Workspace</span>}\n        </div>\n      </SidebarHeader>\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel>Navigation</SidebarGroupLabel>\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Dashboard\">\n                  <div class=\"h-4 w-4 i-lucide-layout-dashboard\" />\n                  {!collapsed() && <span>Dashboard</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Projects\">\n                  <div class=\"h-4 w-4 i-lucide-folder\" />\n                  {!collapsed() && <span>Projects</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Team\">\n                  <div class=\"h-4 w-4 i-lucide-users\" />\n                  {!collapsed() && <span>Team</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Analytics\">\n                  <div class=\"h-4 w-4 i-lucide-bar-chart\" />\n                  {!collapsed() && <span>Analytics</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter>\n        <Show\n          when={!collapsed()}\n          fallback={\n            <div class=\"flex justify-center\">\n              <SidebarTrigger>\n                <Button variant=\"ghost\" size=\"icon\">\n                  <div class=\"h-4 w-4 transition-transform rotate-180 i-lucide-panel-left\" />\n                </Button>\n              </SidebarTrigger>\n            </div>\n          }\n        >\n          <div class=\"flex items-center gap-2\">\n            <div class=\"flex h-8 w-8 items-center justify-center rounded-full bg-muted\">\n              <div class=\"h-4 w-4 i-lucide-user\" />\n            </div>\n            <div class=\"flex flex-col flex-1\">\n              <span class=\"text-sm font-medium\">John Doe</span>\n              <span class=\"text-xs text-muted-foreground\">\n                john@example.com\n              </span>\n            </div>\n            <SidebarTrigger class=\"ml-auto\">\n              <Button variant=\"ghost\" size=\"icon\">\n                <div class=\"h-4 w-4 i-lucide-panel-left\" />\n              </Button>\n            </SidebarTrigger>\n          </div>\n        </Show>\n      </SidebarFooter>\n    </Sidebar>\n    <div class=\"flex-1 p-6\">\n      <div class=\"flex items-center justify-between mb-4\">\n        <h2 class=\"text-2xl font-bold\">Content Area</h2>\n        <Button onClick={() => setCollapsed(!collapsed())}>\n          Toggle Sidebar\n        </Button>\n      </div>\n      <p class=\"text-muted-foreground\">\n        Click the button or use the sidebar toggle to collapse/expand\n        the sidebar.\n      </p>\n    </div>\n  </div>\n);"
         }
       ],
       "dependencies": {
@@ -3463,6 +4345,76 @@
         "slider.tsx"
       ]
     },
+    "snippet": {
+      "name": "Snippet",
+      "fileName": "snippet",
+      "description": "A code snippet component with syntax highlighting, copy functionality, and tab support for multiple code examples. Perfect for documentation and showcasing code.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(details: { value: string }) => void",
+          "description": "On Value Change",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple code snippet with copy button",
+          "source": "const code = \"npm install method-ui\";\nreturn (\n  <div class=\"group w-full gap-0 overflow-hidden rounded-md max-w-2xl\">\n    <SnippetHeader>\n      <span class=\"text-sm font-medium px-2\">Install</span>\n      <SnippetCopyButton value={code} />\n    </SnippetHeader>\n    <SnippetContent>{code}</SnippetContent>\n  </div>\n);"
+        },
+        {
+          "title": "Multiple Tabs",
+          "description": "Code snippet with multiple language examples",
+          "source": "<Snippet defaultValue=\"npm\" class=\"max-w-2xl\">\n  <SnippetHeader>\n    <SnippetTabsList>\n      <SnippetIndicator />\n      <SnippetTabsTrigger value=\"npm\">npm</SnippetTabsTrigger>\n      <SnippetTabsTrigger value=\"yarn\">yarn</SnippetTabsTrigger>\n      <SnippetTabsTrigger value=\"pnpm\">pnpm</SnippetTabsTrigger>\n      <SnippetTabsTrigger value=\"bun\">bun</SnippetTabsTrigger>\n    </SnippetTabsList>\n    <SnippetCopyButton value=\"npm install @method-ui/core\" />\n  </SnippetHeader>\n  <SnippetTabsContent value=\"npm\">\n    npm install @method-ui/core\n  </SnippetTabsContent>\n  <SnippetTabsContent value=\"yarn\">\n    yarn add @method-ui/core\n  </SnippetTabsContent>\n  <SnippetTabsContent value=\"pnpm\">\n    pnpm add @method-ui/core\n  </SnippetTabsContent>\n  <SnippetTabsContent value=\"bun\">\n    bun add @method-ui/core\n  </SnippetTabsContent>\n</Snippet>"
+        },
+        {
+          "title": "Code Example",
+          "description": "Snippet with actual code content",
+          "source": "const codeExample = `import { Button } from \"@method-ui/core\";\n\nexport default function App() {\n  return (\n    <Button onClick={() => alert(\"Hello!\")}>\n      Click me\n    </Button>\n  );\n}`;\n\n        return (\n          <Snippet defaultValue=\"tsx\" class=\"max-w-2xl\">\n            <SnippetHeader>\n              <SnippetTabsList>\n                <SnippetIndicator />\n                <SnippetTabsTrigger value=\"tsx\">\n                  <div class=\"h-4 w-4 i-lucide-file-code\" />\n                  App.tsx\n                </SnippetTabsTrigger>\n              </SnippetTabsList>\n              <SnippetCopyButton value={codeExample} />\n            </SnippetHeader>\n            <SnippetTabsContent value=\"tsx\">{codeExample}</SnippetTabsContent>\n          </Snippet>\n        );"
+        },
+        {
+          "title": "Multiple Files",
+          "description": "Snippet showing multiple file examples",
+          "source": "const componentCode = `export function Hello() {\n  return <h1>Hello World!</h1>;\n}`;\n\n        const styleCode = `.container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}`;\n\n        const configCode = `export default {\n  name: \"my-app\",\n  version: \"1.0.0\"\n};`;\n\n        return (\n          <Snippet defaultValue=\"component\" class=\"max-w-2xl\">\n            <SnippetHeader>\n              <SnippetTabsList>\n                <SnippetIndicator />\n                <SnippetTabsTrigger value=\"component\">\n                  <div class=\"h-4 w-4 i-lucide-file-code\" />\n                  Component.tsx\n                </SnippetTabsTrigger>\n                <SnippetTabsTrigger value=\"styles\">\n                  <div class=\"h-4 w-4 i-lucide-palette\" />\n                  styles.css\n                </SnippetTabsTrigger>\n                <SnippetTabsTrigger value=\"config\">\n                  <div class=\"h-4 w-4 i-lucide-settings\" />\n                  config.ts\n                </SnippetTabsTrigger>\n              </SnippetTabsList>\n              <SnippetCopyButton value={componentCode} />\n            </SnippetHeader>\n            <SnippetTabsContent value=\"component\">\n              {componentCode}\n            </SnippetTabsContent>\n            <SnippetTabsContent value=\"styles\">{styleCode}</SnippetTabsContent>\n            <SnippetTabsContent value=\"config\">{configCode}</SnippetTabsContent>\n          </Snippet>\n        );"
+        }
+      ],
+      "dependencies": {
+        "components": [
+          "button",
+          "tabs"
+        ],
+        "packages": []
+      },
+      "files": [
+        "snippet.tsx"
+      ]
+    },
     "switch": {
       "name": "Switch",
       "fileName": "switch",
@@ -3689,6 +4641,79 @@
       },
       "files": [
         "tabs.tsx"
+      ]
+    },
+    "text-generate-effect": {
+      "name": "TextGenerateEffect",
+      "fileName": "text-generate-effect",
+      "description": "A text animation component that reveals words sequentially with a smooth fade-in and blur effect. Perfect for hero sections and attention-grabbing headlines.",
+      "props": [
+        {
+          "name": "words",
+          "type": "string",
+          "description": "Words",
+          "required": true
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Duration",
+          "required": false
+        },
+        {
+          "name": "stagger",
+          "type": "number",
+          "description": "Stagger",
+          "required": false
+        },
+        {
+          "name": "startDelay",
+          "type": "number",
+          "description": "Start Delay",
+          "required": false
+        },
+        {
+          "name": "filter",
+          "type": "boolean",
+          "description": "Filter",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple text generation effect",
+          "source": "<div class=\"p-8\">\n  <TextGenerateEffect\n    words=\"This text appears word by word with a smooth animation\"\n    class=\"text-2xl font-bold\"\n  />\n</div>"
+        },
+        {
+          "title": "Hero Heading",
+          "description": "Large heading with text generation effect",
+          "source": "<div class=\"text-center p-8\">\n  <TextGenerateEffect\n    words=\"Build beautiful interfaces with Method UI\"\n    class=\"text-4xl md:text-5xl font-bold\"\n  />\n</div>"
+        },
+        {
+          "title": "Custom Timing",
+          "description": "Control animation speed and delays",
+          "source": "<div class=\"flex flex-col gap-8 p-8\">\n  <div>\n    <p class=\"text-sm text-muted-foreground mb-2\">\n      Fast (100ms stagger)\n    </p>\n    <TextGenerateEffect\n      words=\"Quick animation with short delays between words\"\n      class=\"text-xl font-semibold\"\n      stagger={100}\n      duration={300}\n    />\n  </div>\n  <div>\n    <p class=\"text-sm text-muted-foreground mb-2\">\n      Slow (400ms stagger)\n    </p>\n    <TextGenerateEffect\n      words=\"Slower animation with longer delays between words\"\n      class=\"text-xl font-semibold\"\n      stagger={400}\n      duration={800}\n    />\n  </div>\n</div>"
+        },
+        {
+          "title": "No Blur Filter",
+          "description": "Text generation without blur effect",
+          "source": "<div class=\"p-8\">\n  <TextGenerateEffect\n    words=\"This animation appears without the blur effect for a simpler transition\"\n    class=\"text-2xl font-bold\"\n    filter={false}\n  />\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "text-generate-effect.tsx"
       ]
     },
     "theme": {
@@ -4006,12 +5031,136 @@
       "files": [
         "tree-view.tsx"
       ]
+    },
+    "wobble-card": {
+      "name": "WobbleCard",
+      "fileName": "wobble-card",
+      "description": "An interactive card component that responds to mouse movement with smooth wobble animations. Features dynamic scaling and translation effects for an engaging user experience.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": true
+        },
+        {
+          "name": "containerClass",
+          "type": "string",
+          "description": "Container Class",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple wobble card with content",
+          "source": "<WobbleCard class=\"p-8\" containerClass=\"max-w-md\">\n  <h3 class=\"text-2xl font-bold mb-2\">Wobble Card</h3>\n  <p class=\"text-muted-foreground\">\n    Move your mouse over this card to see the wobble effect in action.\n  </p>\n</WobbleCard>"
+        },
+        {
+          "title": "With Image",
+          "description": "Card with image content",
+          "source": "<WobbleCard class=\"p-0\" containerClass=\"max-w-sm\">\n  <div class=\"aspect-video bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center\">\n    <div class=\"h-16 w-16 i-lucide-sparkles text-white\" />\n  </div>\n  <div class=\"p-6\">\n    <h3 class=\"text-xl font-bold mb-2\">Image Card</h3>\n    <p class=\"text-sm text-muted-foreground\">\n      Wobble effect works great with images and mixed content.\n    </p>\n  </div>\n</WobbleCard>"
+        },
+        {
+          "title": "Grid Layout",
+          "description": "Multiple wobble cards in a grid",
+          "source": "<div class=\"grid grid-cols-2 gap-4 max-w-2xl\">\n  <WobbleCard class=\"p-6\" containerClass=\"h-48\">\n    <div class=\"h-10 w-10 mb-3 i-lucide-zap text-primary\" />\n    <h4 class=\"font-semibold mb-1\">Fast</h4>\n    <p class=\"text-sm text-muted-foreground\">\n      Lightning quick performance\n    </p>\n  </WobbleCard>\n  <WobbleCard class=\"p-6\" containerClass=\"h-48\">\n    <div class=\"h-10 w-10 mb-3 i-lucide-shield text-primary\" />\n    <h4 class=\"font-semibold mb-1\">Secure</h4>\n    <p class=\"text-sm text-muted-foreground\">\n      Built with security first\n    </p>\n  </WobbleCard>\n  <WobbleCard class=\"p-6\" containerClass=\"h-48\">\n    <div class=\"h-10 w-10 mb-3 i-lucide-palette text-primary\" />\n    <h4 class=\"font-semibold mb-1\">Beautiful</h4>\n    <p class=\"text-sm text-muted-foreground\">Stunning visual design</p>\n  </WobbleCard>\n  <WobbleCard class=\"p-6\" containerClass=\"h-48\">\n    <div class=\"h-10 w-10 mb-3 i-lucide-code text-primary\" />\n    <h4 class=\"font-semibold mb-1\">Developer Friendly</h4>\n    <p class=\"text-sm text-muted-foreground\">Easy to integrate</p>\n  </WobbleCard>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "wobble-card.tsx"
+      ]
+    },
+    "video": {
+      "name": "Video",
+      "fileName": "video",
+      "description": "A video player component powered by Plyr. Supports HTML5 video, YouTube, and Vimeo with a clean interface.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "options",
+          "type": "any",
+          "description": "Options",
+          "required": false
+        },
+        {
+          "name": "provider",
+          "type": "\"html5\" | \"youtube\" | \"vimeo\"",
+          "description": "Provider",
+          "required": false
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Src",
+          "required": false
+        },
+        {
+          "name": "poster",
+          "type": "string",
+          "description": "Poster",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic HTML5 Video",
+          "description": "Simple HTML5 video player",
+          "source": "<Video\n  src=\"https://cdn.plyr.io/static/demo.mp4\"\n  poster=\"https://cdn.plyr.io/static/demo.jpg\"\n  class=\"max-w-2xl\"\n>\n  <track\n    kind=\"captions\"\n    label=\"English\"\n    srclang=\"en\"\n    src=\"https://cdn.plyr.io/static/demo.vtt\"\n    default\n  />\n</Video>"
+        },
+        {
+          "title": "YouTube Video",
+          "description": "Embedded YouTube video with Plyr controls",
+          "source": "<Video\n  provider=\"youtube\"\n  src=\"bTqVqk7FSmY\"\n  class=\"max-w-2xl\"\n  options={{\n    youtube: { noCookie: true },\n  }}\n/>"
+        },
+        {
+          "title": "Vimeo Video",
+          "description": "Embedded Vimeo video with Plyr controls",
+          "source": "<Video\n  provider=\"vimeo\"\n  src=\"76979871\"\n  class=\"max-w-2xl\"\n  options={{\n    vimeo: { byline: false, portrait: false, title: false },\n  }}\n/>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "video.tsx"
+      ]
     }
   },
   "componentList": [
+    "3d-card",
     "accordion",
+    "alert",
     "angle-slider",
+    "aspect-ratio",
+    "award",
     "badge",
+    "blur-fade",
+    "book",
     "button",
     "card",
     "chart",
@@ -4019,10 +5168,12 @@
     "color-picker",
     "command",
     "date-picker",
+    "device",
     "dialog",
     "file-upload",
     "floating-panel",
     "format",
+    "highlighter",
     "hover-card",
     "input",
     "json-tree-view",
@@ -4030,8 +5181,10 @@
     "listbox",
     "marquee",
     "menu",
+    "number-ticker",
     "pin-input",
     "progress",
+    "progressive-blur",
     "qr-code",
     "radio-group",
     "select",
@@ -4040,11 +5193,15 @@
     "signature-pad",
     "skeleton",
     "slider",
+    "snippet",
     "switch",
     "tabs",
+    "text-generate-effect",
     "theme",
     "toast",
     "tooltip",
-    "tree-view"
+    "tree-view",
+    "wobble-card",
+    "video"
   ]
 }

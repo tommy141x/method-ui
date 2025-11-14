@@ -345,14 +345,6 @@ export const meta: ComponentMeta<SidebarProps> = {
       title: "With Menu Items",
       description: "Sidebar with clickable menu items and icons",
       code: () => {
-        const items = [
-          { title: "Home", icon: "home", active: true },
-          { title: "Inbox", icon: "inbox", active: false },
-          { title: "Calendar", icon: "calendar", active: false },
-          { title: "Search", icon: "search", active: false },
-          { title: "Settings", icon: "settings", active: false },
-        ];
-
         return (
           <div class="flex h-[400px] w-full overflow-hidden rounded-lg border">
             <Sidebar>
@@ -369,19 +361,36 @@ export const meta: ComponentMeta<SidebarProps> = {
                   <SidebarGroupLabel>Menu</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
-                      <For each={items}>
-                        {(item) => (
-                          <SidebarMenuItem>
-                            <SidebarMenuButton
-                              isActive={item.active}
-                              tooltip={item.title}
-                            >
-                              <div class={cn("h-4 w-4", icon(item.icon))} />
-                              <span>{item.title}</span>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        )}
-                      </For>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton isActive={true} tooltip="Home">
+                          <div class="h-4 w-4 i-lucide-home" />
+                          <span>Home</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Inbox">
+                          <div class="h-4 w-4 i-lucide-inbox" />
+                          <span>Inbox</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Calendar">
+                          <div class="h-4 w-4 i-lucide-calendar" />
+                          <span>Calendar</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Search">
+                          <div class="h-4 w-4 i-lucide-search" />
+                          <span>Search</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Settings">
+                          <div class="h-4 w-4 i-lucide-settings" />
+                          <span>Settings</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
@@ -401,13 +410,6 @@ export const meta: ComponentMeta<SidebarProps> = {
       code: () => {
         const [collapsed, setCollapsed] = createSignal(false);
 
-        const items = [
-          { title: "Dashboard", icon: "layout-dashboard" },
-          { title: "Projects", icon: "folder" },
-          { title: "Team", icon: "users" },
-          { title: "Analytics", icon: "bar-chart" },
-        ];
-
         return (
           <div class="flex h-[400px] w-full overflow-hidden rounded-lg border">
             <Sidebar collapsed={collapsed()} onCollapsedChange={setCollapsed}>
@@ -424,16 +426,30 @@ export const meta: ComponentMeta<SidebarProps> = {
                   <SidebarGroupLabel>Navigation</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
-                      <For each={items}>
-                        {(item) => (
-                          <SidebarMenuItem>
-                            <SidebarMenuButton tooltip={item.title}>
-                              <div class={cn("h-4 w-4", icon(item.icon))} />
-                              {!collapsed() && <span>{item.title}</span>}
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        )}
-                      </For>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Dashboard">
+                          <div class="h-4 w-4 i-lucide-layout-dashboard" />
+                          {!collapsed() && <span>Dashboard</span>}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Projects">
+                          <div class="h-4 w-4 i-lucide-folder" />
+                          {!collapsed() && <span>Projects</span>}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Team">
+                          <div class="h-4 w-4 i-lucide-users" />
+                          {!collapsed() && <span>Team</span>}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Analytics">
+                          <div class="h-4 w-4 i-lucide-bar-chart" />
+                          {!collapsed() && <span>Analytics</span>}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
@@ -445,12 +461,7 @@ export const meta: ComponentMeta<SidebarProps> = {
                     <div class="flex justify-center">
                       <SidebarTrigger>
                         <Button variant="ghost" size="icon">
-                          <div
-                            class={cn(
-                              "h-4 w-4 transition-transform rotate-180",
-                              icon("panel-left"),
-                            )}
-                          />
+                          <div class="h-4 w-4 transition-transform rotate-180 i-lucide-panel-left" />
                         </Button>
                       </SidebarTrigger>
                     </div>
@@ -458,7 +469,7 @@ export const meta: ComponentMeta<SidebarProps> = {
                 >
                   <div class="flex items-center gap-2">
                     <div class="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-                      <div class={cn("h-4 w-4", icon("user"))} />
+                      <div class="h-4 w-4 i-lucide-user" />
                     </div>
                     <div class="flex flex-col flex-1">
                       <span class="text-sm font-medium">John Doe</span>
@@ -468,7 +479,7 @@ export const meta: ComponentMeta<SidebarProps> = {
                     </div>
                     <SidebarTrigger class="ml-auto">
                       <Button variant="ghost" size="icon">
-                        <div class={cn("h-4 w-4", icon("panel-left"))} />
+                        <div class="h-4 w-4 i-lucide-panel-left" />
                       </Button>
                     </SidebarTrigger>
                   </div>

@@ -839,32 +839,32 @@ export const meta: ComponentMeta<CommandProps> = {
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup heading="Suggestions">
                   <CommandItem value="calendar">
-                    <div class={cn("h-4 w-4 mr-2", icon("calendar"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-calendar" />
                     <span>Calendar</span>
                   </CommandItem>
                   <CommandItem value="search-emoji">
-                    <div class={cn("h-4 w-4 mr-2", icon("smile"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-smile" />
                     <span>Search Emoji</span>
                   </CommandItem>
                   <CommandItem value="calculator" disabled>
-                    <div class={cn("h-4 w-4 mr-2", icon("calculator"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-calculator" />
                     <span>Calculator</span>
                   </CommandItem>
                 </CommandGroup>
                 <CommandSeparator />
                 <CommandGroup heading="Settings">
                   <CommandItem value="profile">
-                    <div class={cn("h-4 w-4 mr-2", icon("user"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-user" />
                     <span>Profile</span>
                     <CommandShortcut>⌘P</CommandShortcut>
                   </CommandItem>
                   <CommandItem value="billing">
-                    <div class={cn("h-4 w-4 mr-2", icon("credit-card"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-credit-card" />
                     <span>Billing</span>
                     <CommandShortcut>⌘B</CommandShortcut>
                   </CommandItem>
                   <CommandItem value="settings">
-                    <div class={cn("h-4 w-4 mr-2", icon("settings"))} />
+                    <div class="h-4 w-4 mr-2 i-lucide-settings" />
                     <span>Settings</span>
                     <CommandShortcut>⌘S</CommandShortcut>
                   </CommandItem>
@@ -924,21 +924,21 @@ export const meta: ComponentMeta<CommandProps> = {
                       value="calendar"
                       onSelect={() => setOpen(false)}
                     >
-                      <div class={cn("h-4 w-4 mr-2", icon("calendar"))} />
+                      <div class="h-4 w-4 mr-2 i-lucide-calendar" />
                       <span>Calendar</span>
                     </CommandItem>
                     <CommandItem
                       value="search-emoji"
                       onSelect={() => setOpen(false)}
                     >
-                      <div class={cn("h-4 w-4 mr-2", icon("smile"))} />
+                      <div class="h-4 w-4 mr-2 i-lucide-smile" />
                       <span>Search Emoji</span>
                     </CommandItem>
                     <CommandItem
                       value="calculator"
                       onSelect={() => setOpen(false)}
                     >
-                      <div class={cn("h-4 w-4 mr-2", icon("calculator"))} />
+                      <div class="h-4 w-4 mr-2 i-lucide-calculator" />
                       <span>Calculator</span>
                     </CommandItem>
                   </CommandGroup>
@@ -948,7 +948,7 @@ export const meta: ComponentMeta<CommandProps> = {
                       value="profile"
                       onSelect={() => setOpen(false)}
                     >
-                      <div class={cn("h-4 w-4 mr-2", icon("user"))} />
+                      <div class="h-4 w-4 mr-2 i-lucide-user" />
                       <span>Profile</span>
                       <CommandShortcut>⌘P</CommandShortcut>
                     </CommandItem>
@@ -956,7 +956,7 @@ export const meta: ComponentMeta<CommandProps> = {
                       value="billing"
                       onSelect={() => setOpen(false)}
                     >
-                      <div class={cn("h-4 w-4 mr-2", icon("credit-card"))} />
+                      <div class="h-4 w-4 mr-2 i-lucide-credit-card" />
                       <span>Billing</span>
                       <CommandShortcut>⌘B</CommandShortcut>
                     </CommandItem>
@@ -964,7 +964,7 @@ export const meta: ComponentMeta<CommandProps> = {
                       value="settings"
                       onSelect={() => setOpen(false)}
                     >
-                      <div class={cn("h-4 w-4 mr-2", icon("settings"))} />
+                      <div class="h-4 w-4 mr-2 i-lucide-settings" />
                       <span>Settings</span>
                       <CommandShortcut>⌘S</CommandShortcut>
                     </CommandItem>
@@ -1048,7 +1048,7 @@ export const meta: ComponentMeta<CommandProps> = {
                 <For each={items()}>
                   {(item) => (
                     <CommandItem value={item.title}>
-                      <div class={cn("h-4 w-4 mr-2", icon("file-text"))} />
+                      <div class="h-4 w-4 mr-2 i-lucide-file-text" />
                       <div class="flex flex-col gap-0.5 overflow-hidden">
                         <span class="truncate">{item.title}</span>
                         <span class="text-xs text-muted-foreground truncate">

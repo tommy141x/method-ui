@@ -5,6 +5,8 @@ import {
   Show,
   createEffect,
   onMount,
+  onCleanup,
+  type JSX,
 } from "solid-js";
 import { useParams } from "@solidjs/router";
 import { Title, Meta } from "@solidjs/meta";
@@ -149,6 +151,19 @@ const components: ComponentInfo[] = Object.entries(componentMetadata)
   })
   .filter(Boolean) as ComponentInfo[];
 
+// Wrapper component to render examples with proper disposal
+function ExampleRenderer(props: { code: () => JSX.Element }) {
+  let disposeRef: (() => void) | undefined;
+
+  onCleanup(() => {
+    if (disposeRef) {
+      disposeRef();
+    }
+  });
+
+  return <>{props.code()}</>;
+}
+
 export default function ComponentPage() {
   const params = useParams();
   const [showCode, setShowCode] = createSignal<Record<number, boolean>>({});
@@ -158,6 +173,11 @@ export default function ComponentPage() {
   const currentComponent = () => {
     return components.find((c) => c.name === params.component);
   };
+
+  const componentName = () => currentComponent()?.meta.name || "Component";
+  const componentDescription = () =>
+    currentComponent()?.meta.description ||
+    `${componentName()} component for SolidJS`;
 
   const toggleCode = (index: number) => {
     setShowCode((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -182,20 +202,8 @@ export default function ComponentPage() {
 
   return (
     <div class="min-h-screen bg-background">
-      <Title>
-        {currentComponent()
-          ? `${currentComponent()!.meta.name} - Method UI Components`
-          : "Component - Method UI"}
-      </Title>
-      <Meta
-        name="description"
-        content={
-          currentComponent()
-            ? currentComponent()!.meta.description ||
-              `${currentComponent()!.meta.name} component for SolidJS`
-            : "SolidJS component documentation"
-        }
-      />
+      <Title>{componentName()} - Method UI Components</Title>
+      <Meta name="description" content={componentDescription()} />
 
       <Navbar />
 
@@ -388,9 +396,9 @@ export default function ComponentPage() {
                                 <CardContent>
                                   {/* Example Preview */}
                                   <div class="border border-border rounded-lg p-8 bg-background flex items-center justify-center min-h-32 mb-4">
-                                    {typeof example().code === "function"
-                                      ? example().code()
-                                      : null}
+                                    {typeof example().code === "function" ? (
+                                      <ExampleRenderer code={example().code} />
+                                    ) : null}
                                   </div>
 
                                   {/* Code Display */}
