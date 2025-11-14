@@ -966,6 +966,88 @@
         "color-picker.tsx"
       ]
     },
+    "command": {
+      "name": "Command",
+      "fileName": "command",
+      "description": "A command menu component with keyboard navigation, search filtering, and Raycast-like styling. Fully declarative API with support for static and async content.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "onSelect",
+          "type": "(value: string) => void",
+          "description": "On Select",
+          "required": false
+        },
+        {
+          "name": "filter",
+          "type": "(value: string, search: string, keywords?: string[]) => boolean",
+          "description": "Filter",
+          "required": false
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "description": "Loop",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "() => boolean",
+          "description": "Loading",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Command Menu",
+          "description": "A simple command menu with static items and groups",
+          "source": "const [selected, setSelected] = createSignal<string>(\"\");\n\nreturn (\n  <div class=\"flex flex-col gap-4\">\n    <Command\n      class=\"rounded-lg border shadow-md md:min-w-[450px]\"\n      onSelect={(value) => setSelected(value)}\n    >\n      <CommandInput placeholder=\"Type a command or search...\" />\n      <CommandList>\n        <CommandEmpty>No results found.</CommandEmpty>\n        <CommandGroup heading=\"Suggestions\">\n          <CommandItem value=\"calendar\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"calendar\"))} />\n            <span>Calendar</span>\n          </CommandItem>\n          <CommandItem value=\"search-emoji\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"smile\"))} />\n            <span>Search Emoji</span>\n          </CommandItem>\n          <CommandItem value=\"calculator\" disabled>\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"calculator\"))} />\n            <span>Calculator</span>\n          </CommandItem>\n        </CommandGroup>\n        <CommandSeparator />\n        <CommandGroup heading=\"Settings\">\n          <CommandItem value=\"profile\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"user\"))} />\n            <span>Profile</span>\n            <CommandShortcut>⌘P</CommandShortcut>\n          </CommandItem>\n          <CommandItem value=\"billing\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"credit-card\"))} />\n            <span>Billing</span>\n            <CommandShortcut>⌘B</CommandShortcut>\n          </CommandItem>\n          <CommandItem value=\"settings\">\n            <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n            <span>Settings</span>\n            <CommandShortcut>⌘S</CommandShortcut>\n          </CommandItem>\n        </CommandGroup>\n      </CommandList>\n    </Command>\n    <Show when={selected()}>\n      <p class=\"text-sm text-muted-foreground\">\n        Selected: <strong>{selected()}</strong>\n      </p>\n    </Show>\n  </div>\n);"
+        },
+        {
+          "title": "Command Dialog",
+          "description": "Command menu in a modal dialog with keyboard shortcut",
+          "source": "const [open, setOpen] = createSignal(false);\n\n// Keyboard shortcut to open (Cmd+K or Ctrl+K)\ncreateEffect(() => {\n  if (typeof window === \"undefined\") return;\n\n  const handleKeyDown = (e: KeyboardEvent) => {\n    if ((e.metaKey || e.ctrlKey) && e.key === \"k\") {\n      e.preventDefault();\n      setOpen((prev) => !prev);\n    }\n  };\n\n  window.addEventListener(\"keydown\", handleKeyDown);\n  return () => window.removeEventListener(\"keydown\", handleKeyDown);\n});\n\nreturn (\n  <>\n    <div class=\"flex flex-col gap-4\">\n      <p class=\"text-sm text-muted-foreground\">\n        Press{\" \"}\n        <kbd class=\"pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100\">\n          <span class=\"text-xs\">⌘</span>K\n        </kbd>{\" \"}\n        to open the command menu\n      </p>\n      <Button onClick={() => setOpen(true)}>Open Command Menu</Button>\n    </div>\n\n    <CommandDialog open={open()} onOpenChange={setOpen}>\n      <Command>\n        <CommandInput placeholder=\"Type a command or search...\" />\n        <CommandList>\n          <CommandEmpty>No results found.</CommandEmpty>\n          <CommandGroup heading=\"Suggestions\">\n            <CommandItem\n              value=\"calendar\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"calendar\"))} />\n              <span>Calendar</span>\n            </CommandItem>\n            <CommandItem\n              value=\"search-emoji\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"smile\"))} />\n              <span>Search Emoji</span>\n            </CommandItem>\n            <CommandItem\n              value=\"calculator\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"calculator\"))} />\n              <span>Calculator</span>\n            </CommandItem>\n          </CommandGroup>\n          <CommandSeparator />\n          <CommandGroup heading=\"Settings\">\n            <CommandItem\n              value=\"profile\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"user\"))} />\n              <span>Profile</span>\n              <CommandShortcut>⌘P</CommandShortcut>\n            </CommandItem>\n            <CommandItem\n              value=\"billing\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"credit-card\"))} />\n              <span>Billing</span>\n              <CommandShortcut>⌘B</CommandShortcut>\n            </CommandItem>\n            <CommandItem\n              value=\"settings\"\n              onSelect={() => setOpen(false)}\n            >\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"settings\"))} />\n              <span>Settings</span>\n              <CommandShortcut>⌘S</CommandShortcut>\n            </CommandItem>\n          </CommandGroup>\n        </CommandList>\n      </Command>\n    </CommandDialog>\n  </>\n);"
+        },
+        {
+          "title": "With Async Search",
+          "description": "Command menu with async data loading (simulated API)",
+          "source": "const mockData = [\n  { id: 1, title: \"React Documentation\", category: \"Frameworks\" },\n  { id: 2, title: \"Solid.js Guide\", category: \"Frameworks\" },\n  { id: 3, title: \"Vue.js Tutorial\", category: \"Frameworks\" },\n  { id: 4, title: \"Svelte Handbook\", category: \"Frameworks\" },\n  { id: 5, title: \"TypeScript Docs\", category: \"Languages\" },\n  { id: 6, title: \"JavaScript Guide\", category: \"Languages\" },\n  { id: 7, title: \"CSS Tricks\", category: \"Styling\" },\n  { id: 8, title: \"Tailwind CSS\", category: \"Styling\" },\n];\n\nconst [items, setItems] = createSignal<typeof mockData>([]);\nconst [loading, setLoading] = createSignal(false);\nlet searchTimeout: number | undefined;\n\nconst fakeApiSearch = (query: string): Promise<typeof mockData> => {\n  return new Promise((resolve) => {\n    setTimeout(() => {\n      const filtered = mockData.filter(\n        (item) =>\n          item.title.toLowerCase().includes(query.toLowerCase()) ||\n          item.category.toLowerCase().includes(query.toLowerCase()),\n      );\n      resolve(filtered);\n    }, 400);\n  });\n};\n\n// Show first 4 items initially\nonMount(() => {\n  setItems(mockData.slice(0, 4));\n});\n\nconst handleSearch = (value: string) => {\n  clearTimeout(searchTimeout);\n\n  if (!value) {\n    setItems(mockData.slice(0, 4));\n    setLoading(false);\n    return;\n  }\n\n  setLoading(true);\n  searchTimeout = setTimeout(async () => {\n    try {\n      const results = await fakeApiSearch(value);\n      setItems(results);\n    } catch (error) {\n      console.error(\"Search failed:\", error);\n    } finally {\n      setLoading(false);\n    }\n  }, 300) as unknown as number;\n};\n\nreturn (\n  <Command\n    class=\"rounded-lg border shadow-md md:min-w-[450px]\"\n    onValueChange={handleSearch}\n    loading={loading}\n  >\n    <CommandInput placeholder=\"Search documentation...\" />\n    <CommandList>\n      <CommandEmpty>No results found.</CommandEmpty>\n      <CommandGroup heading=\"Results\">\n        <For each={items()}>\n          {(item) => (\n            <CommandItem value={item.title}>\n              <div class={cn(\"h-4 w-4 mr-2\", icon(\"file-text\"))} />\n              <div class=\"flex flex-col gap-0.5 overflow-hidden\">\n                <span class=\"truncate\">{item.title}</span>\n                <span class=\"text-xs text-muted-foreground truncate\">\n                  {item.category}\n                </span>\n              </div>\n            </CommandItem>\n          )}\n        </For>\n      </CommandGroup>\n    </CommandList>\n  </Command>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "command.tsx"
+      ]
+    },
     "date-picker": {
       "name": "DatePicker",
       "fileName": "date-picker",
@@ -2018,6 +2100,72 @@
         "json-tree-view.tsx"
       ]
     },
+    "kbd": {
+      "name": "Kbd",
+      "fileName": "kbd",
+      "description": "A keyboard shortcut component for displaying key combinations. Use Kbd for individual keys or KbdGroup to combine multiple keys.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "size",
+          "values": [
+            "sm",
+            "default",
+            "lg"
+          ],
+          "defaultValue": "default"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Sizes",
+          "description": "Different keyboard shortcut sizes",
+          "source": "<div class=\"flex flex-col gap-4\">\n  <div class=\"flex items-center gap-2\">\n    <span class=\"text-sm text-muted-foreground w-16\">Small:</span>\n    <Kbd size=\"sm\">⌘</Kbd>\n    <Kbd size=\"sm\">K</Kbd>\n  </div>\n  <div class=\"flex items-center gap-2\">\n    <span class=\"text-sm text-muted-foreground w-16\">Default:</span>\n    <Kbd>⌘</Kbd>\n    <Kbd>K</Kbd>\n  </div>\n  <div class=\"flex items-center gap-2\">\n    <span class=\"text-sm text-muted-foreground w-16\">Large:</span>\n    <Kbd size=\"lg\">⌘</Kbd>\n    <Kbd size=\"lg\">K</Kbd>\n  </div>\n</div>"
+        },
+        {
+          "title": "Single Keys",
+          "description": "Individual keyboard keys",
+          "source": "<div class=\"flex gap-2\">\n  <Kbd>⌘</Kbd>\n  <Kbd>⇧</Kbd>\n  <Kbd>⌥</Kbd>\n  <Kbd>⌃</Kbd>\n  <Kbd>Enter</Kbd>\n  <Kbd>Esc</Kbd>\n</div>"
+        },
+        {
+          "title": "Key Combinations",
+          "description": "Multiple keys combined with KbdGroup",
+          "source": "<div class=\"flex flex-col gap-2\">\n  <KbdGroup>\n    <Kbd>⌘</Kbd>\n    <span class=\"text-muted-foreground\">+</span>\n    <Kbd>K</Kbd>\n  </KbdGroup>\n  <KbdGroup>\n    <Kbd>Ctrl</Kbd>\n    <span class=\"text-muted-foreground\">+</span>\n    <Kbd>Shift</Kbd>\n    <span class=\"text-muted-foreground\">+</span>\n    <Kbd>P</Kbd>\n  </KbdGroup>\n  <KbdGroup>\n    <Kbd>⌘</Kbd>\n    <span class=\"text-muted-foreground\">+</span>\n    <Kbd>B</Kbd>\n  </KbdGroup>\n</div>"
+        },
+        {
+          "title": "With Text",
+          "description": "Keyboard shortcuts in context",
+          "source": "<div class=\"flex flex-col gap-2\">\n  <div class=\"text-sm flex items-center gap-1\">\n    <span>Press</span>\n    <KbdGroup>\n      <Kbd>⌘</Kbd>\n      <span class=\"text-muted-foreground\">+</span>\n      <Kbd>K</Kbd>\n    </KbdGroup>\n    <span>to open the command menu</span>\n  </div>\n  <div class=\"text-sm flex items-center gap-1\">\n    <span>Press</span>\n    <Kbd>Esc</Kbd>\n    <span>to close</span>\n  </div>\n  <div class=\"text-sm flex items-center gap-1\">\n    <span>Use</span>\n    <KbdGroup>\n      <Kbd>Ctrl</Kbd>\n      <span class=\"text-muted-foreground\">+</span>\n      <Kbd>C</Kbd>\n    </KbdGroup>\n    <span>to copy</span>\n  </div>\n</div>"
+        },
+        {
+          "title": "Arrow Keys",
+          "description": "Navigation keys",
+          "source": "<div class=\"flex gap-2\">\n  <Kbd>↑</Kbd>\n  <Kbd>→</Kbd>\n  <Kbd>↓</Kbd>\n  <Kbd>←</Kbd>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "kbd.tsx"
+      ]
+    },
     "listbox": {
       "name": "Listbox",
       "fileName": "listbox",
@@ -2945,6 +3093,129 @@
         "select.tsx"
       ]
     },
+    "separator": {
+      "name": "Separator",
+      "fileName": "separator",
+      "description": "A separator component for visually dividing content. Can be horizontal or vertical.",
+      "props": [
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "description": "Decorative",
+          "required": false
+        }
+      ],
+      "variants": [
+        {
+          "name": "orientation",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "defaultValue": "horizontal"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Horizontal",
+          "description": "Default horizontal separator",
+          "source": "<div class=\"w-full\">\n  <div class=\"space-y-1\">\n    <h4 class=\"text-sm font-medium leading-none\">Method UI</h4>\n    <p class=\"text-sm text-muted-foreground\">\n      Beautiful components for SolidJS\n    </p>\n  </div>\n  <Separator class=\"my-4\" />\n  <div class=\"flex h-5 items-center space-x-4 text-sm\">\n    <div>Blog</div>\n    <Separator orientation=\"vertical\" />\n    <div>Docs</div>\n    <Separator orientation=\"vertical\" />\n    <div>Source</div>\n  </div>\n</div>"
+        },
+        {
+          "title": "Vertical",
+          "description": "Vertical separator for inline content",
+          "source": "<div class=\"flex h-5 items-center space-x-4 text-sm\">\n  <div>Home</div>\n  <Separator orientation=\"vertical\" />\n  <div>About</div>\n  <Separator orientation=\"vertical\" />\n  <div>Contact</div>\n</div>"
+        },
+        {
+          "title": "With Content",
+          "description": "Separators dividing sections of content",
+          "source": "<div class=\"space-y-4\">\n  <div>\n    <h3 class=\"text-lg font-semibold\">Section 1</h3>\n    <p class=\"text-sm text-muted-foreground\">\n      This is the first section of content.\n    </p>\n  </div>\n  <Separator />\n  <div>\n    <h3 class=\"text-lg font-semibold\">Section 2</h3>\n    <p class=\"text-sm text-muted-foreground\">\n      This is the second section of content.\n    </p>\n  </div>\n  <Separator />\n  <div>\n    <h3 class=\"text-lg font-semibold\">Section 3</h3>\n    <p class=\"text-sm text-muted-foreground\">\n      This is the third section of content.\n    </p>\n  </div>\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "class-variance-authority"
+        ]
+      },
+      "files": [
+        "separator.tsx"
+      ]
+    },
+    "sidebar": {
+      "name": "Sidebar",
+      "fileName": "sidebar",
+      "description": "A collapsible sidebar component with composable parts. Perfect for application navigation with support for icons, labels, and grouping.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "defaultCollapsed",
+          "type": "boolean",
+          "description": "Default Collapsed",
+          "required": false
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "description": "Collapsed",
+          "required": false
+        },
+        {
+          "name": "onCollapsedChange",
+          "type": "(collapsed: boolean) => void",
+          "description": "On Collapsed Change",
+          "required": false
+        },
+        {
+          "name": "collapsible",
+          "type": "\"offcanvas\" | \"icon\" | \"none\"",
+          "description": "Collapsible",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Sidebar",
+          "description": "A simple sidebar with header, content, and footer",
+          "source": "<div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n  <Sidebar>\n    <SidebarHeader>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n          <span class=\"text-sm font-bold\">M</span>\n        </div>\n        <span class=\"font-semibold\">Method UI</span>\n      </div>\n    </SidebarHeader>\n    <SidebarContent>\n      <SidebarGroup>\n        <SidebarGroupLabel>Getting Started</SidebarGroupLabel>\n        <SidebarGroupContent>\n          <div class=\"space-y-1\">\n            <div class=\"rounded-md px-2 py-2 text-sm\">Introduction</div>\n            <div class=\"rounded-md px-2 py-2 text-sm\">Installation</div>\n            <div class=\"rounded-md px-2 py-2 text-sm\">Usage</div>\n          </div>\n        </SidebarGroupContent>\n      </SidebarGroup>\n    </SidebarContent>\n    <SidebarFooter>\n      <div class=\"text-xs text-muted-foreground\">v1.0.0</div>\n    </SidebarFooter>\n  </Sidebar>\n  <div class=\"flex-1 p-6\">\n    <h2 class=\"text-2xl font-bold\">Main Content</h2>\n    <p class=\"text-muted-foreground\">This is the main content area.</p>\n  </div>\n</div>"
+        },
+        {
+          "title": "With Menu Items",
+          "description": "Sidebar with clickable menu items and icons",
+          "source": "const items = [\n  { title: \"Home\", icon: \"home\", active: true },\n  { title: \"Inbox\", icon: \"inbox\", active: false },\n  { title: \"Calendar\", icon: \"calendar\", active: false },\n  { title: \"Search\", icon: \"search\", active: false },\n  { title: \"Settings\", icon: \"settings\", active: false },\n];\n\nreturn (\n  <div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n    <Sidebar>\n      <SidebarHeader>\n        <div class=\"flex items-center gap-2\">\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n            <span class=\"text-sm font-bold\">A</span>\n          </div>\n          <span class=\"font-semibold\">Application</span>\n        </div>\n      </SidebarHeader>\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel>Menu</SidebarGroupLabel>\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <For each={items}>\n                {(item) => (\n                  <SidebarMenuItem>\n                    <SidebarMenuButton\n                      isActive={item.active}\n                      tooltip={item.title}\n                    >\n                      <div class={cn(\"h-4 w-4\", icon(item.icon))} />\n                      <span>{item.title}</span>\n                    </SidebarMenuButton>\n                  </SidebarMenuItem>\n                )}\n              </For>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n    </Sidebar>\n    <div class=\"flex-1 p-6\">\n      <h2 class=\"text-2xl font-bold\">Dashboard</h2>\n      <p class=\"text-muted-foreground\">Welcome to your dashboard.</p>\n    </div>\n  </div>\n);"
+        },
+        {
+          "title": "Collapsible Sidebar",
+          "description": "Sidebar with collapse/expand functionality",
+          "source": "const [collapsed, setCollapsed] = createSignal(false);\n\nconst items = [\n  { title: \"Dashboard\", icon: \"layout-dashboard\" },\n  { title: \"Projects\", icon: \"folder\" },\n  { title: \"Team\", icon: \"users\" },\n  { title: \"Analytics\", icon: \"bar-chart\" },\n];\n\nreturn (\n  <div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n    <Sidebar collapsed={collapsed()} onCollapsedChange={setCollapsed}>\n      <SidebarHeader>\n        <div class=\"flex items-center gap-2\">\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n            <span class=\"text-sm font-bold\">W</span>\n          </div>\n          {!collapsed() && <span class=\"font-semibold\">Workspace</span>}\n        </div>\n      </SidebarHeader>\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel>Navigation</SidebarGroupLabel>\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <For each={items}>\n                {(item) => (\n                  <SidebarMenuItem>\n                    <SidebarMenuButton tooltip={item.title}>\n                      <div class={cn(\"h-4 w-4\", icon(item.icon))} />\n                      {!collapsed() && <span>{item.title}</span>}\n                    </SidebarMenuButton>\n                  </SidebarMenuItem>\n                )}\n              </For>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter>\n        <Show\n          when={!collapsed()}\n          fallback={\n            <div class=\"flex justify-center\">\n              <SidebarTrigger>\n                <Button variant=\"ghost\" size=\"icon\">\n                  <div\n                    class={cn(\n                      \"h-4 w-4 transition-transform rotate-180\",\n                      icon(\"panel-left\"),\n                    )}\n                  />\n                </Button>\n              </SidebarTrigger>\n            </div>\n          }\n        >\n          <div class=\"flex items-center gap-2\">\n            <div class=\"flex h-8 w-8 items-center justify-center rounded-full bg-muted\">\n              <div class={cn(\"h-4 w-4\", icon(\"user\"))} />\n            </div>\n            <div class=\"flex flex-col flex-1\">\n              <span class=\"text-sm font-medium\">John Doe</span>\n              <span class=\"text-xs text-muted-foreground\">\n                john@example.com\n              </span>\n            </div>\n            <SidebarTrigger class=\"ml-auto\">\n              <Button variant=\"ghost\" size=\"icon\">\n                <div class={cn(\"h-4 w-4\", icon(\"panel-left\"))} />\n              </Button>\n            </SidebarTrigger>\n          </div>\n        </Show>\n      </SidebarFooter>\n    </Sidebar>\n    <div class=\"flex-1 p-6\">\n      <div class=\"flex items-center justify-between mb-4\">\n        <h2 class=\"text-2xl font-bold\">Content Area</h2>\n        <Button onClick={() => setCollapsed(!collapsed())}>\n          Toggle Sidebar\n        </Button>\n      </div>\n      <p class=\"text-muted-foreground\">\n        Click the button or use the sidebar toggle to collapse/expand\n        the sidebar.\n      </p>\n    </div>\n  </div>\n);"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "sidebar.tsx"
+      ]
+    },
     "signature-pad": {
       "name": "SignaturePad",
       "fileName": "signature-pad",
@@ -3006,6 +3277,49 @@
       },
       "files": [
         "signature-pad.tsx"
+      ]
+    },
+    "skeleton": {
+      "name": "Skeleton",
+      "fileName": "skeleton",
+      "description": "A skeleton component for displaying loading states. Use to show a placeholder while content is loading.",
+      "props": [
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic",
+          "description": "Simple skeleton loader",
+          "source": "<div class=\"flex items-center space-x-4\">\n  <Skeleton class=\"h-12 w-12 rounded-full\" />\n  <div class=\"space-y-2\">\n    <Skeleton class=\"h-4 w-[250px]\" />\n    <Skeleton class=\"h-4 w-[200px]\" />\n  </div>\n</div>"
+        },
+        {
+          "title": "Card",
+          "description": "Skeleton for a card layout",
+          "source": "<div class=\"flex flex-col space-y-3\">\n  <Skeleton class=\"h-[125px] w-[250px] rounded-xl\" />\n  <div class=\"space-y-2\">\n    <Skeleton class=\"h-4 w-[250px]\" />\n    <Skeleton class=\"h-4 w-[200px]\" />\n  </div>\n</div>"
+        },
+        {
+          "title": "List",
+          "description": "Skeleton for a list of items",
+          "source": "<div class=\"space-y-4\">\n  <div class=\"flex items-center space-x-4\">\n    <Skeleton class=\"h-10 w-10 rounded-full\" />\n    <div class=\"space-y-2 flex-1\">\n      <Skeleton class=\"h-4 w-full\" />\n      <Skeleton class=\"h-3 w-3/4\" />\n    </div>\n  </div>\n  <div class=\"flex items-center space-x-4\">\n    <Skeleton class=\"h-10 w-10 rounded-full\" />\n    <div class=\"space-y-2 flex-1\">\n      <Skeleton class=\"h-4 w-full\" />\n      <Skeleton class=\"h-3 w-3/4\" />\n    </div>\n  </div>\n  <div class=\"flex items-center space-x-4\">\n    <Skeleton class=\"h-10 w-10 rounded-full\" />\n    <div class=\"space-y-2 flex-1\">\n      <Skeleton class=\"h-4 w-full\" />\n      <Skeleton class=\"h-3 w-3/4\" />\n    </div>\n  </div>\n</div>"
+        },
+        {
+          "title": "Table",
+          "description": "Skeleton for a table layout",
+          "source": "<div class=\"w-full space-y-2\">\n  <Skeleton class=\"h-10 w-full\" />\n  <Skeleton class=\"h-10 w-full\" />\n  <Skeleton class=\"h-10 w-full\" />\n  <Skeleton class=\"h-10 w-full\" />\n  <Skeleton class=\"h-10 w-full\" />\n</div>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": []
+      },
+      "files": [
+        "skeleton.tsx"
       ]
     },
     "slider": {
@@ -3703,6 +4017,7 @@
     "chart",
     "checkbox",
     "color-picker",
+    "command",
     "date-picker",
     "dialog",
     "file-upload",
@@ -3711,6 +4026,7 @@
     "hover-card",
     "input",
     "json-tree-view",
+    "kbd",
     "listbox",
     "marquee",
     "menu",
@@ -3719,7 +4035,10 @@
     "qr-code",
     "radio-group",
     "select",
+    "separator",
+    "sidebar",
     "signature-pad",
+    "skeleton",
     "slider",
     "switch",
     "tabs",
