@@ -593,6 +593,8 @@ function getComponentFiles(fileName: string): string[] {
 function processComponent(
   file: string,
   componentsDir: string,
+  quiet: boolean = false,
+  program?: ts.Program,
 ): ComponentMetadata {
   const filePath = join(componentsDir, file);
   const sourceCode = readFileSync(filePath, "utf-8");
@@ -602,7 +604,9 @@ function processComponent(
     fileName.charAt(0).toUpperCase() +
     fileName.slice(1).replace(/-([a-z])/g, (_, l) => l.toUpperCase());
 
-  console.log(`Processing: ${fileName}`);
+  if (!quiet) {
+    console.log(`Processing: ${fileName}`);
+  }
 
   // Create TypeScript source file for prop extraction
   const sourceFile = ts.createSourceFile(
@@ -617,15 +621,20 @@ function processComponent(
   const metaGenericMatch = sourceCode.match(/ComponentMeta<(\w+)>/);
   if (metaGenericMatch) {
     interfaceName = metaGenericMatch[1];
-    console.log(`  Found props interface: ${interfaceName}`);
+    if (!quiet) {
+      console.log(`  Found props interface: ${interfaceName}`);
+    }
   }
 
-  // Create a program to get type checker
-  const program = ts.createProgram([filePath], {
-    target: ts.ScriptTarget.Latest,
-    module: ts.ModuleKind.ESNext,
-  });
-  const checker = program.getTypeChecker();
+  // Use cached program or create new one
+  let typeCheckerProgram = program;
+  if (!typeCheckerProgram) {
+    typeCheckerProgram = ts.createProgram([filePath], {
+      target: ts.ScriptTarget.Latest,
+      module: ts.ModuleKind.ESNext,
+    });
+  }
+  const checker = typeCheckerProgram.getTypeChecker();
 
   const props = extractPropsFromInterface(sourceFile, interfaceName, checker);
   const variants = extractVariantsFromMeta(sourceCode, sourceFile);
@@ -643,11 +652,13 @@ function processComponent(
   const dependencies = extractDependencies(sourceCode, fileName);
   const files = getComponentFiles(fileName);
 
-  console.log(`  Props: ${props.length}`);
-  console.log(`  Variants: ${variants.length}`);
-  console.log(`  Examples: ${examples.length}`);
-  console.log(`  Component Dependencies: ${dependencies.components.length}`);
-  console.log(`  Package Dependencies: ${dependencies.packages.length}`);
+  if (!quiet) {
+    console.log(`  Props: ${props.length}`);
+    console.log(`  Variants: ${variants.length}`);
+    console.log(`  Examples: ${examples.length}`);
+    console.log(`  Component Dependencies: ${dependencies.components.length}`);
+    console.log(`  Package Dependencies: ${dependencies.packages.length}`);
+  }
 
   return {
     name: componentName,
@@ -664,7 +675,7 @@ function processComponent(
 /**
  * Generate metadata for all components or a specific component
  */
-function generateComponentMetadata(specificFile?: string) {
+export async function generateComponentMetadata(specificFile?: string) {
   const componentsDir = join(process.cwd(), "components");
   const outputFile = join(process.cwd(), "lib", "registry.json");
 
@@ -692,14 +703,44 @@ function generateComponentMetadata(specificFile?: string) {
     }
 
     const fileName = specificFile.replace(".tsx", "");
-    allMetadata[fileName] = processComponent(specificFile, componentsDir);
+    allMetadata[fileName] = processComponent(
+      specificFile,
+      componentsDir,
+      false,
+    );
   } else {
-    // Process all components
+    // Process all components in parallel
     const files = readdirSync(componentsDir).filter((f) => f.endsWith(".tsx"));
 
-    for (const file of files) {
-      const fileName = file.replace(".tsx", "");
-      allMetadata[fileName] = processComponent(file, componentsDir);
+    console.log(`⚡ Processing ${files.length} components in parallel...`);
+    const startTime = Date.now();
+
+    // Create a shared TypeScript program for all components (much faster)
+    const filePaths = files.map((f) => join(componentsDir, f));
+    const sharedProgram = ts.createProgram(filePaths, {
+      target: ts.ScriptTarget.Latest,
+      module: ts.ModuleKind.ESNext,
+    });
+
+    const results = await Promise.all(
+      files.map(async (file) => {
+        const fileName = file.replace(".tsx", "");
+        const metadata = processComponent(
+          file,
+          componentsDir,
+          true,
+          sharedProgram,
+        );
+        return { fileName, metadata };
+      }),
+    );
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log(`✓ Completed in ${elapsed}s\n`);
+
+    // Collect results
+    for (const { fileName, metadata } of results) {
+      allMetadata[fileName] = metadata;
     }
   }
 
@@ -735,6 +776,8 @@ function generateComponentMetadata(specificFile?: string) {
   console.log(`  Unique package dependencies: ${totalPackageDeps}`);
 }
 
-// Run it - check for command line argument
-const specificFile = process.argv[2];
-generateComponentMetadata(specificFile);
+// Run it only if called directly - check for command line argument
+if (import.meta.main) {
+  const specificFile = process.argv[2];
+  await generateComponentMetadata(specificFile);
+}
