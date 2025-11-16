@@ -8,7 +8,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
+  server: {
+    preset: "static",
+    baseURL: process.env.BASE_PATH || "/",
+  },
   vite: {
+    base: process.env.BASE_PATH || "/",
+    ssr: true,
     plugins: [
       UnoCSS({
         mode: "global",
@@ -28,8 +34,5 @@ export default defineConfig({
     ssr: {
       noExternal: ["@ark-ui/solid", "solid-motionone"],
     },
-  },
-  server: {
-    preset: "node-server",
   },
 });
