@@ -13,8 +13,6 @@ export default defineConfig({
     baseURL: process.env.BASE_PATH || "/",
   },
   vite: {
-    base: process.env.BASE_PATH || "/",
-    ssr: true,
     plugins: [
       UnoCSS({
         mode: "global",
