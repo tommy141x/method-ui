@@ -1,3 +1,12 @@
+/**
+ * Input Component - Multi-variant input with support for text, password, tags, textarea, and combobox
+ *
+ * Fixed: Controlled input handling (value prop)
+ * - 'value', 'defaultValue', and 'onValueChange' are now only extracted for tags variant
+ * - For all other input types, these props pass through {...others} to Field.Input
+ * - This allows proper controlled component behavior with value={signal()}
+ */
+
 import { Field } from "@ark-ui/solid";
 import { TagsInput as ArkTagsInput } from "@ark-ui/solid/tags-input";
 import {
@@ -106,6 +115,10 @@ type InputProps = Omit<
   };
 
 export const Input = (props: InputProps) => {
+  // Determine if this is a tags variant to conditionally extract value props
+  const isTagsVariant = props.type === "tags" || props.variant === "tags";
+
+  // Split props - only extract value/defaultValue/onValueChange for tags variant
   const [local, others] = splitProps(props, [
     "class",
     "size",
@@ -124,9 +137,10 @@ export const Input = (props: InputProps) => {
     "onVisibilityChange",
     "ignorePasswordManagers",
     "autoresize",
-    "value",
-    "defaultValue",
-    "onValueChange",
+    // Only extract these for tags variant - otherwise let them pass through
+    ...(isTagsVariant
+      ? (["value", "defaultValue", "onValueChange"] as const)
+      : []),
     "max",
     "maxLength",
     "addOnPaste",
@@ -138,7 +152,7 @@ export const Input = (props: InputProps) => {
     "options",
     "onSelect",
     "clearable",
-  ]);
+  ] as const);
 
   const [showPassword, setShowPassword] = createSignal(
     local.defaultVisible ?? false,
