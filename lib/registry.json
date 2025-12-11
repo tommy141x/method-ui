@@ -1939,6 +1939,121 @@
         "dialog.tsx"
       ]
     },
+    "drawer": {
+      "name": "Drawer",
+      "fileName": "drawer",
+      "description": "A drawer component that slides in from any edge of the screen. Supports drag-to-dismiss, keyboard navigation, and focus management. Custom implementation with full directional support.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether the component is open",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Default Open",
+          "required": false
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(details: { open: boolean }) => void",
+          "description": "Callback when open state changes",
+          "required": false
+        },
+        {
+          "name": "side",
+          "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+          "description": "Side",
+          "required": false
+        },
+        {
+          "name": "closeOnInteractOutside",
+          "type": "boolean",
+          "description": "Close On Interact Outside",
+          "required": false
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "description": "Close On Escape",
+          "required": false
+        },
+        {
+          "name": "preventScroll",
+          "type": "boolean",
+          "description": "Prevent Scroll",
+          "required": false
+        },
+        {
+          "name": "modal",
+          "type": "boolean",
+          "description": "Modal",
+          "required": false
+        },
+        {
+          "name": "dismissThreshold",
+          "type": "number",
+          "description": "Dismiss Threshold",
+          "required": false
+        },
+        {
+          "name": "velocityThreshold",
+          "type": "number",
+          "description": "Velocity Threshold",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Bottom Drawer",
+          "description": "Default drawer that slides up from the bottom",
+          "source": "<Drawer side=\"bottom\">\n  <DrawerTrigger>\n    <Button>Open Drawer</Button>\n  </DrawerTrigger>\n  <DrawerPortal>\n    <DrawerContent>\n      <DrawerHeader>\n        <DrawerTitle>Drawer Title</DrawerTitle>\n        <DrawerDescription>\n          This is a drawer that slides in from the bottom. Drag it down\n          to dismiss.\n        </DrawerDescription>\n      </DrawerHeader>\n      <DrawerBody>\n        <p class=\"text-sm\">\n          Drawer content goes here. You can add any content you want.\n        </p>\n      </DrawerBody>\n      <DrawerFooter>\n        <DrawerClose>\n          <Button variant=\"outline\" class=\"w-full\">\n            Close\n          </Button>\n        </DrawerClose>\n      </DrawerFooter>\n    </DrawerContent>\n  </DrawerPortal>\n</Drawer>"
+        },
+        {
+          "title": "Right Drawer",
+          "description": "Drawer that slides in from the right side",
+          "source": "<Drawer side=\"right\">\n  <DrawerTrigger>\n    <Button variant=\"outline\">Open Right Drawer</Button>\n  </DrawerTrigger>\n  <DrawerPortal>\n    <DrawerContent withHandle={false}>\n      <DrawerCloseTrigger />\n      <DrawerHeader>\n        <DrawerTitle>Navigation Menu</DrawerTitle>\n        <DrawerDescription>\n          Browse through available options\n        </DrawerDescription>\n      </DrawerHeader>\n      <DrawerBody>\n        <nav class=\"space-y-2\">\n          <button class=\"w-full text-left px-3 py-2 rounded-md hover:bg-accent\">\n            Dashboard\n          </button>\n          <button class=\"w-full text-left px-3 py-2 rounded-md hover:bg-accent\">\n            Settings\n          </button>\n          <button class=\"w-full text-left px-3 py-2 rounded-md hover:bg-accent\">\n            Profile\n          </button>\n          <button class=\"w-full text-left px-3 py-2 rounded-md hover:bg-accent\">\n            Logout\n          </button>\n        </nav>\n      </DrawerBody>\n    </DrawerContent>\n  </DrawerPortal>\n</Drawer>"
+        },
+        {
+          "title": "Left Drawer",
+          "description": "Drawer that slides in from the left side",
+          "source": "<Drawer side=\"left\">\n  <DrawerTrigger>\n    <Button variant=\"outline\">Open Left Drawer</Button>\n  </DrawerTrigger>\n  <DrawerPortal>\n    <DrawerContent withHandle={false}>\n      <DrawerCloseTrigger />\n      <DrawerHeader>\n        <DrawerTitle>Filters</DrawerTitle>\n        <DrawerDescription>\n          Filter and sort your results\n        </DrawerDescription>\n      </DrawerHeader>\n      <DrawerBody>\n        <div class=\"space-y-4\">\n          <div>\n            <label class=\"text-sm font-medium mb-2 block\">\n              Category\n            </label>\n            <select class=\"w-full rounded-md border border-border bg-background px-3 py-2\">\n              <option>All</option>\n              <option>Electronics</option>\n              <option>Clothing</option>\n            </select>\n          </div>\n          <div>\n            <label class=\"text-sm font-medium mb-2 block\">\n              Price Range\n            </label>\n            <input type=\"range\" class=\"w-full\" />\n          </div>\n        </div>\n      </DrawerBody>\n      <DrawerFooter>\n        <Button class=\"w-full\">Apply Filters</Button>\n        <DrawerClose>\n          <Button variant=\"outline\" class=\"w-full\">\n            Cancel\n          </Button>\n        </DrawerClose>\n      </DrawerFooter>\n    </DrawerContent>\n  </DrawerPortal>\n</Drawer>"
+        },
+        {
+          "title": "Top Drawer",
+          "description": "Drawer that slides in from the top",
+          "source": "<Drawer side=\"top\">\n  <DrawerTrigger>\n    <Button variant=\"outline\">Open Top Drawer</Button>\n  </DrawerTrigger>\n  <DrawerPortal>\n    <DrawerContent>\n      <DrawerCloseTrigger />\n      <DrawerHeader>\n        <DrawerTitle>Announcement</DrawerTitle>\n        <DrawerDescription>\n          Important information and updates\n        </DrawerDescription>\n      </DrawerHeader>\n      <DrawerBody>\n        <div class=\"space-y-2\">\n          <p class=\"text-sm\">\n            🎉 New features have been released! Check out our latest\n            updates.\n          </p>\n          <p class=\"text-sm text-muted-foreground\">\n            Drag up to dismiss this notification.\n          </p>\n        </div>\n      </DrawerBody>\n    </DrawerContent>\n  </DrawerPortal>\n</Drawer>"
+        },
+        {
+          "title": "Controlled Drawer",
+          "description": "Control drawer state externally",
+          "source": "const drawer = createDrawerState();\nreturn (\n  <div class=\"space-y-4\">\n    <div class=\"flex gap-2\">\n      <Button onClick={drawer.open}>Open</Button>\n      <Button variant=\"outline\" onClick={drawer.close}>\n        Close\n      </Button>\n      <Button variant=\"secondary\" onClick={drawer.toggle}>\n        Toggle\n      </Button>\n    </div>\n    <Drawer\n      open={drawer.isOpen()}\n      onOpenChange={(e) => drawer.setOpen(e.open)}\n      side=\"bottom\"\n    >\n      <DrawerPortal>\n        <DrawerContent>\n          <DrawerHeader>\n            <DrawerTitle>Controlled Drawer</DrawerTitle>\n            <DrawerDescription>\n              This drawer's state is controlled externally\n            </DrawerDescription>\n          </DrawerHeader>\n          <DrawerBody>\n            <p class=\"text-sm\">\n              You can control this drawer using the buttons above.\n            </p>\n          </DrawerBody>\n          <DrawerFooter>\n            <Button onClick={drawer.close} class=\"w-full\">\n              Close from Inside\n            </Button>\n          </DrawerFooter>\n        </DrawerContent>\n      </DrawerPortal>\n    </Drawer>\n  </div>\n);"
+        },
+        {
+          "title": "Form Drawer",
+          "description": "Drawer with form content",
+          "source": "<Drawer side=\"right\">\n  <DrawerTrigger>\n    <Button>\n      <div class={cn(\"h-4 w-4 mr-2\", icon(\"plus\"))} />\n      Add Item\n    </Button>\n  </DrawerTrigger>\n  <DrawerPortal>\n    <DrawerContent withHandle={false}>\n      <DrawerCloseTrigger />\n      <DrawerHeader>\n        <DrawerTitle>Add New Item</DrawerTitle>\n        <DrawerDescription>\n          Fill in the details below to create a new item\n        </DrawerDescription>\n      </DrawerHeader>\n      <DrawerBody>\n        <form class=\"space-y-4\">\n          <div class=\"space-y-2\">\n            <label class=\"text-sm font-medium\">Name</label>\n            <Input type=\"text\" placeholder=\"Enter item name\" />\n          </div>\n          <div class=\"space-y-2\">\n            <label class=\"text-sm font-medium\">Description</label>\n            <textarea\n              class=\"w-full min-h-[100px] rounded-md border border-border bg-background px-3 py-2 text-sm\"\n              placeholder=\"Enter description\"\n            />\n          </div>\n          <div class=\"space-y-2\">\n            <label class=\"text-sm font-medium\">Price</label>\n            <Input type=\"number\" placeholder=\"0.00\" />\n          </div>\n        </form>\n      </DrawerBody>\n      <DrawerFooter>\n        <Button class=\"w-full\">Save Item</Button>\n        <DrawerClose>\n          <Button variant=\"outline\" class=\"w-full\">\n            Cancel\n          </Button>\n        </DrawerClose>\n      </DrawerFooter>\n    </DrawerContent>\n  </DrawerPortal>\n</Drawer>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "drawer.tsx"
+      ]
+    },
     "editor": {
       "name": "Editor",
       "fileName": "editor",
@@ -5717,6 +5832,7 @@
     "date-picker",
     "device",
     "dialog",
+    "drawer",
     "editor",
     "file-upload",
     "floating-panel",
