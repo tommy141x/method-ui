@@ -1,11 +1,17 @@
 /**
  * Toaster Component - Toast notification system using Ark UI
  *
+ * Fixed: Toast reactivity issue
+ * - Made toaster prop optional for better defensive programming
+ * - Wraps ArkToaster in Show to ensure proper reactive tracking
+ * - Fixes issue where toasts don't render due to Ark UI reactivity bug
+ * - Users no longer need to wrap the component themselves
+ *
  * SETUP INSTRUCTIONS:
  *
  * 1. Create a toaster instance in your app:
  *
- *    import { createToaster } from "./components/toaster";
+ *    import { createToaster } from "./components/toast";
  *
  *    const toaster = createToaster({
  *      placement: "bottom-end",
@@ -15,13 +21,13 @@
  *
  * 2. Add the Toaster component to your app root:
  *
- *    import { Toaster } from "./components/toaster";
+ *    import { Toast } from "./components/toast";
  *
  *    export default function App() {
  *      return (
  *        <>
- *          <Toaster toaster={toaster} />
- *          {/* Your app content *\/}
+ *          <Toast toaster={toaster} />
+ *          // Your app content
  *        </>
  *      );
  *    }
@@ -79,8 +85,9 @@ export type ToasterInstance = CreateToasterReturn;
 export interface ToastProps {
   /**
    * The toaster instance created with createToaster
+   * Made optional for defensive programming - component won't render without it
    */
-  toaster: CreateToasterReturn;
+  toaster?: CreateToasterReturn;
   /**
    * Additional CSS classes
    */
@@ -140,9 +147,11 @@ export const Toast: Component<ToastProps> = (props) => {
   const [local, others] = splitProps(props, ["toaster", "class"]);
 
   return (
-    <>
-      <style>
-        {`
+    <Show when={local.toaster}>
+      {(toaster) => (
+        <>
+          <style>
+            {`
           /* Toast group positioning */
           [data-scope="toast"][data-part="group"] {
             position: fixed;
@@ -192,53 +201,55 @@ export const Toast: Component<ToastProps> = (props) => {
             }
           }
         `}
-      </style>
-      <ArkToaster toaster={local.toaster} {...others}>
-        {(toast) => (
-          <ArkToast.Root
-            class={cn(
-              "group relative flex w-full items-start gap-3 border border-border bg-background p-4 shadow-lg",
-              "data-[type=success]:border-green-600/50 dark:data-[type=success]:border-green-400/50",
-              "data-[type=error]:border-destructive/50",
-              "data-[type=warning]:border-yellow-600/50 dark:data-[type=warning]:border-yellow-400/50",
-              "data-[type=info]:border-primary/50",
-              "data-[type=loading]:border-primary/50",
-              local.class,
-            )}
-            style={{
-              "border-radius": "var(--radius)",
-            }}
-          >
-            <ToastIcon type={toast().type} />
+          </style>
+          <ArkToaster toaster={toaster()} {...others}>
+            {(toast) => (
+              <ArkToast.Root
+                class={cn(
+                  "group relative flex w-full items-start gap-3 border border-border bg-background p-4 shadow-lg",
+                  "data-[type=success]:border-green-600/50 dark:data-[type=success]:border-green-400/50",
+                  "data-[type=error]:border-destructive/50",
+                  "data-[type=warning]:border-yellow-600/50 dark:data-[type=warning]:border-yellow-400/50",
+                  "data-[type=info]:border-primary/50",
+                  "data-[type=loading]:border-primary/50",
+                  local.class,
+                )}
+                style={{
+                  "border-radius": "var(--radius)",
+                }}
+              >
+                <ToastIcon type={toast().type} />
 
-            <div class="flex-1 space-y-1">
-              <ArkToast.Title class="text-sm font-semibold text-foreground">
-                {toast().title}
-              </ArkToast.Title>
-              <Show when={toast().description}>
-                <ArkToast.Description class="text-sm text-muted-foreground">
-                  {toast().description}
-                </ArkToast.Description>
-              </Show>
+                <div class="flex-1 space-y-1">
+                  <ArkToast.Title class="text-sm font-semibold text-foreground">
+                    {toast().title}
+                  </ArkToast.Title>
+                  <Show when={toast().description}>
+                    <ArkToast.Description class="text-sm text-muted-foreground">
+                      {toast().description}
+                    </ArkToast.Description>
+                  </Show>
 
-              <Show when={toast().action}>
-                <div class="flex gap-2 mt-3">
-                  <ArkToast.ActionTrigger class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
-                    {toast().action!.label}
-                  </ArkToast.ActionTrigger>
+                  <Show when={toast().action}>
+                    <div class="flex gap-2 mt-3">
+                      <ArkToast.ActionTrigger class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+                        {toast().action!.label}
+                      </ArkToast.ActionTrigger>
+                    </div>
+                  </Show>
                 </div>
-              </Show>
-            </div>
 
-            <Show when={toast().type !== "loading"}>
-              <ArkToast.CloseTrigger class="absolute right-2 top-2 rounded-sm p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:opacity-100">
-                <div class={cn("h-4 w-4", icon("x"))} />
-              </ArkToast.CloseTrigger>
-            </Show>
-          </ArkToast.Root>
-        )}
-      </ArkToaster>
-    </>
+                <Show when={toast().type !== "loading"}>
+                  <ArkToast.CloseTrigger class="absolute right-2 top-2 rounded-sm p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:opacity-100">
+                    <div class={cn("h-4 w-4", icon("x"))} />
+                  </ArkToast.CloseTrigger>
+                </Show>
+              </ArkToast.Root>
+            )}
+          </ArkToaster>
+        </>
+      )}
+    </Show>
   );
 };
 
@@ -260,105 +271,55 @@ export const meta: ComponentMeta<ToastProps> = {
           gap: 16,
         });
 
-        const toasterBottom = createToaster({
-          placement: "bottom",
-          overlap: true,
-          gap: 16,
-        });
-
-        const toasterTopRight = createToaster({
-          placement: "top-end",
-          overlap: true,
-          gap: 16,
-        });
-
-        const toasterTop = createToaster({
+        const toasterTopCenter = createToaster({
           placement: "top",
-          overlap: true,
-          gap: 16,
-        });
-
-        const toasterBottomLeft = createToaster({
-          placement: "bottom-start",
-          overlap: true,
-          gap: 16,
+          overlap: false,
+          gap: 8,
         });
 
         return (
-          <>
-            <Toast toaster={toasterBottomRight} />
-            <Toast toaster={toasterBottom} />
-            <Toast toaster={toasterTopRight} />
-            <Toast toaster={toasterTop} />
-            <Toast toaster={toasterBottomLeft} />
-            <div class="space-y-4">
-              <p class="text-sm text-muted-foreground mb-2">
-                Multiple toaster instances for different positions!
+          <div class="space-y-4">
+            <div class="p-4 rounded-lg border border-border bg-muted/50">
+              <p class="text-sm text-muted-foreground mb-4">
+                Toast instances are created once at the app level and can be
+                used anywhere in your application. Add the Toast component to
+                your app root to render notifications.
               </p>
               <div class="flex flex-wrap gap-2">
                 <Button
                   onClick={() =>
                     toasterBottomRight.create({
                       title: "Bottom Right",
-                      description: "Default position (bottom-right)",
+                      description: "This appears in the bottom right corner",
                       type: "info",
                     })
                   }
                 >
-                  Bottom Right
+                  Bottom Right Toast
                 </Button>
                 <Button
                   onClick={() =>
-                    toasterBottom.create({
-                      title: "Bottom Center",
-                      description: "Centered at the bottom",
-                      type: "success",
-                    })
-                  }
-                >
-                  Bottom Center
-                </Button>
-                <Button
-                  onClick={() =>
-                    toasterTopRight.create({
-                      title: "Top Right",
-                      description: "Top right position",
-                      type: "warning",
-                    })
-                  }
-                >
-                  Top Right
-                </Button>
-                <Button
-                  onClick={() =>
-                    toasterTop.create({
+                    toasterTopCenter.create({
                       title: "Top Center",
-                      description: "Centered at the top",
-                      type: "error",
+                      description: "This appears at the top center",
+                      type: "info",
                     })
                   }
                 >
-                  Top Center
-                </Button>
-                <Button
-                  onClick={() =>
-                    toasterBottomLeft.create({
-                      title: "Bottom Left",
-                      description: "Bottom left position",
-                    })
-                  }
-                >
-                  Bottom Left
+                  Top Center Toast
                 </Button>
               </div>
             </div>
-          </>
+            <Toast toaster={toasterBottomRight} />
+            <Toast toaster={toasterTopCenter} />
+          </div>
         );
       },
     },
     {
-      title: "Promise & Update Toasts",
-      description: "Handle async operations and update toasts dynamically",
+      title: "Toast Types",
+      description:
+        "Different toast types with appropriate icons and colors. Use type-specific methods or the generic create method.",
       code: () => {
         const toaster = createToaster({
           placement: "bottom-end",
@@ -366,157 +327,278 @@ export const meta: ComponentMeta<ToastProps> = {
           gap: 16,
         });
 
-        const uploadFile = () => {
-          return new Promise<void>((resolve, reject) => {
+        return (
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-2">
+              <Button
+                onClick={() =>
+                  toaster.success({
+                    title: "Success!",
+                    description: "Your changes have been saved.",
+                  })
+                }
+              >
+                Success
+              </Button>
+              <Button
+                onClick={() =>
+                  toaster.error({
+                    title: "Error",
+                    description: "Something went wrong. Please try again.",
+                  })
+                }
+              >
+                Error
+              </Button>
+              <Button
+                onClick={() =>
+                  toaster.warning({
+                    title: "Warning",
+                    description: "This action cannot be undone.",
+                  })
+                }
+              >
+                Warning
+              </Button>
+              <Button
+                onClick={() =>
+                  toaster.info({
+                    title: "Info",
+                    description: "This is an informational message.",
+                  })
+                }
+              >
+                Info
+              </Button>
+              <Button
+                onClick={() =>
+                  toaster.loading({
+                    title: "Loading...",
+                    description: "Please wait while we process your request.",
+                  })
+                }
+              >
+                Loading
+              </Button>
+            </div>
+            <Toast toaster={toaster} />
+          </div>
+        );
+      },
+    },
+    {
+      title: "With Actions",
+      description: "Toasts can include action buttons for user interaction",
+      code: () => {
+        const toaster = createToaster({
+          placement: "bottom-end",
+          overlap: true,
+          gap: 16,
+        });
+
+        return (
+          <div class="space-y-4">
+            <Button
+              onClick={() =>
+                toaster.create({
+                  title: "Update Available",
+                  description: "A new version of the app is ready to install.",
+                  type: "info",
+                  action: {
+                    label: "Update Now",
+                    onClick: () => console.log("Updating..."),
+                  },
+                })
+              }
+            >
+              Show Action Toast
+            </Button>
+            <Toast toaster={toaster} />
+          </div>
+        );
+      },
+    },
+    {
+      title: "Custom Duration",
+      description: "Control how long toasts are displayed",
+      code: () => {
+        const toaster = createToaster({
+          placement: "bottom-end",
+          overlap: true,
+          gap: 16,
+        });
+
+        return (
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-2">
+              <Button
+                onClick={() =>
+                  toaster.create({
+                    title: "Quick Toast",
+                    description: "This will disappear in 2 seconds",
+                    type: "info",
+                    duration: 2000,
+                  })
+                }
+              >
+                2 Second Toast
+              </Button>
+              <Button
+                onClick={() =>
+                  toaster.create({
+                    title: "Long Toast",
+                    description: "This will stay for 10 seconds",
+                    type: "info",
+                    duration: 10000,
+                  })
+                }
+              >
+                10 Second Toast
+              </Button>
+              <Button
+                onClick={() =>
+                  toaster.create({
+                    title: "Persistent Toast",
+                    description: "This won't auto-dismiss",
+                    type: "warning",
+                    duration: Infinity,
+                  })
+                }
+              >
+                Persistent Toast
+              </Button>
+            </div>
+            <Toast toaster={toaster} />
+          </div>
+        );
+      },
+    },
+    {
+      title: "Promise Toasts",
+      description:
+        "Show loading, success, and error states for async operations",
+      code: () => {
+        const toaster = createToaster({
+          placement: "bottom-end",
+          overlap: true,
+          gap: 16,
+        });
+
+        const simulateAsync = () =>
+          new Promise((resolve, reject) => {
             setTimeout(() => {
-              Math.random() > 0.5
-                ? resolve()
-                : reject(new Error("Upload failed"));
+              Math.random() > 0.5 ? resolve("Success!") : reject("Failed!");
             }, 2000);
           });
-        };
+
+        return (
+          <div class="space-y-4">
+            <Button
+              onClick={() => {
+                toaster.promise(simulateAsync(), {
+                  loading: {
+                    title: "Processing...",
+                    description: "Please wait",
+                  },
+                  success: {
+                    title: "Success!",
+                    description: "Operation completed successfully",
+                  },
+                  error: {
+                    title: "Error",
+                    description: "Operation failed",
+                  },
+                });
+              }}
+            >
+              Promise Toast
+            </Button>
+            <Toast toaster={toaster} />
+          </div>
+        );
+      },
+    },
+    {
+      title: "Programmatic Control",
+      description: "Dismiss toasts programmatically using the returned ID",
+      code: () => {
+        const toaster = createToaster({
+          placement: "bottom-end",
+          overlap: true,
+          gap: 16,
+        });
 
         let toastId: string | undefined;
 
         return (
-          <>
-            <Toast toaster={toaster} />
-            <div class="flex gap-2">
-              <Button
-                onClick={() =>
-                  toaster.promise(uploadFile, {
-                    loading: {
-                      title: "Uploading...",
-                      description: "Please wait while we process your request.",
-                    },
-                    success: {
-                      title: "Success!",
-                      description:
-                        "Your request has been processed successfully.",
-                    },
-                    error: {
-                      title: "Failed",
-                      description: "Something went wrong. Please try again.",
-                    },
-                  })
-                }
-              >
-                Promise Toast
-              </Button>
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-2">
               <Button
                 onClick={() => {
                   toastId = toaster.create({
-                    title: "Loading",
-                    description: "Processing your request...",
-                    type: "loading",
+                    title: "Dismissible Toast",
+                    description: "Click the dismiss button to close this",
+                    type: "info",
                     duration: Infinity,
                   });
                 }}
               >
-                Create
+                Create Toast
               </Button>
               <Button
                 onClick={() => {
                   if (toastId) {
-                    toaster.update(toastId, {
-                      title: "Success!",
-                      description: "Your request has been processed.",
-                      type: "success",
-                      duration: 3000,
-                    });
+                    toaster.dismiss(toastId);
+                    toastId = undefined;
                   }
                 }}
               >
-                Update
+                Dismiss Toast
+              </Button>
+              <Button
+                onClick={() => {
+                  toaster.dismiss();
+                }}
+              >
+                Dismiss All
               </Button>
             </div>
-          </>
+            <Toast toaster={toaster} />
+          </div>
         );
       },
     },
     {
-      title: "Duration & Limits",
-      description: "Control duration and maximum visible toasts",
-
+      title: "Multiple Toasts",
+      description: "Stack multiple toasts with overlap and gap settings",
       code: () => {
         const toaster = createToaster({
           placement: "bottom-end",
           overlap: true,
           gap: 16,
-          max: 3,
+          max: 5,
         });
 
         return (
-          <>
+          <div class="space-y-4">
+            <Button
+              onClick={() => {
+                const types = ["success", "error", "warning", "info"] as const;
+                const randomType =
+                  types[Math.floor(Math.random() * types.length)];
+                toaster.create({
+                  title: `Toast ${Date.now()}`,
+                  description: `This is a ${randomType} toast`,
+                  type: randomType,
+                });
+              }}
+            >
+              Add Random Toast
+            </Button>
             <Toast toaster={toaster} />
-            <div class="space-y-3">
-              <div class="flex flex-wrap gap-2">
-                <Button
-                  onClick={() =>
-                    toaster.create({
-                      title: "Quick toast",
-                      description: "Disappears in 1 second",
-                      duration: 1000,
-                    })
-                  }
-                >
-                  1s
-                </Button>
-                <Button
-                  onClick={() =>
-                    toaster.create({
-                      title: "Long toast",
-                      description: "Stays for 10 seconds",
-                      duration: 10000,
-                    })
-                  }
-                >
-                  10s
-                </Button>
-                <Button
-                  onClick={() =>
-                    toaster.create({
-                      title: "Persistent",
-                      description: "Stays until dismissed",
-                      duration: Infinity,
-                    })
-                  }
-                >
-                  ∞
-                </Button>
-              </div>
-              <div class="flex flex-wrap gap-2">
-                <Button
-                  onClick={() =>
-                    toaster.create({
-                      title: `Toast ${Date.now()}`,
-                      description: "Max 3 visible at once",
-                      type: "info",
-                    })
-                  }
-                >
-                  Add Toast
-                </Button>
-                <Button
-                  onClick={() => {
-                    for (let i = 1; i <= 5; i++) {
-                      toaster.create({
-                        title: `Toast ${i}`,
-                        description: `Toast number ${i}`,
-                        type: "info",
-                      });
-                    }
-                  }}
-                >
-                  Add 5 Toasts
-                </Button>
-              </div>
-            </div>
-          </>
+          </div>
         );
       },
     },
   ],
 };
-
-export default Toast;

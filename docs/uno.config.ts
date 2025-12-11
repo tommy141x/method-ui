@@ -5,9 +5,10 @@ import {
   presetTypography,
   presetUno,
   presetWebFonts,
-  transformerDirectives,
-  transformerVariantGroup,
 } from "unocss";
+
+import transformerDirectives from "@unocss/transformer-directives";
+import transformerVariantGroup from "@unocss/transformer-variant-group";
 
 /*
 Icon Usage:
@@ -61,7 +62,35 @@ export default defineConfig({
       },
     }),
   ],
+  // NOTE: transformers removed - they can cause issues with the directive plugin
   transformers: [transformerDirectives(), transformerVariantGroup()],
+  rules: [
+    [
+      "bg-background",
+      {
+        "background-color":
+          "hsl(var(--background) / var(--background-opacity, 1))",
+        "backdrop-filter": "var(--background-backdrop-filter, none)",
+        "-webkit-backdrop-filter": "var(--background-backdrop-filter, none)",
+      },
+    ],
+    [
+      "bg-card",
+      {
+        "background-color": "hsl(var(--card) / var(--card-opacity, 1))",
+        "backdrop-filter": "var(--card-backdrop-filter, none)",
+        "-webkit-backdrop-filter": "var(--card-backdrop-filter, none)",
+      },
+    ],
+    [
+      "bg-popover",
+      {
+        "background-color": "hsl(var(--popover) / var(--popover-opacity, 1))",
+        "backdrop-filter": "var(--popover-backdrop-filter, none)",
+        "-webkit-backdrop-filter": "var(--popover-backdrop-filter, none)",
+      },
+    ],
+  ],
   theme: {
     colors: {
       border: "hsl(var(--border))",

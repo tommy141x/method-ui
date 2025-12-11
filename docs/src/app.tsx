@@ -4,6 +4,7 @@ import { Suspense } from "solid-js";
 import { MetaProvider } from "@solidjs/meta";
 import "./global.css";
 import { ThemeProvider, type ThemeDefinition } from "./components/theme";
+import { GlassFilter } from "./components/glass-filter";
 
 const themes: ThemeDefinition[] = [
   {
@@ -39,21 +40,10 @@ const themes: ThemeDefinition[] = [
     },
   },
   {
-    id: "rose",
-    name: "Rose",
-    description: "Warm, elegant rose",
+    id: "glass",
+    name: "Glass",
+    description: "Liquid Glass",
     extends: "base",
-    cssVars: {
-      primary: "346.8 77.2% 59.8%",
-      "primary-foreground": "210 40% 98%",
-      destructive: "346.8 95.2% 50.8%",
-      ring: "346.8 77.2% 59.8%",
-      "chart-1": "346.8 77.2% 59.8%",
-      "chart-2": "346.8 95.2% 50.8%",
-      "chart-3": "346.8 77.2% 59.8%",
-      "chart-4": "346.8 95.2% 50.8%",
-      "chart-5": "346.8 77.2% 59.8%",
-    },
   },
   {
     id: "orange",
@@ -100,6 +90,7 @@ export default function App() {
   return (
     <MetaProvider>
       <ThemeProvider config={{ themes, defaultTheme: "base" }}>
+        <GlassFilter />
         <Router
           root={(props) => (
             <Suspense fallback={<div>Loading...</div>}>

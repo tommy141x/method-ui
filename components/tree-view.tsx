@@ -23,6 +23,7 @@ type TreeViewProps = {
   onExpandedChange?: (details: { expandedValue: string[] }) => void;
   onSelectionChange?: (details: { selectedValue: string[] }) => void;
   selectionMode?: "single" | "multiple";
+  scrollToIndexFn?: (details: { index: number }) => void;
   class?: string;
   renderBranch?: (node: TreeNode) => JSX.Element;
   renderItem?: (node: TreeNode) => JSX.Element;

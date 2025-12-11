@@ -1,0 +1,13 @@
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index f35f982bcbf95c266954765a9fc65cab94f7e35d..496c67b17a3c7fbb7d6ef71ae228fb683763980d 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -76,6 +76,8 @@ function transformCode({
+   onDirectiveFnsById,
+   root
+ }) {
++  // Patched for Bun: skip virtual modules
++  if (id.startsWith("/@") || id.startsWith("/__") || id.charCodeAt(0) === 0) return null;
+   const url = pathToFileURL(id);
+   url.searchParams.delete("v");
+   id = fileURLToPath(url).replace(/\\/g, "/");

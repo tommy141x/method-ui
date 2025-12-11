@@ -3188,6 +3188,12 @@
           "required": false
         },
         {
+          "name": "autoHighlight",
+          "type": "boolean",
+          "description": "Auto Highlight",
+          "required": false
+        },
+        {
           "name": "class",
           "type": "string",
           "description": "Additional CSS classes",
@@ -3435,6 +3441,100 @@
       },
       "files": [
         "menu.tsx"
+      ]
+    },
+    "nav-menu": {
+      "name": "NavMenu",
+      "fileName": "nav-menu",
+      "description": "A responsive navigation menu component with hover/click interactions, keyboard navigation, and smooth animations. Perfect for site headers and navigation bars.",
+      "props": [
+        {
+          "name": "children",
+          "type": "JSX.Element",
+          "description": "Child elements or content",
+          "required": false
+        },
+        {
+          "name": "class",
+          "type": "string",
+          "description": "Additional CSS classes",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current value",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Default value",
+          "required": false
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "description": "On Value Change",
+          "required": false
+        },
+        {
+          "name": "orientation",
+          "type": "Orientation",
+          "description": "Orientation",
+          "required": false
+        },
+        {
+          "name": "dir",
+          "type": "Direction",
+          "description": "Dir",
+          "required": false
+        },
+        {
+          "name": "delayDuration",
+          "type": "number",
+          "description": "Delay Duration",
+          "required": false
+        },
+        {
+          "name": "skipDelayDuration",
+          "type": "number",
+          "description": "Skip Delay Duration",
+          "required": false
+        },
+        {
+          "name": "viewport",
+          "type": "boolean",
+          "description": "Viewport",
+          "required": false
+        }
+      ],
+      "variants": [],
+      "examples": [
+        {
+          "title": "Basic Navbar",
+          "description": "A simple navigation menu with dropdowns",
+          "source": "<NavMenu>\n  <NavMenuList>\n    <NavMenuItem>\n      <NavMenuTrigger>Products</NavMenuTrigger>\n      <NavMenuContent class=\"p-2\">\n        <div class=\"flex gap-2\">\n          {/* Featured Card - 1/3 width */}\n          <a\n            href=\"#featured\"\n            class=\"w-[180px] flex-shrink-0 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 p-4 transition-colors hover:from-primary/30 hover:to-primary/10\"\n          >\n            <div class=\"flex flex-col gap-2\">\n              <div class={cn(\"h-8 w-8\", icon(\"sparkles\"))} />\n              <div class=\"font-semibold\">New Release</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Check out our latest features\n              </div>\n            </div>\n          </a>\n\n          {/* Icon Grid - 2/3 width */}\n          <div class=\"w-[280px] flex flex-col gap-1\">\n            <a\n              href=\"#analytics\"\n              class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n            >\n              <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"trending-up\"))} />\n              <div>\n                <div class=\"font-medium\">Analytics</div>\n                <div class=\"text-xs text-muted-foreground\">\n                  Track your metrics\n                </div>\n              </div>\n            </a>\n            <a\n              href=\"#dashboard\"\n              class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n            >\n              <div\n                class={cn(\"h-5 w-5 mt-0.5\", icon(\"layout-dashboard\"))}\n              />\n              <div>\n                <div class=\"font-medium\">Dashboard</div>\n                <div class=\"text-xs text-muted-foreground\">\n                  Manage workspace\n                </div>\n              </div>\n            </a>\n            <a\n              href=\"#reports\"\n              class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n            >\n              <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"file-text\"))} />\n              <div>\n                <div class=\"font-medium\">Reports</div>\n                <div class=\"text-xs text-muted-foreground\">\n                  Generate reports\n                </div>\n              </div>\n            </a>\n          </div>\n        </div>\n      </NavMenuContent>\n    </NavMenuItem>\n    <NavMenuItem>\n      <NavMenuTrigger>Resources</NavMenuTrigger>\n      <NavMenuContent class=\"p-2\">\n        <div class=\"grid gap-1\">\n          <a\n            href=\"#docs\"\n            class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"book\"))} />\n            <div>\n              <div class=\"font-medium\">Documentation</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Learn how to use our platform\n              </div>\n            </div>\n          </a>\n          <a\n            href=\"#blog\"\n            class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"pen-tool\"))} />\n            <div>\n              <div class=\"font-medium\">Blog</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Latest news and updates\n              </div>\n            </div>\n          </a>\n        </div>\n      </NavMenuContent>\n    </NavMenuItem>\n    <NavMenuItem>\n      <NavMenuLink href=\"#pricing\">Pricing</NavMenuLink>\n    </NavMenuItem>\n  </NavMenuList>\n</NavMenu>"
+        },
+        {
+          "title": "Without Viewport",
+          "description": "Navigation without viewport for inline content",
+          "source": "<NavMenu viewport={false}>\n  <NavMenuList>\n    <NavMenuItem>\n      <NavMenuTrigger>Features</NavMenuTrigger>\n      <NavMenuContent class=\"p-2\">\n        <div class=\"grid gap-1 w-[280px]\">\n          <a\n            href=\"#feature1\"\n            class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"zap\"))} />\n            <div>\n              <div class=\"font-medium\">Lightning Fast</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Optimized performance\n              </div>\n            </div>\n          </a>\n          <a\n            href=\"#feature2\"\n            class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"shield\"))} />\n            <div>\n              <div class=\"font-medium\">Secure</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Enterprise-grade security\n              </div>\n            </div>\n          </a>\n          <a\n            href=\"#feature3\"\n            class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"users\"))} />\n            <div>\n              <div class=\"font-medium\">Collaborative</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Work together seamlessly\n              </div>\n            </div>\n          </a>\n        </div>\n      </NavMenuContent>\n    </NavMenuItem>\n    <NavMenuItem>\n      <NavMenuTrigger>Company</NavMenuTrigger>\n      <NavMenuContent class=\"p-2\">\n        <div class=\"flex flex-col gap-1 w-[200px]\">\n          <a\n            href=\"#about-us\"\n            class=\"rounded-md p-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            About Us\n          </a>\n          <a\n            href=\"#careers\"\n            class=\"rounded-md p-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            Careers\n          </a>\n          <a\n            href=\"#press\"\n            class=\"rounded-md p-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            Press\n          </a>\n        </div>\n      </NavMenuContent>\n    </NavMenuItem>\n  </NavMenuList>\n</NavMenu>"
+        },
+        {
+          "title": "With Call-to-Action",
+          "description": "Complete navigation with branding and CTA",
+          "source": "<NavMenu>\n  <NavMenuList>\n    <NavMenuItem>\n      <NavMenuTrigger>Solutions</NavMenuTrigger>\n      <NavMenuContent class=\"p-2\">\n        <div class=\"grid gap-1\">\n          <a\n            href=\"#automation\"\n            class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"zap\"))} />\n            <div>\n              <div class=\"font-medium\">Automation</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Streamline your workflows\n              </div>\n            </div>\n          </a>\n          <a\n            href=\"#integration\"\n            class=\"flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground\"\n          >\n            <div class={cn(\"h-5 w-5 mt-0.5\", icon(\"puzzle\"))} />\n            <div>\n              <div class=\"font-medium\">Integrations</div>\n              <div class=\"text-xs text-muted-foreground\">\n                Connect your favorite tools\n              </div>\n            </div>\n          </a>\n        </div>\n      </NavMenuContent>\n    </NavMenuItem>\n    <NavMenuItem>\n      <NavMenuLink href=\"#pricing\">Pricing</NavMenuLink>\n    </NavMenuItem>\n    <NavMenuItem>\n      <NavMenuLink href=\"#docs\">Docs</NavMenuLink>\n    </NavMenuItem>\n    <NavMenuItem>\n      <Button variant=\"default\" size=\"sm\" class=\"h-9\">\n        Get Started\n      </Button>\n    </NavMenuItem>\n  </NavMenuList>\n</NavMenu>"
+        }
+      ],
+      "dependencies": {
+        "components": [],
+        "packages": [
+          "solid-motionone"
+        ]
+      },
+      "files": [
+        "nav-menu.tsx"
       ]
     },
     "number-ticker": {
@@ -4278,7 +4378,7 @@
     "sidebar": {
       "name": "Sidebar",
       "fileName": "sidebar",
-      "description": "A collapsible sidebar component with composable parts. Perfect for application navigation with support for icons, labels, and grouping.",
+      "description": "A comprehensive sidebar component with mobile responsiveness, collapsible states, keyboard shortcuts, and multiple variants. Built with Ark UI patterns and solid-motionone animations.",
       "props": [
         {
           "name": "children",
@@ -4293,27 +4393,33 @@
           "required": false
         },
         {
-          "name": "defaultCollapsed",
+          "name": "style",
+          "type": "JSX.CSSProperties",
+          "description": "Style",
+          "required": false
+        },
+        {
+          "name": "defaultOpen",
           "type": "boolean",
-          "description": "Default Collapsed",
+          "description": "Default Open",
           "required": false
         },
         {
-          "name": "collapsed",
+          "name": "open",
           "type": "boolean",
-          "description": "Collapsed",
+          "description": "Whether the component is open",
           "required": false
         },
         {
-          "name": "onCollapsedChange",
-          "type": "(collapsed: boolean) => void",
-          "description": "On Collapsed Change",
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Callback when open state changes",
           "required": false
         },
         {
-          "name": "collapsible",
-          "type": "\"offcanvas\" | \"icon\" | \"none\"",
-          "description": "Collapsible",
+          "name": "fullHeight",
+          "type": "boolean",
+          "description": "Full Height",
           "required": false
         }
       ],
@@ -4321,23 +4427,30 @@
       "examples": [
         {
           "title": "Basic Sidebar",
-          "description": "A simple sidebar with header, content, and footer",
-          "source": "<div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n  <Sidebar>\n    <SidebarHeader>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n          <span class=\"text-sm font-bold\">M</span>\n        </div>\n        <span class=\"font-semibold\">Method UI</span>\n      </div>\n    </SidebarHeader>\n    <SidebarContent>\n      <SidebarGroup>\n        <SidebarGroupLabel>Getting Started</SidebarGroupLabel>\n        <SidebarGroupContent>\n          <div class=\"space-y-1\">\n            <div class=\"rounded-md px-2 py-2 text-sm\">Introduction</div>\n            <div class=\"rounded-md px-2 py-2 text-sm\">Installation</div>\n            <div class=\"rounded-md px-2 py-2 text-sm\">Usage</div>\n          </div>\n        </SidebarGroupContent>\n      </SidebarGroup>\n    </SidebarContent>\n    <SidebarFooter>\n      <div class=\"text-xs text-muted-foreground\">v1.0.0</div>\n    </SidebarFooter>\n  </Sidebar>\n  <div class=\"flex-1 p-6\">\n    <h2 class=\"text-2xl font-bold\">Main Content</h2>\n    <p class=\"text-muted-foreground\">This is the main content area.</p>\n  </div>\n</div>"
+          "description": "A simple sidebar with navigation items - no SidebarProvider needed!",
+          "source": "<Sidebar\n  fullHeight={false}\n  wrapperClass=\"h-[600px] border rounded-lg overflow-hidden\"\n  inset={\n    <SidebarInset>\n      <header class=\"flex h-14 items-center gap-2 border-b px-4\">\n        <SidebarTrigger />\n        <div class=\"text-lg font-semibold\">Dashboard</div>\n      </header>\n      <div class=\"flex-1 p-4\">\n        <p class=\"text-muted-foreground\">\n          This is the main content area. Try toggling the sidebar with\n          the button or pressing Cmd+B (Ctrl+B on Windows).\n        </p>\n      </div>\n    </SidebarInset>\n  }\n>\n  <SidebarHeader>\n    <SidebarMenu>\n      <SidebarMenuItem>\n        <SidebarMenuButton\n          size=\"lg\"\n          class=\"hover:bg-transparent active:bg-transparent\"\n        >\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n            <span class=\"text-sm font-bold\">M</span>\n          </div>\n          <div class=\"flex flex-col gap-0.5 leading-none\">\n            <span class=\"font-semibold\">Method UI</span>\n          </div>\n        </SidebarMenuButton>\n      </SidebarMenuItem>\n    </SidebarMenu>\n  </SidebarHeader>\n  <SidebarContent>\n    <SidebarGroup>\n      <SidebarGroupLabel>Navigation</SidebarGroupLabel>\n      <SidebarGroupContent>\n        <SidebarMenu>\n          <SidebarMenuItem>\n            <SidebarMenuButton isActive tooltip=\"Home\">\n              <div class={cn(\"h-4 w-4\", icon(\"home\"))} />\n              <span>Home</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Inbox\">\n              <div class={cn(\"h-4 w-4\", icon(\"inbox\"))} />\n              <span>Inbox</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Calendar\">\n              <div class={cn(\"h-4 w-4\", icon(\"calendar\"))} />\n              <span>Calendar</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Settings\">\n              <div class={cn(\"h-4 w-4\", icon(\"settings\"))} />\n              <span>Settings</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n        </SidebarMenu>\n      </SidebarGroupContent>\n    </SidebarGroup>\n  </SidebarContent>\n  <SidebarFooter>\n    <SidebarMenu>\n      <SidebarMenuItem>\n        <SidebarMenuButton size=\"lg\">\n          <div class=\"flex aspect-square size-8 items-center justify-center rounded-lg bg-muted\">\n            <div class={cn(\"h-4 w-4\", icon(\"user\"))} />\n          </div>\n          <div class=\"flex flex-col gap-0.5 leading-none\">\n            <span class=\"font-semibold\">John Doe</span>\n            <span class=\"text-xs text-muted-foreground\">\n              john@example.com\n            </span>\n          </div>\n        </SidebarMenuButton>\n      </SidebarMenuItem>\n    </SidebarMenu>\n  </SidebarFooter>\n</Sidebar>"
         },
         {
-          "title": "With Menu Items",
-          "description": "Sidebar with clickable menu items and icons",
-          "source": "<div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n  <Sidebar>\n    <SidebarHeader>\n      <div class=\"flex items-center gap-2\">\n        <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n          <span class=\"text-sm font-bold\">A</span>\n        </div>\n        <span class=\"font-semibold\">Application</span>\n      </div>\n    </SidebarHeader>\n    <SidebarContent>\n      <SidebarGroup>\n        <SidebarGroupLabel>Menu</SidebarGroupLabel>\n        <SidebarGroupContent>\n          <SidebarMenu>\n            <SidebarMenuItem>\n              <SidebarMenuButton isActive={true} tooltip=\"Home\">\n                <div class=\"h-4 w-4 i-lucide-home\" />\n                <span>Home</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Inbox\">\n                <div class=\"h-4 w-4 i-lucide-inbox\" />\n                <span>Inbox</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Calendar\">\n                <div class=\"h-4 w-4 i-lucide-calendar\" />\n                <span>Calendar</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Search\">\n                <div class=\"h-4 w-4 i-lucide-search\" />\n                <span>Search</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Settings\">\n                <div class=\"h-4 w-4 i-lucide-settings\" />\n                <span>Settings</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n          </SidebarMenu>\n        </SidebarGroupContent>\n      </SidebarGroup>\n    </SidebarContent>\n  </Sidebar>\n  <div class=\"flex-1 p-6\">\n    <h2 class=\"text-2xl font-bold\">Dashboard</h2>\n    <p class=\"text-muted-foreground\">Welcome to your dashboard.</p>\n  </div>\n</div>"
+          "title": "Collapsible with Icon Mode",
+          "description": "Sidebar that collapses to icon-only mode - no SidebarProvider needed!",
+          "source": "<Sidebar\n  collapsible=\"icon\"\n  defaultOpen={false}\n  fullHeight={false}\n  wrapperClass=\"h-[600px] border rounded-lg overflow-hidden\"\n  inset={\n    <SidebarInset>\n      <header class=\"flex h-14 items-center gap-2 border-b px-4\">\n        <SidebarTrigger />\n        <div class=\"text-lg font-semibold\">Icon Collapsible</div>\n      </header>\n      <div class=\"flex-1 p-4\">\n        <p class=\"text-muted-foreground\">\n          When collapsed, the sidebar shows only icons with tooltips.\n          Click the toggle button or press Cmd+B to expand.\n        </p>\n      </div>\n    </SidebarInset>\n  }\n>\n  <SidebarHeader>\n    <SidebarMenu>\n      <SidebarMenuItem>\n        <SidebarMenuButton size=\"lg\">\n          <div class=\"flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground\">\n            <div class={cn(\"h-4 w-4\", icon(\"command\"))} />\n          </div>\n          <div class=\"flex flex-col gap-0.5 leading-none\">\n            <span class=\"font-semibold\">Acme Inc</span>\n            <span class=\"text-xs\">Enterprise</span>\n          </div>\n        </SidebarMenuButton>\n      </SidebarMenuItem>\n    </SidebarMenu>\n  </SidebarHeader>\n  <SidebarContent>\n    <SidebarGroup>\n      <SidebarGroupLabel>Platform</SidebarGroupLabel>\n      <SidebarGroupContent>\n        <SidebarMenu>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Dashboard\" isActive>\n              <div class={cn(\"h-4 w-4\", icon(\"layout-dashboard\"))} />\n              <span>Dashboard</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Projects\">\n              <div class={cn(\"h-4 w-4\", icon(\"folder\"))} />\n              <span>Projects</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Tasks\">\n              <div class={cn(\"h-4 w-4\", icon(\"check-square\"))} />\n              <span>Tasks</span>\n              <SidebarMenuBadge>12</SidebarMenuBadge>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n        </SidebarMenu>\n      </SidebarGroupContent>\n    </SidebarGroup>\n    <SidebarSeparator />\n    <SidebarGroup>\n      <SidebarGroupLabel>Teams</SidebarGroupLabel>\n      <SidebarGroupContent>\n        <SidebarMenu>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Engineering\">\n              <div class={cn(\"h-4 w-4\", icon(\"code\"))} />\n              <span>Engineering</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Design\">\n              <div class={cn(\"h-4 w-4\", icon(\"palette\"))} />\n              <span>Design</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n        </SidebarMenu>\n      </SidebarGroupContent>\n    </SidebarGroup>\n  </SidebarContent>\n  <SidebarRail />\n</Sidebar>"
         },
         {
-          "title": "Collapsible Sidebar",
-          "description": "Sidebar with collapse/expand functionality",
-          "source": "const [collapsed, setCollapsed] = createSignal(false);\n\nreturn (\n  <div class=\"flex h-[400px] w-full overflow-hidden rounded-lg border\">\n    <Sidebar collapsed={collapsed()} onCollapsedChange={setCollapsed}>\n      <SidebarHeader>\n        <div class=\"flex items-center gap-2\">\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n            <span class=\"text-sm font-bold\">W</span>\n          </div>\n          {!collapsed() && <span class=\"font-semibold\">Workspace</span>}\n        </div>\n      </SidebarHeader>\n      <SidebarContent>\n        <SidebarGroup>\n          <SidebarGroupLabel>Navigation</SidebarGroupLabel>\n          <SidebarGroupContent>\n            <SidebarMenu>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Dashboard\">\n                  <div class=\"h-4 w-4 i-lucide-layout-dashboard\" />\n                  {!collapsed() && <span>Dashboard</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Projects\">\n                  <div class=\"h-4 w-4 i-lucide-folder\" />\n                  {!collapsed() && <span>Projects</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Team\">\n                  <div class=\"h-4 w-4 i-lucide-users\" />\n                  {!collapsed() && <span>Team</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n              <SidebarMenuItem>\n                <SidebarMenuButton tooltip=\"Analytics\">\n                  <div class=\"h-4 w-4 i-lucide-bar-chart\" />\n                  {!collapsed() && <span>Analytics</span>}\n                </SidebarMenuButton>\n              </SidebarMenuItem>\n            </SidebarMenu>\n          </SidebarGroupContent>\n        </SidebarGroup>\n      </SidebarContent>\n      <SidebarFooter>\n        <Show\n          when={!collapsed()}\n          fallback={\n            <div class=\"flex justify-center\">\n              <SidebarTrigger>\n                <Button variant=\"ghost\" size=\"icon\">\n                  <div class=\"h-4 w-4 transition-transform rotate-180 i-lucide-panel-left\" />\n                </Button>\n              </SidebarTrigger>\n            </div>\n          }\n        >\n          <div class=\"flex items-center gap-2\">\n            <div class=\"flex h-8 w-8 items-center justify-center rounded-full bg-muted\">\n              <div class=\"h-4 w-4 i-lucide-user\" />\n            </div>\n            <div class=\"flex flex-col flex-1\">\n              <span class=\"text-sm font-medium\">John Doe</span>\n              <span class=\"text-xs text-muted-foreground\">\n                john@example.com\n              </span>\n            </div>\n            <SidebarTrigger class=\"ml-auto\">\n              <Button variant=\"ghost\" size=\"icon\">\n                <div class=\"h-4 w-4 i-lucide-panel-left\" />\n              </Button>\n            </SidebarTrigger>\n          </div>\n        </Show>\n      </SidebarFooter>\n    </Sidebar>\n    <div class=\"flex-1 p-6\">\n      <div class=\"flex items-center justify-between mb-4\">\n        <h2 class=\"text-2xl font-bold\">Content Area</h2>\n        <Button onClick={() => setCollapsed(!collapsed())}>\n          Toggle Sidebar\n        </Button>\n      </div>\n      <p class=\"text-muted-foreground\">\n        Click the button or use the sidebar toggle to collapse/expand\n        the sidebar.\n      </p>\n    </div>\n  </div>\n);"
+          "title": "With Sub-menu",
+          "description": "Sidebar with nested navigation items",
+          "source": "<SidebarProvider\n  fullHeight={false}\n  class=\"h-[600px] border rounded-lg overflow-hidden\"\n>\n  <Sidebar>\n    <SidebarHeader>\n      <SidebarMenu>\n        <SidebarMenuItem>\n          <SidebarMenuButton\n            size=\"lg\"\n            class=\"hover:bg-transparent active:bg-transparent\"\n          >\n            <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground\">\n              <div class={cn(\"h-4 w-4\", icon(\"zap\"))} />\n            </div>\n            <div class=\"flex flex-col gap-0.5 leading-none\">\n              <span class=\"font-semibold\">WorkSpace</span>\n            </div>\n          </SidebarMenuButton>\n        </SidebarMenuItem>\n      </SidebarMenu>\n    </SidebarHeader>\n    <SidebarContent>\n      <SidebarGroup>\n        <SidebarGroupContent>\n          <SidebarMenu>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Dashboard\">\n                <div class={cn(\"h-4 w-4\", icon(\"home\"))} />\n                <span>Dashboard</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Projects\">\n                <div class={cn(\"h-4 w-4\", icon(\"folder\"))} />\n                <span>Projects</span>\n              </SidebarMenuButton>\n              <SidebarMenuSub>\n                <SidebarMenuSubItem>\n                  <SidebarMenuSubButton isActive>\n                    <div class={cn(\"h-4 w-4\", icon(\"circle\"))} />\n                    <span>Website Redesign</span>\n                  </SidebarMenuSubButton>\n                </SidebarMenuSubItem>\n                <SidebarMenuSubItem>\n                  <SidebarMenuSubButton>\n                    <div class={cn(\"h-4 w-4\", icon(\"circle\"))} />\n                    <span>Mobile App</span>\n                  </SidebarMenuSubButton>\n                </SidebarMenuSubItem>\n                <SidebarMenuSubItem>\n                  <SidebarMenuSubButton>\n                    <div class={cn(\"h-4 w-4\", icon(\"circle\"))} />\n                    <span>API Integration</span>\n                  </SidebarMenuSubButton>\n                </SidebarMenuSubItem>\n              </SidebarMenuSub>\n            </SidebarMenuItem>\n            <SidebarMenuItem>\n              <SidebarMenuButton tooltip=\"Analytics\">\n                <div class={cn(\"h-4 w-4\", icon(\"bar-chart\"))} />\n                <span>Analytics</span>\n              </SidebarMenuButton>\n            </SidebarMenuItem>\n          </SidebarMenu>\n        </SidebarGroupContent>\n      </SidebarGroup>\n    </SidebarContent>\n  </Sidebar>\n  <SidebarInset>\n    <header class=\"flex h-14 items-center gap-2 border-b px-4\">\n      <SidebarTrigger />\n      <div class=\"text-lg font-semibold\">Sub-menus</div>\n    </header>\n    <div class=\"flex-1 p-4\">\n      <p class=\"text-muted-foreground\">\n        This example shows sub-menu items under the Projects section.\n      </p>\n    </div>\n  </SidebarInset>\n</SidebarProvider>"
+        },
+        {
+          "title": "Floating Variant",
+          "description": "Sidebar with a floating, card-like appearance - no SidebarProvider needed!",
+          "source": "<Sidebar\n  variant=\"floating\"\n  collapsible=\"icon\"\n  fullHeight={false}\n  wrapperClass=\"h-[600px] border rounded-lg overflow-hidden\"\n  inset={\n    <SidebarInset>\n      <header class=\"flex h-14 items-center gap-2 px-4\">\n        <SidebarTrigger />\n        <div class=\"text-lg font-semibold\">Floating Variant</div>\n      </header>\n      <div class=\"flex-1 p-4\">\n        <p class=\"text-muted-foreground\">\n          The floating variant adds padding and a card-like appearance\n          to the sidebar.\n        </p>\n      </div>\n    </SidebarInset>\n  }\n>\n  <SidebarHeader>\n    <SidebarMenu>\n      <SidebarMenuItem>\n        <SidebarMenuButton\n          size=\"lg\"\n          class=\"hover:bg-transparent active:bg-transparent\"\n        >\n          <div class=\"flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-pink-500 text-white\">\n            <div class={cn(\"h-4 w-4\", icon(\"sparkles\"))} />\n          </div>\n          <div class=\"flex flex-col gap-0.5 leading-none\">\n            <span class=\"font-semibold\">Premium</span>\n          </div>\n        </SidebarMenuButton>\n      </SidebarMenuItem>\n    </SidebarMenu>\n  </SidebarHeader>\n  <SidebarContent>\n    <SidebarGroup>\n      <SidebarGroupLabel>Main</SidebarGroupLabel>\n      <SidebarGroupContent>\n        <SidebarMenu>\n          <SidebarMenuItem>\n            <SidebarMenuButton isActive tooltip=\"Overview\">\n              <div class={cn(\"h-4 w-4\", icon(\"layout-dashboard\"))} />\n              <span>Overview</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Analytics\">\n              <div class={cn(\"h-4 w-4\", icon(\"trending-up\"))} />\n              <span>Analytics</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n          <SidebarMenuItem>\n            <SidebarMenuButton tooltip=\"Reports\">\n              <div class={cn(\"h-4 w-4\", icon(\"file-text\"))} />\n              <span>Reports</span>\n            </SidebarMenuButton>\n          </SidebarMenuItem>\n        </SidebarMenu>\n      </SidebarGroupContent>\n    </SidebarGroup>\n  </SidebarContent>\n  <SidebarFooter>\n    <SidebarMenu>\n      <SidebarMenuItem>\n        <SidebarMenuButton tooltip=\"Help\">\n          <div class={cn(\"h-4 w-4\", icon(\"help-circle\"))} />\n          <span>Help & Support</span>\n        </SidebarMenuButton>\n      </SidebarMenuItem>\n    </SidebarMenu>\n  </SidebarFooter>\n  <SidebarRail />\n</Sidebar>"
         }
       ],
       "dependencies": {
         "components": [],
-        "packages": []
+        "packages": [
+          "solid-motionone"
+        ]
       },
       "files": [
         "sidebar.tsx"
@@ -4880,8 +4993,8 @@
         "components": [],
         "packages": [
           "@ark-ui/solid",
-          "class-variance-authority",
-          "solid-motionone"
+          "@motionone/dom",
+          "class-variance-authority"
         ]
       },
       "files": [
@@ -5251,6 +5364,12 @@
           "required": false
         },
         {
+          "name": "scrollToIndexFn",
+          "type": "(details: { index: number }) => void",
+          "description": "Scroll To Index Fn",
+          "required": false
+        },
+        {
           "name": "class",
           "type": "string",
           "description": "Additional CSS classes",
@@ -5611,6 +5730,7 @@
     "listbox",
     "marquee",
     "menu",
+    "nav-menu",
     "number-ticker",
     "pin-input",
     "progress",

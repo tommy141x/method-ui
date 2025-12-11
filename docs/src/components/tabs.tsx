@@ -1,19 +1,25 @@
 import { Tabs as ArkTabs } from "@ark-ui/solid";
 import type { JSX, Component } from "solid-js";
-import { splitProps, createSignal, onMount } from "solid-js";
-import { Motion } from "solid-motionone";
+import {
+  splitProps,
+  createSignal,
+  onMount,
+  createEffect,
+  onCleanup,
+} from "solid-js";
 import { cva, type VariantProps } from "class-variance-authority";
-// Variants for tab triggers
-
+import { animate } from "@motionone/dom";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import { unoMerge } from "unocss-merge";
+
 
 // Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
   return unoMerge(clsx(classLists));
 }
 
+// Variants for tab triggers
 const tabTriggerVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative",
   {
@@ -60,9 +66,225 @@ type TabsProps = {
 
 export const Tabs: Component<TabsProps> = (props) => {
   const [local, others] = splitProps(props, ["children", "class"]);
+  let containerRef: HTMLDivElement | undefined;
+  const tabHeights = new Map<string, number>();
+  let isInitialMount = true;
+  let previousHeight = 0;
+  let currentAnimations: Array<{ stop: () => void }> = [];
+
+  // Function to measure tab heights
+  const measureHeights = () => {
+    if (!containerRef) return;
+
+    const allContents = containerRef.querySelectorAll(
+      "[data-scope='tabs'][data-part='content']",
+    ) as NodeListOf<HTMLElement>;
+
+    allContents.forEach((content) => {
+      // Get the value from aria-labelledby which points to trigger id
+      const labelledBy = content.getAttribute("aria-labelledby") || "";
+      const value = labelledBy.replace("tabs:", "").split(":trigger-")[1];
+
+      if (!value) return;
+
+      // Save current state
+      const wasHidden = content.hasAttribute("hidden");
+
+      // Temporarily show this tab and hide others
+      allContents.forEach((other) => {
+        if (other === content) {
+          other.removeAttribute("hidden");
+        } else {
+          other.setAttribute("hidden", "");
+        }
+      });
+
+      // Force reflow before measuring
+      void containerRef.offsetHeight;
+
+      // Measure the container's actual height with this tab visible
+      const height = containerRef.offsetHeight;
+      tabHeights.set(value, height);
+
+      // Restore hidden state
+      if (wasHidden) {
+        content.setAttribute("hidden", "");
+      }
+    });
+  };
+
+  // Animate on value change
+  createEffect(() => {
+    const currentValue = props.value;
+    if (!containerRef || !currentValue) return;
+
+    // Cleanup animations on component unmount or effect re-run
+    onCleanup(() => {
+      currentAnimations.forEach((anim) => anim.stop());
+      currentAnimations = [];
+    });
+
+    // Skip on initial mount - let it render naturally
+    if (isInitialMount) {
+      isInitialMount = false;
+      // Capture initial height for next transition
+      previousHeight = containerRef.offsetHeight;
+      return;
+    }
+
+    // Use previous height as starting point (before Ark UI switches tabs)
+    const currentHeight = previousHeight;
+
+    // Measure heights now that we're switching tabs
+    measureHeights();
+
+    const targetHeight = tabHeights.get(currentValue);
+    if (!targetHeight) return;
+
+    // Prepare container for animation
+    if (!containerRef.style.overflow) {
+      containerRef.style.overflow = "hidden";
+    }
+
+    // Get all tab content elements and identify old/new based on value
+    const allContents = Array.from(
+      containerRef.querySelectorAll(
+        "[data-scope='tabs'][data-part='content']",
+      ) as NodeListOf<HTMLElement>,
+    );
+
+    const newContent =
+      allContents.find((content) => {
+        const labelledBy = content.getAttribute("aria-labelledby") || "";
+        const value = labelledBy.replace("tabs:", "").split(":trigger-")[1];
+        return value === currentValue;
+      }) || null;
+
+    const oldContent =
+      allContents.find((content) => {
+        const labelledBy = content.getAttribute("aria-labelledby") || "";
+        const value = labelledBy.replace("tabs:", "").split(":trigger-")[1];
+        return value !== currentValue;
+      }) || null;
+
+    // Set initial opacity before changing layout
+    if (oldContent) {
+      oldContent.style.opacity = "1";
+    }
+    if (newContent) {
+      newContent.style.opacity = "0";
+    }
+
+    // Force reflow to lock in current height
+    void containerRef.offsetHeight;
+
+    // Calculate the height of TabsList to position content below it
+    const tabsList = containerRef.querySelector(
+      "[data-scope='tabs'][data-part='list']",
+    ) as HTMLElement;
+    const tabsListHeight = tabsList ? tabsList.offsetHeight : 0;
+
+    // Calculate the actual margin from the first content element
+    const firstContent = allContents[0];
+    const contentMarginTop = firstContent
+      ? parseFloat(window.getComputedStyle(firstContent).marginTop) || 0
+      : 0;
+    const contentTopOffset = tabsListHeight + contentMarginTop;
+
+    // Now set up absolute positioning for animation
+    // Position content below TabsList + margin
+    allContents.forEach((content) => {
+      content.style.position = "absolute";
+      content.style.top = `${contentTopOffset}px`;
+      content.style.left = "0";
+      content.style.right = "0";
+      content.style.marginTop = "0";
+    });
+
+    // Override hidden with CSS to show both during transition
+    if (oldContent) {
+      oldContent.style.display = "block";
+      oldContent.style.zIndex = "0";
+      oldContent.style.pointerEvents = "none";
+    }
+    if (newContent) {
+      newContent.style.display = "block";
+      newContent.style.zIndex = "10";
+      newContent.style.pointerEvents = "auto";
+    }
+
+    // Cancel any ongoing animations
+    currentAnimations.forEach((anim) => anim.stop());
+    currentAnimations = [];
+
+    // Set explicit height AFTER positioning is applied
+    containerRef.style.height = `${currentHeight}px`;
+
+    requestAnimationFrame(() => {
+      if (!containerRef) return;
+
+      // Fade out old content
+      if (oldContent) {
+        const anim = animate(
+          oldContent,
+          { opacity: 0 },
+          { duration: 0.3, easing: "ease-in-out" },
+        );
+        currentAnimations.push(anim);
+      }
+
+      // Fade in new content simultaneously for smooth crossfade
+      if (newContent) {
+        const anim = animate(
+          newContent,
+          { opacity: 1 },
+          { duration: 0.3, easing: "ease-in-out" },
+        );
+        currentAnimations.push(anim);
+      }
+
+      // Animate height
+      const heightAnim = animate(
+        containerRef,
+        { height: `${targetHeight}px` },
+        { duration: 0.3, easing: [0.16, 1, 0.3, 1] },
+      );
+      currentAnimations.push(heightAnim);
+
+      heightAnim.finished.then(() => {
+        if (!containerRef) return;
+
+        // Capture height for next transition
+        previousHeight = containerRef.offsetHeight;
+
+        // Clear animation references
+        currentAnimations = [];
+
+        // Clean up: restore natural layout
+        containerRef.style.height = "";
+        containerRef.style.overflow = "";
+
+        allContents.forEach((content) => {
+          content.style.position = "";
+          content.style.top = "";
+          content.style.left = "";
+          content.style.right = "";
+          content.style.opacity = "";
+          content.style.zIndex = "";
+          content.style.pointerEvents = "";
+          content.style.display = "";
+          content.style.marginTop = "";
+        });
+      });
+    });
+  });
 
   return (
-    <ArkTabs.Root class={cn("w-full", local.class)} {...others}>
+    <ArkTabs.Root
+      ref={containerRef}
+      class={cn("w-full relative", local.class)}
+      {...others}
+    >
       {local.children}
     </ArkTabs.Root>
   );
@@ -124,7 +346,7 @@ export const TabsTrigger: Component<TabsTriggerProps> = (props) => {
   );
 };
 
-// Tab Content
+// Tab Content with smooth height and opacity animations
 type TabsContentProps = {
   value: string;
   children?: JSX.Element;
@@ -137,8 +359,8 @@ export const TabsContent: Component<TabsContentProps> = (props) => {
   return (
     <ArkTabs.Content
       class={cn(
-        "mt-4 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        "data-[selected]:animate-in data-[selected]:fade-in-0 data-[selected]:slide-in-from-left-2 duration-300",
+        "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visual:ring-offset-2",
+        "mt-4",
         local.class,
       )}
       {...others}
@@ -155,6 +377,14 @@ type TabsIndicatorProps = {
 
 export const TabsIndicator: Component<TabsIndicatorProps> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
+  const [mounted, setMounted] = createSignal(false);
+
+  onMount(() => {
+    // Enable transitions after mount
+    requestAnimationFrame(() => {
+      setMounted(true);
+    });
+  });
 
   return (
     <ArkTabs.Indicator
@@ -164,7 +394,9 @@ export const TabsIndicator: Component<TabsIndicatorProps> = (props) => {
         top: "var(--top)",
         width: "var(--width)",
         height: "var(--height)",
-        transition: "all 250ms cubic-bezier(0.16, 1, 0.3, 1)",
+        transition: mounted()
+          ? "all 250ms cubic-bezier(0.16, 1, 0.3, 1)"
+          : "none",
       }}
       {...others}
     />
@@ -175,5 +407,6 @@ export const TabsIndicator: Component<TabsIndicatorProps> = (props) => {
 export const TabsRoot = Tabs;
 
 // Metadata for documentation
+
 
 export default Tabs;

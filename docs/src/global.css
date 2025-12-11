@@ -37,6 +37,14 @@
     }
 }
 
+.glass {
+    --background: 223.8136 0% 5.9388%;
+    --card: 223.8136 0% 9.0527%;
+    --radius: 1rem;
+    /* Backdrop filter glass effect */
+    --background-opacity: 0.95;
+}
+
 @layer base {
     * {
         @apply border-border;

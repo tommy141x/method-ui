@@ -46,6 +46,19 @@ export default defineConfig({
     }),
   ],
   transformers: [transformerDirectives(), transformerVariantGroup()],
+  rules: [
+    [
+      "bg-background",
+      {
+        "background-color":
+          "hsl(var(--background) / var(--background-opacity, 1))",
+        "backdrop-filter":
+          "var(--backdrop-blur, none) var(--backdrop-saturate, none)",
+        "-webkit-backdrop-filter":
+          "var(--backdrop-blur, none) var(--backdrop-saturate, none)",
+      },
+    ],
+  ],
   theme: {
     colors: {
       border: "hsl(var(--border))",

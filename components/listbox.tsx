@@ -35,6 +35,7 @@ interface ListboxProps {
   selectionMode?: "single" | "multiple";
   disabled?: boolean;
   loopFocus?: boolean;
+  autoHighlight?: boolean;
   class?: string;
   label?: string;
   placeholder?: string;
@@ -191,6 +192,7 @@ export const ListboxRoot = (props: {
   selectionMode?: "single" | "multiple";
   disabled?: boolean;
   loopFocus?: boolean;
+  autoHighlight?: boolean;
   class?: string;
 }) => {
   const [local, others] = splitProps(props, ["class"]);

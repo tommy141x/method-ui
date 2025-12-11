@@ -8,15 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-  server: {
-    preset: "static",
-    baseURL: process.env.BASE_PATH || "/",
-  },
   vite: {
     plugins: [
-      UnoCSS({
-        mode: "global",
-      }),
+      UnoCSS(),
       setupPlugins({
         include: /^[^?]+\.jpg\?.*responsive.*$/,
         lqip: { type: "inline" },
