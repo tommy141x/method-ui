@@ -1,26 +1,15 @@
+import metadataJson from "@lib/registry.json";
 import { A, useLocation } from "@solidjs/router";
 import { For, type JSX } from "solid-js";
-import { Navbar } from "./navbar";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarHeader,
-} from "./sidebar";
 import { Badge } from "./badge";
-import metadataJson from "@lib/registry.json";
+import { Navbar } from "./navbar";
 
 const componentMetadata = metadataJson.componentMetadata;
 
 // Dynamically import all components to check for hidden flag
 const componentModules = import.meta.glob("../../../components/*.tsx", {
   eager: true,
-}) as Record<string, any>;
+}) as Record<string, { meta?: { hidden?: boolean } }>;
 
 // Build simplified component list, filtering out hidden components
 const components = Object.entries(componentMetadata)
@@ -96,6 +85,7 @@ export function DocsLayout(props: DocsLayoutProps) {
                   {(section) => (
                     <A href={section.href}>
                       <button
+                        type="button"
                         class={`w-full flex items-center gap-2 px-2 py-2 text-sm rounded-md ${
                           isActive(section.href)
                             ? "bg-accent text-accent-foreground font-medium"
@@ -126,6 +116,7 @@ export function DocsLayout(props: DocsLayoutProps) {
                   {(component) => (
                     <A href={`/components/${component.name}`}>
                       <button
+                        type="button"
                         class={`w-full flex items-center justify-between gap-2 px-2 py-2 text-sm rounded-md ${
                           isActive(`/components/${component.name}`)
                             ? "bg-accent text-accent-foreground font-medium"

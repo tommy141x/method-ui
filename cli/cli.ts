@@ -1,42 +1,31 @@
-import { defineCommand, runMain } from "citty";
 import * as p from "@clack/prompts";
+import { defineCommand, runMain } from "citty";
 import {
+  createComponentsConfig,
+  getComponentsPath,
+  getDefaultConfigValues,
+  hasComponentsConfig,
+  readComponentsConfig,
+  validateComponentsConfig,
+} from "./utils/config.js";
+import {
+  checkPackageCompatibility,
   detectPackageManager,
-  installPackages,
+  formatPackageList,
   getMissingPackages,
   getMissingPackagesWithIcons,
-  formatPackageList,
-  isPackageManagerAvailable,
-  areAllPackagesInstalled,
-  getMissingDependencies,
-  buildDependencyTree,
-  getTemplatesDirectory,
+  installPackages,
   installWithDependencies,
-  validatePackageJson,
-  checkPackageCompatibility,
+  isPackageManagerAvailable,
 } from "./utils/dependencies.js";
-import {
-  readComponentsConfig,
-  hasComponentsConfig,
-  getComponentsPath,
-  validateComponentsConfig,
-  createComponentsConfig,
-  getDefaultConfigValues,
-} from "./utils/config.js";
+import { createProjectFiles } from "./utils/files.js";
 
 import {
-  prepareComponentForUser,
-  validateComponent,
-  componentExists,
-  getAvailableComponents,
-} from "./utils/transform.js";
-
-import {
+  getProjectLanguageInfo,
   getProjectRoot,
   isInProject,
-  getProjectLanguageInfo,
 } from "./utils/project.js";
-import { createProjectFiles, safeWriteFile } from "./utils/files.js";
+import { componentExists, getAvailableComponents } from "./utils/transform.js";
 
 const initCommand = defineCommand({
   meta: {
@@ -79,9 +68,9 @@ const initCommand = defineCommand({
     const compatibility = checkPackageCompatibility();
     if (compatibility.warnings.length > 0) {
       p.log.warn("⚠️  Compatibility warnings:");
-      compatibility.warnings.forEach((warning: string) =>
-        p.log.warn(`  ${warning}`),
-      );
+      for (const warning of compatibility.warnings) {
+        p.log.warn(`  ${warning}`);
+      }
     }
 
     // Check for missing packages
@@ -211,7 +200,7 @@ const initCommand = defineCommand({
         try {
           installPackages(missingPackagesWithIcons, { packageManager });
           s.stop(`${iconLibrary} packages installed successfully!`);
-        } catch (error) {
+        } catch (_error) {
           s.stop("Failed to install icon packages");
           p.log.error(
             "Installation failed. Please install the packages manually and run init again.",
@@ -292,7 +281,7 @@ const addCommand = defineCommand({
       return;
     }
 
-    const projectRoot = getProjectRoot();
+    const _projectRoot = getProjectRoot();
 
     if (!hasComponentsConfig()) {
       p.log.error("No components.json found. Please run 'method init' first.");
@@ -305,7 +294,9 @@ const addCommand = defineCommand({
       const validationErrors = validateComponentsConfig(config);
       if (validationErrors.length > 0) {
         p.log.error("Configuration validation failed:");
-        validationErrors.forEach((error) => p.log.error(`  ${error}`));
+        for (const error of validationErrors) {
+          p.log.error(`  ${error}`);
+        }
         p.log.message("Please run 'method init' to fix the configuration.");
         process.exit(1);
       }
@@ -317,9 +308,9 @@ const addCommand = defineCommand({
     if (componentNames.length === 0) {
       p.log.step("Available components:");
       const availableComponents = getAvailableComponents();
-      availableComponents.forEach((component) => {
+      for (const component of availableComponents) {
         p.log.message(`  • ${component}`);
-      });
+      }
       if (availableComponents.length === 0) {
         p.log.message("  No components available");
       }
@@ -332,9 +323,9 @@ const addCommand = defineCommand({
         p.log.error(`Component(s) not found: ${invalidComponents.join(", ")}`);
         p.log.message("Available components:");
         const availableComponents = getAvailableComponents();
-        availableComponents.forEach((component) => {
+        for (const component of availableComponents) {
           p.log.message(`  • ${component}`);
-        });
+        }
         if (availableComponents.length === 0) {
           p.log.message("  No components available");
         }
@@ -352,22 +343,24 @@ const addCommand = defineCommand({
             p.log.success(
               `Successfully added ${result.installedComponents.length} component(s):`,
             );
-            result.installedComponents.forEach((comp) =>
-              p.log.message(`  ✓ ${comp}`),
-            );
+            for (const comp of result.installedComponents) {
+              p.log.message(`  ✓ ${comp}`);
+            }
           }
 
           if (result.installedPackages.length > 0) {
             p.log.success(
               `Successfully installed ${result.installedPackages.length} package(s):`,
             );
-            result.installedPackages.forEach((pkg) =>
-              p.log.message(`  ✓ ${pkg}`),
-            );
+            for (const pkg of result.installedPackages) {
+              p.log.message(`  ✓ ${pkg}`);
+            }
           }
         } else {
           p.log.error("Installation failed:");
-          result.errors.forEach((error) => p.log.error(`  ${error}`));
+          for (const error of result.errors) {
+            p.log.error(`  ${error}`);
+          }
 
           if (
             result.installedComponents.length > 0 ||
@@ -376,15 +369,15 @@ const addCommand = defineCommand({
             p.log.message("Partially installed:");
             if (result.installedComponents.length > 0) {
               p.log.message("Components:");
-              result.installedComponents.forEach((comp) =>
-                p.log.message(`  ✓ ${comp}`),
-              );
+              for (const comp of result.installedComponents) {
+                p.log.message(`  ✓ ${comp}`);
+              }
             }
             if (result.installedPackages.length > 0) {
               p.log.message("Packages:");
-              result.installedPackages.forEach((pkg) =>
-                p.log.message(`  ✓ ${pkg}`),
-              );
+              for (const pkg of result.installedPackages) {
+                p.log.message(`  ✓ ${pkg}`);
+              }
             }
           }
         }
@@ -433,8 +426,8 @@ const removeCommand = defineCommand({
       return;
     }
 
-    const { existsSync, unlinkSync } = await import("fs");
-    const { join } = await import("path");
+    const { existsSync, unlinkSync } = await import("node:fs");
+    const { join } = await import("node:path");
 
     const componentsPath = getComponentsPath(config);
     const componentFile = `${args.component}.tsx`;
@@ -448,17 +441,19 @@ const removeCommand = defineCommand({
       p.log.message("Available components in your project:");
 
       try {
-        const { readdirSync } = await import("fs");
+        const { readdirSync } = await import("node:fs");
         const files = readdirSync(join(projectRoot, componentsPath))
           .filter((file) => file.endsWith(".tsx"))
           .map((file) => file.replace(".tsx", ""));
 
         if (files.length > 0) {
-          files.forEach((file) => p.log.message(`  • ${file}`));
+          for (const file of files) {
+            p.log.message(`  • ${file}`);
+          }
         } else {
           p.log.message("  (no components found)");
         }
-      } catch (error) {
+      } catch (_error) {
         p.log.message("  (unable to read components directory)");
       }
       return;

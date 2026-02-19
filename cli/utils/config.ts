@@ -1,5 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "fs";
-import { join } from "path";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import * as p from "@clack/prompts";
 
 export interface ComponentsConfig {
@@ -14,7 +13,7 @@ export interface InitConfig {
   iconLibrary: string;
 }
 
-const DEFAULT_CONFIG: Partial<ComponentsConfig> = {
+const _DEFAULT_CONFIG: Partial<ComponentsConfig> = {
   components: "./src/components",
   iconLibrary: "lucide",
   typescript: true,
@@ -94,7 +93,10 @@ function mergeConfig(
   existing: ComponentsConfig,
   updates: Partial<ComponentsConfig>,
 ): ComponentsConfig {
-  const merged = { ...existing };
+  const merged: Record<string, unknown> = {
+    ...(existing as unknown as Record<string, unknown>),
+  };
+  const existingRecord = existing as unknown as Record<string, unknown>;
 
   for (const [key, value] of Object.entries(updates)) {
     if (value !== undefined) {
@@ -103,19 +105,19 @@ function mergeConfig(
         value !== null &&
         !Array.isArray(value)
       ) {
-        const existingValue = (existing as any)[key];
+        const existingValue = existingRecord[key];
         const mergedValue =
           typeof existingValue === "object" && existingValue !== null
             ? Object.assign({}, existingValue, value)
             : value;
-        (merged as any)[key] = mergedValue;
+        merged[key] = mergedValue;
       } else {
-        (merged as any)[key] = value;
+        merged[key] = value;
       }
     }
   }
 
-  return merged;
+  return merged as unknown as ComponentsConfig;
 }
 
 /**

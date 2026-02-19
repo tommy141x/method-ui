@@ -5,9 +5,9 @@
  * Run with: bun run compile
  */
 
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import * as ts from "typescript";
-import { readFileSync, writeFileSync, readdirSync, existsSync } from "fs";
-import { join } from "path";
 
 interface PropDoc {
   name: string;
@@ -130,7 +130,7 @@ function generateDescriptionFromPropName(propName: string): string {
 function extractPropsFromInterface(
   sourceFile: ts.SourceFile,
   interfaceName: string,
-  checker: ts.TypeChecker,
+  _checker: ts.TypeChecker,
 ): PropDoc[] {
   const props: PropDoc[] = [];
 
@@ -200,7 +200,7 @@ function extractPropsFromInterface(
  */
 function extractVariantsFromMeta(
   sourceCode: string,
-  sourceFile: ts.SourceFile,
+  _sourceFile: ts.SourceFile,
 ): VariantDoc[] {
   const variants: VariantDoc[] = [];
 
@@ -248,9 +248,9 @@ function extractVariantsFromMeta(
   // Parse each variant from the content
   // Each variant is: variantName: { value1: "...", value2: "..." }
   const variantRegex = /(\w+):\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g;
-  let match;
+  let match: RegExpExecArray | null = variantRegex.exec(variantsContent);
 
-  while ((match = variantRegex.exec(variantsContent)) !== null) {
+  while (match !== null) {
     const variantName = match[1];
     const variantValuesBlock = match[2];
 
@@ -284,6 +284,8 @@ function extractVariantsFromMeta(
         defaultValue,
       });
     }
+
+    match = variantRegex.exec(variantsContent);
   }
 
   return variants;
@@ -504,7 +506,6 @@ function extractDependencies(
       trimmed.startsWith("*") ||
       inBlockComment
     ) {
-      continue; // Skip comments but keep looking for imports
     }
     // Stop at first actual code
     else if (
@@ -687,7 +688,7 @@ export async function generateComponentMetadata(specificFile?: string) {
       const existingData = readFileSync(outputFile, "utf-8");
       const existing = JSON.parse(existingData);
       allMetadata = existing.componentMetadata || {};
-    } catch (error) {
+    } catch (_error) {
       // File doesn't exist yet, that's ok
       console.log("No existing metadata found, generating from scratch...");
     }

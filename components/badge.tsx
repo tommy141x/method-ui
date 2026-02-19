@@ -1,6 +1,6 @@
-import type { JSX, Component } from "solid-js";
-import { splitProps } from "solid-js";
 import { cva, type VariantProps } from "class-variance-authority";
+import type { Component, JSX } from "solid-js";
+import { splitProps } from "solid-js";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
@@ -44,20 +44,26 @@ export const Badge: Component<BadgeProps> = (props) => {
     ["variant", "clickable"],
   );
 
+  const classes = cn(
+    badgeVariants({
+      variant: variantProps.variant,
+      clickable: variantProps.clickable,
+    }),
+    local.class,
+  );
+
+  if (variantProps.clickable || local.onClick) {
+    return (
+      <button type="button" class={classes} onClick={local.onClick} {...others}>
+        {local.children}
+      </button>
+    );
+  }
+
   return (
-    <div
-      class={cn(
-        badgeVariants({
-          variant: variantProps.variant,
-          clickable: variantProps.clickable,
-        }),
-        local.class,
-      )}
-      onClick={local.onClick}
-      {...others}
-    >
+    <span class={classes} {...others}>
       {local.children}
-    </div>
+    </span>
   );
 };
 

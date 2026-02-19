@@ -1,75 +1,83 @@
 /**
  * Toaster Component - Toast notification system using Ark UI
  *
- * Fixed: Toast reactivity issue
- * - Made toaster prop optional for better defensive programming
- * - Wraps ArkToaster in Show to ensure proper reactive tracking
- * - Fixes issue where toasts don't render due to Ark UI reactivity bug
- * - Users no longer need to wrap the component themselves
+ * EASY SETUP (Recommended):
  *
- * SETUP INSTRUCTIONS:
+ * 1. Add the Toast component to your app root (uses default singleton):
  *
- * 1. Create a toaster instance in your app:
- *
- *    import { createToaster } from "./components/toast";
- *
- *    const toaster = createToaster({
- *      placement: "bottom-end",
- *      overlap: true,
- *      gap: 16,
- *    });
- *
- * 2. Add the Toaster component to your app root:
- *
- *    import { Toast } from "./components/toast";
+ *    import { Toast, toaster } from "./components/toast";
  *
  *    export default function App() {
  *      return (
  *        <>
- *          <Toast toaster={toaster} />
+ *          <Toast />
  *          // Your app content
  *        </>
  *      );
  *    }
  *
- * 3. Use toast notifications anywhere in your app:
+ * 2. Use the default toaster anywhere in your app:
  *
- *    toaster.create({
- *      title: "Success!",
- *      description: "Your changes have been saved.",
- *      type: "success",
- *    });
+ *    import { toaster } from "./components/toast";
  *
- *    // Or use convenience methods:
  *    toaster.success({ title: "Success!", description: "Done!" });
  *    toaster.error({ title: "Error", description: "Something went wrong" });
- *    toaster.warning({ title: "Warning", description: "Be careful" });
- *    toaster.info({ title: "Info", description: "FYI" });
+ *
+ * CUSTOM CONFIGURATION:
+ *
+ * Option A - Configure via props:
+ *
+ *    <Toast config={{ placement: "top", gap: 24 }} />
+ *
+ * Option B - Configure before use (in app.tsx):
+ *
+ *    import { configureToaster } from "./components/toast";
+ *
+ *    configureToaster("default", {
+ *      placement: "top-end",
+ *      overlap: false,
+ *      gap: 24,
+ *    });
+ *
+ * MULTIPLE TOASTERS:
+ *
+ * You can have multiple named toasters for different positions:
+ *
+ *    // In app.tsx
+ *    <Toast name="main" config={{ placement: "bottom-end" }} />
+ *    <Toast name="alerts" config={{ placement: "top" }} />
+ *
+ *    // In your components
+ *    import { getToaster } from "./components/toast";
+ *
+ *    const mainToaster = getToaster("main");
+ *    const alertToaster = getToaster("alerts");
+ *
+ *    mainToaster.success({ title: "Saved!" });
+ *    alertToaster.error({ title: "Error!" });
  *
  * FEATURES:
- * - Multiple toast types (success, error, warning, info, loading)
- * - Customizable duration and position
+ * - Default singleton toaster (no setup needed)
+ * - Multiple named toasters support
+ * - All toast types (success, error, warning, info, loading)
  * - Promise-based toasts for async operations
- * - Action and cancel buttons
- * - Dismiss toasts programmatically
- * - Stacking and overlap animations
- * - Pause on hover
- * - Maximum visible toasts with queueing
+ * - Action buttons and custom durations
+ * - Stacking animations and pause on hover
  * - Dark mode support
  */
 
-import type { JSX, Component } from "solid-js";
-import { splitProps, Show, For } from "solid-js";
+import type {
+  CreateToasterProps,
+  CreateToasterReturn,
+} from "@ark-ui/solid/toast";
 import {
   Toast as ArkToast,
   Toaster as ArkToaster,
   createToaster as arkCreateToaster,
 } from "@ark-ui/solid/toast";
-import type {
-  CreateToasterProps,
-  CreateToasterReturn,
-  ToasterProps as ArkToasterProps,
-} from "@ark-ui/solid/toast";
+import type { Component } from "solid-js";
+import { Show, splitProps } from "solid-js";
+import { Portal } from "solid-js/web";
 import { cn } from "../lib/cn";
 import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
@@ -81,13 +89,73 @@ export const createToaster = (props: CreateToasterProps) => {
 
 export type ToasterInstance = CreateToasterReturn;
 
+// ============================================================================
+// Toaster Registry - Allows named toasters to be configured and accessed
+// ============================================================================
+
+const toasterRegistry = new Map<string, CreateToasterReturn>();
+
+/**
+ * Get or create a named toaster instance
+ * @param name - Name of the toaster (default: "default")
+ * @param config - Configuration for the toaster (only used on first call)
+ */
+export function getToaster(
+  name: string = "default",
+  config?: CreateToasterProps,
+): CreateToasterReturn {
+  if (!toasterRegistry.has(name)) {
+    const defaultConfig: CreateToasterProps = {
+      placement: "bottom-end",
+      overlap: true,
+      gap: 16,
+    };
+    const instance = arkCreateToaster({ ...defaultConfig, ...config });
+    toasterRegistry.set(name, instance);
+  }
+  const toaster = toasterRegistry.get(name);
+  if (!toaster) throw new Error(`Toaster "${name}" could not be created`);
+  return toaster;
+}
+
+/**
+ * Configure a named toaster before it's created
+ * Call this in your app.tsx before rendering the Toast component
+ * @param name - Name of the toaster
+ * @param config - Configuration for the toaster
+ */
+export function configureToaster(
+  name: string,
+  config: CreateToasterProps,
+): void {
+  if (toasterRegistry.has(name)) {
+    console.warn(
+      `Toaster "${name}" is already created. Configuration will be ignored.`,
+    );
+    return;
+  }
+  toasterRegistry.set(name, arkCreateToaster(config));
+}
+
+// Default toaster instance - singleton that can be imported anywhere
+export const toaster = getToaster("default");
+
 // Toast component props
 export interface ToastProps {
   /**
-   * The toaster instance created with createToaster
-   * Made optional for defensive programming - component won't render without it
+   * Name of the toaster instance to use (default: "default")
+   * The component will get or create a toaster with this name
+   */
+  name?: string;
+  /**
+   * Optional toaster instance (overrides name if provided)
+   * Use this if you want to manually create and pass a toaster
    */
   toaster?: CreateToasterReturn;
+  /**
+   * Configuration for the toaster (only used if toaster doesn't exist yet)
+   */
+  config?: CreateToasterProps;
   /**
    * Additional CSS classes
    */
@@ -144,14 +212,23 @@ const ToastIcon: Component<{ type?: string }> = (props) => {
 
 // Main Toast component
 export const Toast: Component<ToastProps> = (props) => {
-  const [local, others] = splitProps(props, ["toaster", "class"]);
+  const [local, others] = splitProps(props, [
+    "toaster",
+    "name",
+    "config",
+    "class",
+  ]);
+
+  // Get toaster instance: use provided toaster, or get/create named toaster
+  const toasterInstance =
+    local.toaster || getToaster(local.name || "default", local.config);
+
+  if (!toasterInstance) return null;
 
   return (
-    <Show when={local.toaster}>
-      {(toaster) => (
-        <>
-          <style>
-            {`
+    <>
+      <style>
+        {`
           /* Toast group positioning */
           [data-scope="toast"][data-part="group"] {
             position: fixed;
@@ -201,55 +278,55 @@ export const Toast: Component<ToastProps> = (props) => {
             }
           }
         `}
-          </style>
-          <ArkToaster toaster={toaster()} {...others}>
-            {(toast) => (
-              <ArkToast.Root
-                class={cn(
-                  "group relative flex w-full items-start gap-3 border border-border bg-background p-4 shadow-lg",
-                  "data-[type=success]:border-green-600/50 dark:data-[type=success]:border-green-400/50",
-                  "data-[type=error]:border-destructive/50",
-                  "data-[type=warning]:border-yellow-600/50 dark:data-[type=warning]:border-yellow-400/50",
-                  "data-[type=info]:border-primary/50",
-                  "data-[type=loading]:border-primary/50",
-                  local.class,
-                )}
-                style={{
-                  "border-radius": "var(--radius)",
-                }}
-              >
-                <ToastIcon type={toast().type} />
+      </style>
+      <Portal>
+        <ArkToaster toaster={toasterInstance} {...others}>
+          {(toast) => (
+            <ArkToast.Root
+              class={cn(
+                "group relative flex w-full items-start gap-3 border border-border bg-background p-4 shadow-lg",
+                "data-[type=success]:border-green-600/50 dark:data-[type=success]:border-green-400/50",
+                "data-[type=error]:border-destructive/50",
+                "data-[type=warning]:border-yellow-600/50 dark:data-[type=warning]:border-yellow-400/50",
+                "data-[type=info]:border-primary/50",
+                "data-[type=loading]:border-primary/50",
+                local.class,
+              )}
+              style={{
+                "border-radius": "var(--radius)",
+              }}
+            >
+              <ToastIcon type={toast().type} />
 
-                <div class="flex-1 space-y-1">
-                  <ArkToast.Title class="text-sm font-semibold text-foreground">
-                    {toast().title}
-                  </ArkToast.Title>
-                  <Show when={toast().description}>
-                    <ArkToast.Description class="text-sm text-muted-foreground">
-                      {toast().description}
-                    </ArkToast.Description>
-                  </Show>
-
-                  <Show when={toast().action}>
-                    <div class="flex gap-2 mt-3">
-                      <ArkToast.ActionTrigger class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
-                        {toast().action!.label}
-                      </ArkToast.ActionTrigger>
-                    </div>
-                  </Show>
-                </div>
-
-                <Show when={toast().type !== "loading"}>
-                  <ArkToast.CloseTrigger class="absolute right-2 top-2 rounded-sm p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:opacity-100">
-                    <div class={cn("h-4 w-4", icon("x"))} />
-                  </ArkToast.CloseTrigger>
+              <div class="flex-1 space-y-1">
+                <ArkToast.Title class="text-sm font-semibold text-foreground">
+                  {toast().title}
+                </ArkToast.Title>
+                <Show when={toast().description}>
+                  <ArkToast.Description class="text-sm text-muted-foreground">
+                    {toast().description}
+                  </ArkToast.Description>
                 </Show>
-              </ArkToast.Root>
-            )}
-          </ArkToaster>
-        </>
-      )}
-    </Show>
+
+                <Show when={toast().action}>
+                  <div class="flex gap-2 mt-3">
+                    <ArkToast.ActionTrigger class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+                      {toast().action?.label}
+                    </ArkToast.ActionTrigger>
+                  </div>
+                </Show>
+              </div>
+
+              <Show when={toast().type !== "loading"}>
+                <ArkToast.CloseTrigger class="absolute right-2 top-2 rounded-sm p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:opacity-100">
+                  <div class={cn("h-4 w-4", icon("x"))} />
+                </ArkToast.CloseTrigger>
+              </Show>
+            </ArkToast.Root>
+          )}
+        </ArkToaster>
+      </Portal>
+    </>
   );
 };
 

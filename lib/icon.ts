@@ -6,7 +6,7 @@
  * @returns The full UnoCSS icon class (e.g., 'i-lucide-check')
  */
 export function icon(name: string): string {
-  // This will be replaced by the CLI at build time with:
-  // return `i-{iconLibrary}-${name}`
-  return `i-lucide-${name}`;
+	// This will be replaced by the CLI at build time with:
+	// return `i-{iconLibrary}-${name}`
+	return `i-lucide-${name}`;
 }

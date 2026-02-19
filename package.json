@@ -1,83 +1,88 @@
 {
-  "name": "method",
-  "version": "0.1.0",
-  "description": "Method UI Component Library CLI - Add beautiful Solid.js components to your project",
-  "main": "dist/cli.js",
-  "type": "module",
-  "bin": {
-    "method": "./dist/cli.js"
-  },
-  "files": [
-    "dist/",
-    "lib/",
-    "components/",
-    "README.md",
-    "LICENSE"
-  ],
-  "scripts": {
-    "dev": "bun run scripts/dev.ts",
-    "build": "bun run scripts/build.ts",
-    "cli": "bun run cli/cli.ts",
-    "compile": "bun run scripts/compile.ts",
-    "watch": "bun run scripts/watch.ts",
-    "update": "bun run scripts/update.ts",
-    "check:licenses": "license-checker scan --failOn GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 AGPL-3.0 MPL-2.0 EPL-1.0 EPL-2.0 CDDL-1.0",
-    "prepublishOnly": "bun run build && bun run check:licenses",
-    "test:publish": "bun publish --dry-run"
-  },
-  "keywords": [
-    "method",
-    "method-ui",
-    "solidjs",
-    "solid",
-    "components",
-    "ui",
-    "cli",
-    "component-library",
-    "design-system",
-    "ark-ui"
-  ],
-  "author": "Your Name",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/method.git"
-  },
-  "homepage": "https://github.com/yourusername/method#readme",
-  "bugs": {
-    "url": "https://github.com/yourusername/method/issues"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "@unocss/reset": "^66.5.10",
-    "citty": "^0.1.6",
-    "echarts": "^6.0.0",
-    "typescript": "^5.9.3"
-  },
-  "devDependencies": {
-    "@ark-ui/solid": "^5.30.0",
-    "@iconify-json/lucide": "^1.2.79",
-    "@onebeyond/license-checker": "^2.1.0",
-    "@responsive-image/solid": "^2.0.4",
-    "@tiptap/core": "^3.13.0",
-    "@tiptap/extension-typography": "^3.13.0",
-    "@tiptap/extensions": "^3.13.0",
-    "@tiptap/pm": "^3.13.0",
-    "@tiptap/starter-kit": "^3.13.0",
-    "@types/bun": "^1.3.4",
-    "@unocss/preset-icons": "^66.5.10",
-    "chokidar": "^4.0.3",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "rough-notation": "^0.5.1",
-    "solid-js": "^1.9.10",
-    "solid-motionone": "^1.0.4",
-    "solid-tiptap": "^0.8.0",
-    "unocss": "^66.5.10",
-    "unocss-merge": "^0.6.0"
-  }
+	"name": "method",
+	"version": "0.1.0",
+	"description": "Method UI Component Library CLI - Add beautiful Solid.js components to your project",
+	"main": "dist/cli.js",
+	"type": "module",
+	"bin": {
+		"method": "./dist/cli.js"
+	},
+	"files": [
+		"dist/",
+		"lib/",
+		"components/",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"dev": "bun run scripts/dev.ts",
+		"build": "bun run scripts/build.ts",
+		"cli": "bun run cli/cli.ts",
+		"compile": "bun run scripts/compile.ts",
+		"watch": "bun run scripts/watch.ts",
+		"update": "bun run scripts/update.ts",
+		"format": "bun --bun run biome format --write .",
+		"lint": "bun --bun run biome lint --write .",
+		"check": "bun --bun run biome check --write .",
+		"check:licenses": "license-checker scan --failOn GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 AGPL-3.0 MPL-2.0 EPL-1.0 EPL-2.0 CDDL-1.0",
+		"prepublishOnly": "bun run build && bun run check:licenses",
+		"test:publish": "bun publish --dry-run"
+	},
+	"keywords": [
+		"method",
+		"method-ui",
+		"solidjs",
+		"solid",
+		"components",
+		"ui",
+		"cli",
+		"component-library",
+		"design-system",
+		"ark-ui"
+	],
+	"author": "Your Name",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yourusername/method.git"
+	},
+	"homepage": "https://github.com/yourusername/method#readme",
+	"bugs": {
+		"url": "https://github.com/yourusername/method/issues"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"dependencies": {
+		"@clack/prompts": "^0.11.0",
+		"@unocss/reset": "66.5.11",
+		"citty": "^0.1.6",
+		"echarts": "^6.0.0",
+		"typescript": "^5.9.3"
+	},
+	"devDependencies": {
+		"@ark-ui/solid": "^5.31.0",
+		"@biomejs/biome": "^2.4.3",
+		"@iconify-json/lucide": "^1.2.92",
+		"@onebeyond/license-checker": "^2.2.0",
+		"@responsive-image/solid": "^2.0.4",
+		"@tiptap/core": "^3.20.0",
+		"@tiptap/extension-typography": "^3.20.0",
+		"@tiptap/extensions": "^3.20.0",
+		"@tiptap/pm": "^3.20.0",
+		"@tiptap/starter-kit": "^3.20.0",
+		"@types/bun": "^1.3.9",
+		"@unocss/preset-icons": "66.5.11",
+		"chokidar": "^4.0.3",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"plyr": "^3.8.4",
+		"rough-notation": "^0.5.1",
+		"solid-js": "^1.9.11",
+		"solid-motionone": "^1.0.4",
+		"solid-tiptap": "^0.8.0",
+		"unocss": "66.5.11",
+		"unocss-merge": "^0.6.0"
+	}
 }

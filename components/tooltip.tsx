@@ -1,5 +1,6 @@
 import { Tooltip as ArkTooltip } from "@ark-ui/solid/tooltip";
-import { type JSX, splitProps, Show } from "solid-js";
+import type { PositioningOptions } from "@zag-js/popper";
+import { type JSX, Show, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
 
 import { Motion, Presence } from "solid-motionone";
@@ -13,7 +14,7 @@ interface TooltipProps {
   onOpenChange?: (details: { open: boolean }) => void;
   openDelay?: number;
   closeDelay?: number;
-  positioning?: any;
+  positioning?: PositioningOptions;
   disabled?: boolean;
   interactive?: boolean;
   closeOnClick?: boolean;
@@ -83,10 +84,10 @@ export const TooltipContent = (props: TooltipContentProps) => {
   );
 };
 
+import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
 import { Button } from "./button";
-import { Badge } from "./badge";
 
 export const meta: ComponentMeta<TooltipProps> = {
   name: "Tooltip",

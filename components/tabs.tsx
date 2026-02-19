@@ -1,14 +1,14 @@
 import { Tabs as ArkTabs } from "@ark-ui/solid";
-import type { JSX, Component } from "solid-js";
-import {
-  splitProps,
-  createSignal,
-  onMount,
-  createEffect,
-  onCleanup,
-} from "solid-js";
-import { cva, type VariantProps } from "class-variance-authority";
 import { animate } from "@motionone/dom";
+import { cva } from "class-variance-authority";
+import type { Component, JSX } from "solid-js";
+import {
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+  splitProps,
+} from "solid-js";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
@@ -113,7 +113,9 @@ export const Tabs: Component<TabsProps> = (props) => {
 
     // Cleanup animations on component unmount or effect re-run
     onCleanup(() => {
-      currentAnimations.forEach((anim) => anim.stop());
+      currentAnimations.forEach((anim) => {
+        anim.stop();
+      });
       currentAnimations = [];
     });
 
@@ -207,7 +209,9 @@ export const Tabs: Component<TabsProps> = (props) => {
     }
 
     // Cancel any ongoing animations
-    currentAnimations.forEach((anim) => anim.stop());
+    currentAnimations.forEach((anim) => {
+      anim.stop();
+    });
     currentAnimations = [];
 
     // Set explicit height AFTER positioning is applied
@@ -402,8 +406,7 @@ export const TabsRoot = Tabs;
 // Metadata for documentation
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
-import { Card, CardHeader, CardTitle, CardContent } from "./card";
-import { Badge } from "./badge";
+import { Card, CardContent, CardHeader, CardTitle } from "./card";
 
 export const meta: ComponentMeta<TabsProps> = {
   name: "Tabs",

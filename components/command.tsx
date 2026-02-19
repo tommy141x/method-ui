@@ -1,16 +1,16 @@
 import {
-  createSignal,
-  createEffect,
-  For,
-  Show,
-  JSX,
-  splitProps,
-  createMemo,
-  onMount,
-  onCleanup,
   createContext,
-  useContext,
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+  type JSX,
+  onCleanup,
+  onMount,
+  Show,
+  splitProps,
   untrack,
+  useContext,
 } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
@@ -97,7 +97,7 @@ export const Command = (props: CommandProps) => {
   const [itemsMap, setItemsMap] = createSignal<Map<string, CommandItemData>>(
     new Map(),
   );
-  const [loading, setLoading] = createSignal(false);
+  const [loading, _setLoading] = createSignal(false);
 
   const getItems = () => Array.from(itemsMap().values());
   const itemCount = () => itemsMap().size;
@@ -145,7 +145,7 @@ export const Command = (props: CommandProps) => {
 
       // Count only visible items before this one
       if (firstVisibleIndex >= 0) {
-        const visibleItems = allItems.filter((item, idx) => {
+        const _visibleItems = allItems.filter((item, idx) => {
           if (item.disabled) return false;
           if (idx > firstVisibleIndex) return false;
 
@@ -197,6 +197,7 @@ export const Command = (props: CommandProps) => {
         {...others}
         role="combobox"
         aria-expanded="true"
+        tabIndex={0}
       >
         {local.children}
       </div>
@@ -224,11 +225,17 @@ export const CommandInput = (props: CommandInputProps) => {
     inputRef?.focus();
   });
 
-  const handleInput = (e: Event & { currentTarget: HTMLInputElement }) => {
+  const handleInput = (
+    e: InputEvent & { currentTarget: HTMLInputElement; target: Element },
+  ) => {
     const value = e.currentTarget.value;
     context.setSearch(value);
-    if (local.onInput) {
-      (local.onInput as any)(e);
+    if (typeof local.onInput === "function") {
+      (
+        local.onInput as (
+          e: InputEvent & { currentTarget: HTMLInputElement; target: Element },
+        ) => void
+      )(e);
     }
   };
 
@@ -456,7 +463,7 @@ interface CommandGroupProps {
 
 export const CommandGroup = (props: CommandGroupProps) => {
   const [local, others] = splitProps(props, ["children", "heading", "class"]);
-  const context = useCommandContext();
+  const _context = useCommandContext();
   const [groupId] = createSignal(
     `command-group-${Math.random().toString(36).substr(2, 9)}`,
   );
@@ -496,7 +503,7 @@ export const CommandGroup = (props: CommandGroupProps) => {
           !hasVisibleItems() && "hidden",
           local.class,
         )}
-        role="group"
+        role="listbox"
         {...others}
       >
         <Show when={local.heading}>
@@ -656,8 +663,15 @@ export const CommandItem = (props: CommandItemProps) => {
         role="option"
         aria-selected={isSelected()}
         aria-disabled={local.disabled}
+        tabIndex={local.disabled ? -1 : 0}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
         {...others}
       >
         {local.children}
@@ -699,10 +713,7 @@ export const CommandSeparator = (props: CommandSeparatorProps) => {
 
   return (
     <Show when={isVisible()}>
-      <div
-        class={cn("-mx-1 h-px bg-border my-1", props.class)}
-        role="separator"
-      />
+      <hr class={cn("-mx-1 h-px bg-border my-1 border-none", props.class)} />
     </Show>
   );
 };

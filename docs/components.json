@@ -1,5 +1,5 @@
 {
-  "components": "./src/components",
-  "iconLibrary": "lucide",
-  "typescript": true
+	"components": "./src/components",
+	"iconLibrary": "lucide",
+	"typescript": true
 }

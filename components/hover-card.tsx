@@ -1,5 +1,6 @@
 import { HoverCard as ArkHoverCard } from "@ark-ui/solid/hover-card";
-import { type JSX, splitProps, Show } from "solid-js";
+import type { PositioningOptions } from "@zag-js/popper";
+import { type JSX, Show, splitProps } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
@@ -10,7 +11,7 @@ interface HoverCardProps {
   onOpenChange?: (details: { open: boolean }) => void;
   openDelay?: number;
   closeDelay?: number;
-  positioning?: any;
+  positioning?: PositioningOptions;
   disabled?: boolean;
 }
 
@@ -80,10 +81,10 @@ export const HoverCardContent = (props: HoverCardContentProps) => {
   );
 };
 
+import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
 import { Button } from "./button";
-import { Badge } from "./badge";
 
 export const meta: ComponentMeta<HoverCardProps> = {
   name: "HoverCard",

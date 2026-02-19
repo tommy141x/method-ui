@@ -1,37 +1,39 @@
 {
-  "name": "method-ui-dev",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "description": "Development playground for Method UI components with SolidStart",
-  "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start",
-    "method": "bun run ../cli/cli.ts"
-  },
-  "dependencies": {
-    "@ark-ui/solid": "^5.29.1",
-    "@responsive-image/vite-plugin": "^2.0.2",
-    "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.4",
-    "@solidjs/start": "^1.2.0",
-    "@unocss/reset": "^0.65.4",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "solid-js": "^1.9.10",
-    "solid-motionone": "^1.0.4",
-    "unocss-merge": "^0.6.0",
-    "vinxi": "^0.5.8"
-  },
-  "devDependencies": {
-    "@iconify-json/lucide": "^1.2.79",
-    "@types/bun": "^1.3.4",
-    "@unocss/preset-icons": "^0.65.4",
-    "typescript": "^5.9.3",
-    "unocss": "^0.65.4"
-  },
-  "patchedDependencies": {
-    "@tanstack/directive-functions-plugin@1.121.21": "patches/@tanstack%2Fdirective-functions-plugin@1.121.21.patch"
-  }
+	"name": "method-ui-dev",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Development playground for Method UI components with SolidStart",
+	"scripts": {
+		"dev": "vinxi dev",
+		"build": "vinxi build",
+		"start": "vinxi start",
+		"method": "bun run ../cli/cli.ts"
+	},
+	"dependencies": {
+		"@ark-ui/solid": "^5.30.0",
+		"@opennextjs/cloudflare": "^1.16.5",
+		"@responsive-image/vite-plugin": "^2.0.2",
+		"@solidjs/meta": "^0.29.4",
+		"@solidjs/router": "^0.15.4",
+		"@solidjs/start": "^1.2.1",
+		"@unocss/reset": "^0.65.4",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"solid-js": "^1.9.10",
+		"solid-motionone": "^1.0.4",
+		"solid-notifications": "^1.2.0",
+		"unocss-merge": "^0.6.0",
+		"vinxi": "^0.5.10"
+	},
+	"devDependencies": {
+		"@iconify-json/lucide": "^1.2.82",
+		"@types/bun": "^1.3.5",
+		"@unocss/preset-icons": "^0.65.4",
+		"typescript": "^5.9.3",
+		"unocss": "^0.65.4"
+	},
+	"patchedDependencies": {
+		"@tanstack/directive-functions-plugin@1.121.21": "patches/@tanstack%2Fdirective-functions-plugin@1.121.21.patch"
+	}
 }

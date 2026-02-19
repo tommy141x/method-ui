@@ -1,8 +1,18 @@
-import { readFileSync, existsSync } from "fs";
-import { join } from "path";
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import * as p from "@clack/prompts";
 import { getTemplatesDirectory } from "./files.js";
+
+interface PackageJson {
+  name?: string;
+  version?: string;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+  packageManager?: string;
+  [key: string]: unknown;
+}
 
 // Types
 export type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
@@ -165,7 +175,7 @@ export function getPackageManagerInfo(
 }
 
 // Package.json Operations
-export function readPackageJson(projectRoot?: string): any | null {
+export function readPackageJson(projectRoot?: string): PackageJson | null {
   const packageJsonPath = projectRoot
     ? join(projectRoot, "package.json")
     : "package.json";
@@ -310,8 +320,7 @@ export function analyzeComponentDependencies(
   ];
 
   for (const pattern of importPatterns) {
-    let match;
-    while ((match = pattern.exec(content)) !== null) {
+    for (const match of content.matchAll(pattern)) {
       const source = match[1];
 
       if (!source) continue;
@@ -424,7 +433,7 @@ function getComponentDependenciesFromRegistry(
       components: componentMetadata.dependencies.components || [],
       packages: componentMetadata.dependencies.packages || [],
     };
-  } catch (error) {
+  } catch (_error) {
     // If registry is not available or malformed, return null to fall back to file analysis
     return null;
   }
@@ -524,21 +533,22 @@ export function flattenDependencyTree(tree: DependencyTree): {
     }
 
     // Add package dependencies
-    node.packageDependencies.forEach((pkg) => {
+    for (const pkg of node.packageDependencies) {
       if (packages.has(pkg.name)) {
-        const existing = packages.get(pkg.name)!;
+        const existing = packages.get(pkg.name);
+        if (!existing) continue;
         existing.imports = [...new Set([...existing.imports, ...pkg.imports])];
       } else {
         packages.set(pkg.name, { ...pkg });
       }
-    });
+    }
 
     // Recursively traverse dependencies
-    node.dependencies.forEach((dep) => {
+    for (const dep of node.dependencies) {
       if (!dep.visited) {
         traverse(dep);
       }
-    });
+    }
   }
 
   traverse(tree);
@@ -572,26 +582,27 @@ export function getMissingDependencies(
     const flattened = flattenDependencyTree(tree);
 
     // Check component dependencies
-    flattened.components.forEach((comp) => {
+    for (const comp of flattened.components) {
       if (isComponentInstalled(comp, componentsPath)) {
         allInstalledComponents.add(comp);
       } else {
         allMissingComponents.add(comp);
       }
-    });
+    }
 
     // Check package dependencies
-    flattened.packages.forEach((pkg) => {
+    for (const pkg of flattened.packages) {
       const isInstalled = isPackageInstalled(pkg.name, projectRoot);
       const targetMap = isInstalled ? allInstalledPackages : allMissingPackages;
 
       if (targetMap.has(pkg.name)) {
-        const existing = targetMap.get(pkg.name)!;
+        const existing = targetMap.get(pkg.name);
+        if (!existing) continue;
         existing.imports = [...new Set([...existing.imports, ...pkg.imports])];
       } else {
         targetMap.set(pkg.name, { ...pkg, isInstalled });
       }
-    });
+    }
   }
 
   return {
@@ -630,7 +641,7 @@ export function isPackageManagerAvailable(
   packageManager: PackageManager,
 ): boolean {
   try {
-    const info = getPackageManagerInfo(packageManager);
+    const _info = getPackageManagerInfo(packageManager);
     // Try to get version to check if package manager is available
     execSync(`${packageManager} --version`, { stdio: "ignore" });
     return true;
@@ -678,7 +689,10 @@ export function checkPackageCompatibility(): {
   // Check for SolidJS version compatibility
   if (installedPackages["solid-js"]) {
     const version = installedPackages["solid-js"];
-    const majorVersion = parseInt(version.replace(/^[\^~]/, "").split(".")[0]);
+    const majorVersion = parseInt(
+      version.replace(/^[\^~]/, "").split(".")[0],
+      10,
+    );
 
     if (majorVersion < 1) {
       warnings.push(
@@ -688,9 +702,12 @@ export function checkPackageCompatibility(): {
   }
 
   // Check for UnoCSS compatibility
-  if (installedPackages["unocss"]) {
-    const version = installedPackages["unocss"];
-    const majorVersion = parseInt(version.replace(/^[\^~]/, "").split(".")[0]);
+  if (installedPackages.unocss) {
+    const version = installedPackages.unocss;
+    const majorVersion = parseInt(
+      version.replace(/^[\^~]/, "").split(".")[0],
+      10,
+    );
 
     if (majorVersion < 0.55) {
       warnings.push(
@@ -794,8 +811,8 @@ async function installComponents(
   const { readComponentsConfig, isTypeScriptProject } = await import(
     "./config.js"
   );
-  const { join } = await import("path");
-  const { existsSync } = await import("fs");
+  const { join } = await import("node:path");
+  const { existsSync } = await import("node:fs");
 
   const installed: string[] = [];
   const errors: string[] = [];
@@ -990,7 +1007,7 @@ export async function installWithDependencies(
 
       if (componentResult.errors.length > 0) {
         p.log.error("Some components failed to install:");
-        componentResult.errors.forEach((error) => p.log.error(`  ${error}`));
+        for (const error of componentResult.errors) p.log.error(`  ${error}`);
       }
     }
   }

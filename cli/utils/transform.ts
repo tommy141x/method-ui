@@ -4,9 +4,8 @@
  * to make components completely self-contained for end users.
  */
 
-import { readFileSync, existsSync, readdirSync } from "fs";
-import { join, dirname } from "path";
-import type { ClassValue } from "clsx";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { getProjectRoot } from "./project.js";
 
 /**
@@ -27,7 +26,7 @@ function findCliDirectory(): string | null {
       const currentFile = new URL(import.meta.url).pathname;
       // Go up from cli/utils to package root
       cliDir = join(dirname(dirname(dirname(currentFile))));
-    } catch (error) {
+    } catch (_error) {
       // Ignore URL parsing errors
     }
   }
@@ -48,7 +47,7 @@ function findCliDirectory(): string | null {
             break;
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Ignore JSON parsing errors
       }
       searchDir = dirname(searchDir);
@@ -76,7 +75,7 @@ function findCliDirectory(): string | null {
             cliDir = path;
             break;
           }
-        } catch (error) {
+        } catch (_error) {
           // Continue checking other paths
         }
       }
@@ -99,7 +98,7 @@ function getIconLibraryFromConfig(): string {
       const config = JSON.parse(configContent);
       return config.iconLibrary || "lucide";
     }
-  } catch (error) {
+  } catch (_error) {
     // Fall back to lucide if config not found or invalid
   }
   return "lucide";
@@ -143,7 +142,7 @@ export function getAvailableComponents(): string[] {
     return readdirSync(componentsDir)
       .filter((file) => file.endsWith(".tsx"))
       .map((file) => file.replace(".tsx", ""));
-  } catch (error) {
+  } catch (_error) {
     return [];
   }
 }
@@ -169,7 +168,7 @@ export function readComponentFile(componentName: string): string {
   const componentPath = join(cliDir, "components", `${componentName}.tsx`);
   try {
     return readFileSync(componentPath, "utf-8");
-  } catch (error) {
+  } catch (_error) {
     throw new Error(
       `Component "${componentName}" not found at ${componentPath}`,
     );
@@ -288,11 +287,7 @@ function removeExampleOnlyImports(code: string): string {
       let foundExampleComment = false;
       for (let j = Math.max(0, result.length - 5); j < result.length; j++) {
         const prevLine = result[j];
-        if (
-          prevLine &&
-          prevLine.includes("example") &&
-          prevLine.trim().startsWith("//")
-        ) {
+        if (prevLine?.includes("example") && prevLine.trim().startsWith("//")) {
           foundExampleComment = true;
           skipCommentLines = result.length - j;
           break;
@@ -450,8 +445,9 @@ export function extractDependencies(componentCode: string): string[] {
   const dependencies: string[] = [];
   const importRegex = /import\s+(?:.*?from\s+)?["']([^"']+)["']/g;
 
-  let match;
-  while ((match = importRegex.exec(componentCode)) !== null) {
+  for (const match of importRegex.exec(componentCode)
+    ? componentCode.matchAll(importRegex)
+    : []) {
     const packageName = match[1];
 
     // Skip relative imports and built-in modules

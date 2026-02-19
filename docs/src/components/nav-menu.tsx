@@ -1,29 +1,26 @@
-import type { JSX, Component, Accessor, ComponentProps } from "solid-js";
-import {
-  splitProps,
-  createSignal,
-  createContext,
-  useContext,
-  Show,
-  For,
-  mergeProps,
-  createEffect,
-  onCleanup,
-  onMount,
-  createUniqueId,
-} from "solid-js";
-import { Portal, isServer } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
+import type { Accessor, Component, ComponentProps, JSX } from "solid-js";
+import {
+  createContext,
+  createEffect,
+  createSignal,
+  createUniqueId,
+  mergeProps,
+  onCleanup,
+  onMount,
+  Show,
+  splitProps,
+  useContext,
+} from "solid-js";
+import { isServer, Portal } from "solid-js/web";
+import { Motion, Presence } from "solid-motionone";
 import { unoMerge } from "unocss-merge";
-
 
 // Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
   return unoMerge(clsx(classLists));
 }
-
 
 // Icon helper function - returns UnoCSS icon class for your configured icon library
 function icon(name: string): string {
@@ -493,7 +490,9 @@ export const NavMenuContent: Component<NavMenuContentProps> = (props) => {
         <Presence exitBeforeEnter>
           <Show when={itemContext.isOpen()}>
             <Motion.div
-              ref={contentRef as any}
+              ref={(el: HTMLDivElement) => {
+                contentRef = el;
+              }}
               id={contentId}
               aria-labelledby={triggerId}
               data-state={itemContext.isOpen() ? "open" : "closed"}
@@ -525,7 +524,7 @@ export const NavMenuContent: Component<NavMenuContentProps> = (props) => {
       <Show when={hasViewport() && context.viewport()}>
         {(viewportElement) => (
           <Portal mount={viewportElement()}>
-            <div
+            <section
               ref={(el) => {
                 contentRef = el;
               }}
@@ -545,7 +544,7 @@ export const NavMenuContent: Component<NavMenuContentProps> = (props) => {
               {...others}
             >
               {local.children}
-            </div>
+            </section>
           </Portal>
         )}
       </Show>
@@ -616,7 +615,7 @@ export const NavMenuViewport: Component<NavMenuViewportProps> = (props) => {
   });
 
   createEffect(() => {
-    const currentIsOpen = isOpen();
+    const _currentIsOpen = isOpen();
 
     // Measure the active content's dimensions and position
     if (viewportRef && context.value() !== "") {
@@ -751,6 +750,5 @@ export const NavMenuViewport: Component<NavMenuViewportProps> = (props) => {
 /* -------------------------------------------------------------------------------------------------
  * Examples & Meta
  * -----------------------------------------------------------------------------------------------*/
-
 
 export default NavMenu;

@@ -1,62 +1,62 @@
-import type { JSX, Component } from "solid-js";
+import { cva, type VariantProps } from "class-variance-authority";
+import type {
+  BarSeriesOption,
+  CandlestickSeriesOption,
+  FunnelSeriesOption,
+  GaugeSeriesOption,
+  LineSeriesOption,
+  PieSeriesOption,
+  RadarSeriesOption,
+  ScatterSeriesOption,
+  TreeSeriesOption,
+} from "echarts/charts";
 import {
+  BarChart,
+  CandlestickChart,
+  FunnelChart,
+  GaugeChart,
+  HeatmapChart,
+  LineChart,
+  PieChart,
+  RadarChart,
+  ScatterChart,
+  TreeChart,
+} from "echarts/charts";
+import type {
+  DatasetComponentOption,
+  DataZoomComponentOption,
+  GridComponentOption,
+  LegendComponentOption,
+  TitleComponentOption,
+  ToolboxComponentOption,
+  TooltipComponentOption,
+  VisualMapComponentOption,
+} from "echarts/components";
+import {
+  DatasetComponent,
+  DataZoomComponent,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  TransformComponent,
+  VisualMapComponent,
+} from "echarts/components";
+import type { ComposeOption } from "echarts/core";
+import * as echarts from "echarts/core";
+import { LabelLayout, UniversalTransition } from "echarts/features";
+import { CanvasRenderer } from "echarts/renderers";
+import type { Component, JSX } from "solid-js";
+import {
+  createEffect,
+  createMemo,
   createSignal,
   onCleanup,
   onMount,
-  createEffect,
-  createMemo,
 } from "solid-js";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
-import { cva, type VariantProps } from "class-variance-authority";
-import * as echarts from "echarts/core";
-import {
-  BarChart,
-  LineChart,
-  PieChart,
-  ScatterChart,
-  RadarChart,
-  GaugeChart,
-  FunnelChart,
-  CandlestickChart,
-  HeatmapChart,
-  TreeChart,
-} from "echarts/charts";
-import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  DatasetComponent,
-  TransformComponent,
-  LegendComponent,
-  ToolboxComponent,
-  VisualMapComponent,
-  DataZoomComponent,
-} from "echarts/components";
-import { LabelLayout, UniversalTransition } from "echarts/features";
-import { CanvasRenderer } from "echarts/renderers";
-import type {
-  BarSeriesOption,
-  LineSeriesOption,
-  PieSeriesOption,
-  ScatterSeriesOption,
-  RadarSeriesOption,
-  GaugeSeriesOption,
-  FunnelSeriesOption,
-  CandlestickSeriesOption,
-  TreeSeriesOption,
-} from "echarts/charts";
-import type {
-  TitleComponentOption,
-  TooltipComponentOption,
-  GridComponentOption,
-  DatasetComponentOption,
-  LegendComponentOption,
-  ToolboxComponentOption,
-  VisualMapComponentOption,
-  DataZoomComponentOption,
-} from "echarts/components";
-import type { ComposeOption } from "echarts/core";
 
 // Register required components
 echarts.use([
@@ -105,7 +105,7 @@ type ECOption =
       | VisualMapComponentOption
       | DataZoomComponentOption
     >
-  | any;
+  | Record<string, unknown>;
 
 // Helper function to get CSS variable color value
 const getCSSVariable = (variable: string): string => {
@@ -138,9 +138,9 @@ const getCSSVariableAsRGBA = (variable: string, alpha: number = 1): string => {
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = l - c / 2;
 
-  let r = 0,
-    g = 0,
-    b = 0;
+  let r = 0;
+  let g = 0;
+  let b = 0;
   if (h >= 0 && h < 60) {
     r = c;
     g = x;
@@ -178,7 +178,7 @@ const getCSSVariableAsRGBA = (variable: string, alpha: number = 1): string => {
 
 // Create theme based on CSS variables
 const createThemeFromCSSVariables = () => {
-  const background = getCSSVariable("--background");
+  const _background = getCSSVariable("--background");
   const foreground = getCSSVariable("--foreground");
   const primary = getCSSVariable("--primary");
   const secondary = getCSSVariable("--secondary");
@@ -694,21 +694,34 @@ const chartVariants = cva(
 );
 
 // Deep merge utility to properly merge theme and user options
-const deepMerge = (target: any, source: any): any => {
-  if (!source) return target;
-  if (!target) return source;
+const deepMerge = (
+  target: unknown,
+  source: unknown,
+): Record<string, unknown> => {
+  const t = target as Record<string, unknown>;
+  const s = source as Record<string, unknown>;
+  if (!s) return t;
+  if (!t) return s;
 
-  const result = { ...target };
+  const result: Record<string, unknown> = { ...t };
 
-  for (const key in source) {
+  for (const key in s) {
+    const sourceVal = s[key];
+    const targetVal = t[key];
     if (
-      source[key] &&
-      typeof source[key] === "object" &&
-      !Array.isArray(source[key])
+      sourceVal &&
+      typeof sourceVal === "object" &&
+      !Array.isArray(sourceVal) &&
+      targetVal &&
+      typeof targetVal === "object" &&
+      !Array.isArray(targetVal)
     ) {
-      result[key] = deepMerge(target[key], source[key]);
+      result[key] = deepMerge(
+        targetVal as Record<string, unknown>,
+        sourceVal as Record<string, unknown>,
+      );
     } else {
-      result[key] = source[key];
+      result[key] = sourceVal;
     }
   }
 
@@ -721,7 +734,7 @@ type ChartProps = {
   loading?: boolean;
   loadingOption?: object;
   onChartReady?: (chart: echarts.ECharts) => void;
-  onEvents?: Record<string, (params: any) => void>;
+  onEvents?: Record<string, (params: Record<string, unknown>) => void>;
   notMerge?: boolean;
   lazyUpdate?: boolean;
   showLoading?: boolean;
@@ -807,171 +820,168 @@ export const Chart: Component<ChartProps> = (props) => {
 
     // Ensure series colors update with theme
     if (merged.series && Array.isArray(merged.series)) {
-      merged.series = merged.series.map((s: any, index: number) => {
-        const seriesColor = Array.isArray(colorScheme)
-          ? colorScheme[index % colorScheme.length]
-          : colorScheme[0];
+      // biome-ignore lint/suspicious/noExplicitAny: ECharts series items are complex nested objects requiring dynamic property access
+      merged.series = (merged.series as Record<string, any>[]).map(
+        // biome-ignore lint/suspicious/noExplicitAny: ECharts series items are complex nested objects requiring dynamic property access
+        (s: Record<string, any>, index: number) => {
+          const seriesColor = Array.isArray(colorScheme)
+            ? colorScheme[index % colorScheme.length]
+            : colorScheme[0];
 
-        // Get fresh CSS variables inside the map for reactivity
-        const foregroundColor = getCSSVariable("--foreground");
-        const backgroundColor = getCSSVariable("--background");
+          // Get fresh CSS variables inside the map for reactivity
+          const foregroundColor = getCSSVariable("--foreground");
+          const backgroundColor = getCSSVariable("--background");
 
-        // For line charts with areaStyle - preserve gradient on hover
-        if (s.type === "line" && s.areaStyle && !s.itemStyle?.color) {
-          return {
-            ...s,
-            itemStyle: {
-              ...s.itemStyle,
-              color: seriesColor,
-            },
-            lineStyle: {
-              ...s.lineStyle,
-              color: seriesColor,
-            },
-            areaStyle: {
-              ...s.areaStyle,
-            },
-            emphasis: {
-              focus: "none",
-              blurScope: "none",
-              scale: false,
-              lineStyle: {
-                width: 3,
-                color: seriesColor,
-                ...s.emphasis?.lineStyle,
-              },
-              itemStyle: {
-                color: seriesColor,
-                ...s.emphasis?.itemStyle,
-              },
-              areaStyle: {
-                // Preserve the original areaStyle including gradients from user
-                ...s.areaStyle,
-                // Then allow user's explicit emphasis areaStyle overrides
-                ...(s.emphasis?.areaStyle || {}),
-              },
-            },
-            blur: {
-              lineStyle: {
-                ...s.lineStyle,
-              },
+          // For line charts with areaStyle - preserve gradient on hover
+          if (s.type === "line" && s.areaStyle && !s.itemStyle?.color) {
+            return {
+              ...s,
               itemStyle: {
                 ...s.itemStyle,
+                color: seriesColor,
+              },
+              lineStyle: {
+                ...s.lineStyle,
+                color: seriesColor,
               },
               areaStyle: {
                 ...s.areaStyle,
               },
-            },
-          };
-        }
-
-        // For bar charts without explicit colors
-        if (!s.itemStyle?.color && s.type === "bar") {
-          return {
-            ...s,
-            itemStyle: {
-              ...s.itemStyle,
-              color: seriesColor,
-            },
-            emphasis: {
-              ...s.emphasis,
-              itemStyle: {
-                ...s.emphasis?.itemStyle,
-                color: seriesColor,
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.3)",
+              emphasis: {
+                focus: "none",
+                blurScope: "none",
+                scale: false,
+                lineStyle: {
+                  width: 3,
+                  color: seriesColor,
+                  ...s.emphasis?.lineStyle,
+                },
+                itemStyle: {
+                  color: seriesColor,
+                  ...s.emphasis?.itemStyle,
+                },
+                areaStyle: {
+                  // Preserve the original areaStyle including gradients from user
+                  ...s.areaStyle,
+                  // Then allow user's explicit emphasis areaStyle overrides
+                  ...(s.emphasis?.areaStyle || {}),
+                },
               },
-            },
-          };
-        }
+              blur: {
+                lineStyle: {
+                  ...s.lineStyle,
+                },
+                itemStyle: {
+                  ...s.itemStyle,
+                },
+                areaStyle: {
+                  ...s.areaStyle,
+                },
+              },
+            };
+          }
 
-        // For line charts without explicit colors
-        if (!s.itemStyle?.color && s.type === "line") {
-          return {
-            ...s,
-            itemStyle: {
-              ...s.itemStyle,
-              color: seriesColor,
-            },
-            lineStyle: {
-              ...s.lineStyle,
-              color: seriesColor,
-            },
-            emphasis: {
-              ...s.emphasis,
+          // For bar charts without explicit colors
+          if (!s.itemStyle?.color && s.type === "bar") {
+            return {
+              ...s,
+              itemStyle: {
+                ...s.itemStyle,
+                color: seriesColor,
+              },
+              emphasis: {
+                ...s.emphasis,
+                itemStyle: {
+                  ...s.emphasis?.itemStyle,
+                  color: seriesColor,
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: "rgba(0, 0, 0, 0.3)",
+                },
+              },
+            };
+          }
+
+          // For line charts without explicit colors
+          if (!s.itemStyle?.color && s.type === "line") {
+            return {
+              ...s,
+              itemStyle: {
+                ...s.itemStyle,
+                color: seriesColor,
+              },
               lineStyle: {
-                ...s.emphasis?.lineStyle,
-                width: 3,
+                ...s.lineStyle,
                 color: seriesColor,
               },
-              itemStyle: {
-                ...s.emphasis?.itemStyle,
-                color: seriesColor,
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.3)",
+              emphasis: {
+                ...s.emphasis,
+                lineStyle: {
+                  ...s.emphasis?.lineStyle,
+                  width: 3,
+                  color: seriesColor,
+                },
+                itemStyle: {
+                  ...s.emphasis?.itemStyle,
+                  color: seriesColor,
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: "rgba(0, 0, 0, 0.3)",
+                },
               },
-            },
-          };
-        }
+            };
+          }
 
-        // For pie charts - always apply styling
-        if (s.type === "pie") {
-          // Preserve existing data colors but fix emphasis behavior and apply label colors
-          const pieData = s.data
-            ? s.data.map((item: any, i: number) => {
-                const itemColor =
-                  item.itemStyle?.color ||
-                  (Array.isArray(colorScheme)
-                    ? colorScheme[i % colorScheme.length]
-                    : seriesColor);
-                return {
-                  ...item,
-                  itemStyle: {
-                    ...item.itemStyle,
-                    color: itemColor,
+          // For pie charts - always apply styling
+          if (s.type === "pie") {
+            // Preserve existing data colors but fix emphasis behavior and apply label colors
+            const pieData = Array.isArray(s.data)
+              ? // biome-ignore lint/suspicious/noExplicitAny: ECharts pie data items are complex nested objects requiring dynamic property access
+                (s.data as Record<string, any>[]).map(
+                  // biome-ignore lint/suspicious/noExplicitAny: ECharts pie data items are complex nested objects requiring dynamic property access
+                  (item: Record<string, any>, i: number) => {
+                    const itemColor =
+                      item.itemStyle?.color ||
+                      (Array.isArray(colorScheme)
+                        ? colorScheme[i % colorScheme.length]
+                        : seriesColor);
+                    return {
+                      ...item,
+                      itemStyle: {
+                        ...item.itemStyle,
+                        color: itemColor,
+                      },
+                      label: {
+                        ...item.label,
+                        color: foregroundColor,
+                        textBorderColor: backgroundColor,
+                        textBorderWidth: 0,
+                      },
+                      emphasis: {
+                        ...item.emphasis,
+                        disabled: false,
+                        itemStyle: {
+                          ...item.emphasis?.itemStyle,
+                          color: itemColor,
+                          shadowBlur: 10,
+                          shadowOffsetX: 0,
+                          shadowColor: "rgba(0, 0, 0, 0.3)",
+                        },
+                        label: {
+                          ...item.emphasis?.label,
+                          color: foregroundColor,
+                          textBorderColor: backgroundColor,
+                          textBorderWidth: 0,
+                        },
+                      },
+                    };
                   },
-                  label: {
-                    ...item.label,
-                    color: foregroundColor,
-                    textBorderColor: backgroundColor,
-                    textBorderWidth: 0,
-                  },
-                  emphasis: {
-                    ...item.emphasis,
-                    disabled: false,
-                    itemStyle: {
-                      ...item.emphasis?.itemStyle,
-                      color: itemColor,
-                      shadowBlur: 10,
-                      shadowOffsetX: 0,
-                      shadowColor: "rgba(0, 0, 0, 0.3)",
-                    },
-                    label: {
-                      ...item.emphasis?.label,
-                      color: foregroundColor,
-                      textBorderColor: backgroundColor,
-                      textBorderWidth: 0,
-                    },
-                  },
-                };
-              })
-            : s.data;
+                )
+              : s.data;
 
-          return {
-            ...s,
-            data: pieData,
-            label: {
-              color: foregroundColor,
-              textBorderColor: backgroundColor,
-              textBorderWidth: 0,
-              textShadowColor: "transparent",
-              textShadowBlur: 0,
-            },
-            emphasis: {
-              focus: "none",
-              scale: false,
+            return {
+              ...s,
+              data: pieData,
               label: {
                 color: foregroundColor,
                 textBorderColor: backgroundColor,
@@ -979,242 +989,254 @@ export const Chart: Component<ChartProps> = (props) => {
                 textShadowColor: "transparent",
                 textShadowBlur: 0,
               },
-            },
-          };
-        }
+              emphasis: {
+                focus: "none",
+                scale: false,
+                label: {
+                  color: foregroundColor,
+                  textBorderColor: backgroundColor,
+                  textBorderWidth: 0,
+                  textShadowColor: "transparent",
+                  textShadowBlur: 0,
+                },
+              },
+            };
+          }
 
-        // For gauge charts - apply proper coloring
-        if (s.type === "gauge") {
-          return {
-            ...s,
-            axisLine: {
-              ...s.axisLine,
-              lineStyle: {
-                ...s.axisLine?.lineStyle,
-                color: s.axisLine?.lineStyle?.color || [
-                  [0.25, colorScheme[0] || getCSSVariable("--chart-1")],
-                  [0.5, colorScheme[1] || getCSSVariable("--chart-2")],
-                  [0.75, colorScheme[2] || getCSSVariable("--chart-3")],
-                  [1, colorScheme[3] || getCSSVariable("--chart-4")],
-                ],
+          // For gauge charts - apply proper coloring
+          if (s.type === "gauge") {
+            return {
+              ...s,
+              axisLine: {
+                ...s.axisLine,
+                lineStyle: {
+                  ...s.axisLine?.lineStyle,
+                  color: s.axisLine?.lineStyle?.color || [
+                    [0.25, colorScheme[0] || getCSSVariable("--chart-1")],
+                    [0.5, colorScheme[1] || getCSSVariable("--chart-2")],
+                    [0.75, colorScheme[2] || getCSSVariable("--chart-3")],
+                    [1, colorScheme[3] || getCSSVariable("--chart-4")],
+                  ],
+                },
               },
-            },
-            pointer: {
-              ...s.pointer,
-              itemStyle: {
-                ...s.pointer?.itemStyle,
-                color:
-                  s.pointer?.itemStyle?.color || getCSSVariable("--primary"),
+              pointer: {
+                ...s.pointer,
+                itemStyle: {
+                  ...s.pointer?.itemStyle,
+                  color:
+                    s.pointer?.itemStyle?.color || getCSSVariable("--primary"),
+                },
               },
-            },
-            axisTick: {
-              ...s.axisTick,
-              lineStyle: {
-                ...s.axisTick?.lineStyle,
-                color:
-                  s.axisTick?.lineStyle?.color || getCSSVariable("--primary"),
+              axisTick: {
+                ...s.axisTick,
+                lineStyle: {
+                  ...s.axisTick?.lineStyle,
+                  color:
+                    s.axisTick?.lineStyle?.color || getCSSVariable("--primary"),
+                },
               },
-            },
-            splitLine: {
-              ...s.splitLine,
-              lineStyle: {
-                ...s.splitLine?.lineStyle,
-                color:
-                  s.splitLine?.lineStyle?.color || getCSSVariable("--primary"),
+              splitLine: {
+                ...s.splitLine,
+                lineStyle: {
+                  ...s.splitLine?.lineStyle,
+                  color:
+                    s.splitLine?.lineStyle?.color ||
+                    getCSSVariable("--primary"),
+                },
               },
-            },
-            axisLabel: {
-              ...s.axisLabel,
-              color: s.axisLabel?.color || foregroundColor,
-            },
-            title: {
-              ...s.title,
-              color: s.title?.color || foregroundColor,
-            },
-            detail: {
-              ...s.detail,
-              color: s.detail?.color || getCSSVariable("--primary"),
-            },
-          };
-        }
+              axisLabel: {
+                ...s.axisLabel,
+                color: s.axisLabel?.color || foregroundColor,
+              },
+              title: {
+                ...s.title,
+                color: s.title?.color || foregroundColor,
+              },
+              detail: {
+                ...s.detail,
+                color: s.detail?.color || getCSSVariable("--primary"),
+              },
+            };
+          }
 
-        // For tree charts - apply proper label coloring
-        if (s.type === "tree") {
-          return {
-            ...s,
-            label: {
-              color: foregroundColor,
-              textBorderColor: "transparent",
-              textBorderWidth: 0,
-              ...s.label,
-            },
-            leaves: {
-              ...s.leaves,
+          // For tree charts - apply proper label coloring
+          if (s.type === "tree") {
+            return {
+              ...s,
               label: {
                 color: foregroundColor,
                 textBorderColor: "transparent",
                 textBorderWidth: 0,
-                ...s.leaves?.label,
+                ...s.label,
               },
-            },
-            itemStyle: {
-              ...s.itemStyle,
-              color: seriesColor,
-            },
-            lineStyle: {
-              ...s.lineStyle,
-              color: seriesColor,
-            },
-            emphasis: {
-              ...s.emphasis,
-              label: {
-                color: foregroundColor,
-                ...s.emphasis?.label,
+              leaves: {
+                ...s.leaves,
+                label: {
+                  color: foregroundColor,
+                  textBorderColor: "transparent",
+                  textBorderWidth: 0,
+                  ...s.leaves?.label,
+                },
               },
-            },
-          };
-        }
-
-        // For scatter charts - apply proper coloring
-        if (s.type === "scatter") {
-          return {
-            ...s,
-            itemStyle: {
-              ...s.itemStyle,
-              color: s.itemStyle?.color || seriesColor,
-            },
-            label: {
-              color: foregroundColor,
-              textBorderColor: "transparent",
-              textBorderWidth: 0,
-              ...s.label,
-            },
-            emphasis: {
-              ...s.emphasis,
               itemStyle: {
-                ...s.emphasis?.itemStyle,
-                color: s.emphasis?.itemStyle?.color || seriesColor,
+                ...s.itemStyle,
+                color: seriesColor,
               },
-              label: {
-                color: foregroundColor,
-                ...s.emphasis?.label,
-              },
-            },
-          };
-        }
-
-        // For radar charts - apply proper coloring
-        if (s.type === "radar") {
-          return {
-            ...s,
-            itemStyle: {
-              ...s.itemStyle,
-              color: s.itemStyle?.color || seriesColor,
-            },
-            lineStyle: {
-              ...s.lineStyle,
-              color: s.lineStyle?.color || seriesColor,
-            },
-            areaStyle: {
-              ...s.areaStyle,
-              color: s.areaStyle?.color || seriesColor,
-            },
-            label: {
-              color: foregroundColor,
-              textBorderColor: "transparent",
-              textBorderWidth: 0,
-              ...s.label,
-            },
-            emphasis: {
-              ...s.emphasis,
-              label: {
-                color: foregroundColor,
-                ...s.emphasis?.label,
-              },
-            },
-          };
-        }
-
-        // For funnel charts - apply proper label coloring
-        if (s.type === "funnel") {
-          return {
-            ...s,
-            itemStyle: {
-              ...s.itemStyle,
-              color: s.itemStyle?.color || seriesColor,
-            },
-            label: {
-              color: foregroundColor,
-              textBorderColor: "transparent",
-              textBorderWidth: 0,
-              ...s.label,
-            },
-            labelLine: {
-              ...s.labelLine,
               lineStyle: {
-                ...s.labelLine?.lineStyle,
-                color: foregroundColor,
+                ...s.lineStyle,
+                color: seriesColor,
               },
-            },
-            emphasis: {
-              ...s.emphasis,
+              emphasis: {
+                ...s.emphasis,
+                label: {
+                  color: foregroundColor,
+                  ...s.emphasis?.label,
+                },
+              },
+            };
+          }
+
+          // For scatter charts - apply proper coloring
+          if (s.type === "scatter") {
+            return {
+              ...s,
+              itemStyle: {
+                ...s.itemStyle,
+                color: s.itemStyle?.color || seriesColor,
+              },
               label: {
                 color: foregroundColor,
-                ...s.emphasis?.label,
+                textBorderColor: "transparent",
+                textBorderWidth: 0,
+                ...s.label,
               },
-            },
-          };
-        }
+              emphasis: {
+                ...s.emphasis,
+                itemStyle: {
+                  ...s.emphasis?.itemStyle,
+                  color: s.emphasis?.itemStyle?.color || seriesColor,
+                },
+                label: {
+                  color: foregroundColor,
+                  ...s.emphasis?.label,
+                },
+              },
+            };
+          }
 
-        // For candlestick charts - apply proper coloring
-        if (s.type === "candlestick") {
-          return {
-            ...s,
-            itemStyle: {
-              color: getCSSVariable("--primary"),
-              color0: getCSSVariable("--secondary"),
-              borderColor: getCSSVariable("--primary"),
-              borderColor0: getCSSVariable("--secondary"),
-              ...s.itemStyle,
-            },
-            emphasis: {
-              ...s.emphasis,
+          // For radar charts - apply proper coloring
+          if (s.type === "radar") {
+            return {
+              ...s,
+              itemStyle: {
+                ...s.itemStyle,
+                color: s.itemStyle?.color || seriesColor,
+              },
+              lineStyle: {
+                ...s.lineStyle,
+                color: s.lineStyle?.color || seriesColor,
+              },
+              areaStyle: {
+                ...s.areaStyle,
+                color: s.areaStyle?.color || seriesColor,
+              },
+              label: {
+                color: foregroundColor,
+                textBorderColor: "transparent",
+                textBorderWidth: 0,
+                ...s.label,
+              },
+              emphasis: {
+                ...s.emphasis,
+                label: {
+                  color: foregroundColor,
+                  ...s.emphasis?.label,
+                },
+              },
+            };
+          }
+
+          // For funnel charts - apply proper label coloring
+          if (s.type === "funnel") {
+            return {
+              ...s,
+              itemStyle: {
+                ...s.itemStyle,
+                color: s.itemStyle?.color || seriesColor,
+              },
+              label: {
+                color: foregroundColor,
+                textBorderColor: "transparent",
+                textBorderWidth: 0,
+                ...s.label,
+              },
+              labelLine: {
+                ...s.labelLine,
+                lineStyle: {
+                  ...s.labelLine?.lineStyle,
+                  color: foregroundColor,
+                },
+              },
+              emphasis: {
+                ...s.emphasis,
+                label: {
+                  color: foregroundColor,
+                  ...s.emphasis?.label,
+                },
+              },
+            };
+          }
+
+          // For candlestick charts - apply proper coloring
+          if (s.type === "candlestick") {
+            return {
+              ...s,
               itemStyle: {
                 color: getCSSVariable("--primary"),
                 color0: getCSSVariable("--secondary"),
                 borderColor: getCSSVariable("--primary"),
                 borderColor0: getCSSVariable("--secondary"),
-                ...s.emphasis?.itemStyle,
+                ...s.itemStyle,
               },
-            },
-          };
-        }
+              emphasis: {
+                ...s.emphasis,
+                itemStyle: {
+                  color: getCSSVariable("--primary"),
+                  color0: getCSSVariable("--secondary"),
+                  borderColor: getCSSVariable("--primary"),
+                  borderColor0: getCSSVariable("--secondary"),
+                  ...s.emphasis?.itemStyle,
+                },
+              },
+            };
+          }
 
-        // For heatmap charts - apply proper label coloring
-        if (s.type === "heatmap") {
-          return {
-            ...s,
-            label: {
-              color: foregroundColor,
-              textBorderColor: "transparent",
-              textBorderWidth: 0,
-              ...s.label,
-            },
-            emphasis: {
-              ...s.emphasis,
-              itemStyle: {
-                ...s.emphasis?.itemStyle,
-              },
+          // For heatmap charts - apply proper label coloring
+          if (s.type === "heatmap") {
+            return {
+              ...s,
               label: {
                 color: foregroundColor,
-                ...s.emphasis?.label,
+                textBorderColor: "transparent",
+                textBorderWidth: 0,
+                ...s.label,
               },
-            },
-          };
-        }
+              emphasis: {
+                ...s.emphasis,
+                itemStyle: {
+                  ...s.emphasis?.itemStyle,
+                },
+                label: {
+                  color: foregroundColor,
+                  ...s.emphasis?.label,
+                },
+              },
+            };
+          }
 
-        return s;
-      });
+          return s;
+        },
+      );
     }
 
     return merged;
@@ -1274,7 +1296,8 @@ export const Chart: Component<ChartProps> = (props) => {
       // Bind events
       if (props.onEvents) {
         Object.entries(props.onEvents).forEach(([eventName, handler]) => {
-          newChart.on(eventName, handler);
+          // biome-ignore lint/suspicious/noExplicitAny: ECharts event handler signature is not statically known
+          newChart.on(eventName, handler as any);
         });
       }
 
@@ -1394,7 +1417,7 @@ export const meta: ComponentMeta<ChartProps> = {
           () => Math.floor(Math.random() * 100) + 20,
         );
         const [data, setData] = createSignal(initialData);
-        let chartRef: any;
+        let chartRef: echarts.ECharts | undefined;
 
         onMount(() => {
           const interval = setInterval(() => {
@@ -1510,7 +1533,7 @@ export const meta: ComponentMeta<ChartProps> = {
           133, 334, 198, 123, 125, 220,
         ];
 
-        let chartRef: any;
+        let _chartRef: echarts.ECharts | undefined;
 
         return (
           <Chart
@@ -1557,8 +1580,9 @@ export const meta: ComponentMeta<ChartProps> = {
               ],
             }}
             onChartReady={(chart) => {
-              chartRef = chart;
-              chart.on("click", (params: any) => {
+              _chartRef = chart;
+              chart.on("click", (rawParams: unknown) => {
+                const params = rawParams as Record<string, number>;
                 const zoomSize = 6;
                 chart.dispatchAction({
                   type: "dataZoom",
@@ -1621,7 +1645,7 @@ export const meta: ComponentMeta<ChartProps> = {
       description: "Interactive heatmap with perlin noise data",
       code: () => {
         const generateHeatmapData = () => {
-          const data: any[] = [];
+          const data: [number, number, number][] = [];
           // Simple pseudo-random noise with smoothing for better visual appearance
           const random2D = (x: number, y: number) => {
             const hash = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;

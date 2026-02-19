@@ -1,15 +1,14 @@
 import { Dialog as ArkDialog } from "@ark-ui/solid";
+import type { DialogInteractOutsideEvent } from "@ark-ui/solid/dialog";
 import {
-  type JSX,
-  splitProps,
   createSignal,
+  type JSX,
   mergeProps,
-  createEffect,
   children as resolveChildren,
   Show,
+  splitProps,
 } from "solid-js";
 import { Portal } from "solid-js/web";
-import { Dynamic } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
 import { cn } from "../lib/cn";
 import { icon } from "../lib/icon";
@@ -55,7 +54,7 @@ interface DialogProps {
   initialFocusEl?: () => HTMLElement | null;
   finalFocusEl?: () => HTMLElement | null;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
-  onInteractOutside?: (event: any) => void;
+  onInteractOutside?: (event: DialogInteractOutsideEvent) => void;
 }
 
 export const Dialog = (props: DialogProps) => {
@@ -105,6 +104,8 @@ export const DialogTrigger = (props: DialogTriggerProps) => {
     <ArkDialog.Context>
       {(context) => {
         return (
+          // biome-ignore lint/a11y/noStaticElementInteractions: transparent wrapper div
+          // biome-ignore lint/a11y/useKeyWithClickEvents: child element handles keyboard
           <div
             onClick={() => context().setOpen(true)}
             style={{ display: "contents" }}
@@ -269,11 +270,11 @@ export const DialogClose = (props: DialogCloseProps) => {
   return <ArkDialog.CloseTrigger>{props.children}</ArkDialog.CloseTrigger>;
 };
 
+import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
 import { Button } from "./button";
 import { Input } from "./input";
-import { Badge } from "./badge";
 
 export const meta: ComponentMeta<DialogProps> = {
   name: "Dialog",
@@ -351,12 +352,24 @@ export const meta: ComponentMeta<DialogProps> = {
             </DialogDescription>
             <div class="space-y-4 my-4">
               <div class="space-y-2">
-                <label class="text-sm font-medium">Name</label>
-                <Input type="text" placeholder="Enter your name" />
+                <label for="dialog-name" class="text-sm font-medium">
+                  Name
+                </label>
+                <Input
+                  id="dialog-name"
+                  type="text"
+                  placeholder="Enter your name"
+                />
               </div>
               <div class="space-y-2">
-                <label class="text-sm font-medium">Email</label>
-                <Input type="email" placeholder="Enter your email" />
+                <label for="dialog-email" class="text-sm font-medium">
+                  Email
+                </label>
+                <Input
+                  id="dialog-email"
+                  type="email"
+                  placeholder="Enter your email"
+                />
               </div>
             </div>
             <DialogFooter>

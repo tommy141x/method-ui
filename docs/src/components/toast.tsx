@@ -49,19 +49,19 @@
  * - Drag to dismiss
  */
 
-import type { JSX, Component } from "solid-js";
-import { splitProps, mergeProps, createSignal } from "solid-js";
-import { Portal } from "solid-js/web";
 import { cva } from "class-variance-authority";
-import {
-  ToastProvider as SolidToastProvider,
-  Toaster as SolidToaster,
-  useToast,
-  showToast,
-} from "solid-notifications";
-
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
+import type { Component, JSX } from "solid-js";
+import { mergeProps, splitProps } from "solid-js";
+import { Portal } from "solid-js/web";
+import {
+  Toaster as SolidToaster,
+  ToastProvider as SolidToastProvider,
+  type ToastOptions,
+  showToast,
+  useToast,
+} from "solid-notifications";
 import { unoMerge } from "unocss-merge";
 
 // Hardcoded cn function - makes this component completely self-contained
@@ -69,13 +69,12 @@ function cn(...classLists: ClassValue[]) {
   return unoMerge(clsx(classLists));
 }
 
-
 // Icon helper function - returns UnoCSS icon class for your configured icon library
 function icon(name: string): string {
   return `i-lucide-${name}`;
 }
 
-const toastVariants = cva("", {
+const _toastVariants = cva("", {
   variants: {
     variant: {
       default: "",
@@ -582,8 +581,10 @@ export const Toaster: Component<ToasterProps> = (props) => {
           }}
           wrapperClass={cn("sn-toast-wrapper", local.class)}
           class="sn-toast"
-          icon={(args) => {
-            const iconClass = TOAST_ICONS[args.type] || TOAST_ICONS.default;
+          icon={(args: { type: string; theme?: string | null }) => {
+            const iconClass =
+              TOAST_ICONS[args.type as keyof typeof TOAST_ICONS] ||
+              TOAST_ICONS.default;
             return (
               <div
                 class={cn(
@@ -624,7 +625,7 @@ export const ToastContainer: Component<{
   position?: "top" | "bottom";
   align?: "left" | "center" | "right";
 }> = (props) => {
-  const [local, others] = splitProps(props, ["children", "position", "align"]);
+  const [local, _others] = splitProps(props, ["children", "position", "align"]);
 
   return (
     <SolidToastProvider>
@@ -659,15 +660,15 @@ export { showToast };
  * Helper function to show different toast types
  */
 export const toast = {
-  success: (message: string, options?: any) =>
+  success: (message: string, options?: ToastOptions) =>
     showToast(message, { type: "success", toasterId: "default", ...options }),
-  error: (message: string, options?: any) =>
+  error: (message: string, options?: ToastOptions) =>
     showToast(message, { type: "error", toasterId: "default", ...options }),
-  warning: (message: string, options?: any) =>
+  warning: (message: string, options?: ToastOptions) =>
     showToast(message, { type: "warning", toasterId: "default", ...options }),
-  info: (message: string, options?: any) =>
+  info: (message: string, options?: ToastOptions) =>
     showToast(message, { type: "info", toasterId: "default", ...options }),
-  loading: (message: string, options?: any) =>
+  loading: (message: string, options?: ToastOptions) =>
     showToast(message, {
       type: "loading",
       duration: false,
@@ -679,9 +680,9 @@ export const toast = {
     messages: {
       pending: string;
       success: string | ((data: T) => string);
-      error: string | ((error: any) => string);
+      error: string | ((error: unknown) => string);
     },
-    options?: any,
+    options?: ToastOptions,
   ) => {
     const { promiseToast } = await import("solid-notifications");
     return promiseToast(promise, messages, {
@@ -690,7 +691,5 @@ export const toast = {
     });
   },
 };
-
-
 
 export default Toaster;

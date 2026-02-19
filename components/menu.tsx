@@ -1,6 +1,7 @@
-import type { JSX, Component } from "solid-js";
-import { splitProps, Show } from "solid-js";
 import { Menu as ArkMenu } from "@ark-ui/solid/menu";
+import type { PositioningOptions } from "@zag-js/popper";
+import type { Component, JSX } from "solid-js";
+import { Show, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
 import { cn } from "../lib/cn";
@@ -14,7 +15,7 @@ type MenuProps = {
   onOpenChange?: (details: { open: boolean }) => void;
   onSelect?: (details: { value: string | null }) => void;
   closeOnSelect?: boolean;
-  positioning?: any;
+  positioning?: PositioningOptions;
   id?: string;
   ids?: Partial<{
     trigger: string;

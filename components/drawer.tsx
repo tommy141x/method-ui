@@ -1,13 +1,13 @@
 import {
-  type JSX,
-  splitProps,
-  createSignal,
-  createEffect,
-  onCleanup,
-  Show,
-  mergeProps,
   type Accessor,
   createContext,
+  createEffect,
+  createSignal,
+  type JSX,
+  mergeProps,
+  onCleanup,
+  Show,
+  splitProps,
   useContext,
 } from "solid-js";
 import { Portal } from "solid-js/web";
@@ -110,7 +110,7 @@ export const Drawer = (props: DrawerProps) => {
 
   // Handle controlled/uncontrolled state
   const isControlled = () => merged.open !== undefined;
-  const open = () => (isControlled() ? merged.open! : internalOpen());
+  const open = () => (isControlled() ? (merged.open ?? false) : internalOpen());
 
   const setOpen = (value: boolean) => {
     if (!isControlled()) {
@@ -182,6 +182,8 @@ export const DrawerTrigger = (props: DrawerTriggerProps) => {
   const context = useDrawerContext();
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: transparent wrapper div
+    // biome-ignore lint/a11y/useKeyWithClickEvents: child element handles keyboard
     <div
       onClick={() => context.setOpen(true)}
       style={{ display: "contents" }}
@@ -204,6 +206,8 @@ export const DrawerClose = (props: DrawerCloseProps) => {
   const context = useDrawerContext();
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: transparent wrapper div
+    // biome-ignore lint/a11y/useKeyWithClickEvents: child element handles keyboard
     <div
       onClick={() => context.setOpen(false)}
       style={{ display: "contents" }}
@@ -487,7 +491,9 @@ export const DrawerContent = (props: DrawerContentProps) => {
           {...others}
         >
           <Show when={merged.withHandle && context.side() === "bottom"}>
-            <div
+            <button
+              type="button"
+              aria-label="Drag to close"
               class="shrink-0 rounded-full bg-muted cursor-grab active:cursor-grabbing mt-4 mb-2 h-1.5 w-12 self-center"
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
@@ -496,7 +502,9 @@ export const DrawerContent = (props: DrawerContentProps) => {
           </Show>
           {local.children}
           <Show when={merged.withHandle && context.side() === "top"}>
-            <div
+            <button
+              type="button"
+              aria-label="Drag to close"
               class="shrink-0 rounded-full bg-muted cursor-grab active:cursor-grabbing mt-2 mb-4 h-1.5 w-12 self-center"
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
@@ -504,7 +512,9 @@ export const DrawerContent = (props: DrawerContentProps) => {
             />
           </Show>
           <Show when={merged.withHandle && context.side() === "left"}>
-            <div
+            <button
+              type="button"
+              aria-label="Drag to close"
               class="shrink-0 rounded-full bg-muted cursor-grab active:cursor-grabbing ml-4 mr-2 h-12 w-1.5 self-start"
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
@@ -512,7 +522,9 @@ export const DrawerContent = (props: DrawerContentProps) => {
             />
           </Show>
           <Show when={merged.withHandle && context.side() === "right"}>
-            <div
+            <button
+              type="button"
+              aria-label="Drag to close"
               class="shrink-0 rounded-full bg-muted cursor-grab active:cursor-grabbing ml-2 mr-4 h-12 w-1.5 self-end"
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
@@ -716,16 +728,28 @@ export const meta: ComponentMeta<DrawerProps> = {
               </DrawerHeader>
               <DrawerBody>
                 <nav class="space-y-2">
-                  <button class="w-full text-left px-3 py-2 rounded-md hover:bg-accent">
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-md hover:bg-accent"
+                  >
                     Dashboard
                   </button>
-                  <button class="w-full text-left px-3 py-2 rounded-md hover:bg-accent">
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-md hover:bg-accent"
+                  >
                     Settings
                   </button>
-                  <button class="w-full text-left px-3 py-2 rounded-md hover:bg-accent">
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-md hover:bg-accent"
+                  >
                     Profile
                   </button>
-                  <button class="w-full text-left px-3 py-2 rounded-md hover:bg-accent">
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-md hover:bg-accent"
+                  >
                     Logout
                   </button>
                 </nav>
@@ -755,20 +779,33 @@ export const meta: ComponentMeta<DrawerProps> = {
               <DrawerBody>
                 <div class="space-y-4">
                   <div>
-                    <label class="text-sm font-medium mb-2 block">
+                    <label
+                      for="drawer-category"
+                      class="text-sm font-medium mb-2 block"
+                    >
                       Category
                     </label>
-                    <select class="w-full rounded-md border border-border bg-background px-3 py-2">
+                    <select
+                      id="drawer-category"
+                      class="w-full rounded-md border border-border bg-background px-3 py-2"
+                    >
                       <option>All</option>
                       <option>Electronics</option>
                       <option>Clothing</option>
                     </select>
                   </div>
                   <div>
-                    <label class="text-sm font-medium mb-2 block">
+                    <label
+                      for="drawer-price-range"
+                      class="text-sm font-medium mb-2 block"
+                    >
                       Price Range
                     </label>
-                    <input type="range" class="w-full" />
+                    <input
+                      id="drawer-price-range"
+                      type="range"
+                      class="w-full"
+                    />
                   </div>
                 </div>
               </DrawerBody>
@@ -887,19 +924,34 @@ export const meta: ComponentMeta<DrawerProps> = {
               <DrawerBody>
                 <form class="space-y-4">
                   <div class="space-y-2">
-                    <label class="text-sm font-medium">Name</label>
-                    <Input type="text" placeholder="Enter item name" />
+                    <label for="drawer-item-name" class="text-sm font-medium">
+                      Name
+                    </label>
+                    <Input
+                      id="drawer-item-name"
+                      type="text"
+                      placeholder="Enter item name"
+                    />
                   </div>
                   <div class="space-y-2">
-                    <label class="text-sm font-medium">Description</label>
+                    <label for="drawer-item-desc" class="text-sm font-medium">
+                      Description
+                    </label>
                     <textarea
+                      id="drawer-item-desc"
                       class="w-full min-h-[100px] rounded-md border border-border bg-background px-3 py-2 text-sm"
                       placeholder="Enter description"
                     />
                   </div>
                   <div class="space-y-2">
-                    <label class="text-sm font-medium">Price</label>
-                    <Input type="number" placeholder="0.00" />
+                    <label for="drawer-item-price" class="text-sm font-medium">
+                      Price
+                    </label>
+                    <Input
+                      id="drawer-item-price"
+                      type="number"
+                      placeholder="0.00"
+                    />
                   </div>
                 </form>
               </DrawerBody>

@@ -1,6 +1,6 @@
-import type { JSX, Component } from "solid-js";
-import { splitProps } from "solid-js";
 import { cva, type VariantProps } from "class-variance-authority";
+import type { Component, JSX } from "solid-js";
+import { splitProps } from "solid-js";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
@@ -10,6 +10,9 @@ const cardVariants = cva("rounded-lg text-card-foreground", {
       default: "bg-card shadow-sm",
       elevated: "bg-card shadow-xl",
       outlined: "bg-card border-2 border-primary shadow-none",
+      interactive:
+        "bg-card shadow-sm hover:shadow-md hover:border-accent transition-all cursor-pointer",
+      ghost: "bg-transparent border border-border shadow-none",
     },
   },
   defaultVariants: {
@@ -121,11 +124,11 @@ export const CardFooter: Component<CardFooterProps> = (props) => {
   );
 };
 
+import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
 import { Button } from "./button";
 import { Input } from "./input";
-import { Badge } from "./badge";
 
 export const meta: ComponentMeta<CardProps> = {
   name: "Card",
@@ -178,7 +181,7 @@ export const meta: ComponentMeta<CardProps> = {
             </div>
           </CardContent>
           <CardFooter>
-            <button class="text-sm text-primary hover:underline">
+            <button type="button" class="text-sm text-primary hover:underline">
               Mark all as read
             </button>
           </CardFooter>
@@ -212,6 +215,22 @@ export const meta: ComponentMeta<CardProps> = {
             </CardHeader>
             <CardContent>
               <p class="text-sm">Card with prominent border.</p>
+            </CardContent>
+          </Card>
+          <Card variant="interactive" class="w-[300px]">
+            <CardHeader>
+              <CardTitle class="text-lg">Interactive Card</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm">Card with hover effects and cursor pointer.</p>
+            </CardContent>
+          </Card>
+          <Card variant="ghost" class="w-[300px]">
+            <CardHeader>
+              <CardTitle class="text-lg">Ghost Card</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm">Minimal card with transparent background.</p>
             </CardContent>
           </Card>
         </div>
@@ -268,6 +287,59 @@ export const meta: ComponentMeta<CardProps> = {
             </Button>
           </CardFooter>
         </Card>
+      ),
+    },
+    {
+      title: "Interactive Cards",
+      description: "Clickable cards with hover effects",
+      code: () => (
+        <div class="grid gap-4 md:grid-cols-3">
+          <Card variant="interactive">
+            <CardHeader class="pb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <div class="h-5 w-5 i-lucide-package text-blue-500" />
+                </div>
+                <CardTitle class="text-base">Services</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-muted-foreground">
+                View and manage your active services
+              </p>
+            </CardContent>
+          </Card>
+          <Card variant="interactive">
+            <CardHeader class="pb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <div class="h-5 w-5 i-lucide-file-text text-purple-500" />
+                </div>
+                <CardTitle class="text-base">Invoices</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-muted-foreground">
+                Check your billing and invoices
+              </p>
+            </CardContent>
+          </Card>
+          <Card variant="interactive">
+            <CardHeader class="pb-3">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <div class="h-5 w-5 i-lucide-headphones text-green-500" />
+                </div>
+                <CardTitle class="text-base">Support</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-muted-foreground">
+                Get help from our support team
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       ),
     },
     {

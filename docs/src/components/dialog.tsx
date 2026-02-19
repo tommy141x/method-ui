@@ -1,28 +1,22 @@
 import { Dialog as ArkDialog } from "@ark-ui/solid";
-import {
-  type JSX,
-  splitProps,
-  createSignal,
-  mergeProps,
-  createEffect,
-  children as resolveChildren,
-  Show,
-} from "solid-js";
-import { Portal } from "solid-js/web";
-import { Dynamic } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
-import { Button, buttonVariants } from "./button";
-
-
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
+import {
+  createSignal,
+  type JSX,
+  mergeProps,
+  children as resolveChildren,
+  Show,
+  splitProps,
+} from "solid-js";
+import { Portal } from "solid-js/web";
+import { Motion, Presence } from "solid-motionone";
 import { unoMerge } from "unocss-merge";
 
 // Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
   return unoMerge(clsx(classLists));
 }
-
 
 // Icon helper function - returns UnoCSS icon class for your configured icon library
 function icon(name: string): string {
@@ -69,7 +63,7 @@ interface DialogProps {
   initialFocusEl?: () => HTMLElement | null;
   finalFocusEl?: () => HTMLElement | null;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
-  onInteractOutside?: (event: any) => void;
+  onInteractOutside?: (event: CustomEvent) => void;
 }
 
 export const Dialog = (props: DialogProps) => {
@@ -119,12 +113,19 @@ export const DialogTrigger = (props: DialogTriggerProps) => {
     <ArkDialog.Context>
       {(context) => {
         return (
-          <div
-            onClick={() => context().setOpen(true)}
-            style={{ display: "contents" }}
-          >
-            {resolved()}
-          </div>
+          <>
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: display:contents wrapper is an SSR hydration workaround for Ark UI Dialog.Trigger */}
+            <div
+              onClick={() => context().setOpen(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") context().setOpen(true);
+              }}
+              role="presentation"
+              style={{ display: "contents" }}
+            >
+              {resolved()}
+            </div>
+          </>
         );
       }}
     </ArkDialog.Context>
@@ -282,6 +283,5 @@ interface DialogCloseProps {
 export const DialogClose = (props: DialogCloseProps) => {
   return <ArkDialog.CloseTrigger>{props.children}</ArkDialog.CloseTrigger>;
 };
-
 
 export default Dialog;

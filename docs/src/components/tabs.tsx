@@ -1,18 +1,17 @@
 import { Tabs as ArkTabs } from "@ark-ui/solid";
-import type { JSX, Component } from "solid-js";
-import {
-  splitProps,
-  createSignal,
-  onMount,
-  createEffect,
-  onCleanup,
-} from "solid-js";
-import { cva, type VariantProps } from "class-variance-authority";
 import { animate } from "@motionone/dom";
+import { cva } from "class-variance-authority";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
+import type { Component, JSX } from "solid-js";
+import {
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+  splitProps,
+} from "solid-js";
 import { unoMerge } from "unocss-merge";
-
 
 // Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
@@ -120,7 +119,9 @@ export const Tabs: Component<TabsProps> = (props) => {
 
     // Cleanup animations on component unmount or effect re-run
     onCleanup(() => {
-      currentAnimations.forEach((anim) => anim.stop());
+      currentAnimations.forEach((anim) => {
+        anim.stop();
+      });
       currentAnimations = [];
     });
 
@@ -214,7 +215,9 @@ export const Tabs: Component<TabsProps> = (props) => {
     }
 
     // Cancel any ongoing animations
-    currentAnimations.forEach((anim) => anim.stop());
+    currentAnimations.forEach((anim) => {
+      anim.stop();
+    });
     currentAnimations = [];
 
     // Set explicit height AFTER positioning is applied
@@ -407,6 +410,5 @@ export const TabsIndicator: Component<TabsIndicatorProps> = (props) => {
 export const TabsRoot = Tabs;
 
 // Metadata for documentation
-
 
 export default Tabs;

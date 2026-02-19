@@ -1,15 +1,16 @@
-import type { JSX, Component } from "solid-js";
-import { splitProps, Show } from "solid-js";
+import type { ImageData } from "@responsive-image/core";
+import type { Component, JSX } from "solid-js";
+import { Show, splitProps } from "solid-js";
 import { isServer } from "solid-js/web";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
-import type { ImageData } from "@responsive-image/core";
 
 // Type guard to check if src is responsive image data
-const isResponsiveImageData = (src: any): src is ImageData => {
+const isResponsiveImageData = (src: unknown): src is ImageData => {
   return (
-    src &&
+    Boolean(src) &&
     typeof src === "object" &&
+    src !== null &&
     typeof src !== "string" &&
     "imageTypes" in src &&
     "availableWidths" in src &&
@@ -70,12 +71,12 @@ const createFallbackImgProps = (
     // Parse sizes attribute to get a reasonable default
     if (props.sizes) {
       const sizeMatch = props.sizes.match(/(\d+)px/);
-      if (sizeMatch) return parseInt(sizeMatch[1]);
+      if (sizeMatch) return parseInt(sizeMatch[1], 10);
 
       // Handle viewport units
       const vwMatch = props.sizes.match(/(\d+)vw/);
       if (vwMatch) {
-        const vw = parseInt(vwMatch[1]);
+        const vw = parseInt(vwMatch[1], 10);
         return Math.round((vw / 100) * 1200); // Assume 1200px viewport
       }
     }
@@ -110,7 +111,7 @@ const createFallbackImgProps = (
         return src.imageUrlFor(400);
       } catch {
         // Last resort
-        return (src as any).src || "";
+        return (src as { src?: string }).src ?? "";
       }
     }
   })();
@@ -163,11 +164,11 @@ const InternalResponsiveImage: Component<ImageProps> = (props) => {
 
     if (local.sizes) {
       const sizeMatch = local.sizes.match(/(\d+)px/);
-      if (sizeMatch) return parseInt(sizeMatch[1]);
+      if (sizeMatch) return parseInt(sizeMatch[1], 10);
 
       const vwMatch = local.sizes.match(/(\d+)vw/);
       if (vwMatch) {
-        const vw = parseInt(vwMatch[1]);
+        const vw = parseInt(vwMatch[1], 10);
         return Math.round((vw / 100) * 1200);
       }
     }
@@ -186,6 +187,7 @@ const InternalResponsiveImage: Component<ImageProps> = (props) => {
   const fallbackElement = (
     <img
       {...fallbackImgProps}
+      alt={local.alt}
       class={cn("rounded-lg", fallbackImgProps.class)}
       {...otherProps}
     />
@@ -229,6 +231,7 @@ const ClientOnlyResponsiveImage: Component<
   ]);
 
   // Dynamically import ResponsiveImage
+  // biome-ignore lint/suspicious/noExplicitAny: dynamically imported component has no statically known prop types
   let ResponsiveImageComponent: any;
 
   try {
@@ -245,6 +248,7 @@ const ClientOnlyResponsiveImage: Component<
   }
 
   try {
+    // biome-ignore lint/suspicious/noExplicitAny: props forwarded to dynamically imported component with unknown prop shape
     const responsiveProps: any = {
       src: local.src,
       alt: local.alt,
@@ -299,8 +303,8 @@ export const Image: Component<ImageProps> = (props) => {
     if (local.priority) return true;
     if (local.fetchpriority === "high") return true;
 
-    const width = (props as any).width || 0;
-    const height = (props as any).height || 0;
+    const width = props.width || 0;
+    const height = props.height || 0;
     return width >= 800 || height >= 400;
   };
 
@@ -329,8 +333,8 @@ export const Image: Component<ImageProps> = (props) => {
     return (
       <InternalResponsiveImage
         {...props}
-        loading={optimizedLoading as any}
-        fetchpriority={optimizedFetchPriority as any}
+        loading={optimizedLoading as "lazy" | "eager"}
+        fetchpriority={optimizedFetchPriority as "high" | "low" | "auto"}
         decoding={local.decoding || "async"}
       />
     );
@@ -344,8 +348,8 @@ export const Image: Component<ImageProps> = (props) => {
       src={imgSrc}
       alt={local.alt}
       class={cn("rounded-lg", local.class)}
-      loading={optimizedLoading as any}
-      fetchpriority={optimizedFetchPriority as any}
+      loading={optimizedLoading as "lazy" | "eager"}
+      fetchpriority={optimizedFetchPriority as "high" | "low" | "auto"}
       decoding={local.decoding || "async"}
       style={imageStyle}
       onLoad={handleLoad}
