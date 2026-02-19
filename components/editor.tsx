@@ -1,4 +1,4 @@
-import type { Editor as TiptapEditor } from "@tiptap/core";
+import type { Extension, Editor as TiptapEditor } from "@tiptap/core";
 import Typography from "@tiptap/extension-typography";
 import { Placeholder } from "@tiptap/extensions";
 import StarterKit from "@tiptap/starter-kit";
@@ -267,7 +267,7 @@ export const Editor: Component<EditorProps> = (props) => {
 
 	// Build extensions array based on props
 	const extensions = () => {
-		const starterKitConfig: any = {};
+		const starterKitConfig: Record<string, unknown> = {};
 
 		// Configure Link extension if enabled
 		if (local.extensions?.link !== false) {
@@ -286,7 +286,7 @@ export const Editor: Component<EditorProps> = (props) => {
 			starterKitConfig.underline = false;
 		}
 
-		const exts: any[] = [StarterKit.configure(starterKitConfig)];
+		const exts: Extension[] = [StarterKit.configure(starterKitConfig) as unknown as Extension];
 
 		if (local.placeholder) {
 			exts.push(

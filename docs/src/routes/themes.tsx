@@ -8,7 +8,7 @@ import { Navbar } from "../components/navbar";
 import { useTheme } from "../components/theme";
 
 export default function Themes() {
-	const { theme, setTheme, themes, mounted } = useTheme();
+	const { theme, setTheme, themes } = useTheme();
 
 	return (
 		<div class="min-h-screen bg-background">
@@ -43,7 +43,11 @@ export default function Themes() {
 					<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 						<For each={themes()}>
 							{(themeOption) => (
-								<button onClick={() => setTheme(themeOption.id)} class="text-left h-full">
+								<button
+									type="button"
+									onClick={() => setTheme(themeOption.id)}
+									class="text-left h-full"
+								>
 									<Card
 										class={cn(
 											"cursor-pointer transition-all hover:shadow-lg h-full flex flex-col",
@@ -53,13 +57,15 @@ export default function Themes() {
 										<CardHeader class="flex-1 flex flex-col justify-between min-h-[180px]">
 											<div class="flex items-start justify-between mb-4 gap-2">
 												<div class="flex-1 min-w-0">
-													<CardTitle class="line-clamp-2 break-words">{themeOption.name}</CardTitle>
-													<CardDescription class="mt-2 line-clamp-3 break-words min-h-[3.6em]">
+													<CardTitle class="line-clamp-2 wrap-break-word">
+														{themeOption.name}
+													</CardTitle>
+													<CardDescription class="mt-2 line-clamp-3 wrap-break-word min-h-[3.6em]">
 														{themeOption.description}
 													</CardDescription>
 												</div>
 												<Show when={theme() === themeOption.id}>
-													<Badge variant="default" class="flex-shrink-0">
+													<Badge variant="default" class="shrink-0">
 														Active
 													</Badge>
 												</Show>
@@ -70,13 +76,13 @@ export default function Themes() {
 													when={themeOption.cssVars?.primary}
 													fallback={
 														<div class="flex gap-2 items-center">
-															<div class="w-10 h-10 rounded-full border-2 border-border shadow-sm bg-gradient-to-br from-blue-500 to-purple-600 flex-shrink-0" />
+															<div class="w-10 h-10 rounded-full border-2 border-border shadow-sm bg-linear-to-br from-blue-500 to-purple-600 shrink-0" />
 															<div class="text-xs text-muted-foreground">Base Theme</div>
 														</div>
 													}
 												>
 													<div
-														class="w-10 h-10 rounded-full border-2 border-border shadow-sm flex-shrink-0"
+														class="w-10 h-10 rounded-full border-2 border-border shadow-sm shrink-0"
 														style={{
 															"background-color": `hsl(${themeOption.cssVars?.primary})`,
 														}}
@@ -295,7 +301,7 @@ const themes = [
 
 							<div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
 								<div class="flex gap-2 items-start">
-									<div class="i-lucide-info size-4 text-blue-500 mt-0.5 flex-shrink-0" />
+									<div class="i-lucide-info size-4 text-blue-500 mt-0.5 shrink-0" />
 									<div class="text-sm">
 										<strong class="text-blue-500">Tip:</strong> Inline cssVars override CSS-defined
 										themes. If a theme has both a CSS class and cssVars defined, the cssVars take

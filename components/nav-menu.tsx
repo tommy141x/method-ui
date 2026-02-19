@@ -406,7 +406,7 @@ export const NavMenuTrigger: Component<NavMenuTriggerProps> = (props) => {
 			{local.children}
 			<div
 				class={cn(
-					"relative top-[1px] ml-1 h-3 w-3 transition-transform duration-300",
+					"relative top-px ml-1 h-3 w-3 transition-transform duration-300",
 					"group-data-[state=open]:rotate-180",
 					icon("chevron-down")
 				)}
@@ -539,7 +539,7 @@ export const NavMenuLink: Component<NavMenuLinkProps> = (props) => {
 				"block rounded-md px-3 py-2 text-sm font-medium transition-colors outline-none",
 				"hover:bg-accent hover:text-accent-foreground",
 				"focus:bg-accent focus:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring",
-				"data-[active]:bg-accent/50 data-[active]:text-accent-foreground",
+				"data-active:bg-accent/50 data-active:text-accent-foreground",
 				others.class
 			)}
 		/>
@@ -738,7 +738,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 									{/* Featured Card - 1/3 width */}
 									<a
 										href="#featured"
-										class="w-[180px] flex-shrink-0 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 p-4 transition-colors hover:from-primary/30 hover:to-primary/10"
+										class="w-[180px] shrink-0 rounded-lg bg-linear-to-br from-primary/20 to-primary/5 p-4 transition-colors hover:from-primary/30 hover:to-primary/10"
 									>
 										<div class="flex flex-col gap-2">
 											<div class={cn("h-8 w-8", icon("sparkles"))} />

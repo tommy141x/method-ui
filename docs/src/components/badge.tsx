@@ -50,6 +50,7 @@ export const Badge: Component<BadgeProps> = (props) => {
 	);
 
 	return (
+		// biome-ignore lint/a11y/noStaticElementInteractions: role is set dynamically to "button" when onClick or clickable is provided
 		<div
 			class={cn(
 				badgeVariants({
@@ -58,7 +59,15 @@ export const Badge: Component<BadgeProps> = (props) => {
 				}),
 				local.class
 			)}
+			role={local.onClick || variantProps.clickable ? "button" : undefined}
+			tabIndex={local.onClick || variantProps.clickable ? 0 : undefined}
 			onClick={local.onClick}
+			onKeyDown={(e) => {
+				if (local.onClick && (e.key === "Enter" || e.key === " ")) {
+					e.preventDefault();
+					local.onClick(e as unknown as MouseEvent);
+				}
+			}}
 			{...others}
 		>
 			{local.children}

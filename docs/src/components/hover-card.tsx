@@ -16,7 +16,7 @@ interface HoverCardProps {
 	onOpenChange?: (details: { open: boolean }) => void;
 	openDelay?: number;
 	closeDelay?: number;
-	positioning?: any;
+	positioning?: Record<string, unknown>;
 	disabled?: boolean;
 }
 

@@ -92,6 +92,7 @@ const _getCookie = (name: string): string | undefined => {
 // Helper to set cookie
 const _setCookie = (name: string, value: string, maxAge: number) => {
 	if (typeof document === "undefined") return;
+	// biome-ignore lint/suspicious/noDocumentCookie: direct cookie access is intentional for sidebar state persistence
 	document.cookie = `${name}=${value}; path=/; max-age=${maxAge}`;
 };
 
@@ -370,7 +371,7 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 					class={cn(
 						"flex h-full w-(--sidebar-width) flex-col bg-background overflow-hidden",
 						merged.variant === "floating" &&
-							"rounded-2xl border border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg",
+							"rounded-2xl border border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-lg",
 						merged.variant === "sidebar" && "border-r border-border",
 						local.class
 					)}
@@ -486,7 +487,7 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 							"flex h-full w-full flex-col bg-background overflow-hidden",
 							context.isInitialMount() ? "" : "transition-opacity duration-150 ease-out",
 							merged.variant === "floating" &&
-								"rounded-2xl border border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg"
+								"rounded-2xl border border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-lg"
 						)}
 					>
 						{local.children}
@@ -559,7 +560,7 @@ export const SidebarRail: Component<SidebarRailProps> = (props) => {
 				"after:absolute after:inset-y-0 after:left-1/2 after:w-[2px]",
 				"hover:after:bg-border",
 				"sm:flex",
-				"[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize",
+				"in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",
 				"[[data-side=left][data-state=collapsed]_&]:cursor-e-resize",
 				"[[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
 				"group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full",
@@ -972,8 +973,8 @@ interface SidebarMenuButtonProps {
 	variant?: "default" | "outline";
 	size?: "default" | "sm" | "lg";
 	onClick?: (e: MouseEvent) => void;
-	as?: any;
-	[key: string]: any;
+	as?: Component | string;
+	[key: string]: unknown;
 }
 
 export const SidebarMenuButton: Component<SidebarMenuButtonProps> = (props) => {
@@ -1164,8 +1165,8 @@ interface SidebarMenuSubButtonProps {
 	size?: "sm" | "md";
 	isActive?: boolean;
 	onClick?: (e: MouseEvent) => void;
-	as?: any;
-	[key: string]: any;
+	as?: Component | string;
+	[key: string]: unknown;
 }
 
 export const SidebarMenuSubButton: Component<SidebarMenuSubButtonProps> = (props) => {
@@ -1696,7 +1697,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 						<SidebarMenu>
 							<SidebarMenuItem>
 								<SidebarMenuButton size="lg" class="hover:bg-transparent active:bg-transparent">
-									<div class="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-purple-500 to-pink-500 text-white">
+									<div class="flex h-8 w-8 items-center justify-center rounded-md bg-linear-to-br from-purple-500 to-pink-500 text-white">
 										<div class={cn("h-4 w-4", icon("sparkles"))} />
 									</div>
 									<div class="flex flex-col gap-0.5 leading-none">

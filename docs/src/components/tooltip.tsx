@@ -17,7 +17,7 @@ interface TooltipProps {
 	onOpenChange?: (details: { open: boolean }) => void;
 	openDelay?: number;
 	closeDelay?: number;
-	positioning?: any;
+	positioning?: Record<string, unknown>;
 	disabled?: boolean;
 	interactive?: boolean;
 	closeOnClick?: boolean;

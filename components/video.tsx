@@ -1,14 +1,27 @@
+import type Plyr from "plyr";
 import type { Component, JSX } from "solid-js";
 import { createSignal, ErrorBoundary, onCleanup, onMount, Show, splitProps } from "solid-js";
 import { isServer } from "solid-js/web";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
-export interface VideoProps extends JSX.VideoHTMLAttributes<HTMLVideoElement> {
+export interface VideoProps
+	extends Omit<
+		JSX.VideoHTMLAttributes<HTMLVideoElement>,
+		| "onEnded"
+		| "onPlay"
+		| "onPause"
+		| "onTimeUpdate"
+		| "onSeeking"
+		| "onSeeked"
+		| "onVolumeChange"
+		| "onRateChange"
+		| "onError"
+	> {
 	children?: JSX.Element;
 	class?: string;
 	/** Plyr options object - pass any Plyr configuration options */
-	options?: any;
+	options?: Plyr.Options;
 	/** Video provider type */
 	provider?: "html5" | "youtube" | "vimeo";
 	/** Video source URL or ID (for YouTube/Vimeo) */
@@ -59,19 +72,19 @@ export interface VideoProps extends JSX.VideoHTMLAttributes<HTMLVideoElement> {
 		withCredentials?: boolean;
 	};
 	/** Event handlers */
-	onReady?: (player: any) => void;
-	onPlay?: (event: any) => void;
-	onPause?: (event: any) => void;
-	onEnded?: (event: any) => void;
-	onError?: (event: any) => void;
-	onTimeUpdate?: (event: any) => void;
-	onSeeking?: (event: any) => void;
-	onSeeked?: (event: any) => void;
-	onVolumeChange?: (event: any) => void;
-	onQualityChange?: (event: any) => void;
-	onRateChange?: (event: any) => void;
-	onEnterFullscreen?: (event: any) => void;
-	onExitFullscreen?: (event: any) => void;
+	onReady?: (player: Plyr) => void;
+	onPlay?: (event: Plyr.PlyrEvent) => void;
+	onPause?: (event: Plyr.PlyrEvent) => void;
+	onEnded?: (event: Plyr.PlyrEvent) => void;
+	onError?: (event: Plyr.PlyrEvent) => void;
+	onTimeUpdate?: (event: Plyr.PlyrEvent) => void;
+	onSeeking?: (event: Plyr.PlyrEvent) => void;
+	onSeeked?: (event: Plyr.PlyrEvent) => void;
+	onVolumeChange?: (event: Plyr.PlyrEvent) => void;
+	onQualityChange?: (event: Plyr.PlyrEvent) => void;
+	onRateChange?: (event: Plyr.PlyrEvent) => void;
+	onEnterFullscreen?: (event: Plyr.PlyrEvent) => void;
+	onExitFullscreen?: (event: Plyr.PlyrEvent) => void;
 }
 
 /**
@@ -224,7 +237,7 @@ export const Video: Component<VideoProps> = (props) => {
 	]);
 
 	let playerRef: HTMLVideoElement | HTMLDivElement | undefined;
-	let player: any;
+	let player: Plyr | undefined;
 	const [_mounted, setMounted] = createSignal(false);
 	const [error, setError] = createSignal<string | null>(null);
 
@@ -268,8 +281,18 @@ export const Video: Component<VideoProps> = (props) => {
 				...(local.hideControls !== undefined && {
 					hideControls: local.hideControls,
 				}),
-				...(local.keyboard !== undefined && { keyboard: local.keyboard }),
-				...(local.tooltips !== undefined && { tooltips: local.tooltips }),
+				...(local.keyboard !== undefined && {
+					keyboard:
+						typeof local.keyboard === "boolean"
+							? { focused: local.keyboard, global: false }
+							: local.keyboard,
+				}),
+				...(local.tooltips !== undefined && {
+					tooltips:
+						typeof local.tooltips === "boolean"
+							? { controls: local.tooltips, seek: local.tooltips }
+							: local.tooltips,
+				}),
 				...(local.captions && { captions: local.captions }),
 				...(local.fullscreen && { fullscreen: local.fullscreen }),
 				...(local.previewThumbnails && {
@@ -295,7 +318,7 @@ export const Video: Component<VideoProps> = (props) => {
 			// Attach event listeners
 			if (player?.on) {
 				if (local.onReady) {
-					player.on("ready", (_event: any) => local.onReady?.(player));
+					player.on("ready", (_event: Plyr.PlyrEvent) => local.onReady?.(player as Plyr));
 				}
 				if (local.onPlay) {
 					player.on("play", local.onPlay);
@@ -334,7 +357,7 @@ export const Video: Component<VideoProps> = (props) => {
 
 			// Add error event listener
 			if (player?.on) {
-				player.on("error", (event: any) => {
+				player.on("error", (event: Plyr.PlyrEvent) => {
 					console.error("Plyr error:", event);
 					setError("Failed to load video. The video source may be unavailable.");
 					// Call user's error handler if provided

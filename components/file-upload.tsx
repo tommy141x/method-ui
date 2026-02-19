@@ -1,3 +1,8 @@
+import type {
+	FileUploadFileAcceptDetails as FileAcceptDetails,
+	FileUploadFileChangeDetails as FileChangeDetails,
+	FileUploadFileRejectDetails as FileRejectDetails,
+} from "@ark-ui/solid/file-upload";
 import { FileUpload as ArkFileUpload } from "@ark-ui/solid/file-upload";
 import { cva, type VariantProps } from "class-variance-authority";
 import { For, type JSX, Show } from "solid-js";
@@ -31,9 +36,9 @@ interface FileUploadProps extends VariantProps<typeof dropzoneVariants> {
 	disabled?: boolean;
 	required?: boolean;
 	name?: string;
-	onFileChange?: (details: any) => void;
-	onFileAccept?: (details: any) => void;
-	onFileReject?: (details: any) => void;
+	onFileChange?: (details: FileChangeDetails) => void;
+	onFileAccept?: (details: FileAcceptDetails) => void;
+	onFileReject?: (details: FileRejectDetails) => void;
 	class?: string;
 	allowDrop?: boolean;
 	directory?: boolean;

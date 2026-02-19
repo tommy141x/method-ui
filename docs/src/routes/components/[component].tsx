@@ -61,12 +61,47 @@ function dedent(code: string): string {
 // Dynamically import all components
 const componentModules = import.meta.glob("../../../../components/*.tsx", {
 	eager: true,
-}) as Record<string, any>;
+}) as Record<string, Record<string, unknown>>;
+
+interface ComponentProp {
+	name: string;
+	type: string;
+	description?: string;
+	defaultValue?: string;
+	required?: boolean;
+}
+
+interface ComponentVariant {
+	name: string;
+	values?: string[];
+	defaultValue?: string;
+}
+
+interface ComponentExample {
+	title: string;
+	description?: string;
+	code?: () => JSX.Element;
+	source?: string;
+}
+
+interface ComponentDependencies {
+	components?: string[];
+}
+
+interface ComponentMeta {
+	name: string;
+	description?: string;
+	apiReference?: string;
+	props?: ComponentProp[];
+	variants?: ComponentVariant[];
+	examples?: ComponentExample[];
+	dependencies?: ComponentDependencies;
+}
 
 interface ComponentInfo {
 	name: string;
-	meta: any;
-	Component: any;
+	meta: ComponentMeta;
+	Component: (props: Record<string, unknown>) => unknown;
 }
 
 // Build component registry from generated metadata and imports
@@ -91,44 +126,54 @@ const components: ComponentInfo[] = Object.entries(componentMetadata)
 		}
 
 		// Merge runtime meta with generated metadata
-		const runtimeMeta = module.meta || {};
+		const runtimeMeta = (module.meta || {}) as Record<string, unknown>;
 
 		// Skip hidden components
-		if (runtimeMeta.hidden) {
+		if ((runtimeMeta as { hidden?: boolean }).hidden) {
 			return null;
 		}
 
+		const runtimeExamples = (runtimeMeta.examples as ComponentExample[] | undefined) ?? [];
+
 		// Merge runtime examples (code functions) with generated sources
-		const mergedExamples = (metadata.examples || []).map((generatedExample: any, index: number) => {
-			const runtimeExample = runtimeMeta.examples?.[index];
+		const mergedExamples = (
+			((metadata as Record<string, unknown>).examples as Record<string, unknown>[] | undefined) ??
+			[]
+		).map((generatedExample: Record<string, unknown>, index: number) => {
+			const runtimeExample = runtimeExamples[index];
 			return {
 				...generatedExample,
 				code: runtimeExample?.code,
-				source: generatedExample?.source ? dedent(generatedExample.source) : runtimeExample?.source,
+				source: generatedExample?.source
+					? dedent(generatedExample.source as string)
+					: runtimeExample?.source,
 			};
 		});
 
 		// Generate default API reference link based on component name
 		const defaultApiReference = `https://ark-ui.com/docs/components/${fileName}#api-reference`;
-		const apiReference = Object.hasOwn(runtimeMeta, "apiReference")
-			? runtimeMeta.apiReference
-			: defaultApiReference;
+		const apiReference =
+			"apiReference" in runtimeMeta ? (runtimeMeta.apiReference as string) : defaultApiReference;
 
 		return {
 			name: fileName,
 			meta: {
-				name: metadata.name,
-				description: metadata.description || runtimeMeta.description,
+				name: (metadata as Record<string, unknown>).name as string,
+				description:
+					((metadata as Record<string, unknown>).description as string | undefined) ||
+					(runtimeMeta.description as string | undefined),
 				apiReference: apiReference,
-				props: metadata.props,
-				variants: metadata.variants,
-				examples: mergedExamples,
-				dependencies: metadata.dependencies,
+				props: (metadata as Record<string, unknown>).props as ComponentProp[] | undefined,
+				variants: (metadata as Record<string, unknown>).variants as ComponentVariant[] | undefined,
+				examples: mergedExamples as ComponentExample[],
+				dependencies: (metadata as Record<string, unknown>).dependencies as
+					| ComponentDependencies
+					| undefined,
 			},
-			Component,
+			Component: Component as (props: Record<string, unknown>) => unknown,
 		};
 	})
-	.filter(Boolean) as ComponentInfo[];
+	.filter(Boolean) as unknown as ComponentInfo[];
 
 // Wrapper component to render examples with proper disposal
 function ExampleRenderer(props: { code: () => JSX.Element }) {
@@ -229,7 +274,10 @@ export default function ComponentPage() {
 												stroke-width="2"
 												stroke-linecap="round"
 												stroke-linejoin="round"
+												aria-label="External link"
+												role="img"
 											>
+												<title>External link</title>
 												<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
 												<polyline points="15 3 21 3 21 9" />
 												<line x1="10" y1="14" x2="21" y2="3" />
@@ -238,18 +286,16 @@ export default function ComponentPage() {
 									</Show>
 								</div>
 								<div class="flex gap-2 flex-wrap justify-end">
-									<Show
-										when={componentInfo().meta.variants && componentInfo().meta.variants.length > 0}
-									>
+									<Show when={(componentInfo().meta.variants?.length ?? 0) > 0}>
 										<Badge variant="secondary">
-											{componentInfo().meta.variants.length} Variant
-											{componentInfo().meta.variants.length !== 1 ? "s" : ""}
+											{componentInfo().meta.variants?.length} Variant
+											{componentInfo().meta.variants?.length !== 1 ? "s" : ""}
 										</Badge>
 									</Show>
-									<Show when={componentInfo().meta.examples.length > 0}>
+									<Show when={(componentInfo().meta.examples?.length ?? 0) > 0}>
 										<Badge variant="secondary">
-											{componentInfo().meta.examples.length} Example
-											{componentInfo().meta.examples.length !== 1 ? "s" : ""}
+											{componentInfo().meta.examples?.length} Example
+											{componentInfo().meta.examples?.length !== 1 ? "s" : ""}
 										</Badge>
 									</Show>
 								</div>
@@ -290,12 +336,12 @@ export default function ComponentPage() {
 						</div>
 
 						{/* Examples Section */}
-						<Show when={componentInfo().meta.examples.length > 0}>
+						<Show when={(componentInfo().meta.examples?.length ?? 0) > 0}>
 							<div>
 								<h2 class="text-2xl font-semibold mb-4">Examples</h2>
 								<Tabs value={selectedTab()} onValueChange={(e) => setSelectedTab(e.value)}>
 									<TabsList>
-										<Index each={componentInfo().meta.examples}>
+										<Index each={componentInfo().meta.examples ?? []}>
 											{(example, index) => (
 												<TabsTrigger value={index.toString()}>{example().title}</TabsTrigger>
 											)}
@@ -303,10 +349,10 @@ export default function ComponentPage() {
 										<TabsIndicator />
 									</TabsList>
 
-									<Index each={componentInfo().meta.examples}>
+									<Index each={componentInfo().meta.examples ?? []}>
 										{(example, index) => (
 											<TabsContent value={index.toString()}>
-												<Card style="opacity: 1 !important;">
+												<Card>
 													<CardHeader>
 														<div class="flex items-center justify-between">
 															<div>
@@ -327,7 +373,7 @@ export default function ComponentPage() {
 														{/* Example Preview */}
 														<div class="border border-border rounded-lg p-8 bg-background flex items-center justify-center min-h-32 mb-4">
 															{typeof example().code === "function" ? (
-																<ExampleRenderer code={example().code} />
+																<ExampleRenderer code={example().code as () => JSX.Element} />
 															) : null}
 														</div>
 
@@ -347,7 +393,7 @@ export default function ComponentPage() {
 																					navigator.clipboard.writeText(
 																						example().source ||
 																							(typeof example().code === "function"
-																								? example().code.toString()
+																								? (example().code as () => JSX.Element).toString()
 																								: "")
 																					);
 																				}}
@@ -362,7 +408,7 @@ export default function ComponentPage() {
 																	<code class="language-tsx text-foreground">
 																		{example().source ||
 																			(typeof example().code === "function"
-																				? example().code.toString()
+																				? (example().code as () => JSX.Element).toString()
 																				: "")}
 																	</code>
 																</pre>
@@ -380,7 +426,7 @@ export default function ComponentPage() {
 						{/* Component Details */}
 						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 							{/* Component Dependencies */}
-							<Show when={componentInfo().meta.dependencies?.components?.length > 0}>
+							<Show when={(componentInfo().meta.dependencies?.components?.length ?? 0) > 0}>
 								<Card>
 									<CardHeader>
 										<CardTitle class="text-lg">Dependencies</CardTitle>
@@ -388,7 +434,7 @@ export default function ComponentPage() {
 									</CardHeader>
 									<CardContent>
 										<div class="flex flex-wrap gap-2">
-											<For each={componentInfo().meta.dependencies.components}>
+											<For each={componentInfo().meta.dependencies?.components ?? []}>
 												{(dep) => (
 													<Badge variant="secondary" class="font-mono">
 														{dep}
@@ -402,7 +448,9 @@ export default function ComponentPage() {
 
 							{/* Variants Info */}
 							<Show
-								when={componentInfo().meta.variants && componentInfo().meta.variants.length > 0}
+								when={
+									componentInfo().meta.variants && (componentInfo().meta.variants?.length ?? 0) > 0
+								}
 							>
 								<Card>
 									<CardHeader>
@@ -411,7 +459,7 @@ export default function ComponentPage() {
 									</CardHeader>
 									<CardContent>
 										<div class="space-y-3">
-											<For each={componentInfo().meta.variants}>
+											<For each={componentInfo().meta.variants ?? []}>
 												{(variant) => (
 													<div class="space-y-1">
 														<div class="flex items-center gap-2">
@@ -441,7 +489,9 @@ export default function ComponentPage() {
 						</div>
 
 						{/* Props Table */}
-						<Show when={componentInfo().meta.props && componentInfo().meta.props.length > 0}>
+						<Show
+							when={componentInfo().meta.props && (componentInfo().meta.props?.length ?? 0) > 0}
+						>
 							<Accordion collapsible defaultValue={["props"]}>
 								<AccordionItem value="props">
 									<Card>
@@ -455,7 +505,7 @@ export default function ComponentPage() {
 														</CardDescription>
 													</div>
 													<Badge variant="secondary" class="ml-4">
-														{componentInfo().meta.props.length}
+														{componentInfo().meta.props?.length}
 													</Badge>
 												</div>
 											</AccordionTrigger>
@@ -481,7 +531,7 @@ export default function ComponentPage() {
 															</tr>
 														</thead>
 														<tbody>
-															<For each={componentInfo().meta.props}>
+															<For each={componentInfo().meta.props ?? []}>
 																{(prop) => (
 																	<tr class="border-b border-border/50 hover:bg-muted/50 transition-colors">
 																		<td class="py-3 px-4">

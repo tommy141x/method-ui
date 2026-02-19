@@ -68,7 +68,7 @@ export const PinInput: Component<PinInputProps> = (props) => {
 					{(_, index) => (
 						<ArkPinInput.Input
 							index={index}
-							class="h-12 w-12 rounded-md border border-input bg-background text-center text-sm ring-offset-background transition-all duration-200 ease-out hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50 data-[invalid]:border-destructive"
+							class="h-12 w-12 rounded-md border border-input bg-background text-center text-sm ring-offset-background transition-all duration-200 ease-out hover:border-ring/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50 data-invalid:border-destructive"
 						/>
 					)}
 				</Index>

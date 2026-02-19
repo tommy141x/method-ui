@@ -113,7 +113,7 @@ type InputProps = Omit<
 		// Textarea-specific props
 		autoresize?: boolean;
 		// Tags-specific props
-		value?: string[];
+		value?: string | string[];
 		defaultValue?: string[];
 		onValueChange?: (details: { value: string[] }) => void;
 		max?: number;
@@ -234,12 +234,13 @@ export const Input = (props: InputProps) => {
 										}),
 										local.class
 									)}
+									// biome-ignore lint/suspicious/noExplicitAny: ark-ui type compatibility
 									{...(others as any)}
 								/>
 							}
 						>
 							<ArkTagsInput.Root
-								value={local.value}
+								value={Array.isArray(local.value) ? local.value : undefined}
 								defaultValue={local.defaultValue}
 								onValueChange={local.onValueChange}
 								max={local.max}
@@ -276,7 +277,7 @@ export const Input = (props: InputProps) => {
 															<ArkTagsInput.ItemPreview
 																class={cn(
 																	tagVariants({ size: local.size }),
-																	"data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground"
+																	"data-highlighted:bg-accent data-highlighted:text-accent-foreground"
 																)}
 															>
 																<ArkTagsInput.ItemText class="select-none">
@@ -292,6 +293,7 @@ export const Input = (props: InputProps) => {
 												</Index>
 												<ArkTagsInput.Input
 													class="flex-1 min-w-[120px] bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+													// biome-ignore lint/suspicious/noExplicitAny: ark-ui type compatibility
 													{...(others as any)}
 												/>
 											</ArkTagsInput.Control>
@@ -315,11 +317,11 @@ export const Input = (props: InputProps) => {
 							filter: filterFn().contains,
 						});
 
-						const handleInputChange = (details: any) => {
+						const handleInputChange = (details: { inputValue: string }) => {
 							filter(details.inputValue);
 						};
 
-						const handleValueChange = (details: any) => {
+						const handleValueChange = (details: { value: string[] }) => {
 							local.onSelect?.(details);
 						};
 
@@ -370,7 +372,7 @@ export const Input = (props: InputProps) => {
 											<Portal>
 												<ArkCombobox.Positioner>
 													<Show when={context().open}>
-														<ArkCombobox.Content class="z-50 min-w-[var(--reference-width)] max-h-[300px] overflow-y-auto rounded-md border border-border bg-background p-1 shadow-md outline-none focus:outline-none focus-visible:outline-none">
+														<ArkCombobox.Content class="z-50 min-w-(--reference-width) max-h-[300px] overflow-y-auto rounded-md border border-border bg-background p-1 shadow-md outline-none focus:outline-none focus-visible:outline-none">
 															<Show when={collection().items.length === 0}>
 																<div class="px-2 py-6 text-center text-sm text-muted-foreground">
 																	No results found
@@ -380,13 +382,15 @@ export const Input = (props: InputProps) => {
 																{(item) => (
 																	<ArkCombobox.Item
 																		item={item}
-																		class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+																		class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
 																	>
 																		<ArkCombobox.ItemText>{item}</ArkCombobox.ItemText>
 																		<Show
 																			when={
 																				collection().stringifyItem(item) &&
-																				context().value.includes(collection().stringifyItem(item)!)
+																				context().value.includes(
+																					collection().stringifyItem(item) ?? ""
+																				)
 																			}
 																		>
 																			<ArkCombobox.ItemIndicator class="ml-auto inline-flex h-4 w-4 items-center justify-center shrink-0">
@@ -450,6 +454,7 @@ export const Input = (props: InputProps) => {
 				}
 			>
 				<Field.Input
+					// biome-ignore lint/suspicious/noExplicitAny: Field.Input type narrowing
 					type={local.type as any}
 					id={fieldId()}
 					name={local.name}
@@ -572,12 +577,7 @@ export const meta: ComponentMeta<InputProps> = {
 						error="Please enter a valid email address"
 						required
 					/>
-					<Input
-						label="Username"
-						type="text"
-						value={"johndoe" as any}
-						success="Username is available"
-					/>
+					<Input label="Username" type="text" value={"johndoe"} success="Username is available" />
 					<Input
 						label="Password"
 						type="password"

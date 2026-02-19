@@ -172,7 +172,9 @@ export const ThemeProvider: Component<ThemeProviderProps> = (props) => {
 
 		// Remove all theme classes/attributes
 		if (attribute === "class") {
-			themes().forEach((t) => root.classList.remove(t.id));
+			for (const t of themes()) {
+				root.classList.remove(t.id);
+			}
 
 			// Apply theme class and all parent classes for CSS-defined themes
 			const themeChain: string[] = [];
@@ -336,7 +338,7 @@ export const ThemeSwitcher: Component<ThemeSwitcherProps> = (props) => {
 
 						if (local.renderButton) {
 							return (
-								<button onClick={() => setTheme(themeDef.id)}>
+								<button type="button" onClick={() => setTheme(themeDef.id)}>
 									{local.renderButton(themeDef, isActive)}
 								</button>
 							);
@@ -344,6 +346,7 @@ export const ThemeSwitcher: Component<ThemeSwitcherProps> = (props) => {
 
 						return (
 							<button
+								type="button"
 								onClick={() => setTheme(themeDef.id)}
 								class={cn(
 									"flex flex-col items-start gap-1 p-3 rounded-lg border-2 transition-all text-left",

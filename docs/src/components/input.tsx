@@ -179,6 +179,7 @@ export const Input = (props: InputProps) => {
 								}),
 								local.class
 							)}
+							// biome-ignore lint/suspicious/noExplicitAny: others contains mixed input/textarea attrs that can't be narrowed further
 							{...(others as any)}
 						/>
 					}
@@ -221,7 +222,7 @@ export const Input = (props: InputProps) => {
 													<ArkTagsInput.ItemPreview
 														class={cn(
 															tagVariants({ size: local.size }),
-															"data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground"
+															"data-highlighted:bg-accent data-highlighted:text-accent-foreground"
 														)}
 													>
 														<ArkTagsInput.ItemText class="select-none">
@@ -237,6 +238,7 @@ export const Input = (props: InputProps) => {
 										</Index>
 										<ArkTagsInput.Input
 											class="flex-1 min-w-[120px] bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+											// biome-ignore lint/suspicious/noExplicitAny: others contains mixed input/textarea attrs that can't be narrowed further
 											{...(others as any)}
 										/>
 									</ArkTagsInput.Control>
@@ -289,7 +291,7 @@ export const Input = (props: InputProps) => {
 				}
 			>
 				<Field.Input
-					type={local.type as any}
+					type={local.type as "text" | "email" | "number" | "tel" | "url" | "search" | undefined}
 					id={local.id}
 					name={local.name}
 					form={local.form}

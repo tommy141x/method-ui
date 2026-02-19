@@ -164,8 +164,10 @@ export const Card3D: Component<Card3DProps> = (props) => {
 				</div>
 			}
 		>
+			{/* biome-ignore lint/a11y/useSemanticElements: fieldset default styles would break 3D transform */}
 			<div
 				ref={wrapperRef}
+				role="group"
 				class={cn("perspective-1000", local.class)}
 				style={{ "transform-style": "preserve-3d" }}
 				onMouseMove={handleMouseMove}
@@ -203,7 +205,7 @@ export const meta: ComponentMeta<Card3DProps> = {
 				<div class="flex justify-center p-8">
 					<Card3D intensity="normal" class="w-[400px]">
 						<div class="rounded-2xl bg-card border border-border overflow-hidden">
-							<div class="aspect-video bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+							<div class="aspect-video bg-linear-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
 								<div class="h-24 w-24 i-lucide-box text-white" />
 							</div>
 							<div class="p-6">
@@ -213,7 +215,10 @@ export const meta: ComponentMeta<Card3DProps> = {
 								</p>
 								<div class="flex items-center justify-between">
 									<span class="text-2xl font-bold">$99</span>
-									<button class="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90">
+									<button
+										type="button"
+										class="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+									>
 										Add to Cart
 									</button>
 								</div>
@@ -229,7 +234,7 @@ export const meta: ComponentMeta<Card3DProps> = {
 			code: () => (
 				<div class="flex justify-center p-8">
 					<Card3D class="w-[350px]">
-						<div class="rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 p-8 text-white">
+						<div class="rounded-2xl bg-linear-to-br from-purple-500 to-pink-500 p-8 text-white">
 							<h3 class="text-2xl font-bold mb-2">3D Card</h3>
 							<p class="text-white/90 mb-4">
 								Hover over this card to see the 3D tilt effect with a dynamic shine overlay.

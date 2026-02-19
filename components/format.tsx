@@ -56,17 +56,20 @@ export const Format: Component<FormatProps> = (props) => {
 					when={isByte()}
 					fallback={
 						<span class={cn(formatVariants(variants), local.class)}>
+							{/* biome-ignore lint/suspicious/noExplicitAny: ark-ui type compatibility */}
 							<ArkFormat.RelativeTime {...(others as any)} />
 						</span>
 					}
 				>
 					<span class={cn(formatVariants(variants), local.class)}>
+						{/* biome-ignore lint/suspicious/noExplicitAny: ark-ui type compatibility */}
 						<ArkFormat.Byte {...(others as any)} />
 					</span>
 				</Show>
 			}
 		>
 			<span class={cn(formatVariants(variants), local.class)}>
+				{/* biome-ignore lint/suspicious/noExplicitAny: ark-ui type compatibility */}
 				<ArkFormat.Number {...(others as any)} />
 			</span>
 		</Show>

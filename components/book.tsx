@@ -140,8 +140,8 @@ export const Book: Component<BookProps> = (props) => {
 		>
 			<div
 				class={cn(
-					"relative w-fit min-w-[calc(var(--book-width))] rotate-0 transition-all duration-700 ease-out contain-inline-size [transform-style:preserve-3d]",
-					local.orientation === "landscape" ? "aspect-[4/3]" : "aspect-[3/4]"
+					"relative w-fit min-w-[calc(var(--book-width))] rotate-0 transition-all duration-700 ease-out contain-inline-size transform-3d",
+					local.orientation === "landscape" ? "aspect-4/3" : "aspect-3/4"
 				)}
 			>
 				{/* Main Book Cover */}

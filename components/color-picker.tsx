@@ -107,7 +107,7 @@ export const ColorPicker: Component<ColorPickerProps> & {
 			<ArkColorPicker.Control class="flex items-center gap-2">
 				<ArkColorPicker.ChannelInput
 					channel="hex"
-					class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[invalid]:border-destructive"
+					class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-invalid:border-destructive"
 				/>
 				<ArkColorPicker.Trigger class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 p-0 relative overflow-hidden">
 					<ArkColorPicker.ValueSwatch class="absolute inset-0 h-full w-full rounded-lg" />
@@ -142,7 +142,7 @@ export const ColorPicker: Component<ColorPickerProps> & {
 
 													<div class="flex flex-col gap-2">
 														<ArkColorPicker.ChannelSlider channel="hue">
-															<ArkColorPicker.ChannelSliderTrack class="h-3 rounded-md bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-cyan-500 via-blue-500 via-purple-500 to-red-500" />
+															<ArkColorPicker.ChannelSliderTrack class="h-3 rounded-md bg-linear-to-r from-red-500 via-yellow-500 via-green-500 via-cyan-500 via-blue-500 via-purple-500 to-red-500" />
 															<ArkColorPicker.ChannelSliderThumb class="h-4 w-4 rounded-full border-2 border-white shadow-md -translate-x-1/2 -translate-y-1/2" />
 														</ArkColorPicker.ChannelSlider>
 
@@ -392,7 +392,7 @@ const ColorPickerChannelInput: Component<{
 	return (
 		<ArkColorPicker.ChannelInput
 			class={cn(
-				"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[invalid]:border-destructive",
+				"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-invalid:border-destructive",
 				local.class
 			)}
 			{...others}
@@ -563,7 +563,7 @@ export const meta: ComponentMeta<ColorPickerProps> = {
 										<ColorPicker.AreaThumb />
 									</ColorPicker.Area>
 									<ColorPicker.ChannelSlider channel="hue">
-										<ColorPicker.ChannelSliderTrack class="h-3 rounded-md bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-cyan-500 via-blue-500 via-purple-500 to-red-500" />
+										<ColorPicker.ChannelSliderTrack class="h-3 rounded-md bg-linear-to-r from-red-500 via-yellow-500 via-green-500 via-cyan-500 via-blue-500 via-purple-500 to-red-500" />
 										<ColorPicker.ChannelSliderThumb class="h-4 w-4 rounded-full border-2 border-white shadow-md -translate-x-1/2 -translate-y-1/2" />
 									</ColorPicker.ChannelSlider>
 									<ColorPicker.SwatchGroup>

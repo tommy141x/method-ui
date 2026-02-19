@@ -31,7 +31,7 @@ type ProgressProps = {
 	thickness?: number;
 	orientation?: "horizontal" | "vertical";
 	translations?: {
-		value?: (details: { value: number | null; max: number }) => string;
+		value: (details: { value: number | null; max: number }) => string;
 	};
 } & VariantProps<typeof progressVariants>;
 
@@ -49,7 +49,7 @@ export const Progress: Component<ProgressProps> = (props) => {
 			max={props.max}
 			onValueChange={props.onValueChange}
 			orientation={props.orientation}
-			translations={props.translations as any}
+			translations={props.translations}
 			id={props.id}
 			class={cn(progressVariants({ variant }), props.class)}
 			style={{

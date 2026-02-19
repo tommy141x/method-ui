@@ -35,6 +35,7 @@ interface SelectContextValue {
 	getPlaceholder: () => string;
 	setPlaceholder: (text: string) => void;
 	currentGroupLabel?: string;
+	setGroupLabel?: (label: string) => void;
 }
 
 interface SelectItemData {
@@ -42,11 +43,6 @@ interface SelectItemData {
 	label: string;
 	content: () => JSX.Element;
 	group?: string;
-}
-
-interface SelectGroupData {
-	label: string;
-	items: SelectItemData[];
 }
 
 const SelectContext = createContext<SelectContextValue>();
@@ -64,7 +60,7 @@ interface SelectProps extends VariantProps<typeof selectTriggerVariants> {
 	required?: boolean;
 	name?: string;
 	class?: string;
-	positioning?: any;
+	positioning?: Record<string, unknown>;
 }
 
 export const Select = (props: SelectProps) => {
@@ -192,10 +188,10 @@ export const Select = (props: SelectProps) => {
 														when={itemsArray.some((item) => item.group)}
 														fallback={
 															<For each={collection().items}>
-																{(item: any) => (
+																{(item: SelectItemData) => (
 																	<ArkSelect.Item
 																		item={item}
-																		class="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 px-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground hover:bg-accent hover:text-accent-foreground"
+																		class="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 px-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground hover:bg-accent hover:text-accent-foreground"
 																	>
 																		<div class="flex items-center gap-2 flex-1 min-w-0">
 																			{item.content()}
@@ -209,16 +205,16 @@ export const Select = (props: SelectProps) => {
 														}
 													>
 														<For each={collection().group()}>
-															{([groupLabel, groupItems]: [string, any[]]) => (
-																<ArkSelect.ItemGroup class="p-1 [&:not(:first-child)]:pt-2">
+															{([groupLabel, groupItems]: [string, SelectItemData[]]) => (
+																<ArkSelect.ItemGroup class="p-1 not-first:pt-2">
 																	<ArkSelect.ItemGroupLabel class="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
 																		{groupLabel}
 																	</ArkSelect.ItemGroupLabel>
 																	<For each={groupItems}>
-																		{(item: any) => (
+																		{(item: SelectItemData) => (
 																			<ArkSelect.Item
 																				item={item}
-																				class="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 px-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground hover:bg-accent hover:text-accent-foreground"
+																				class="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 px-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground hover:bg-accent hover:text-accent-foreground"
 																			>
 																				<div class="flex items-center gap-2 flex-1 min-w-0">
 																					{item.content()}
@@ -288,15 +284,15 @@ export const SelectGroup = (props: { children: JSX.Element }) => {
 	let groupLabelValue = "";
 
 	const groupContext: SelectContextValue = {
-		...parentContext!,
+		items: parentContext?.items ?? [],
+		getPlaceholder: parentContext?.getPlaceholder ?? (() => "Select..."),
+		setPlaceholder: parentContext?.setPlaceholder ?? (() => {}),
+		setGroupLabel: (label: string) => {
+			groupLabelValue = label;
+		},
 		get currentGroupLabel() {
 			return groupLabelValue;
 		},
-	};
-
-	// Helper to set group label
-	(groupContext as any).setGroupLabel = (label: string) => {
-		groupLabelValue = label;
 	};
 
 	return <SelectContext.Provider value={groupContext}>{props.children}</SelectContext.Provider>;
@@ -305,8 +301,8 @@ export const SelectGroup = (props: { children: JSX.Element }) => {
 // SelectLabel component (for group labels)
 export const SelectLabel = (props: { children: string }) => {
 	const context = useContext(SelectContext);
-	if (context && (context as any).setGroupLabel) {
-		(context as any).setGroupLabel(props.children);
+	if (context?.setGroupLabel) {
+		context.setGroupLabel(props.children);
 	}
 	return null;
 };
@@ -333,7 +329,7 @@ export const SelectValueText = (props: { placeholder?: string; class?: string })
 	return (
 		<ArkSelect.ValueText
 			class={cn(
-				"flex-1 text-left truncate data-[placeholder-shown]:text-muted-foreground",
+				"flex-1 text-left truncate data-placeholder-shown:text-muted-foreground",
 				local.class
 			)}
 			placeholder={local.placeholder}

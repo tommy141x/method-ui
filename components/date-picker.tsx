@@ -1,4 +1,6 @@
 import { DatePicker as ArkDatePicker } from "@ark-ui/solid/date-picker";
+import type { DateValue } from "@internationalized/date";
+import type { LocaleDetails } from "@zag-js/date-picker";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Index, type JSX, Show } from "solid-js";
 import { Portal } from "solid-js/web";
@@ -46,9 +48,9 @@ const inputVariants = cva(
 
 interface DatePickerProps extends VariantProps<typeof inputVariants> {
 	children?: JSX.Element;
-	value?: any[];
-	defaultValue?: any[];
-	onValueChange?: (details: { value: any[] }) => void;
+	value?: DateValue[];
+	defaultValue?: DateValue[];
+	onValueChange?: (details: { value: DateValue[] }) => void;
 	placeholder?: string;
 	disabled?: boolean;
 	readOnly?: boolean;
@@ -58,10 +60,10 @@ interface DatePickerProps extends VariantProps<typeof inputVariants> {
 	selectionMode?: "single" | "multiple" | "range";
 	closeOnSelect?: boolean;
 	numOfMonths?: number;
-	min?: any;
-	max?: any;
-	positioning?: any;
-	format?: (date: any, details: any) => string;
+	min?: DateValue;
+	max?: DateValue;
+	positioning?: Record<string, unknown>;
+	format?: (date: DateValue, details: LocaleDetails) => string;
 }
 
 export const DatePicker = (props: DatePickerProps) => {
@@ -190,7 +192,7 @@ export const DatePicker = (props: DatePickerProps) => {
 															<Index each={week()}>
 																{(day) => (
 																	<ArkDatePicker.TableCell value={day()} class="flex-1 p-0">
-																		<ArkDatePicker.TableCellTrigger class="flex items-center justify-center h-9 w-9 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[today]:border data-[today]:border-primary data-[outside-range]:text-muted-foreground data-[outside-range]:opacity-50 data-[in-range]:bg-accent data-[range-start]:rounded-r-none data-[range-end]:rounded-l-none transition-colors">
+																		<ArkDatePicker.TableCellTrigger class="flex items-center justify-center h-9 w-9 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-selected:bg-primary data-selected:text-primary-foreground data-selected:hover:bg-primary data-selected:hover:text-primary-foreground data-today:border data-today:border-primary data-outside-range:text-muted-foreground data-outside-range:opacity-50 data-in-range:bg-accent data-range-start:rounded-r-none data-range-end:rounded-l-none transition-colors">
 																			{day().day}
 																		</ArkDatePicker.TableCellTrigger>
 																	</ArkDatePicker.TableCell>
@@ -257,7 +259,7 @@ export const DatePicker = (props: DatePickerProps) => {
 															<Index each={months()}>
 																{(month) => (
 																	<ArkDatePicker.TableCell value={month().value} class="flex-1">
-																		<ArkDatePicker.TableCellTrigger class="h-10 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground transition-colors">
+																		<ArkDatePicker.TableCellTrigger class="h-10 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-selected:bg-primary data-selected:text-primary-foreground data-selected:hover:bg-primary data-selected:hover:text-primary-foreground transition-colors">
 																			{month().label}
 																		</ArkDatePicker.TableCellTrigger>
 																	</ArkDatePicker.TableCell>
@@ -319,7 +321,7 @@ export const DatePicker = (props: DatePickerProps) => {
 															<Index each={years()}>
 																{(year) => (
 																	<ArkDatePicker.TableCell value={year().value} class="flex-1">
-																		<ArkDatePicker.TableCellTrigger class="h-10 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground transition-colors">
+																		<ArkDatePicker.TableCellTrigger class="h-10 px-3 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-selected:bg-primary data-selected:text-primary-foreground data-selected:hover:bg-primary data-selected:hover:text-primary-foreground transition-colors">
 																			{year().label}
 																		</ArkDatePicker.TableCellTrigger>
 																	</ArkDatePicker.TableCell>

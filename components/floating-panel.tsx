@@ -105,7 +105,7 @@ export const FloatingPanelContent = (props: FloatingPanelContentProps) => {
 								class={cn(
 									"flex flex-col rounded-lg border border-border bg-background shadow-lg",
 									"data-[state=closed]:hidden",
-									"data-[maximized]:rounded-none",
+									"data-maximized:rounded-none",
 									local.class
 								)}
 								{...others}
@@ -114,7 +114,7 @@ export const FloatingPanelContent = (props: FloatingPanelContentProps) => {
 									<ArkFloatingPanel.Header
 										class={cn(
 											"flex items-center justify-between border-b border-border px-4 py-3 bg-accent/50",
-											"data-[dragging]:cursor-move",
+											"data-dragging:cursor-move",
 											local.headerClass
 										)}
 									>
@@ -202,7 +202,7 @@ export const FloatingPanelContent = (props: FloatingPanelContentProps) => {
 									</ArkFloatingPanel.Header>
 								</ArkFloatingPanel.DragTrigger>
 								<ArkFloatingPanel.Body
-									class={cn("flex-1 overflow-auto p-4", "data-[minimized]:hidden")}
+									class={cn("flex-1 overflow-auto p-4", "data-minimized:hidden")}
 								>
 									{local.children}
 								</ArkFloatingPanel.Body>

@@ -7,118 +7,118 @@
  * that only need to define the variables they want to change from the base
  */
 @layer base {
-  :root {
-    --background: 223.8136 0% 3.9388%;
-    --foreground: 223.8136 0.0004% 98.0256%;
-    --card: 223.8136 0% 9.0527%;
-    --card-foreground: 223.8136 0.0004% 98.0256%;
-    --popover: 223.8136 0% 14.9382%;
-    --popover-foreground: 223.8136 0.0004% 98.0256%;
-    --primary: 223.8136 0.0001% 89.8161%;
-    --primary-foreground: 223.8136 0% 9.0527%;
-    --secondary: 223.8136 0% 14.9382%;
-    --secondary-foreground: 223.8136 0.0004% 98.0256%;
-    --muted: 223.8136 0% 14.9382%;
-    --muted-foreground: 223.8136 0% 63.0163%;
-    --accent: 223.8136 0% 25.0471%;
-    --accent-foreground: 223.8136 0.0004% 98.0256%;
-    --destructive: 358.7594 101.8439% 69.8357%;
-    --destructive-foreground: 223.8136 0.0004% 98.0256%;
-    --border: 223.8136 0% 15.5096%;
-    --input: 223.8136 0% 20.3885%;
-    --ring: 223.8136 0% 45.1519%;
-    --chart-1: 221.2 83.2% 53.3%;
-    --chart-2: 217.4076 91.3672% 59.5787%;
-    --chart-3: 221.4336 86.3731% 54.0624%;
-    --chart-4: 223.6587 78.718% 47.8635%;
-    --chart-5: 226.5426 70.0108% 39.9224%;
-    --radius: 0.5rem;
-    --font-sans: Inter, sans-serif;
-  }
+	:root {
+		--background: 223.8136 0% 3.9388%;
+		--foreground: 223.8136 0.0004% 98.0256%;
+		--card: 223.8136 0% 9.0527%;
+		--card-foreground: 223.8136 0.0004% 98.0256%;
+		--popover: 223.8136 0% 14.9382%;
+		--popover-foreground: 223.8136 0.0004% 98.0256%;
+		--primary: 223.8136 0.0001% 89.8161%;
+		--primary-foreground: 223.8136 0% 9.0527%;
+		--secondary: 223.8136 0% 14.9382%;
+		--secondary-foreground: 223.8136 0.0004% 98.0256%;
+		--muted: 223.8136 0% 14.9382%;
+		--muted-foreground: 223.8136 0% 63.0163%;
+		--accent: 223.8136 0% 25.0471%;
+		--accent-foreground: 223.8136 0.0004% 98.0256%;
+		--destructive: 358.7594 101.8439% 69.8357%;
+		--destructive-foreground: 223.8136 0.0004% 98.0256%;
+		--border: 223.8136 0% 15.5096%;
+		--input: 223.8136 0% 20.3885%;
+		--ring: 223.8136 0% 45.1519%;
+		--chart-1: 221.2 83.2% 53.3%;
+		--chart-2: 217.4076 91.3672% 59.5787%;
+		--chart-3: 221.4336 86.3731% 54.0624%;
+		--chart-4: 223.6587 78.718% 47.8635%;
+		--chart-5: 226.5426 70.0108% 39.9224%;
+		--radius: 0.5rem;
+		--font-sans: Inter, sans-serif;
+	}
 }
 
 .glass {
-  --background: 223.8136 0% 5.9388%;
-  --card: 223.8136 0% 9.0527%;
-  --radius: 1rem;
-  /* Backdrop filter glass effect */
-  --background-opacity: 0.95;
+	--background: 223.8136 0% 5.9388%;
+	--card: 223.8136 0% 9.0527%;
+	--radius: 1rem;
+	/* Backdrop filter glass effect */
+	--background-opacity: 0.95;
 }
 
 @layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
+	* {
+		border-color: hsl(var(--border));
+	}
 
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: var(--font-sans);
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
-  }
+	body {
+		background-color: hsl(var(--background));
+		color: hsl(var(--foreground));
+		font-family: var(--font-sans);
+		font-feature-settings:
+			"rlig" 1,
+			"calt" 1;
+	}
 
-  /* Scrollbar styles */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+	/* Scrollbar styles */
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
 
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.3);
-    border-radius: 4px;
-  }
+	::-webkit-scrollbar-thumb {
+		background: hsl(var(--muted-foreground) / 0.3);
+		border-radius: 4px;
+	}
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.5);
-  }
+	::-webkit-scrollbar-thumb:hover {
+		background: hsl(var(--muted-foreground) / 0.5);
+	}
 
-  /* Selection styles */
-  ::selection {
-    background: hsl(var(--primary) / 0.2);
-    color: hsl(var(--primary-foreground));
-  }
+	/* Selection styles */
+	::selection {
+		background: hsl(var(--primary) / 0.2);
+		color: hsl(var(--primary-foreground));
+	}
 
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms;
-      animation-iteration-count: 1;
-      transition-duration: 0.01ms;
-      scroll-behavior: auto;
-    }
-  }
+	/* Reduced motion support */
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms;
+			animation-iteration-count: 1;
+			transition-duration: 0.01ms;
+			scroll-behavior: auto;
+		}
+	}
 }
 
 @layer components {
-  /* Screen reader only utility */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
+	/* Screen reader only utility */
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
+	}
 
-  .not-sr-only {
-    position: static;
-    width: auto;
-    height: auto;
-    padding: 0;
-    margin: 0;
-    overflow: visible;
-    clip: auto;
-    white-space: normal;
-  }
+	.not-sr-only {
+		position: static;
+		width: auto;
+		height: auto;
+		padding: 0;
+		margin: 0;
+		overflow: visible;
+		clip: auto;
+		white-space: normal;
+	}
 }

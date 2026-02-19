@@ -1,4 +1,5 @@
 import { Listbox as ArkListbox, createListCollection } from "@ark-ui/solid";
+import type { ListCollection } from "@zag-js/collection";
 import { createContext, createMemo, For, type JSX, Show, splitProps } from "solid-js";
 import { cn } from "../lib/cn";
 import { icon } from "../lib/icon";
@@ -83,10 +84,10 @@ export const Listbox = (props: ListboxProps) => {
 						when={collection().group}
 						fallback={
 							<For each={collection().items}>
-								{(item: any) => (
+								{(item: ListboxItemData) => (
 									<ArkListbox.Item
 										item={item}
-										class="relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:opacity-50 hover:bg-accent/50"
+										class="relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-50 hover:bg-accent/50"
 									>
 										<ArkListbox.ItemText>
 											{typeof item === "string" ? item : item.label}
@@ -100,16 +101,16 @@ export const Listbox = (props: ListboxProps) => {
 						}
 					>
 						<For each={collection().group()}>
-							{([groupLabel, groupItems]: [string, any[]]) => (
+							{([groupLabel, groupItems]: [string, ListboxItemData[]]) => (
 								<ArkListbox.ItemGroup>
 									<ArkListbox.ItemGroupLabel class="px-3 py-2 text-xs font-semibold text-muted-foreground">
 										{groupLabel}
 									</ArkListbox.ItemGroupLabel>
 									<For each={groupItems}>
-										{(item: any) => (
+										{(item: ListboxItemData) => (
 											<ArkListbox.Item
 												item={item}
-												class="relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:opacity-50 hover:bg-accent/50 ml-2"
+												class="relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-50 hover:bg-accent/50 ml-2"
 											>
 												<ArkListbox.ItemText>{item.label}</ArkListbox.ItemText>
 												<ArkListbox.ItemIndicator class="flex items-center justify-center h-4 w-4 shrink-0 transition-all duration-200 ease-out data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
@@ -137,7 +138,7 @@ export const Listbox = (props: ListboxProps) => {
 
 // ListboxItem for simple API
 interface ListboxItemProps {
-	value: any;
+	value: string | ListboxItemData;
 	children?: JSX.Element;
 	disabled?: boolean;
 	group?: string;
@@ -151,7 +152,7 @@ export const ListboxItem = (props: ListboxItemProps) => {
 		<ArkListbox.Item
 			item={local.value}
 			class={cn(
-				"relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:opacity-50 hover:bg-accent/50",
+				"relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-50 hover:bg-accent/50",
 				local.class
 			)}
 			{...others}
@@ -167,9 +168,9 @@ export const ListboxItem = (props: ListboxItemProps) => {
 };
 
 // Composable API exports
-export const ListboxRoot = (props: {
+export function ListboxRoot<T>(props: {
 	children?: JSX.Element;
-	collection: any;
+	collection: ListCollection<T>;
 	value?: string[];
 	defaultValue?: string[];
 	onValueChange?: (details: { value: string[] }) => void;
@@ -178,10 +179,10 @@ export const ListboxRoot = (props: {
 	loopFocus?: boolean;
 	autoHighlight?: boolean;
 	class?: string;
-}) => {
+}) {
 	const [local, others] = splitProps(props, ["class"]);
 	return <ArkListbox.Root class={cn("flex flex-col gap-2", local.class)} {...others} />;
-};
+}
 
 export const ListboxLabel = (props: { children?: JSX.Element; class?: string }) => {
 	const [local, others] = splitProps(props, ["class"]);
@@ -204,7 +205,7 @@ export const ListboxContent = (props: { children?: JSX.Element; class?: string }
 };
 
 export const ListboxItemComposable = (props: {
-	item: any;
+	item: ListboxItemData | string;
 	children?: JSX.Element;
 	class?: string;
 	highlightOnHover?: boolean;
@@ -213,7 +214,7 @@ export const ListboxItemComposable = (props: {
 	return (
 		<ArkListbox.Item
 			class={cn(
-				"relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:opacity-50 hover:bg-accent/50",
+				"relative flex cursor-pointer select-none items-center justify-between rounded-sm px-3 py-2 text-sm outline-none transition-colors data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-50 hover:bg-accent/50",
 				local.class
 			)}
 			{...others}

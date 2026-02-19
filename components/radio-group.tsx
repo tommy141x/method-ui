@@ -58,7 +58,7 @@ export const RadioGroupItem: Component<RadioGroupItemProps> = (props) => {
 			disabled={props.disabled}
 			invalid={props.invalid}
 			class={cn(
-				"flex items-center gap-2 cursor-pointer data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
+				"flex items-center gap-2 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50",
 				props.class
 			)}
 		>

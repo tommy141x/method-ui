@@ -56,139 +56,122 @@ import type { Component, JSX } from "solid-js";
 import { mergeProps, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
 import {
-  Toaster as SolidToaster,
-  ToastProvider as SolidToastProvider,
-  type ToastOptions,
-  showToast,
-  useToast,
+	Toaster as SolidToaster,
+	ToastProvider as SolidToastProvider,
+	showToast,
+	type ToastOptions,
+	useToast,
 } from "solid-notifications";
 import { unoMerge } from "unocss-merge";
 
 // Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
-  return unoMerge(clsx(classLists));
+	return unoMerge(clsx(classLists));
 }
 
 // Icon helper function - returns UnoCSS icon class for your configured icon library
 function icon(name: string): string {
-  return `i-lucide-${name}`;
+	return `i-lucide-${name}`;
 }
 
 const _toastVariants = cva("", {
-  variants: {
-    variant: {
-      default: "",
-      success: "",
-      error: "",
-      warning: "",
-      info: "",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
+	variants: {
+		variant: {
+			default: "",
+			success: "",
+			error: "",
+			warning: "",
+			info: "",
+		},
+	},
+	defaultVariants: {
+		variant: "default",
+	},
 });
 
 // Toast icon map - defined at module level so UnoCSS extractor can find icon() calls
 const TOAST_ICONS = {
-  success: icon("circle-check"),
-  error: icon("circle-x"),
-  warning: icon("triangle-alert"),
-  info: icon("info"),
-  loading: icon("loader-circle"),
-  default: icon("bell"),
+	success: icon("circle-check"),
+	error: icon("circle-x"),
+	warning: icon("triangle-alert"),
+	info: icon("info"),
+	loading: icon("loader-circle"),
+	default: icon("bell"),
 } as const;
 
 export interface ToastProps {
-  variant?: "default" | "success" | "error" | "warning" | "info";
-  duration?: number | false;
-  position?:
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right";
+	variant?: "default" | "success" | "error" | "warning" | "info";
+	duration?: number | false;
+	position?:
+		| "top-left"
+		| "top-center"
+		| "top-right"
+		| "bottom-left"
+		| "bottom-center"
+		| "bottom-right";
 }
 
 /**
  * Toaster component props
  */
 export interface ToasterProps {
-  toasterId?: string;
-  position?: "top" | "bottom";
-  align?: "left" | "center" | "right";
-  class?: string;
-  // Toaster config
-  limit?: number | false;
-  reverseToastOrder?: boolean;
-  offsetX?: number;
-  offsetY?: number;
-  gutter?: number;
-  renderOnWindowInactive?: boolean;
-  pauseOnWindowInactive?: boolean;
-  toasterStyle?: JSX.CSSProperties;
-  // Toast config
-  theme?: string | undefined | null;
-  type?: "default" | "success" | "error" | "loading" | "warning" | "info";
-  duration?: number | false;
-  onEnter?: string;
-  enterDuration?: number;
-  onExit?: string;
-  exitDuration?: number;
-  onIdle?: string;
-  style?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  pauseOnHover?: boolean;
-  wrapperClass?:
-    | string
-    | ((args: { theme: string | undefined | null; type: string }) => string);
-  wrapperStyle?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  enterCallback?: () => void;
-  updateCallback?: () => void;
-  exitCallback?: (reason?: boolean | string) => void;
-  showDismissButton?: boolean;
-  dismissButtonClass?:
-    | string
-    | ((args: { theme: string | undefined | null; type: string }) => string);
-  dismissButtonStyle?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  dismissOnClick?: boolean;
-  showProgressBar?: boolean;
-  progressBarClass?:
-    | string
-    | ((args: { theme: string | undefined | null; type: string }) => string);
-  progressBarStyle?:
-    | JSX.CSSProperties
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.CSSProperties);
-  showIcon?: boolean;
-  icon?:
-    | JSX.Element
-    | null
-    | ((args: {
-        theme: string | undefined | null;
-        type: string;
-      }) => JSX.Element);
-  dragToDismiss?: boolean;
-  dragTreshold?: number;
-  ariaLive?: "polite" | "assertive" | "off";
-  role?: "status" | "alert";
+	toasterId?: string;
+	position?: "top" | "bottom";
+	align?: "left" | "center" | "right";
+	class?: string;
+	// Toaster config
+	limit?: number | false;
+	reverseToastOrder?: boolean;
+	offsetX?: number;
+	offsetY?: number;
+	gutter?: number;
+	renderOnWindowInactive?: boolean;
+	pauseOnWindowInactive?: boolean;
+	toasterStyle?: JSX.CSSProperties;
+	// Toast config
+	theme?: string | undefined | null;
+	type?: "default" | "success" | "error" | "loading" | "warning" | "info";
+	duration?: number | false;
+	onEnter?: string;
+	enterDuration?: number;
+	onExit?: string;
+	exitDuration?: number;
+	onIdle?: string;
+	style?:
+		| JSX.CSSProperties
+		| ((args: { theme: string | undefined | null; type: string }) => JSX.CSSProperties);
+	pauseOnHover?: boolean;
+	wrapperClass?: string | ((args: { theme: string | undefined | null; type: string }) => string);
+	wrapperStyle?:
+		| JSX.CSSProperties
+		| ((args: { theme: string | undefined | null; type: string }) => JSX.CSSProperties);
+	enterCallback?: () => void;
+	updateCallback?: () => void;
+	exitCallback?: (reason?: boolean | string) => void;
+	showDismissButton?: boolean;
+	dismissButtonClass?:
+		| string
+		| ((args: { theme: string | undefined | null; type: string }) => string);
+	dismissButtonStyle?:
+		| JSX.CSSProperties
+		| ((args: { theme: string | undefined | null; type: string }) => JSX.CSSProperties);
+	dismissOnClick?: boolean;
+	showProgressBar?: boolean;
+	progressBarClass?:
+		| string
+		| ((args: { theme: string | undefined | null; type: string }) => string);
+	progressBarStyle?:
+		| JSX.CSSProperties
+		| ((args: { theme: string | undefined | null; type: string }) => JSX.CSSProperties);
+	showIcon?: boolean;
+	icon?:
+		| JSX.Element
+		| null
+		| ((args: { theme: string | undefined | null; type: string }) => JSX.Element);
+	dragToDismiss?: boolean;
+	dragTreshold?: number;
+	ariaLive?: "polite" | "assertive" | "off";
+	role?: "status" | "alert";
 }
 
 /**
@@ -196,36 +179,36 @@ export interface ToasterProps {
  * Place this component where you want toasts to appear
  */
 export const Toaster: Component<ToasterProps> = (props) => {
-  const merged = mergeProps(
-    {
-      position: "top" as const,
-      align: "right" as const,
-      toasterId: "default",
-      offsetX: 16,
-      offsetY: 16,
-      gutter: 8,
-      duration: 5000,
-      showIcon: true,
-      showDismissButton: true,
-      showProgressBar: true,
-    },
-    props,
-  );
+	const merged = mergeProps(
+		{
+			position: "top" as const,
+			align: "right" as const,
+			toasterId: "default",
+			offsetX: 16,
+			offsetY: 16,
+			gutter: 8,
+			duration: 5000,
+			showIcon: true,
+			showDismissButton: true,
+			showProgressBar: true,
+		},
+		props
+	);
 
-  const [local, others] = splitProps(merged, [
-    "toasterId",
-    "position",
-    "align",
-    "class",
-    "toasterStyle",
-  ]);
+	const [local, others] = splitProps(merged, [
+		"toasterId",
+		"position",
+		"align",
+		"class",
+		"toasterStyle",
+	]);
 
-  console.log("Toaster component rendering with toasterId:", local.toasterId);
+	console.log("Toaster component rendering with toasterId:", local.toasterId);
 
-  return (
-    <>
-      <style>
-        {`
+	return (
+		<>
+			<style>
+				{`
           /* Solid Notifications CSS Variables */
           :root {
             --sn-z-index: 999999;
@@ -564,51 +547,50 @@ export const Toaster: Component<ToasterProps> = (props) => {
             animation: SNSlideOutBottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
           }
         `}
-      </style>
-      <Portal mount={document.body}>
-        <SolidToaster
-          toasterId={local.toasterId}
-          positionY={local.position}
-          positionX={local.align}
-          toasterStyle={{
-            [local.position]: "16px",
-            ...(local.align === "left" && { left: "16px" }),
-            ...(local.align === "right" && { right: "16px" }),
-            ...(local.align === "center" && {
-              left: "50%",
-              right: "auto",
-            }),
-          }}
-          wrapperClass={cn("sn-toast-wrapper", local.class)}
-          class="sn-toast"
-          icon={(args: { type: string; theme?: string | null }) => {
-            const iconClass =
-              TOAST_ICONS[args.type as keyof typeof TOAST_ICONS] ||
-              TOAST_ICONS.default;
-            return (
-              <div
-                class={cn(
-                  "shrink-0 flex items-center justify-center self-start",
-                  args.type === "loading" && "animate-spin",
-                  iconClass,
-                )}
-                style={{
-                  width: "var(--sn-icon-size)",
-                  height: "var(--sn-icon-size)",
-                  margin: "var(--sn-icon-margin)",
-                  color: "var(--sn-icon-fill)",
-                  "margin-top": "2px",
-                }}
-              />
-            );
-          }}
-          progressBarClass="sn-progress-bar"
-          dismissButtonClass="sn-dismiss-button"
-          {...others}
-        />
-      </Portal>
-    </>
-  );
+			</style>
+			<Portal mount={document.body}>
+				<SolidToaster
+					toasterId={local.toasterId}
+					positionY={local.position}
+					positionX={local.align}
+					toasterStyle={{
+						[local.position]: "16px",
+						...(local.align === "left" && { left: "16px" }),
+						...(local.align === "right" && { right: "16px" }),
+						...(local.align === "center" && {
+							left: "50%",
+							right: "auto",
+						}),
+					}}
+					wrapperClass={cn("sn-toast-wrapper", local.class)}
+					class="sn-toast"
+					icon={(args: { type: string; theme?: string | null }) => {
+						const iconClass =
+							TOAST_ICONS[args.type as keyof typeof TOAST_ICONS] || TOAST_ICONS.default;
+						return (
+							<div
+								class={cn(
+									"shrink-0 flex items-center justify-center self-start",
+									args.type === "loading" && "animate-spin",
+									iconClass
+								)}
+								style={{
+									width: "var(--sn-icon-size)",
+									height: "var(--sn-icon-size)",
+									margin: "var(--sn-icon-margin)",
+									color: "var(--sn-icon-fill)",
+									"margin-top": "2px",
+								}}
+							/>
+						);
+					}}
+					progressBarClass="sn-progress-bar"
+					dismissButtonClass="sn-dismiss-button"
+					{...others}
+				/>
+			</Portal>
+		</>
+	);
 };
 
 /**
@@ -621,22 +603,18 @@ export const Toaster: Component<ToasterProps> = (props) => {
  * </ToastContainer>
  */
 export const ToastContainer: Component<{
-  children?: JSX.Element;
-  position?: "top" | "bottom";
-  align?: "left" | "center" | "right";
+	children?: JSX.Element;
+	position?: "top" | "bottom";
+	align?: "left" | "center" | "right";
 }> = (props) => {
-  const [local, _others] = splitProps(props, ["children", "position", "align"]);
+	const [local, _others] = splitProps(props, ["children", "position", "align"]);
 
-  return (
-    <SolidToastProvider>
-      {local.children}
-      <Toaster
-        position={local.position}
-        align={local.align}
-        toasterId="default"
-      />
-    </SolidToastProvider>
-  );
+	return (
+		<SolidToastProvider>
+			{local.children}
+			<Toaster position={local.position} align={local.align} toasterId="default" />
+		</SolidToastProvider>
+	);
 };
 
 /**
@@ -660,36 +638,36 @@ export { showToast };
  * Helper function to show different toast types
  */
 export const toast = {
-  success: (message: string, options?: ToastOptions) =>
-    showToast(message, { type: "success", toasterId: "default", ...options }),
-  error: (message: string, options?: ToastOptions) =>
-    showToast(message, { type: "error", toasterId: "default", ...options }),
-  warning: (message: string, options?: ToastOptions) =>
-    showToast(message, { type: "warning", toasterId: "default", ...options }),
-  info: (message: string, options?: ToastOptions) =>
-    showToast(message, { type: "info", toasterId: "default", ...options }),
-  loading: (message: string, options?: ToastOptions) =>
-    showToast(message, {
-      type: "loading",
-      duration: false,
-      toasterId: "default",
-      ...options,
-    }),
-  promise: async <T,>(
-    promise: Promise<T>,
-    messages: {
-      pending: string;
-      success: string | ((data: T) => string);
-      error: string | ((error: unknown) => string);
-    },
-    options?: ToastOptions,
-  ) => {
-    const { promiseToast } = await import("solid-notifications");
-    return promiseToast(promise, messages, {
-      toasterId: "default",
-      ...options,
-    });
-  },
+	success: (message: string, options?: ToastOptions) =>
+		showToast(message, { type: "success", toasterId: "default", ...options }),
+	error: (message: string, options?: ToastOptions) =>
+		showToast(message, { type: "error", toasterId: "default", ...options }),
+	warning: (message: string, options?: ToastOptions) =>
+		showToast(message, { type: "warning", toasterId: "default", ...options }),
+	info: (message: string, options?: ToastOptions) =>
+		showToast(message, { type: "info", toasterId: "default", ...options }),
+	loading: (message: string, options?: ToastOptions) =>
+		showToast(message, {
+			type: "loading",
+			duration: false,
+			toasterId: "default",
+			...options,
+		}),
+	promise: async <T,>(
+		promise: Promise<T>,
+		messages: {
+			pending: string;
+			success: string | ((data: T) => string);
+			error: string | ((error: unknown) => string);
+		},
+		options?: ToastOptions
+	) => {
+		const { promiseToast } = await import("solid-notifications");
+		return promiseToast(promise, messages, {
+			toasterId: "default",
+			...options,
+		});
+	},
 };
 
 export default Toaster;

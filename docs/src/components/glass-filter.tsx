@@ -25,7 +25,7 @@ import type { JSX } from "solid-js";
  */
 export function GlassFilter(): JSX.Element {
 	return (
-		<svg style="position:absolute; width:0; height:0;">
+		<svg style="position:absolute; width:0; height:0;" aria-hidden="true">
 			<filter id="glass" x="0" y="0" width="100%" height="100%" primitiveUnits="userSpaceOnUse">
 				<feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="5" result="noise" />
 

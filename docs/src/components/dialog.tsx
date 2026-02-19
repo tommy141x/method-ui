@@ -2,12 +2,12 @@ import { Dialog as ArkDialog } from "@ark-ui/solid";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import {
-  createSignal,
-  type JSX,
-  mergeProps,
-  children as resolveChildren,
-  Show,
-  splitProps,
+	createSignal,
+	type JSX,
+	mergeProps,
+	children as resolveChildren,
+	Show,
+	splitProps,
 } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
@@ -15,12 +15,12 @@ import { unoMerge } from "unocss-merge";
 
 // Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
-  return unoMerge(clsx(classLists));
+	return unoMerge(clsx(classLists));
 }
 
 // Icon helper function - returns UnoCSS icon class for your configured icon library
 function icon(name: string): string {
-  return `i-lucide-${name}`;
+	return `i-lucide-${name}`;
 }
 
 /**
@@ -37,43 +37,43 @@ function icon(name: string): string {
  * );
  */
 export function createDialogState() {
-  const [open, setOpen] = createSignal(false);
+	const [open, setOpen] = createSignal(false);
 
-  return {
-    open: () => setOpen(true),
-    close: () => setOpen(false),
-    toggle: () => setOpen(!open()),
-    isOpen: open,
-    setOpen,
-  };
+	return {
+		open: () => setOpen(true),
+		close: () => setOpen(false),
+		toggle: () => setOpen(!open()),
+		isOpen: open,
+		setOpen,
+	};
 }
 
 interface DialogProps {
-  children?: JSX.Element;
-  open?: boolean;
-  onOpenChange?: (details: { open: boolean }) => void;
-  closeOnInteractOutside?: boolean;
-  closeOnEscape?: boolean;
-  modal?: boolean;
-  role?: "dialog" | "alertdialog";
-  preventScroll?: boolean;
-  trapFocus?: boolean;
-  lazyMount?: boolean;
-  unmountOnExit?: boolean;
-  initialFocusEl?: () => HTMLElement | null;
-  finalFocusEl?: () => HTMLElement | null;
-  onEscapeKeyDown?: (event: KeyboardEvent) => void;
-  onInteractOutside?: (event: CustomEvent) => void;
+	children?: JSX.Element;
+	open?: boolean;
+	onOpenChange?: (details: { open: boolean }) => void;
+	closeOnInteractOutside?: boolean;
+	closeOnEscape?: boolean;
+	modal?: boolean;
+	role?: "dialog" | "alertdialog";
+	preventScroll?: boolean;
+	trapFocus?: boolean;
+	lazyMount?: boolean;
+	unmountOnExit?: boolean;
+	initialFocusEl?: () => HTMLElement | null;
+	finalFocusEl?: () => HTMLElement | null;
+	onEscapeKeyDown?: (event: KeyboardEvent) => void;
+	onInteractOutside?: (event: CustomEvent) => void;
 }
 
 export const Dialog = (props: DialogProps) => {
-  // Use defaultOpen for uncontrolled dialogs to ensure proper initialization
-  const merged = mergeProps({ defaultOpen: false }, props);
-  return <ArkDialog.Root {...merged}>{merged.children}</ArkDialog.Root>;
+	// Use defaultOpen for uncontrolled dialogs to ensure proper initialization
+	const merged = mergeProps({ defaultOpen: false }, props);
+	return <ArkDialog.Root {...merged}>{merged.children}</ArkDialog.Root>;
 };
 
 interface DialogTriggerProps {
-  children?: JSX.Element;
+	children?: JSX.Element;
 }
 
 /**
@@ -107,181 +107,173 @@ interface DialogTriggerProps {
  * - Try to clone/modify children props (doesn't work in Solid's reactivity model)
  */
 export const DialogTrigger = (props: DialogTriggerProps) => {
-  const resolved = resolveChildren(() => props.children);
+	const resolved = resolveChildren(() => props.children);
 
-  return (
-    <ArkDialog.Context>
-      {(context) => {
-        return (
-          <>
-            {/* biome-ignore lint/a11y/noStaticElementInteractions: display:contents wrapper is an SSR hydration workaround for Ark UI Dialog.Trigger */}
-            <div
-              onClick={() => context().setOpen(true)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") context().setOpen(true);
-              }}
-              role="presentation"
-              style={{ display: "contents" }}
-            >
-              {resolved()}
-            </div>
-          </>
-        );
-      }}
-    </ArkDialog.Context>
-  );
+	return (
+		<ArkDialog.Context>
+			{(context) => {
+				return (
+					<>
+						{/* biome-ignore lint/a11y/noStaticElementInteractions: display:contents wrapper is an SSR hydration workaround for Ark UI Dialog.Trigger */}
+						<div
+							onClick={() => context().setOpen(true)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") context().setOpen(true);
+							}}
+							role="presentation"
+							style={{ display: "contents" }}
+						>
+							{resolved()}
+						</div>
+					</>
+				);
+			}}
+		</ArkDialog.Context>
+	);
 };
 
 interface DialogContentProps {
-  children?: JSX.Element;
-  class?: string;
+	children?: JSX.Element;
+	class?: string;
 }
 
 export const DialogContent = (props: DialogContentProps) => {
-  const [local, others] = splitProps(props, ["children", "class"]);
+	const [local, others] = splitProps(props, ["children", "class"]);
 
-  return (
-    <Portal>
-      <ArkDialog.Context>
-        {(context) => {
-          const isOpen = () => context().open;
+	return (
+		<Portal>
+			<ArkDialog.Context>
+				{(context) => {
+					const isOpen = () => context().open;
 
-          return (
-            <Presence exitBeforeEnter>
-              <Show when={isOpen()}>
-                <Motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2, easing: "ease-out" }}
-                  class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
-                />
-              </Show>
-            </Presence>
-          );
-        }}
-      </ArkDialog.Context>
+					return (
+						<Presence exitBeforeEnter>
+							<Show when={isOpen()}>
+								<Motion.div
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									transition={{ duration: 0.2, easing: "ease-out" }}
+									class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+								/>
+							</Show>
+						</Presence>
+					);
+				}}
+			</ArkDialog.Context>
 
-      <ArkDialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <ArkDialog.Context>
-          {(context) => {
-            const isOpen = () => context().open;
+			<ArkDialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center p-4">
+				<ArkDialog.Context>
+					{(context) => {
+						const isOpen = () => context().open;
 
-            return (
-              <Presence exitBeforeEnter>
-                <Show when={isOpen()}>
-                  <Motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{
-                      duration: 0.3,
-                      easing: [0.16, 1, 0.3, 1], // Custom easing for smooth spring-like effect
-                    }}
-                  >
-                    <ArkDialog.Content
-                      class={cn(
-                        "relative w-full max-w-lg rounded-lg bg-background border border-border p-6 shadow-lg",
-                        local.class,
-                      )}
-                      {...others}
-                    >
-                      <DialogCloseTrigger />
-                      {local.children}
-                    </ArkDialog.Content>
-                  </Motion.div>
-                </Show>
-              </Presence>
-            );
-          }}
-        </ArkDialog.Context>
-      </ArkDialog.Positioner>
-    </Portal>
-  );
+						return (
+							<Presence exitBeforeEnter>
+								<Show when={isOpen()}>
+									<Motion.div
+										initial={{ opacity: 0, scale: 0.95 }}
+										animate={{ opacity: 1, scale: 1 }}
+										exit={{ opacity: 0, scale: 0.95 }}
+										transition={{
+											duration: 0.3,
+											easing: [0.16, 1, 0.3, 1], // Custom easing for smooth spring-like effect
+										}}
+									>
+										<ArkDialog.Content
+											class={cn(
+												"relative w-full max-w-lg rounded-lg bg-background border border-border p-6 shadow-lg",
+												local.class
+											)}
+											{...others}
+										>
+											<DialogCloseTrigger />
+											{local.children}
+										</ArkDialog.Content>
+									</Motion.div>
+								</Show>
+							</Presence>
+						);
+					}}
+				</ArkDialog.Context>
+			</ArkDialog.Positioner>
+		</Portal>
+	);
 };
 
 interface DialogTitleProps {
-  children?: JSX.Element;
-  class?: string;
+	children?: JSX.Element;
+	class?: string;
 }
 
 export const DialogTitle = (props: DialogTitleProps) => {
-  const [local, others] = splitProps(props, ["class"]);
+	const [local, others] = splitProps(props, ["class"]);
 
-  return (
-    <ArkDialog.Title
-      class={cn("text-lg font-semibold text-foreground", local.class)}
-      {...others}
-    />
-  );
+	return (
+		<ArkDialog.Title class={cn("text-lg font-semibold text-foreground", local.class)} {...others} />
+	);
 };
 
 interface DialogDescriptionProps {
-  children?: JSX.Element;
-  class?: string;
+	children?: JSX.Element;
+	class?: string;
 }
 
 export const DialogDescription = (props: DialogDescriptionProps) => {
-  const [local, others] = splitProps(props, ["class"]);
+	const [local, others] = splitProps(props, ["class"]);
 
-  return (
-    <ArkDialog.Description
-      class={cn("text-sm text-muted-foreground mt-2", local.class)}
-      {...others}
-    />
-  );
+	return (
+		<ArkDialog.Description
+			class={cn("text-sm text-muted-foreground mt-2", local.class)}
+			{...others}
+		/>
+	);
 };
 
 interface DialogCloseTriggerProps {
-  children?: JSX.Element;
-  class?: string;
+	children?: JSX.Element;
+	class?: string;
 }
 
 export const DialogCloseTrigger = (props: DialogCloseTriggerProps) => {
-  const [local, others] = splitProps(props, ["children", "class"]);
+	const [local, others] = splitProps(props, ["children", "class"]);
 
-  return (
-    <ArkDialog.CloseTrigger
-      class={cn(
-        "absolute right-6 top-6 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none",
-        local.class,
-      )}
-      {...others}
-    >
-      {local.children || (
-        <>
-          <div class={cn("h-4 w-4", icon("x"))} />
-          <span class="sr-only">Close</span>
-        </>
-      )}
-    </ArkDialog.CloseTrigger>
-  );
+	return (
+		<ArkDialog.CloseTrigger
+			class={cn(
+				"absolute right-6 top-6 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none",
+				local.class
+			)}
+			{...others}
+		>
+			{local.children || (
+				<>
+					<div class={cn("h-4 w-4", icon("x"))} />
+					<span class="sr-only">Close</span>
+				</>
+			)}
+		</ArkDialog.CloseTrigger>
+	);
 };
 
 interface DialogFooterProps {
-  children?: JSX.Element;
-  class?: string;
+	children?: JSX.Element;
+	class?: string;
 }
 
 export const DialogFooter = (props: DialogFooterProps) => {
-  return (
-    <div
-      class={cn(
-        "flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-2 mt-6",
-        props.class,
-      )}
-    >
-      {props.children}
-    </div>
-  );
+	return (
+		<div class={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-2 mt-6", props.class)}>
+			{props.children}
+		</div>
+	);
 };
 
 interface DialogCloseProps {
-  children?: JSX.Element;
+	children?: JSX.Element;
 }
 
 export const DialogClose = (props: DialogCloseProps) => {
-  return <ArkDialog.CloseTrigger>{props.children}</ArkDialog.CloseTrigger>;
+	return <ArkDialog.CloseTrigger>{props.children}</ArkDialog.CloseTrigger>;
 };
 
 export default Dialog;

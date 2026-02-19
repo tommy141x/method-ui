@@ -71,7 +71,7 @@ export const Marquee = (props: MarqueeProps) => {
 			<Show when={local.showEdges !== false}>
 				<ArkMarquee.Edge
 					side="start"
-					class="pointer-events-none absolute z-10 h-full w-24 left-0 bg-gradient-to-r from-background to-transparent"
+					class="pointer-events-none absolute z-10 h-full w-24 left-0 bg-linear-to-r from-background to-transparent"
 				/>
 			</Show>
 			<ArkMarquee.Viewport class="w-full overflow-hidden">
@@ -80,7 +80,7 @@ export const Marquee = (props: MarqueeProps) => {
 			<Show when={local.showEdges !== false}>
 				<ArkMarquee.Edge
 					side="end"
-					class="pointer-events-none absolute z-10 h-full w-24 right-0 bg-gradient-to-l from-background to-transparent"
+					class="pointer-events-none absolute z-10 h-full w-24 right-0 bg-linear-to-l from-background to-transparent"
 				/>
 			</Show>
 		</ArkMarquee.Root>
@@ -93,7 +93,7 @@ export const MarqueeItem = (props: {
 	style?: JSX.CSSProperties | string;
 }) => {
 	const [local, others] = splitProps(props, ["class"]);
-	return <ArkMarquee.Item class={cn("flex-shrink-0", local.class)} {...others} />;
+	return <ArkMarquee.Item class={cn("shrink-0", local.class)} {...others} />;
 };
 
 // Advanced composable API exports

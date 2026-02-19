@@ -169,7 +169,7 @@ export const AngleSlider: Component<AngleSliderProps> = (props) => {
 							>
 								<div
 									class={cn(
-										"rounded-full bg-background border-2 border-primary shadow-lg transition-transform focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[invalid]:border-destructive",
+										"rounded-full bg-background border-2 border-primary shadow-lg transition-transform focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-invalid:border-destructive",
 										!props.disabled && "hover:scale-110",
 										props.disabled && "pointer-events-none"
 									)}

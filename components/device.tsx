@@ -47,6 +47,8 @@ export const Device: Component<DeviceProps> = (props) => {
 										viewBox="0 0 520 400"
 										fill="none"
 										xmlns="http://www.w3.org/2000/svg"
+										role="img"
+										aria-label="iPad device mockup"
 										class={cn(local.class)}
 										{...others}
 									>
@@ -108,6 +110,8 @@ export const Device: Component<DeviceProps> = (props) => {
 								viewBox="0 0 200 400"
 								fill="none"
 								xmlns="http://www.w3.org/2000/svg"
+								role="img"
+								aria-label="iPhone device mockup"
 								class={cn(local.class)}
 								{...others}
 							>
@@ -166,6 +170,8 @@ export const Device: Component<DeviceProps> = (props) => {
 						viewBox="0 0 600 500"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
+						role="img"
+						aria-label="iMac device mockup"
 						class={cn(local.class)}
 						{...others}
 					>
@@ -270,6 +276,8 @@ export const Device: Component<DeviceProps> = (props) => {
 				viewBox="0 0 650 400"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
+				role="img"
+				aria-label="MacBook device mockup"
 				class={cn(local.class)}
 				{...others}
 			>
@@ -387,7 +395,7 @@ export const meta: ComponentMeta<DeviceProps> = {
 			title: "Presentation",
 			description: "Showcase on colored background",
 			code: () => (
-				<div class="bg-gradient-to-br from-primary/20 to-accent p-12 rounded-lg">
+				<div class="bg-linear-to-br from-primary/20 to-accent p-12 rounded-lg">
 					<div class="grid grid-cols-3 gap-6 items-end">
 						<Device variant="iphone" class="w-full" />
 						<Device variant="macbook" class="w-full col-span-2" />
