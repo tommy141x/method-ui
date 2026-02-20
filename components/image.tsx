@@ -1,7 +1,7 @@
 import type { ImageData } from "@responsive-image/core";
+import { ResponsiveImage } from "@responsive-image/solid";
 import type { Component, JSX } from "solid-js";
-import { Show, splitProps } from "solid-js";
-import { isServer } from "solid-js/web";
+import { splitProps } from "solid-js";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
@@ -14,9 +14,8 @@ const isResponsiveImageData = (src: unknown): src is ImageData => {
 		typeof src !== "string" &&
 		"imageTypes" in src &&
 		"availableWidths" in src &&
-		"aspectRatio" in src &&
 		"imageUrlFor" in src &&
-		typeof src.imageUrlFor === "function"
+		typeof (src as ImageData).imageUrlFor === "function"
 	);
 };
 
@@ -55,217 +54,6 @@ export interface ImageProps extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>
 	onError?: (event: Event) => void;
 }
 
-// Helper to generate fallback img props from responsive image data
-const createFallbackImgProps = (
-	src: ImageData,
-	props: Partial<ImageProps>,
-	targetWidth?: number
-) => {
-	// Calculate optimal fallback width based on props
-	const fallbackWidth = (() => {
-		if (targetWidth) return targetWidth;
-		if (props.width) return props.width;
-		if (props.size) return props.size;
-
-		// Parse sizes attribute to get a reasonable default
-		if (props.sizes) {
-			const sizeMatch = props.sizes.match(/(\d+)px/);
-			if (sizeMatch) return parseInt(sizeMatch[1], 10);
-
-			// Handle viewport units
-			const vwMatch = props.sizes.match(/(\d+)vw/);
-			if (vwMatch) {
-				const vw = parseInt(vwMatch[1], 10);
-				return Math.round((vw / 100) * 1200); // Assume 1200px viewport
-			}
-		}
-
-		// Default fallback width
-		return 800;
-	})();
-
-	// Calculate height based on aspect ratio if not provided
-	const fallbackHeight =
-		props.height || (src.aspectRatio ? Math.round(fallbackWidth / src.aspectRatio) : undefined);
-
-	// Generate fallback src URL
-	const fallbackSrc = (() => {
-		try {
-			const widths = src.availableWidths || [];
-			const targetWidth = fallbackWidth;
-
-			// Find the closest available width that's >= target width
-			let closestWidth = widths.find((w) => w >= targetWidth);
-			if (!closestWidth) {
-				// If no width is large enough, use the largest available
-				closestWidth = Math.max(...widths);
-			}
-
-			return src.imageUrlFor(closestWidth || fallbackWidth);
-		} catch (error) {
-			console.warn("Failed to generate fallback URL:", error);
-			// Try with a smaller width
-			try {
-				return src.imageUrlFor(400);
-			} catch {
-				// Last resort
-				return (src as { src?: string }).src ?? "";
-			}
-		}
-	})();
-
-	return {
-		src: fallbackSrc,
-		width: fallbackWidth,
-		height: fallbackHeight,
-		alt: props.alt || "",
-		class: props.class,
-		loading: props.loading,
-		fetchpriority: props.fetchpriority,
-		decoding: props.decoding || "async",
-		style: {
-			...(props.objectFit && { "object-fit": props.objectFit }),
-			...(props.objectPosition && { "object-position": props.objectPosition }),
-		},
-	};
-};
-
-// Internal component for responsive images
-const InternalResponsiveImage: Component<ImageProps> = (props) => {
-	const [local, otherProps] = splitProps(props, [
-		"src",
-		"alt",
-		"width",
-		"height",
-		"size",
-		"sizes",
-		"layout",
-		"class",
-		"loading",
-		"decoding",
-		"fetchpriority",
-		"objectFit",
-		"objectPosition",
-		"priority",
-		"onLoad",
-		"onError",
-	]);
-
-	if (!isResponsiveImageData(local.src)) {
-		return null;
-	}
-
-	// Determine target width for fallback
-	const getTargetWidth = () => {
-		if (local.width) return local.width;
-		if (local.size) return local.size;
-
-		if (local.sizes) {
-			const sizeMatch = local.sizes.match(/(\d+)px/);
-			if (sizeMatch) return parseInt(sizeMatch[1], 10);
-
-			const vwMatch = local.sizes.match(/(\d+)vw/);
-			if (vwMatch) {
-				const vw = parseInt(vwMatch[1], 10);
-				return Math.round((vw / 100) * 1200);
-			}
-		}
-
-		return 800;
-	};
-
-	const targetWidth = getTargetWidth();
-	const fallbackImgProps = createFallbackImgProps(local.src, local, targetWidth);
-
-	// Fallback element
-	const fallbackElement = (
-		<img
-			{...fallbackImgProps}
-			alt={local.alt}
-			class={cn("rounded-lg", fallbackImgProps.class)}
-			{...otherProps}
-		/>
-	);
-
-	// Server-side rendering: always use fallback
-	if (isServer) {
-		return fallbackElement;
-	}
-
-	// Client-side: dynamically load ResponsiveImage
-	return (
-		<Show when={!isServer} fallback={fallbackElement}>
-			<ClientOnlyResponsiveImage {...local} fallbackElement={fallbackElement} {...otherProps} />
-		</Show>
-	);
-};
-
-// Client-only wrapper for ResponsiveImage
-const ClientOnlyResponsiveImage: Component<ImageProps & { fallbackElement: JSX.Element }> = (
-	props
-) => {
-	const [local, otherProps] = splitProps(props, [
-		"src",
-		"alt",
-		"width",
-		"height",
-		"size",
-		"sizes",
-		"layout",
-		"class",
-		"loading",
-		"decoding",
-		"fetchpriority",
-		"priority",
-		"fallbackElement",
-	]);
-
-	// Dynamically import ResponsiveImage
-	// biome-ignore lint/suspicious/noExplicitAny: dynamically imported component has no statically known prop types
-	let ResponsiveImageComponent: any;
-
-	try {
-		import("@responsive-image/solid").then((module) => {
-			ResponsiveImageComponent = module.ResponsiveImage;
-		});
-	} catch (error) {
-		console.error("Failed to load ResponsiveImage:", error);
-		return local.fallbackElement;
-	}
-
-	if (!ResponsiveImageComponent) {
-		return local.fallbackElement;
-	}
-
-	try {
-		// biome-ignore lint/suspicious/noExplicitAny: props forwarded to dynamically imported component with unknown prop shape
-		const responsiveProps: any = {
-			src: local.src,
-			alt: local.alt,
-			class: cn("rounded-lg", local.class),
-			loading: local.priority || local.loading === "eager" ? "eager" : local.loading,
-			decoding: local.decoding || "async",
-			fetchpriority: local.priority ? "high" : local.fetchpriority,
-			...otherProps,
-		};
-
-		// Add layout-specific props
-		if (local.layout === "fixed" && (local.width || local.height)) {
-			if (local.width) responsiveProps.width = local.width;
-			if (local.height) responsiveProps.height = local.height;
-		} else {
-			// Responsive layout
-			if (local.size) responsiveProps.size = local.size;
-			if (local.sizes) responsiveProps.sizes = local.sizes;
-		}
-
-		return <ResponsiveImageComponent {...responsiveProps} />;
-	} catch (error) {
-		console.error("Error rendering ResponsiveImage:", error);
-		return local.fallbackElement;
-	}
-};
-
 // Main Image component
 export const Image: Component<ImageProps> = (props) => {
 	const [local, otherProps] = splitProps(props, [
@@ -280,6 +68,11 @@ export const Image: Component<ImageProps> = (props) => {
 		"objectPosition",
 		"onLoad",
 		"onError",
+		"size",
+		"sizes",
+		"width",
+		"height",
+		"layout",
 	]);
 
 	// Early return if no src
@@ -288,59 +81,60 @@ export const Image: Component<ImageProps> = (props) => {
 	}
 
 	// Auto-detect LCP images and optimize them
-	const isLikelyLCP = () => {
-		if (local.priority) return true;
-		if (local.fetchpriority === "high") return true;
-
-		const width = props.width || 0;
-		const height = props.height || 0;
-		return width >= 800 || height >= 400;
-	};
+	const isLCP =
+		local.priority ||
+		local.fetchpriority === "high" ||
+		(local.width != null && local.width >= 800) ||
+		(local.height != null && local.height >= 400);
 
 	// Optimize loading strategy
-	const optimizedLoading = isLikelyLCP() ? "eager" : local.loading || "lazy";
-	const optimizedFetchPriority = isLikelyLCP() ? "high" : local.fetchpriority || "auto";
+	const optimizedLoading = (isLCP ? "eager" : (local.loading ?? "lazy")) as "lazy" | "eager";
+	const optimizedFetchPriority = (isLCP ? "high" : (local.fetchpriority ?? "auto")) as
+		| "high"
+		| "low"
+		| "auto";
 
-	const imageStyle: JSX.CSSProperties = {
-		...(local.objectFit && { "object-fit": local.objectFit }),
-		...(local.objectPosition && { "object-position": local.objectPosition }),
+	const imgStyle: JSX.CSSProperties = {
+		...(local.objectFit ? { "object-fit": local.objectFit } : {}),
+		...(local.objectPosition ? { "object-position": local.objectPosition } : {}),
 	};
 
-	// Handle error state
-	const handleError = (event: Event) => {
-		local.onError?.(event);
-	};
-
-	const handleLoad = (event: Event) => {
-		local.onLoad?.(event);
-	};
-
-	// If it's a responsive ImageData object, use InternalResponsiveImage
+	// If it's a responsive ImageData object, use the @responsive-image/solid component.
+	// Renders a proper <picture> element with <source> elements for avif/webp and an
+	// <img> fallback, with correct srcset + sizes attributes. Handles SSR natively.
 	if (isResponsiveImageData(local.src)) {
 		return (
-			<InternalResponsiveImage
-				{...props}
-				loading={optimizedLoading as "lazy" | "eager"}
-				fetchpriority={optimizedFetchPriority as "high" | "low" | "auto"}
-				decoding={local.decoding || "async"}
+			<ResponsiveImage
+				src={local.src}
+				alt={local.alt}
+				class={cn("rounded-lg", local.class)}
+				loading={optimizedLoading}
+				fetchpriority={optimizedFetchPriority}
+				decoding={local.decoding ?? "async"}
+				size={local.size}
+				sizes={local.sizes}
+				width={local.width}
+				height={local.height}
+				style={imgStyle}
+				onLoad={local.onLoad}
+				onError={local.onError}
+				{...otherProps}
 			/>
 		);
 	}
 
-	// Regular image fallback
-	const imgSrc = typeof local.src === "string" ? local.src : "";
-
+	// Regular string URL — plain <img>
 	return (
 		<img
-			src={imgSrc}
+			src={typeof local.src === "string" ? local.src : ""}
 			alt={local.alt}
 			class={cn("rounded-lg", local.class)}
-			loading={optimizedLoading as "lazy" | "eager"}
-			fetchpriority={optimizedFetchPriority as "high" | "low" | "auto"}
-			decoding={local.decoding || "async"}
-			style={imageStyle}
-			onLoad={handleLoad}
-			onError={handleError}
+			loading={optimizedLoading}
+			fetchpriority={optimizedFetchPriority}
+			decoding={local.decoding ?? "async"}
+			style={imgStyle}
+			onLoad={local.onLoad}
+			onError={local.onError}
 			{...otherProps}
 		/>
 	);
