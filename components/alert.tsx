@@ -1,8 +1,13 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
 import { Show, splitProps } from "solid-js";
+import { Dynamic } from "solid-js/web";
+import IconAlertCircle from "~icons/lucide/alert-circle";
+import IconAlertTriangle from "~icons/lucide/alert-triangle";
+import IconCheckCircle from "~icons/lucide/check-circle";
+import IconInfo from "~icons/lucide/info";
+import IconTerminal from "~icons/lucide/terminal";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const alertVariants = cva("relative w-full rounded-lg border p-4", {
@@ -23,21 +28,21 @@ const alertVariants = cva("relative w-full rounded-lg border p-4", {
 	},
 });
 
-// Default icon mapping for each variant
-const variantIcons: Record<string, string> = {
-	default: "terminal",
-	destructive: "alert-circle",
-	success: "check-circle",
-	warning: "alert-triangle",
-	info: "info",
+// Icon component mapping for each variant
+const variantIconComponents: Record<string, Component<{ class?: string }>> = {
+	default: IconTerminal,
+	destructive: IconAlertCircle,
+	success: IconCheckCircle,
+	warning: IconAlertTriangle,
+	info: IconInfo,
 };
 
 export interface AlertProps {
 	children?: JSX.Element;
 	variant?: VariantProps<typeof alertVariants>["variant"];
 	class?: string;
-	// Icon prop: true for auto icon, false for no icon, string for custom icon name, JSX.Element for custom icon component
-	icon?: boolean | string | JSX.Element;
+	// Icon prop: true for auto icon based on variant, false for no icon, JSX.Element for a custom icon
+	icon?: boolean | JSX.Element;
 }
 
 export const Alert: Component<AlertProps> = (props) => {
@@ -51,16 +56,11 @@ export const Alert: Component<AlertProps> = (props) => {
 		// If icon is explicitly false, don't render any icon
 		if (local.icon === false) return null;
 
-		// If icon is true, use the default icon for the variant
+		// If icon is true, use the default icon component for the variant
 		if (local.icon === true) {
 			const variantKey = variantProps.variant || "default";
-			const iconName = variantIcons[variantKey];
-			return <div class={cn(icon(iconName), "h-5 w-5 mt-0.5 shrink-0")} />;
-		}
-
-		// If icon is a string, treat it as an icon name
-		if (typeof local.icon === "string") {
-			return <div class={cn(icon(local.icon), "h-5 w-5 mt-0.5 shrink-0")} />;
+			const IconComp = variantIconComponents[variantKey];
+			return <Dynamic component={IconComp} class="h-5 w-5 mt-0.5 shrink-0" />;
 		}
 
 		// If icon is a JSX element, render it directly

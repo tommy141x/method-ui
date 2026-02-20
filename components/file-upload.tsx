@@ -7,8 +7,11 @@ import { FileUpload as ArkFileUpload } from "@ark-ui/solid/file-upload";
 import { cva, type VariantProps } from "class-variance-authority";
 import { For, type JSX, Show } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
+import IconAlertCircle from "~icons/lucide/alert-circle";
+import IconFile from "~icons/lucide/file";
+import IconUpload from "~icons/lucide/upload";
+import IconX from "~icons/lucide/x";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const dropzoneVariants = cva(
@@ -73,7 +76,7 @@ export const FileUpload = (props: FileUploadProps) => {
 						<div
 							class={cn("flex h-12 w-12 items-center justify-center rounded-full bg-primary/10")}
 						>
-							<div class={cn("h-6 w-6 text-primary", icon("upload"))} />
+							<IconUpload class="h-6 w-6 text-primary" />
 						</div>
 						<div class="space-y-1">
 							<p class="text-sm font-medium text-foreground">Drop files here or click to browse</p>
@@ -143,12 +146,7 @@ export const FileUpload = (props: FileUploadProps) => {
 																					type=".*"
 																					class="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-muted"
 																				>
-																					<div
-																						class={cn(
-																							"h-5 w-5 text-muted-foreground",
-																							icon("file")
-																						)}
-																					/>
+																					<IconFile class="h-5 w-5 text-muted-foreground" />
 																				</ArkFileUpload.ItemPreview>
 																			</Show>
 																		</>
@@ -162,7 +160,7 @@ export const FileUpload = (props: FileUploadProps) => {
 																	<ArkFileUpload.ItemSizeText class="text-xs text-muted-foreground block" />
 																</div>
 																<ArkFileUpload.ItemDeleteTrigger class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0">
-																	<div class={cn("h-4 w-4", icon("x"))} />
+																	<IconX class="h-4 w-4" />
 																</ArkFileUpload.ItemDeleteTrigger>
 															</ArkFileUpload.Item>
 														</Motion.li>
@@ -215,9 +213,7 @@ export const FileUpload = (props: FileUploadProps) => {
 																class="flex items-center gap-3 rounded-md border border-destructive/50 bg-destructive/5 p-3"
 															>
 																<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-destructive/10">
-																	<div
-																		class={cn("h-5 w-5 text-destructive", icon("alert-circle"))}
-																	/>
+																	<IconAlertCircle class="h-5 w-5 text-destructive" />
 																</div>
 																<div class="flex-1 min-w-0">
 																	<ArkFileUpload.ItemName class="text-sm font-medium truncate" />

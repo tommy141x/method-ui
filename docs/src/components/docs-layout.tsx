@@ -1,6 +1,10 @@
 import metadataJson from "@lib/registry.json";
 import { A, useLocation } from "@solidjs/router";
 import { For, type JSX } from "solid-js";
+import IconBookOpen from "~icons/lucide/book-open";
+import IconDownload from "~icons/lucide/download";
+import IconPalette from "~icons/lucide/palette";
+import IconRocket from "~icons/lucide/rocket";
 import { Badge } from "./badge";
 import { Navbar } from "./navbar";
 
@@ -33,18 +37,18 @@ const components = Object.entries(componentMetadata)
 	.filter((c): c is NonNullable<typeof c> => c !== null);
 
 const docsSections = [
-	{ name: "Introduction", href: "/docs", iconClass: "i-lucide-book-open" },
+	{ name: "Introduction", href: "/docs", Icon: IconBookOpen },
 	{
 		name: "Installation",
 		href: "/docs/installation",
-		iconClass: "i-lucide-download",
+		Icon: IconDownload,
 	},
 	{
 		name: "Getting Started",
 		href: "/docs/getting-started",
-		iconClass: "i-lucide-rocket",
+		Icon: IconRocket,
 	},
-	{ name: "Theming", href: "/docs/theming", iconClass: "i-lucide-palette" },
+	{ name: "Theming", href: "/docs/theming", Icon: IconPalette },
 ];
 
 interface DocsLayoutProps {
@@ -65,14 +69,14 @@ export function DocsLayout(props: DocsLayoutProps) {
 			<div class="flex">
 				{/* Sidebar */}
 				<aside
-					class="fixed top-[60px] left-0 h-[calc(100vh-60px)] w-64 bg-background overflow-y-auto relative"
+					class="sticky top-[60px] h-[calc(100vh-60px)] w-64 bg-background overflow-y-auto"
 					style={{
 						"scrollbar-width": "none",
 						"-ms-overflow-style": "none",
 					}}
 				>
 					{/* Top gradient fade */}
-					<div class="sticky top-0 h-12 bg-gradient-to-b from-background via-background/80 to-transparent pointer-events-none z-10" />
+					<div class="sticky top-0 h-12 bg-linear-to-b from-background via-background/80 to-transparent pointer-events-none z-10" />
 
 					<div class="p-4 pt-0">
 						{/* Docs Section */}
@@ -92,7 +96,7 @@ export function DocsLayout(props: DocsLayoutProps) {
 														: "text-foreground hover:bg-accent/50"
 												}`}
 											>
-												<div class={`${section.iconClass} h-4 w-4`} />
+												<section.Icon class="h-4 w-4" />
 												<span>{section.name}</span>
 											</button>
 										</A>
@@ -138,7 +142,7 @@ export function DocsLayout(props: DocsLayoutProps) {
 					</div>
 
 					{/* Bottom gradient fade */}
-					<div class="sticky bottom-0 h-12 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10" />
+					<div class="sticky bottom-0 h-12 bg-linear-to-t from-background via-background/80 to-transparent pointer-events-none z-10" />
 				</aside>
 
 				{/* Main Content */}

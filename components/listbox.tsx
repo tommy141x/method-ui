@@ -1,8 +1,8 @@
 import { Listbox as ArkListbox, createListCollection } from "@ark-ui/solid";
 import type { ListCollection } from "@zag-js/collection";
 import { createContext, createMemo, For, type JSX, Show, splitProps } from "solid-js";
+import IconCheck from "~icons/lucide/check";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // Context for Listbox
@@ -93,7 +93,7 @@ export const Listbox = (props: ListboxProps) => {
 											{typeof item === "string" ? item : item.label}
 										</ArkListbox.ItemText>
 										<ArkListbox.ItemIndicator class="flex items-center justify-center h-4 w-4 shrink-0 transition-all duration-200 ease-out data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
-											<div class={cn("h-3 w-3", icon("check"))} />
+											<IconCheck class="h-3 w-3" />
 										</ArkListbox.ItemIndicator>
 									</ArkListbox.Item>
 								)}
@@ -114,7 +114,7 @@ export const Listbox = (props: ListboxProps) => {
 											>
 												<ArkListbox.ItemText>{item.label}</ArkListbox.ItemText>
 												<ArkListbox.ItemIndicator class="flex items-center justify-center h-4 w-4 shrink-0 transition-all duration-200 ease-out data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
-													<div class={cn("h-3 w-3", icon("check"))} />
+													<IconCheck class="h-3 w-3" />
 												</ArkListbox.ItemIndicator>
 											</ArkListbox.Item>
 										)}
@@ -161,7 +161,7 @@ export const ListboxItem = (props: ListboxItemProps) => {
 				{local.children || (typeof local.value === "string" ? local.value : local.value.label)}
 			</ArkListbox.ItemText>
 			<ArkListbox.ItemIndicator class="flex items-center justify-center h-4 w-4 shrink-0 transition-all duration-200 ease-out data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
-				<div class={cn("h-3 w-3", icon("check"))} />
+				<IconCheck class="h-3 w-3" />
 			</ArkListbox.ItemIndicator>
 		</ArkListbox.Item>
 	);
@@ -237,7 +237,7 @@ export const ListboxItemIndicator = (props: { children?: JSX.Element; class?: st
 			)}
 			{...others}
 		>
-			{local.children || <div class={cn("h-3 w-3", icon("check"))} />}
+			{local.children || <IconCheck class="h-3 w-3" />}
 		</ArkListbox.ItemIndicator>
 	);
 };

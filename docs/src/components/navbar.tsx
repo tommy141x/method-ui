@@ -1,7 +1,15 @@
-import { cn } from "@lib/cn";
-import { icon } from "@lib/icon";
 import { A } from "@solidjs/router";
 import { createSignal, Show } from "solid-js";
+import IconBookOpen from "~icons/lucide/book-open";
+import IconDownload from "~icons/lucide/download";
+import IconMenu from "~icons/lucide/menu";
+import IconPalette from "~icons/lucide/palette";
+import IconRectangleVertical from "~icons/lucide/rectangle-vertical";
+import IconRocket from "~icons/lucide/rocket";
+import IconSparkles from "~icons/lucide/sparkles";
+import IconSquareMousePointer from "~icons/lucide/square-mouse-pointer";
+import IconTextCursorInput from "~icons/lucide/text-cursor-input";
+import IconX from "~icons/lucide/x";
 import { Button } from "./button";
 import {
 	NavMenu,
@@ -17,7 +25,7 @@ export function Navbar() {
 	const [mobileMenuOpen, setMobileMenuOpen] = createSignal(false);
 
 	return (
-		<header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+		<header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
 			<div class="container mx-auto px-4 h-16 flex items-center justify-between">
 				<div class="flex items-center gap-8">
 					<A href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -36,7 +44,7 @@ export function Navbar() {
 												href="/docs"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
-												<div class={cn("h-5 w-5 mt-0.5", icon("book-open"))} />
+												<IconBookOpen class="h-5 w-5 mt-0.5" />
 												<div>
 													<div class="font-medium">Documentation</div>
 													<div class="text-xs text-muted-foreground">
@@ -48,7 +56,7 @@ export function Navbar() {
 												href="/docs/getting-started"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
-												<div class={cn("h-5 w-5 mt-0.5", icon("rocket"))} />
+												<IconRocket class="h-5 w-5 mt-0.5" />
 												<div>
 													<div class="font-medium">Getting Started</div>
 													<div class="text-xs text-muted-foreground">Quick setup guide</div>
@@ -58,7 +66,7 @@ export function Navbar() {
 												href="/docs/installation"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
-												<div class={cn("h-5 w-5 mt-0.5", icon("download"))} />
+												<IconDownload class="h-5 w-5 mt-0.5" />
 												<div>
 													<div class="font-medium">Installation</div>
 													<div class="text-xs text-muted-foreground">Install Method UI</div>
@@ -68,7 +76,7 @@ export function Navbar() {
 												href="/docs/theming"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
-												<div class={cn("h-5 w-5 mt-0.5", icon("palette"))} />
+												<IconPalette class="h-5 w-5 mt-0.5" />
 												<div>
 													<div class="font-medium">Theming</div>
 													<div class="text-xs text-muted-foreground">Customize your theme</div>
@@ -85,10 +93,10 @@ export function Navbar() {
 											{/* Featured Card */}
 											<A
 												href="/components/button"
-												class="w-[180px] flex-shrink-0 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 p-4 transition-colors hover:from-primary/30 hover:to-primary/10"
+												class="w-[180px] shrink-0 rounded-lg bg-linear-to-br from-primary/20 to-primary/5 p-4 transition-colors hover:from-primary/30 hover:to-primary/10"
 											>
 												<div class="flex flex-col gap-2">
-													<div class={cn("h-8 w-8", icon("sparkles"))} />
+													<IconSparkles class="h-8 w-8" />
 													<div class="font-semibold">Featured</div>
 													<div class="text-xs text-muted-foreground">
 														Explore our component library
@@ -102,7 +110,7 @@ export function Navbar() {
 													href="/components/button"
 													class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 												>
-													<div class={cn("h-5 w-5 mt-0.5", icon("square-mouse-pointer"))} />
+													<IconSquareMousePointer class="h-5 w-5 mt-0.5" />
 													<div>
 														<div class="font-medium">Button</div>
 														<div class="text-xs text-muted-foreground">
@@ -114,7 +122,7 @@ export function Navbar() {
 													href="/components/input"
 													class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 												>
-													<div class={cn("h-5 w-5 mt-0.5", icon("text-cursor-input"))} />
+													<IconTextCursorInput class="h-5 w-5 mt-0.5" />
 													<div>
 														<div class="font-medium">Input</div>
 														<div class="text-xs text-muted-foreground">Form input components</div>
@@ -124,7 +132,7 @@ export function Navbar() {
 													href="/components/dialog"
 													class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 												>
-													<div class={cn("h-5 w-5 mt-0.5", icon("rectangle-vertical"))} />
+													<IconRectangleVertical class="h-5 w-5 mt-0.5" />
 													<div>
 														<div class="font-medium">Dialog</div>
 														<div class="text-xs text-muted-foreground">Modal dialogs</div>
@@ -157,7 +165,9 @@ export function Navbar() {
 						class="md:hidden"
 						onClick={() => setMobileMenuOpen(!mobileMenuOpen())}
 					>
-						<div class={cn("h-5 w-5", mobileMenuOpen() ? "i-lucide-x" : "i-lucide-menu")} />
+						<Show when={mobileMenuOpen()} fallback={<IconMenu class="h-5 w-5" />}>
+							<IconX class="h-5 w-5" />
+						</Show>
 					</Button>
 				</div>
 			</div>

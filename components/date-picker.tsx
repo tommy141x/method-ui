@@ -4,8 +4,10 @@ import type { LocaleDetails } from "@zag-js/date-picker";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Index, type JSX, Show } from "solid-js";
 import { Portal } from "solid-js/web";
+import IconCalendar from "~icons/lucide/calendar";
+import IconChevronLeft from "~icons/lucide/chevron-left";
+import IconChevronRight from "~icons/lucide/chevron-right";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const datePickerTriggerVariants = cva(
@@ -102,7 +104,7 @@ export const DatePicker = (props: DatePickerProps) => {
 									"absolute right-1 top-1/2 -translate-y-1/2"
 								)}
 							>
-								<div class={cn("h-4 w-4", icon("calendar"))} />
+								<IconCalendar class="h-4 w-4" />
 							</ArkDatePicker.Trigger>
 						</>
 					}
@@ -126,7 +128,7 @@ export const DatePicker = (props: DatePickerProps) => {
 							"shrink-0"
 						)}
 					>
-						<div class={cn("h-4 w-4", icon("calendar"))} />
+						<IconCalendar class="h-4 w-4" />
 					</ArkDatePicker.Trigger>
 				</Show>
 			</ArkDatePicker.Control>
@@ -148,7 +150,7 @@ export const DatePicker = (props: DatePickerProps) => {
 														})
 													)}
 												>
-													<div class={cn("h-4 w-4", icon("chevron-left"))} />
+													<IconChevronLeft class="h-4 w-4" />
 												</ArkDatePicker.PrevTrigger>
 
 												<ArkDatePicker.ViewTrigger
@@ -167,7 +169,7 @@ export const DatePicker = (props: DatePickerProps) => {
 														})
 													)}
 												>
-													<div class={cn("h-4 w-4", icon("chevron-right"))} />
+													<IconChevronRight class="h-4 w-4" />
 												</ArkDatePicker.NextTrigger>
 											</ArkDatePicker.ViewControl>
 										</div>
@@ -222,7 +224,7 @@ export const DatePicker = (props: DatePickerProps) => {
 														})
 													)}
 												>
-													<div class={cn("h-4 w-4", icon("chevron-left"))} />
+													<IconChevronLeft class="h-4 w-4" />
 												</ArkDatePicker.PrevTrigger>
 
 												<ArkDatePicker.ViewTrigger
@@ -241,7 +243,7 @@ export const DatePicker = (props: DatePickerProps) => {
 														})
 													)}
 												>
-													<div class={cn("h-4 w-4", icon("chevron-right"))} />
+													<IconChevronRight class="h-4 w-4" />
 												</ArkDatePicker.NextTrigger>
 											</ArkDatePicker.ViewControl>
 										</div>
@@ -289,7 +291,7 @@ export const DatePicker = (props: DatePickerProps) => {
 														})
 													)}
 												>
-													<div class={cn("h-4 w-4", icon("chevron-left"))} />
+													<IconChevronLeft class="h-4 w-4" />
 												</ArkDatePicker.PrevTrigger>
 
 												<ArkDatePicker.ViewTrigger
@@ -308,7 +310,7 @@ export const DatePicker = (props: DatePickerProps) => {
 														})
 													)}
 												>
-													<div class={cn("h-4 w-4", icon("chevron-right"))} />
+													<IconChevronRight class="h-4 w-4" />
 												</ArkDatePicker.NextTrigger>
 											</ArkDatePicker.ViewControl>
 										</div>

@@ -2,8 +2,12 @@ import { FloatingPanel as ArkFloatingPanel } from "@ark-ui/solid/floating-panel"
 import { createSignal, type JSX, Show, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion } from "solid-motionone";
+import IconMaximize2 from "~icons/lucide/maximize-2";
+import IconMinimize2 from "~icons/lucide/minimize-2";
+import IconMinus from "~icons/lucide/minus";
+import IconSquare from "~icons/lucide/square";
+import IconX from "~icons/lucide/x";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 interface FloatingPanelProps {
@@ -149,8 +153,14 @@ export const FloatingPanelContent = (props: FloatingPanelContentProps) => {
 															rotate: isMinimized() ? 180 : 0,
 														}}
 														transition={{ duration: 0.2 }}
-														class={cn("h-4 w-4", isMinimized() ? icon("square") : icon("minus"))}
-													/>
+														class="h-4 w-4 flex items-center justify-center"
+													>
+														{isMinimized() ? (
+															<IconSquare class="h-4 w-4" />
+														) : (
+															<IconMinus class="h-4 w-4" />
+														)}
+													</Motion.div>
 												</Motion.button>
 											</Show>
 											<Show when={showMaximize()}>
@@ -180,11 +190,14 @@ export const FloatingPanelContent = (props: FloatingPanelContentProps) => {
 															scale: isMaximized() ? 0.8 : 1,
 														}}
 														transition={{ duration: 0.2 }}
-														class={cn(
-															"h-4 w-4",
-															isMaximized() ? icon("minimize-2") : icon("maximize-2")
+														class="h-4 w-4 flex items-center justify-center"
+													>
+														{isMaximized() ? (
+															<IconMinimize2 class="h-4 w-4" />
+														) : (
+															<IconMaximize2 class="h-4 w-4" />
 														)}
-													/>
+													</Motion.div>
 												</Motion.button>
 											</Show>
 											<Show when={showClose()}>
@@ -195,7 +208,7 @@ export const FloatingPanelContent = (props: FloatingPanelContentProps) => {
 														"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 													)}
 												>
-													<div class={cn("h-4 w-4", icon("x"))} />
+													<IconX class="h-4 w-4" />
 												</ArkFloatingPanel.CloseTrigger>
 											</Show>
 										</div>

@@ -192,6 +192,9 @@ export const Card3D: Component<Card3DProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconBox from "~icons/lucide/box";
+
 export const meta: ComponentMeta<Card3DProps> = {
 	name: "3D Card",
 	description:
@@ -206,7 +209,7 @@ export const meta: ComponentMeta<Card3DProps> = {
 					<Card3D intensity="normal" class="w-[400px]">
 						<div class="rounded-2xl bg-card border border-border overflow-hidden">
 							<div class="aspect-video bg-linear-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
-								<div class="h-24 w-24 i-lucide-box text-white" />
+								<IconBox class="h-24 w-24 text-white" />
 							</div>
 							<div class="p-6">
 								<h3 class="text-xl font-bold mb-2">Premium Product</h3>

@@ -1,4 +1,5 @@
 import { Dialog as ArkDialog } from "@ark-ui/solid";
+import type { DialogInteractOutsideEvent } from "@ark-ui/solid/dialog";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import {
@@ -12,15 +13,10 @@ import {
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
 import { unoMerge } from "unocss-merge";
+import IconX from "~icons/lucide/x";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
-}
-
-// Icon helper function - returns UnoCSS icon class for your configured icon library
-function icon(name: string): string {
-	return `i-lucide-${name}`;
 }
 
 /**
@@ -63,7 +59,7 @@ interface DialogProps {
 	initialFocusEl?: () => HTMLElement | null;
 	finalFocusEl?: () => HTMLElement | null;
 	onEscapeKeyDown?: (event: KeyboardEvent) => void;
-	onInteractOutside?: (event: CustomEvent) => void;
+	onInteractOutside?: (event: DialogInteractOutsideEvent) => void;
 }
 
 export const Dialog = (props: DialogProps) => {
@@ -113,19 +109,11 @@ export const DialogTrigger = (props: DialogTriggerProps) => {
 		<ArkDialog.Context>
 			{(context) => {
 				return (
-					<>
-						{/* biome-ignore lint/a11y/noStaticElementInteractions: display:contents wrapper is an SSR hydration workaround for Ark UI Dialog.Trigger */}
-						<div
-							onClick={() => context().setOpen(true)}
-							onKeyDown={(e) => {
-								if (e.key === "Enter" || e.key === " ") context().setOpen(true);
-							}}
-							role="presentation"
-							style={{ display: "contents" }}
-						>
-							{resolved()}
-						</div>
-					</>
+					// biome-ignore lint/a11y/noStaticElementInteractions: transparent wrapper div
+					// biome-ignore lint/a11y/useKeyWithClickEvents: child element handles keyboard
+					<div onClick={() => context().setOpen(true)} style={{ display: "contents" }}>
+						{resolved()}
+					</div>
 				);
 			}}
 		</ArkDialog.Context>
@@ -247,7 +235,7 @@ export const DialogCloseTrigger = (props: DialogCloseTriggerProps) => {
 		>
 			{local.children || (
 				<>
-					<div class={cn("h-4 w-4", icon("x"))} />
+					<IconX class="h-4 w-4" />
 					<span class="sr-only">Close</span>
 				</>
 			)}

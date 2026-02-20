@@ -12,8 +12,8 @@ import {
 	useContext,
 } from "solid-js";
 import { unoMerge } from "unocss-merge";
+import IconCheck from "~icons/lucide/check";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
@@ -172,9 +172,9 @@ export const ThemeProvider: Component<ThemeProviderProps> = (props) => {
 
 		// Remove all theme classes/attributes
 		if (attribute === "class") {
-			for (const t of themes()) {
+			themes().forEach((t) => {
 				root.classList.remove(t.id);
-			}
+			});
 
 			// Apply theme class and all parent classes for CSS-defined themes
 			const themeChain: string[] = [];
@@ -361,7 +361,7 @@ export const ThemeSwitcher: Component<ThemeSwitcherProps> = (props) => {
 								<div class="flex items-center justify-between w-full">
 									<span class="font-medium">{themeDef.name}</span>
 									<Show when={isActive}>
-										<div class="i-lucide-check size-4 text-primary" />
+										<IconCheck class="size-4 text-primary" />
 									</Show>
 								</div>
 								<Show when={local.showDescription && themeDef.description}>
@@ -416,9 +416,5 @@ export const themeScript = (config: ThemeConfig) => {
     })();
   `.trim();
 };
-
-// ============================================================================
-// Component Meta
-// ============================================================================
 
 export { ThemeProvider as Theme };

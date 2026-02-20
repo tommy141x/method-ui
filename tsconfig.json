@@ -15,7 +15,8 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "preserve",
-		"jsxImportSource": "solid-js"
+		"jsxImportSource": "solid-js",
+		"types": ["unplugin-icons/types/solid"]
 	},
 	"include": ["src/**/*", "components/**/*", "index.ts"],
 	"exclude": ["node_modules", "dist", "build"]

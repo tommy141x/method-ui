@@ -25,6 +25,9 @@ export const AspectRatio: Component<AspectRatioProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconImage from "~icons/lucide/image";
+
 export const meta: ComponentMeta<AspectRatioProps> = {
 	name: "AspectRatio",
 	description:
@@ -38,7 +41,7 @@ export const meta: ComponentMeta<AspectRatioProps> = {
 				<AspectRatio ratio={16 / 9} class="bg-muted rounded-lg">
 					<div class="flex items-center justify-center h-full">
 						<div class="text-center">
-							<div class="h-12 w-12 i-lucide-image mx-auto mb-2 text-muted-foreground" />
+							<IconImage class="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
 							<p class="text-sm text-muted-foreground">16:9 Aspect Ratio</p>
 						</div>
 					</div>
@@ -53,7 +56,7 @@ export const meta: ComponentMeta<AspectRatioProps> = {
 					<div>
 						<p class="text-sm font-medium mb-2">16:9 (Widescreen)</p>
 						<AspectRatio ratio={16 / 9} class="bg-muted rounded-lg">
-							<div class="flex items-center justify-center h-full bg-gradient-to-br from-blue-500 to-cyan-500">
+							<div class="flex items-center justify-center h-full bg-linear-to-br from-blue-500 to-cyan-500">
 								<span class="text-white font-mono text-lg font-semibold">16:9</span>
 							</div>
 						</AspectRatio>
@@ -61,7 +64,7 @@ export const meta: ComponentMeta<AspectRatioProps> = {
 					<div>
 						<p class="text-sm font-medium mb-2">4:3 (Standard)</p>
 						<AspectRatio ratio={4 / 3} class="bg-muted rounded-lg">
-							<div class="flex items-center justify-center h-full bg-gradient-to-br from-green-500 to-emerald-500">
+							<div class="flex items-center justify-center h-full bg-linear-to-br from-green-500 to-emerald-500">
 								<span class="text-white font-mono text-lg font-semibold">4:3</span>
 							</div>
 						</AspectRatio>
@@ -69,7 +72,7 @@ export const meta: ComponentMeta<AspectRatioProps> = {
 					<div>
 						<p class="text-sm font-medium mb-2">1:1 (Square)</p>
 						<AspectRatio ratio={1 / 1} class="bg-muted rounded-lg">
-							<div class="flex items-center justify-center h-full bg-gradient-to-br from-orange-500 to-red-500">
+							<div class="flex items-center justify-center h-full bg-linear-to-br from-orange-500 to-red-500">
 								<span class="text-white font-mono text-lg font-semibold">1:1</span>
 							</div>
 						</AspectRatio>

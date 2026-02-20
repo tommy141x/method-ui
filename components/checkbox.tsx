@@ -1,7 +1,8 @@
 import { Checkbox as ArkCheckbox } from "@ark-ui/solid";
 import { For, type JSX, Show, splitProps } from "solid-js";
+import IconCheck from "~icons/lucide/check";
+import IconMinus from "~icons/lucide/minus";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // Simple Checkbox component - the easy way
@@ -39,7 +40,7 @@ export const Checkbox = (props: CheckboxProps & { size?: "sm" | "md" | "lg" }) =
 				)}
 			>
 				<ArkCheckbox.Indicator class="flex items-center justify-center w-full h-full transition-all duration-200 ease-out data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
-					<div class={cn(currentSize.icon, icon("check"))} />
+					<IconCheck class={currentSize.icon} />
 				</ArkCheckbox.Indicator>
 			</ArkCheckbox.Control>
 			<Show when={local.children}>
@@ -101,7 +102,9 @@ export const CheckboxIndicator = (props: {
 			{...others}
 		>
 			{local.children || (
-				<div class={cn("h-4 w-4", icon(local.indeterminate ? "minus" : "check"))} />
+				<Show when={local.indeterminate} fallback={<IconCheck class="h-4 w-4" />}>
+					<IconMinus class="h-4 w-4" />
+				</Show>
 			)}
 		</ArkCheckbox.Indicator>
 	);

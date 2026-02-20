@@ -7,8 +7,8 @@ import { Popover as ArkPopover } from "@ark-ui/solid/popover";
 import type { PositioningOptions } from "@zag-js/popper";
 import { createSignal, type JSX, mergeProps, Show, splitProps } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
+import IconX from "~icons/lucide/x";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 /**
@@ -172,7 +172,7 @@ export const PopoverCloseTrigger = (props: PopoverCloseTriggerProps) => {
 		>
 			{local.children || (
 				<>
-					<div class={cn("h-4 w-4", icon("x"))} />
+					<IconX class="h-4 w-4" />
 					<span class="sr-only">Close</span>
 				</>
 			)}
@@ -217,6 +217,10 @@ export const PopoverFooter = (props: PopoverFooterProps) => {
 
 export default Popover;
 
+// Example-only imports - removed during CLI transform
+import IconInfo from "~icons/lucide/info";
+import IconSettings from "~icons/lucide/settings";
+import IconUser from "~icons/lucide/user";
 import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
@@ -258,7 +262,7 @@ export const meta: ComponentMeta<PopoverProps> = {
 				<Popover>
 					<PopoverTrigger>
 						<Button>
-							<div class="h-4 w-4 i-lucide-info mr-2" />
+							<IconInfo class="h-4 w-4 mr-2" />
 							Learn More
 						</Button>
 					</PopoverTrigger>
@@ -281,7 +285,7 @@ export const meta: ComponentMeta<PopoverProps> = {
 				<Popover>
 					<PopoverTrigger>
 						<Button variant="outline">
-							<div class="h-4 w-4 i-lucide-settings mr-2" />
+							<IconSettings class="h-4 w-4 mr-2" />
 							Settings
 						</Button>
 					</PopoverTrigger>
@@ -376,7 +380,7 @@ export const meta: ComponentMeta<PopoverProps> = {
 				<Popover>
 					<PopoverTrigger>
 						<Button variant="outline">
-							<div class="h-4 w-4 i-lucide-user mr-2" />
+							<IconUser class="h-4 w-4 mr-2" />
 							View Profile
 						</Button>
 					</PopoverTrigger>
@@ -384,7 +388,7 @@ export const meta: ComponentMeta<PopoverProps> = {
 						<PopoverBody class="space-y-3">
 							<div class="flex items-center gap-3">
 								<div class="h-12 w-12 rounded-full bg-secondary flex items-center justify-center">
-									<div class="h-6 w-6 i-lucide-user text-secondary-foreground" />
+									<IconUser class="h-6 w-6 text-secondary-foreground" />
 								</div>
 								<div>
 									<h4 class="font-semibold">John Doe</h4>

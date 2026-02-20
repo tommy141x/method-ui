@@ -1,11 +1,11 @@
 import { Toggle as ArkToggle } from "@ark-ui/solid/toggle";
 import { cva } from "class-variance-authority";
 import type { Component, JSX, ValidComponent } from "solid-js";
-import { createSignal, mergeProps, Show, splitProps } from "solid-js";
+import { mergeProps, Show, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
+import IconLoaderCircle from "~icons/lucide/loader-circle";
 
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const buttonVariants = cva(
@@ -51,9 +51,9 @@ type ButtonProps = {
 	// New props for loading state
 	loading?: boolean;
 	loadingText?: string;
-	// New props for icons
-	leftIcon?: string | JSX.Element;
-	rightIcon?: string | JSX.Element;
+	// New props for icons — pass a JSX element, e.g. <IconCheck />
+	leftIcon?: JSX.Element;
+	rightIcon?: JSX.Element;
 	// Polymorphic as prop
 	as?: ValidComponent;
 	[key: string]: unknown;
@@ -85,26 +85,19 @@ const Button: Component<ButtonProps> = (props) => {
 
 	const isDisabled = () => !!(local.disabled || local.loading);
 
-	const renderIcon = (iconProp: string | JSX.Element) => {
-		if (typeof iconProp === "string") {
-			return <div class={cn(icon(iconProp), "h-4 w-4")} />;
-		}
-		return iconProp;
-	};
-
 	const content = () => (
 		<>
 			<Show when={local.loading}>
-				<div class={cn(icon("loader-circle"), "h-4 w-4 animate-spin")} />
+				<IconLoaderCircle class="h-4 w-4 animate-spin" />
 			</Show>
 			<Show when={!local.loading && local.leftIcon} keyed>
-				{(leftIcon) => renderIcon(leftIcon)}
+				{(leftIcon) => leftIcon}
 			</Show>
 			<Show when={local.loading && local.loadingText} fallback={local.children}>
 				{local.loadingText}
 			</Show>
 			<Show when={!local.loading && local.rightIcon} keyed>
-				{(rightIcon) => renderIcon(rightIcon)}
+				{(rightIcon) => rightIcon}
 			</Show>
 		</>
 	);
@@ -154,6 +147,17 @@ const Button: Component<ButtonProps> = (props) => {
 	);
 };
 
+import { createSignal } from "solid-js";
+// Example-only imports - removed during CLI transform
+import IconAlignCenter from "~icons/lucide/align-center";
+import IconAlignLeft from "~icons/lucide/align-left";
+import IconAlignRight from "~icons/lucide/align-right";
+import IconArrowRight from "~icons/lucide/arrow-right";
+import IconDownload from "~icons/lucide/download";
+import IconExternalLink from "~icons/lucide/external-link";
+import IconPlus from "~icons/lucide/plus";
+import IconSettings from "~icons/lucide/settings";
+
 export const meta: ComponentMeta<ButtonProps> = {
 	name: "Button",
 	description:
@@ -192,12 +196,12 @@ export const meta: ComponentMeta<ButtonProps> = {
 			description: "Buttons with left and right icons",
 			code: () => (
 				<div class="flex gap-2 flex-wrap">
-					<Button leftIcon="plus">New Item</Button>
-					<Button rightIcon="arrow-right">Continue</Button>
-					<Button leftIcon="download" rightIcon="external-link">
+					<Button leftIcon={<IconPlus />}>New Item</Button>
+					<Button rightIcon={<IconArrowRight />}>Continue</Button>
+					<Button leftIcon={<IconDownload />} rightIcon={<IconExternalLink />}>
 						Download
 					</Button>
-					<Button variant="outline" leftIcon="settings">
+					<Button variant="outline" leftIcon={<IconSettings />}>
 						Settings
 					</Button>
 				</div>
@@ -267,7 +271,7 @@ export const meta: ComponentMeta<ButtonProps> = {
 							size="icon"
 							class="rounded-l-md! rounded-r-none!"
 						>
-							<div class="h-4 w-4 i-lucide-align-left" />
+							<IconAlignLeft class="h-4 w-4" />
 						</Button>
 						<Button
 							toggle
@@ -277,7 +281,7 @@ export const meta: ComponentMeta<ButtonProps> = {
 							size="icon"
 							class="rounded-none border-l-0"
 						>
-							<div class="h-4 w-4 i-lucide-align-center" />
+							<IconAlignCenter class="h-4 w-4" />
 						</Button>
 						<Button
 							toggle
@@ -287,7 +291,7 @@ export const meta: ComponentMeta<ButtonProps> = {
 							size="icon"
 							class="rounded-r-md! rounded-l-none! border-l-0"
 						>
-							<div class="h-4 w-4 i-lucide-align-right" />
+							<IconAlignRight class="h-4 w-4" />
 						</Button>
 					</div>
 				);

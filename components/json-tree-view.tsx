@@ -1,8 +1,8 @@
 import { JsonTreeView as ArkJsonTreeView } from "@ark-ui/solid/json-tree-view";
 import type { Component } from "solid-js";
 import { splitProps } from "solid-js";
+import IconChevronRight from "~icons/lucide/chevron-right";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 type JsonTreeViewProps = {
@@ -95,7 +95,7 @@ export const JsonTreeView: Component<JsonTreeViewProps> = (props) => {
 						"**:data-[part='branch-text']:items-center",
 						"**:data-[part='branch-text']:flex-1"
 					)}
-					arrow={<div class={cn("h-4 w-4", icon("chevron-right"))} />}
+					arrow={<IconChevronRight class="h-4 w-4" />}
 				/>
 				<style>
 					{`

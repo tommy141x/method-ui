@@ -97,7 +97,7 @@ function getIconLibraryFromConfig(): string {
 }
 
 /**
- * Get the cn function code from templates directory
+ * Get the cn import lines to inline into transformed components
  * This makes components completely self-contained with no external dependencies
  */
 function getCnImports(): string {
@@ -107,10 +107,8 @@ import { unoMerge } from "unocss-merge";`;
 }
 
 function getCnFunctionCode(): string {
-	return `
-// Hardcoded cn function - makes this component completely self-contained
-function cn(...classLists: ClassValue[]) {
-  return unoMerge(clsx(classLists));
+	return `function cn(...classLists: ClassValue[]) {
+	return unoMerge(clsx(classLists));
 }`;
 }
 
@@ -204,112 +202,259 @@ function removeMetaExport(code: string): string {
 }
 
 /**
- * Remove example-only imports that appear after component code
- * These are imports placed after the main component definitions but before the meta export
- * They're only used in examples and shouldn't be included in the user's code
+ * Remove everything that sits between the last real component code and the
+ * `export const meta` block. This covers:
+ *   - The "// Example-only imports - removed during CLI transform" marker comment
+ *   - Icon / component imports that are only used in examples
+ *   - Any other comments or blank lines in that gap
  *
- * Strategy: Look for import statements that appear after we've seen at least one
- * component export (export const/function) AND are followed by another comment mentioning
- * "example" or appear in a specific pattern after component definitions.
+ * Strategy: walk backwards from the meta line and discard every line that is
+ * blank, a comment, or an import statement — stopping the moment actual code
+ * is encountered. `removeMetaExport` handles removing the meta block itself.
+ *
+ * Note: top-of-file imports that are only used inside the meta block are handled
+ * automatically by `cleanupImports` (step 9), which runs after `removeMetaExport`
+ * has already stripped the meta body — making those imports appear unused.
  */
-function removeExampleOnlyImports(code: string): string {
+function removePreMetaContent(code: string): string {
 	const lines = code.split("\n");
-	const result: string[] = [];
 
-	// First, identify the initial import block (all imports before any code)
-	let initialImportEnd = 0;
-	let inMultilineImport = false;
+	// Find the meta export line
+	const metaLine = lines.findIndex((l) => /^\s*export const meta[:<\s]/.test(l));
+	if (metaLine === -1) return code;
 
-	for (let i = 0; i < lines.length; i++) {
+	// Walk backwards from the meta line, marking every removable line
+	let cutFrom = metaLine;
+	let i = metaLine - 1;
+
+	while (i >= 0) {
 		const trimmed = lines[i].trim();
 
-		// Track multiline imports
-		if (trimmed.startsWith("import ")) {
-			inMultilineImport =
-				!trimmed.includes(";") && !trimmed.includes('from "') && !trimmed.includes("from '");
-		} else if (inMultilineImport) {
-			if (trimmed.includes(";") || trimmed.includes('from "') || trimmed.includes("from '")) {
-				inMultilineImport = false;
-			}
-		} else if (
-			trimmed &&
-			!trimmed.startsWith("//") &&
-			!trimmed.startsWith("/*") &&
-			!trimmed.startsWith("*") &&
-			!trimmed.endsWith("*/") &&
-			!trimmed.startsWith("import")
-		) {
-			// Found first non-import, non-comment line
-			initialImportEnd = i;
+		const isRemovable =
+			trimmed === "" ||
+			trimmed.startsWith("//") ||
+			trimmed.startsWith("/*") ||
+			trimmed.startsWith("*") ||
+			trimmed.endsWith("*/") ||
+			trimmed.startsWith("import ");
+
+		if (isRemovable) {
+			cutFrom = i;
+			i--;
+		} else {
 			break;
 		}
 	}
 
-	// Now process all lines and remove imports that come after the initial block
-	let skipUntilSemicolon = false;
-	let skipCommentLines = 0;
-
-	for (let i = 0; i < lines.length; i++) {
-		const line = lines[i];
-		const trimmed = line.trim();
-
-		// If we're skipping a multiline import
-		if (skipUntilSemicolon) {
-			if (trimmed.includes(";") || trimmed.includes('from "') || trimmed.includes("from '")) {
-				skipUntilSemicolon = false;
-			}
-			continue;
-		}
-
-		// If we're past the initial imports and find another import
-		if (i > initialImportEnd && trimmed.startsWith("import ")) {
-			// Check if the previous lines were comments about examples
-			let foundExampleComment = false;
-			for (let j = Math.max(0, result.length - 5); j < result.length; j++) {
-				const prevLine = result[j];
-				if (prevLine?.includes("example") && prevLine.trim().startsWith("//")) {
-					foundExampleComment = true;
-					skipCommentLines = result.length - j;
-					break;
-				}
-			}
-
-			// Remove the comment lines if this is an example import
-			if (foundExampleComment) {
-				for (let j = 0; j < skipCommentLines; j++) {
-					result.pop();
-				}
-				// Also remove any empty lines before the comments
-				while (result.length > 0 && result[result.length - 1].trim() === "") {
-					result.pop();
-				}
-			}
-
-			// Skip this import line
-			skipUntilSemicolon =
-				!trimmed.includes(";") && !trimmed.includes('from "') && !trimmed.includes("from '");
-			continue;
-		}
-
-		result.push(line);
-	}
-
-	return result.join("\n");
+	// Splice out the pre-meta zone; the meta line itself stays for removeMetaExport
+	return [...lines.slice(0, cutFrom), ...lines.slice(metaLine)].join("\n");
 }
 
 /**
- * Transform a component by replacing imports and inlining utilities
+ * Escape a string for use inside a RegExp
+ */
+function escapeForRegex(s: string): string {
+	return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Extract the locally-bound identifier(s) from an import statement so we can
+ * check whether they're actually used in the component body.
+ *
+ * Handles:
+ *   import Foo from "x"                            => ["Foo"]
+ *   import type Foo from "x"                       => ["Foo"]
+ *   import { Bar, Baz as B, type Qux } from "x"   => ["Bar", "B", "Qux"]
+ *   import Foo, { Bar } from "x"                   => ["Foo", "Bar"]
+ *   import * as Ns from "x"                        => ["Ns"]
+ */
+function extractImportIdentifiers(importText: string): string[] {
+	const ids: string[] = [];
+
+	// Namespace import: import * as Foo from "..."
+	const nsMatch = importText.match(/import\s+(?:type\s+)?\*\s+as\s+([A-Za-z_$][A-Za-z0-9_$]*)/);
+	if (nsMatch) return [nsMatch[1]];
+
+	// Named imports: { Foo, Bar as Baz, type Qux }
+	const namedMatch = importText.match(/\{([^}]+)\}/);
+	if (namedMatch) {
+		for (const part of namedMatch[1].split(",")) {
+			const t = part.trim().replace(/^type\s+/, "");
+			const asMatch = t.match(/\S+\s+as\s+(\S+)/);
+			const name = asMatch ? asMatch[1] : t.split(/\s+/)[0];
+			if (name) ids.push(name);
+		}
+	}
+
+	// Default import (possibly combined with named: `import Foo, { Bar } from "..."`)
+	const defaultMatch = importText.match(
+		/import\s+(?:type\s+)?([A-Za-z_$][A-Za-z0-9_$]*)\s*(?:,|\s+from)/
+	);
+	if (defaultMatch) ids.push(defaultMatch[1]);
+
+	return ids.filter(Boolean);
+}
+
+/**
+ * Remove identifiers from a named import list that appear in `unusedIds`.
+ * Returns null when the entire import should be dropped (all identifiers unused).
+ */
+function removeIdentifiersFromImport(importText: string, unusedIds: Set<string>): string | null {
+	const namedMatch = importText.match(/\{([^}]+)\}/);
+	if (!namedMatch) return importText;
+
+	const kept = namedMatch[1]
+		.split(",")
+		.map((p) => p.trim())
+		.filter((p) => {
+			if (!p) return false;
+			const noType = p.replace(/^type\s+/, "");
+			const asMatch = noType.match(/\S+\s+as\s+(\S+)/);
+			const localName = asMatch ? asMatch[1] : noType.split(/\s+/)[0];
+			return localName && !unusedIds.has(localName);
+		});
+
+	if (kept.length === 0) return null;
+
+	return importText.replace(/\{[^}]+\}/, `{ ${kept.join(", ")} }`);
+}
+
+/**
+ * Remove unused imports and sort the remaining ones.
+ *
+ * Works in three passes:
+ *   1. Split the file into the leading import block and the rest of the code.
+ *   2. For each import, check whether every bound identifier appears in the
+ *      body code. Drop (or prune) imports whose identifiers are all absent.
+ *   3. Sort surviving imports by module path and reassemble the file.
+ *
+ * This is run as the final transform step, after meta and example content has
+ * already been removed, so any import that was only referenced inside the meta
+ * block — whether it lived at the top of the file or just above the meta —
+ * will naturally appear unused here and get dropped.
+ */
+function cleanupImports(code: string): string {
+	const lines = code.split("\n");
+	const importBlocks: string[] = [];
+	const bodyLines: string[] = [];
+
+	let i = 0;
+	let pastImports = false;
+
+	while (i < lines.length) {
+		const trimmed = lines[i].trim();
+
+		if (!pastImports) {
+			// Blank lines within the import section are discarded; we'll add one back later.
+			if (trimmed === "") {
+				i++;
+				continue;
+			}
+
+			if (trimmed.startsWith("import ")) {
+				let importText = lines[i];
+
+				// Handle multi-line imports — keep reading until we find `from "...";`
+				while (
+					!importText.match(/from\s+["'][^"']+["'];?\s*$/) &&
+					!importText.match(/^import\s+["'][^"']+["'];?\s*$/) &&
+					i < lines.length - 1
+				) {
+					i++;
+					importText += `\n${lines[i]}`;
+				}
+
+				importBlocks.push(importText);
+				i++;
+				continue;
+			}
+
+			// First non-blank, non-import line → we are past the import block.
+			pastImports = true;
+		}
+
+		bodyLines.push(lines[i]);
+		i++;
+	}
+
+	if (importBlocks.length === 0) return code;
+
+	const bodyCode = bodyLines.join("\n");
+
+	// ------------------------------------------------------------------
+	// Remove unused imports (or prune individual unused named identifiers)
+	// ------------------------------------------------------------------
+	const usedImports: string[] = [];
+
+	for (const importText of importBlocks) {
+		// Side-effect import — always keep.
+		if (/^import\s+["']/.test(importText)) {
+			usedImports.push(importText);
+			continue;
+		}
+
+		const ids = extractImportIdentifiers(importText);
+
+		if (ids.length === 0) {
+			// Namespace or unrecognised shape — keep as-is.
+			usedImports.push(importText);
+			continue;
+		}
+
+		const unusedIds = new Set(
+			ids.filter((id) => !new RegExp(`\\b${escapeForRegex(id)}\\b`).test(bodyCode))
+		);
+
+		if (unusedIds.size === 0) {
+			// All identifiers are used — keep as-is.
+			usedImports.push(importText);
+			continue;
+		}
+
+		if (unusedIds.size === ids.length) {
+			// Every identifier is unused — drop the whole import.
+			continue;
+		}
+
+		// Some identifiers are unused — prune only those from named imports.
+		const pruned = removeIdentifiersFromImport(importText, unusedIds);
+		if (pruned) usedImports.push(pruned);
+	}
+
+	// ------------------------------------------------------------------
+	// Sort by module path using Unicode code-point order so that
+	// punctuation-prefixed virtual modules (e.g. "~icons/…", code 126)
+	// sort AFTER regular lowercase package names — matching Biome's
+	// organizeImports behaviour.
+	// ------------------------------------------------------------------
+	usedImports.sort((a, b) => {
+		const ma = (a.match(/from\s+["']([^"']+)["']/) || [])[1] ?? "";
+		const mb = (b.match(/from\s+["']([^"']+)["']/) || [])[1] ?? "";
+		return ma < mb ? -1 : ma > mb ? 1 : 0;
+	});
+
+	// ------------------------------------------------------------------
+	// Reassemble: imports → blank line → body (trim leading blank lines)
+	// ------------------------------------------------------------------
+	const trimmedBody = bodyLines.join("\n").replace(/^\n+/, "");
+	return `${usedImports.join("\n")}\n\n${trimmedBody}`;
+}
+
+/**
+ * Transform a component by replacing imports and inlining utilities.
  * This prepares components for end-user installation by:
- * - Removing example-only imports (imports after component code)
- * - Inlining the cn utility function
+ * - Removing pre-meta content (comments/imports between component code and meta export)
+ * - Removing the meta export (only used for documentation/showcase)
  * - Removing ComponentMeta import (not needed in user projects)
- * - Removing meta export (only used for documentation/showcase)
+ * - Removing unused imports, including any top-of-file imports only referenced in meta
+ * - Inlining the cn utility function
+ * - Rewriting ~icons/lucide/ import paths to the user's chosen icon collection
  */
 export function transformComponent(componentCode: string): string {
 	let transformedCode = componentCode;
 
-	// Step 1: Remove example-only imports (must be done before other transformations)
-	transformedCode = removeExampleOnlyImports(transformedCode);
+	// Step 1: Remove comments/imports that sit between component code and the meta export
+	transformedCode = removePreMetaContent(transformedCode);
 
 	// Step 2: Remove the meta export and its entire value object
 	transformedCode = removeMetaExport(transformedCode);
@@ -329,30 +474,28 @@ export function transformComponent(componentCode: string): string {
 		transformedCode = transformedCode.replace(cnImportMatch[0], "");
 	}
 
-	// Step 5: Remove icon import
-	transformedCode = transformedCode.replace(
-		/import\s*{\s*icon\s*}\s*from\s*["'][^"']*["'];?\s*\n?/g,
-		""
-	);
+	// Step 5: Swap icon collection prefix in all ~icons/lucide/ imports.
+	// Components use lucide as the canonical source collection. This single
+	// regex replacement is the complete, reliable collection-switching mechanism —
+	// every static icon import gets the correct prefix for the user's chosen library.
+	const iconLibrary = getIconLibraryFromConfig();
+	if (iconLibrary !== "lucide") {
+		transformedCode = transformedCode.replace(/~icons\/lucide\//g, `~icons/${iconLibrary}/`);
+	}
 
 	// Step 6: Add cn imports after the last existing import
 	const lines = transformedCode.split("\n");
 	let lastImportIndex = -1;
 
-	// Find the last import statement
 	for (let i = 0; i < lines.length; i++) {
 		const trimmed = lines[i].trim();
 
-		// Check if this line contains an import statement
 		if (trimmed.startsWith("import ")) {
-			// Track this as a potential last import
 			let currentIndex = i;
 
-			// Handle multi-line imports - keep going until we find the closing
 			while (currentIndex < lines.length) {
 				const currentLine = lines[currentIndex].trim();
 				if (currentLine.includes("from")) {
-					// Found the from clause, this line ends the import
 					lastImportIndex = currentIndex;
 					break;
 				}
@@ -363,44 +506,26 @@ export function transformComponent(componentCode: string): string {
 
 	if (lastImportIndex >= 0) {
 		const linesArray = transformedCode.split("\n");
-
-		// Add cn imports right after the last import
 		linesArray.splice(lastImportIndex + 1, 0, getCnImports());
-
 		transformedCode = linesArray.join("\n");
-
-		// Update lastImportIndex to account for added cn imports (3 lines)
+		// Account for the 3 lines added by getCnImports
 		lastImportIndex += 3;
 	}
 
-	// Step 7: Find where to insert function definitions (after all imports)
-	// Re-split lines since we've added imports
+	// Step 7: Find where to insert the cn function (after all imports)
 	const finalLines = transformedCode.split("\n");
 	let insertIndex = lastImportIndex + 1;
 
-	// Skip empty lines after imports
 	while (insertIndex < finalLines.length && finalLines[insertIndex].trim() === "") {
 		insertIndex++;
 	}
 
-	// Step 8: Get icon library from user's config and inline the icon function
-	const iconLibrary = getIconLibraryFromConfig();
-	const iconFunctionCode = `
-// Icon helper function - returns UnoCSS icon class for your configured icon library
-function icon(name: string): string {
-  return \`i-${iconLibrary}-\${name}\`;
-}`;
-
-	// Step 9: Insert cn and icon function definitions
-	const usesIcon = transformedCode.includes("icon(");
-
-	if (usesIcon) {
-		finalLines.splice(insertIndex, 0, "", getCnFunctionCode(), "", iconFunctionCode, "");
-	} else {
-		finalLines.splice(insertIndex, 0, "", getCnFunctionCode(), "");
-	}
-
+	// Step 8: Insert cn function — one blank line before, one after
+	finalLines.splice(insertIndex, 0, getCnFunctionCode(), "");
 	transformedCode = finalLines.join("\n");
+
+	// Step 9: Sort imports and remove any that became unused after meta/example removal
+	transformedCode = cleanupImports(transformedCode);
 
 	return transformedCode;
 }

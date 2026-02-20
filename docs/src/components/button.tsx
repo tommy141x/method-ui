@@ -1,27 +1,33 @@
+import { Toggle as ArkToggle } from "@ark-ui/solid/toggle";
 import { cva } from "class-variance-authority";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
-import type { Component, JSX } from "solid-js";
-import { mergeProps, splitProps } from "solid-js";
+import type { Component, JSX, ValidComponent } from "solid-js";
+import { mergeProps, Show, splitProps } from "solid-js";
+import { Dynamic } from "solid-js/web";
 import { unoMerge } from "unocss-merge";
+import IconLoaderCircle from "~icons/lucide/loader-circle";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
 
 const buttonVariants = cva(
-	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 [background-image:none]",
 	{
 		variants: {
 			variant: {
-				default: "bg-primary text-primary-foreground hover:bg-primary/90",
-				destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+				default:
+					"!bg-primary text-primary-foreground hover:!bg-primary/90 data-[pressed]:!bg-primary/80",
+				destructive:
+					"!bg-destructive text-destructive-foreground hover:!bg-destructive/90 data-[pressed]:!bg-destructive/80",
 				outline:
-					"border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
-				secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-				ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
-				link: "text-primary underline-offset-4 hover:underline",
+					"border border-input !bg-background text-foreground hover:!bg-accent hover:text-accent-foreground data-[pressed]:!bg-accent",
+				secondary:
+					"!bg-secondary text-secondary-foreground hover:!bg-secondary/80 data-[pressed]:!bg-secondary/70",
+				ghost:
+					"!bg-transparent text-foreground hover:!bg-accent hover:text-accent-foreground data-[pressed]:!bg-accent",
+				link: "!bg-transparent text-primary underline-offset-4 hover:underline",
 			},
 			size: {
 				default: "h-10 px-4 py-2",
@@ -37,23 +43,111 @@ const buttonVariants = cva(
 	}
 );
 
-type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = {
 	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 	size?: "default" | "sm" | "lg" | "icon";
 	class?: string | undefined;
 	children?: JSX.Element;
+	toggle?: boolean;
+	pressed?: boolean;
+	defaultPressed?: boolean;
+	onPressedChange?: (pressed: boolean) => void;
+	// New props for loading state
+	loading?: boolean;
+	loadingText?: string;
+	// New props for icons — pass a JSX element, e.g. <IconCheck />
+	leftIcon?: JSX.Element;
+	rightIcon?: JSX.Element;
+	// Polymorphic as prop
+	as?: ValidComponent;
+	[key: string]: unknown;
 };
 
 const Button: Component<ButtonProps> = (props) => {
-	const merged = mergeProps({ variant: "default" as const, size: "default" as const }, props);
+	const merged = mergeProps(
+		{ variant: "default" as const, size: "default" as const, toggle: false },
+		props
+	);
 
-	const [local, others] = splitProps(merged, ["variant", "size", "class"]);
+	const [local, toggleProps, others] = splitProps(
+		merged,
+		[
+			"variant",
+			"size",
+			"class",
+			"toggle",
+			"children",
+			"loading",
+			"loadingText",
+			"leftIcon",
+			"rightIcon",
+			"disabled",
+			"as",
+		],
+		["pressed", "defaultPressed", "onPressedChange"]
+	);
+
+	const isDisabled = () => !!(local.disabled || local.loading);
+
+	const content = () => (
+		<>
+			<Show when={local.loading}>
+				<IconLoaderCircle class="h-4 w-4 animate-spin" />
+			</Show>
+			<Show when={!local.loading && local.leftIcon} keyed>
+				{(leftIcon) => leftIcon}
+			</Show>
+			<Show when={local.loading && local.loadingText} fallback={local.children}>
+				{local.loadingText}
+			</Show>
+			<Show when={!local.loading && local.rightIcon} keyed>
+				{(rightIcon) => rightIcon}
+			</Show>
+		</>
+	);
+
+	if (local.toggle) {
+		return (
+			<ArkToggle.Root
+				pressed={toggleProps.pressed as unknown as boolean | undefined}
+				defaultPressed={toggleProps.defaultPressed as unknown as boolean | undefined}
+				onPressedChange={toggleProps.onPressedChange}
+				disabled={isDisabled()}
+				class={cn(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+				{...others}
+			>
+				{content()}
+			</ArkToggle.Root>
+		);
+	}
+
+	// For polymorphic rendering without 'as' prop, use regular button
+	if (!local.as) {
+		return (
+			<button
+				disabled={isDisabled()}
+				class={cn(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+				{...others}
+			>
+				{content()}
+			</button>
+		);
+	}
+
+	// For polymorphic rendering with 'as' prop, use Dynamic
+	// Don't pass disabled to non-button elements (like anchor tags)
+	const isButtonElement = local.as === "button" || !local.as;
+	const dynamicProps = isButtonElement ? { disabled: isDisabled() } : {};
 
 	return (
-		<button
+		<Dynamic
+			component={local.as}
 			class={cn(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+			{...dynamicProps}
 			{...others}
-		/>
+		>
+			{content()}
+		</Dynamic>
 	);
 };
 

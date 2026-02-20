@@ -23,8 +23,14 @@ import {
 	splitProps,
 } from "solid-js";
 import { Portal } from "solid-js/web";
+import IconAlertCircle from "~icons/lucide/alert-circle";
+import IconCheck from "~icons/lucide/check";
+import IconCheckCircle from "~icons/lucide/check-circle";
+import IconChevronDown from "~icons/lucide/chevron-down";
+import IconEye from "~icons/lucide/eye";
+import IconEyeOff from "~icons/lucide/eye-off";
+import IconX from "~icons/lucide/x";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const inputVariants = cva(
@@ -284,7 +290,7 @@ export const Input = (props: InputProps) => {
 																	{value()}
 																</ArkTagsInput.ItemText>
 																<ArkTagsInput.ItemDeleteTrigger class="inline-flex items-center justify-center rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors focus:outline-none">
-																	<div class={cn("h-2.5 w-2.5", icon("x"))} />
+																	<IconX class="h-2.5 w-2.5" />
 																</ArkTagsInput.ItemDeleteTrigger>
 															</ArkTagsInput.ItemPreview>
 															<ArkTagsInput.ItemInput class="bg-transparent outline-none placeholder:text-muted-foreground" />
@@ -362,11 +368,11 @@ export const Input = (props: InputProps) => {
 													}
 												>
 													<ArkCombobox.ClearTrigger class="absolute right-10 top-0 h-full px-2 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center disabled:opacity-50">
-														<div class={cn("h-3.5 w-3.5", icon("x"))} />
+														<IconX class="h-3.5 w-3.5" />
 													</ArkCombobox.ClearTrigger>
 												</Show>
 												<ArkCombobox.Trigger class="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center disabled:opacity-50">
-													<div class={cn("h-4 w-4", icon("chevron-down"))} />
+													<IconChevronDown class="h-4 w-4" />
 												</ArkCombobox.Trigger>
 											</ArkCombobox.Control>
 											<Portal>
@@ -394,7 +400,7 @@ export const Input = (props: InputProps) => {
 																			}
 																		>
 																			<ArkCombobox.ItemIndicator class="ml-auto inline-flex h-4 w-4 items-center justify-center shrink-0">
-																				<div class={cn("h-4 w-4", icon("check"))} />
+																				<IconCheck class="h-4 w-4" />
 																			</ArkCombobox.ItemIndicator>
 																		</Show>
 																	</ArkCombobox.Item>
@@ -444,11 +450,7 @@ export const Input = (props: InputProps) => {
 							disabled={local.disabled}
 							class="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
 						>
-							{isPasswordVisible() ? (
-								<div class={cn("h-4 w-4", icon("eye-off"))} />
-							) : (
-								<div class={cn("h-4 w-4", icon("eye"))} />
-							)}
+							{isPasswordVisible() ? <IconEyeOff class="h-4 w-4" /> : <IconEye class="h-4 w-4" />}
 						</button>
 					</div>
 				}
@@ -509,7 +511,7 @@ export const Input = (props: InputProps) => {
 			{/* Error Message */}
 			<Show when={hasError()}>
 				<div class="flex items-start gap-1.5 text-sm text-destructive">
-					<div class={cn(icon("alert-circle"), "h-4 w-4 mt-0.5 shrink-0")} />
+					<IconAlertCircle class="h-4 w-4 mt-0.5 shrink-0" />
 					<span>{wrapperProps.error}</span>
 				</div>
 			</Show>
@@ -517,7 +519,7 @@ export const Input = (props: InputProps) => {
 			{/* Success Message */}
 			<Show when={hasSuccess()}>
 				<div class="flex items-start gap-1.5 text-sm text-green-600 dark:text-green-400">
-					<div class={cn(icon("check-circle"), "h-4 w-4 mt-0.5 shrink-0")} />
+					<IconCheckCircle class="h-4 w-4 mt-0.5 shrink-0" />
 					<span>{wrapperProps.success}</span>
 				</div>
 			</Show>

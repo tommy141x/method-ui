@@ -134,6 +134,13 @@ export const BlurFade: Component<BlurFadeProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconArrowDown from "~icons/lucide/arrow-down";
+import IconArrowLeft from "~icons/lucide/arrow-left";
+import IconArrowRight from "~icons/lucide/arrow-right";
+import IconArrowUp from "~icons/lucide/arrow-up";
+import IconUser from "~icons/lucide/user";
+
 export const meta: ComponentMeta<BlurFadeProps> = {
 	name: "Blur Fade",
 	description:
@@ -161,25 +168,25 @@ export const meta: ComponentMeta<BlurFadeProps> = {
 				<div class="grid grid-cols-2 gap-4 p-8">
 					<BlurFade direction="up">
 						<div class="rounded-lg bg-primary/10 p-4 text-center">
-							<div class="h-4 w-4 mx-auto mb-2 i-lucide-arrow-up" />
+							<IconArrowUp class="h-4 w-4 mx-auto mb-2" />
 							<p class="text-sm font-medium">Up</p>
 						</div>
 					</BlurFade>
 					<BlurFade direction="down">
 						<div class="rounded-lg bg-primary/10 p-4 text-center">
-							<div class="h-4 w-4 mx-auto mb-2 i-lucide-arrow-down" />
+							<IconArrowDown class="h-4 w-4 mx-auto mb-2" />
 							<p class="text-sm font-medium">Down</p>
 						</div>
 					</BlurFade>
 					<BlurFade direction="left">
 						<div class="rounded-lg bg-primary/10 p-4 text-center">
-							<div class="h-4 w-4 mx-auto mb-2 i-lucide-arrow-left" />
+							<IconArrowLeft class="h-4 w-4 mx-auto mb-2" />
 							<p class="text-sm font-medium">Left</p>
 						</div>
 					</BlurFade>
 					<BlurFade direction="right">
 						<div class="rounded-lg bg-primary/10 p-4 text-center">
-							<div class="h-4 w-4 mx-auto mb-2 i-lucide-arrow-right" />
+							<IconArrowRight class="h-4 w-4 mx-auto mb-2" />
 							<p class="text-sm font-medium">Right</p>
 						</div>
 					</BlurFade>
@@ -242,7 +249,7 @@ export const meta: ComponentMeta<BlurFadeProps> = {
 					<BlurFade delay={0} direction="right">
 						<div class="flex items-center gap-4 rounded-lg bg-card border p-4">
 							<div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-								<div class="h-6 w-6 i-lucide-user" />
+								<IconUser class="h-6 w-6" />
 							</div>
 							<div class="flex-1">
 								<h4 class="font-semibold">John Doe</h4>
@@ -253,7 +260,7 @@ export const meta: ComponentMeta<BlurFadeProps> = {
 					<BlurFade delay={0.15} direction="right">
 						<div class="flex items-center gap-4 rounded-lg bg-card border p-4">
 							<div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-								<div class="h-6 w-6 i-lucide-user" />
+								<IconUser class="h-6 w-6" />
 							</div>
 							<div class="flex-1">
 								<h4 class="font-semibold">Jane Smith</h4>
@@ -264,7 +271,7 @@ export const meta: ComponentMeta<BlurFadeProps> = {
 					<BlurFade delay={0.3} direction="right">
 						<div class="flex items-center gap-4 rounded-lg bg-card border p-4">
 							<div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-								<div class="h-6 w-6 i-lucide-user" />
+								<IconUser class="h-6 w-6" />
 							</div>
 							<div class="flex-1">
 								<h4 class="font-semibold">Bob Johnson</h4>

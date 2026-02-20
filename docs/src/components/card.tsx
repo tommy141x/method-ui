@@ -5,7 +5,6 @@ import type { Component, JSX } from "solid-js";
 import { splitProps } from "solid-js";
 import { unoMerge } from "unocss-merge";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
@@ -15,7 +14,10 @@ const cardVariants = cva("rounded-lg text-card-foreground", {
 		variant: {
 			default: "bg-card shadow-sm",
 			elevated: "bg-card shadow-xl",
-			outlined: "bg-card border-2 border-border shadow-none",
+			outlined: "bg-card border-2 border-primary shadow-none",
+			interactive:
+				"bg-card shadow-sm hover:shadow-md hover:border-accent transition-all cursor-pointer",
+			ghost: "bg-transparent border border-border shadow-none",
 		},
 	},
 	defaultVariants: {

@@ -5,7 +5,6 @@ import type { Component, JSX } from "solid-js";
 import { splitProps } from "solid-js";
 import { unoMerge } from "unocss-merge";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
@@ -49,29 +48,26 @@ export const Badge: Component<BadgeProps> = (props) => {
 		["variant", "clickable"]
 	);
 
+	const classes = cn(
+		badgeVariants({
+			variant: variantProps.variant,
+			clickable: variantProps.clickable,
+		}),
+		local.class
+	);
+
+	if (variantProps.clickable || local.onClick) {
+		return (
+			<button type="button" class={classes} onClick={local.onClick} {...others}>
+				{local.children}
+			</button>
+		);
+	}
+
 	return (
-		// biome-ignore lint/a11y/noStaticElementInteractions: role is set dynamically to "button" when onClick or clickable is provided
-		<div
-			class={cn(
-				badgeVariants({
-					variant: variantProps.variant,
-					clickable: variantProps.clickable,
-				}),
-				local.class
-			)}
-			role={local.onClick || variantProps.clickable ? "button" : undefined}
-			tabIndex={local.onClick || variantProps.clickable ? 0 : undefined}
-			onClick={local.onClick}
-			onKeyDown={(e) => {
-				if (local.onClick && (e.key === "Enter" || e.key === " ")) {
-					e.preventDefault();
-					local.onClick(e as unknown as MouseEvent);
-				}
-			}}
-			{...others}
-		>
+		<span class={classes} {...others}>
 			{local.children}
-		</div>
+		</span>
 	);
 };
 

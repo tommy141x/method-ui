@@ -89,6 +89,12 @@ export const RadioGroupItem: Component<RadioGroupItemProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconAtom from "~icons/lucide/atom";
+import IconBox from "~icons/lucide/box";
+import IconTriangle from "~icons/lucide/triangle";
+import IconZap from "~icons/lucide/zap";
+
 export const meta: ComponentMeta<RadioGroupProps> = {
 	name: "RadioGroup",
 	description:
@@ -124,25 +130,25 @@ export const meta: ComponentMeta<RadioGroupProps> = {
 						<RadioGroupLabel>Framework</RadioGroupLabel>
 						<RadioGroupItem value="react">
 							<div class="flex items-center gap-2">
-								<div class="h-4 w-4 i-lucide-atom" />
+								<IconAtom class="h-4 w-4" />
 								<span>React</span>
 							</div>
 						</RadioGroupItem>
 						<RadioGroupItem value="solid">
 							<div class="flex items-center gap-2">
-								<div class="h-4 w-4 i-lucide-box" />
+								<IconBox class="h-4 w-4" />
 								<span>Solid</span>
 							</div>
 						</RadioGroupItem>
 						<RadioGroupItem value="vue">
 							<div class="flex items-center gap-2">
-								<div class="h-4 w-4 i-lucide-triangle" />
+								<IconTriangle class="h-4 w-4" />
 								<span>Vue</span>
 							</div>
 						</RadioGroupItem>
 						<RadioGroupItem value="svelte">
 							<div class="flex items-center gap-2">
-								<div class="h-4 w-4 i-lucide-zap" />
+								<IconZap class="h-4 w-4" />
 								<span>Svelte</span>
 							</div>
 						</RadioGroupItem>

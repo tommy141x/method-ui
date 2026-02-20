@@ -111,6 +111,13 @@ export const CardFooter: Component<CardFooterProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconBell from "~icons/lucide/bell";
+import IconFileText from "~icons/lucide/file-text";
+import IconHeadphones from "~icons/lucide/headphones";
+import IconPackage from "~icons/lucide/package";
+import IconTrendingDown from "~icons/lucide/trending-down";
+import IconTrendingUp from "~icons/lucide/trending-up";
 import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
@@ -154,15 +161,15 @@ export const meta: ComponentMeta<CardProps> = {
 					<CardContent>
 						<div class="flex flex-col gap-2">
 							<div class="flex items-center gap-2">
-								<div class="h-4 w-4 i-lucide-bell" />
+								<IconBell class="h-4 w-4" />
 								<span class="text-sm">New message from Alice</span>
 							</div>
 							<div class="flex items-center gap-2">
-								<div class="h-4 w-4 i-lucide-bell" />
+								<IconBell class="h-4 w-4" />
 								<span class="text-sm">Bob commented on your post</span>
 							</div>
 							<div class="flex items-center gap-2">
-								<div class="h-4 w-4 i-lucide-bell" />
+								<IconBell class="h-4 w-4" />
 								<span class="text-sm">Your report is ready</span>
 							</div>
 						</div>
@@ -282,7 +289,7 @@ export const meta: ComponentMeta<CardProps> = {
 						<CardHeader class="pb-3">
 							<div class="flex items-center gap-3">
 								<div class="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-									<div class="h-5 w-5 i-lucide-package text-blue-500" />
+									<IconPackage class="h-5 w-5 text-blue-500" />
 								</div>
 								<CardTitle class="text-base">Services</CardTitle>
 							</div>
@@ -295,7 +302,7 @@ export const meta: ComponentMeta<CardProps> = {
 						<CardHeader class="pb-3">
 							<div class="flex items-center gap-3">
 								<div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-									<div class="h-5 w-5 i-lucide-file-text text-purple-500" />
+									<IconFileText class="h-5 w-5 text-purple-500" />
 								</div>
 								<CardTitle class="text-base">Invoices</CardTitle>
 							</div>
@@ -308,7 +315,7 @@ export const meta: ComponentMeta<CardProps> = {
 						<CardHeader class="pb-3">
 							<div class="flex items-center gap-3">
 								<div class="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-									<div class="h-5 w-5 i-lucide-headphones text-green-500" />
+									<IconHeadphones class="h-5 w-5 text-green-500" />
 								</div>
 								<CardTitle class="text-base">Support</CardTitle>
 							</div>
@@ -332,7 +339,7 @@ export const meta: ComponentMeta<CardProps> = {
 						</CardHeader>
 						<CardContent>
 							<div class="text-xs text-muted-foreground flex items-center gap-1">
-								<div class="h-3 w-3 text-green-500 i-lucide-trending-up" />
+								<IconTrendingUp class="h-3 w-3 text-green-500" />
 								<span>+20.1% from last month</span>
 							</div>
 						</CardContent>
@@ -344,7 +351,7 @@ export const meta: ComponentMeta<CardProps> = {
 						</CardHeader>
 						<CardContent>
 							<div class="text-xs text-muted-foreground flex items-center gap-1">
-								<div class="h-3 w-3 text-green-500 i-lucide-trending-up" />
+								<IconTrendingUp class="h-3 w-3 text-green-500" />
 								<span>+15.2% from last month</span>
 							</div>
 						</CardContent>
@@ -356,7 +363,7 @@ export const meta: ComponentMeta<CardProps> = {
 						</CardHeader>
 						<CardContent>
 							<div class="text-xs text-muted-foreground flex items-center gap-1">
-								<div class="h-3 w-3 text-red-500 i-lucide-trending-down" />
+								<IconTrendingDown class="h-3 w-3 text-red-500" />
 								<span>-5.3% from last hour</span>
 							</div>
 						</CardContent>

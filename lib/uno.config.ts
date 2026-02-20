@@ -1,7 +1,6 @@
 import {
 	defineConfig,
 	presetAttributify,
-	presetIcons,
 	presetTypography,
 	presetUno,
 	presetWebFonts,
@@ -11,31 +10,26 @@ import {
 
 /*
 Icon Usage:
-Use icons with the pattern: i-{collection}-{icon-name}
+Import icons as components using unplugin-icons:
+  import IconCheck from '~icons/lucide/check'
+  import IconUser from '~icons/lucide/user'
 
-Examples:
-- <div class="i-lucide-heart" />              // Heart icon
-- <div class="i-lucide-user text-xl" />       // User icon with size
-- <div class="i-lucide-sun dark:i-lucide-moon" /> // Theme toggle
+Use them directly in JSX:
+  <IconCheck class="h-4 w-4" />
+  <IconUser class="h-5 w-5 text-muted-foreground" />
 
 Available collections: lucide, heroicons, tabler, ph (phosphor)
 Find all icons at: https://icones.js.org/
+
+Make sure unplugin-icons is configured in your vite.config:
+  import Icons from 'unplugin-icons/vite'
+  plugins: [Icons({ compiler: 'solid' })]
 */
 
 export default defineConfig({
 	presets: [
 		presetUno(),
 		presetAttributify(),
-		presetIcons({
-			collections: {
-				// This will be replaced with actual icon library configuration
-				// Format: libraryName: () => import("@iconify-json/library/icons.json").then(i => i.default)
-			},
-			extraProperties: {
-				display: "inline-block",
-				"vertical-align": "middle",
-			},
-		}),
 		presetTypography(),
 		presetWebFonts({
 			fonts: {

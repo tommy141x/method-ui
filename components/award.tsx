@@ -1,6 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
 import { splitProps } from "solid-js";
+import IconAward from "~icons/lucide/award";
+import IconStar from "~icons/lucide/star";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
@@ -117,7 +119,7 @@ const StampVariant: Component<AwardProps> = (props) => {
 			<div class="relative z-10 text-center">
 				{props.showIcon && (
 					<div class="mb-1 flex justify-center text-center text-2xl">
-						<div class="h-6 w-6 i-lucide-star text-primary fill-primary" />
+						<IconStar class="h-6 w-6 text-primary fill-primary" />
 					</div>
 				)}
 				{props.recipient && <div class="text-primary mt-2 text-[14px]">{props.recipient}</div>}
@@ -197,7 +199,7 @@ const CertificateVariant: Component<AwardProps> = (props) => {
 
 				<p class="text-muted-foreground mb-1 text-xs">{props.subtitle}</p>
 				<div class="mt-6 flex justify-center">
-					<div class="h-4 w-4 i-lucide-award" />
+					<IconAward class="h-4 w-4" />
 				</div>
 				<div class="mt-2 text-xs">Awarded on: {props.date}</div>
 			</div>

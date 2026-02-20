@@ -3,8 +3,8 @@ import type { Component, ComponentProps, JSX } from "solid-js";
 import { For, Show, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
+import IconPipette from "~icons/lucide/pipette";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // Re-export parseColor for convenience
@@ -172,7 +172,7 @@ export const ColorPicker: Component<ColorPickerProps> & {
 
 													<Show when={local.showEyeDropper !== false}>
 														<ArkColorPicker.EyeDropperTrigger class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-															<div class={cn("h-4 w-4", icon("pipette"))} />
+															<IconPipette class="h-4 w-4" />
 															Pick Color
 														</ArkColorPicker.EyeDropperTrigger>
 													</Show>

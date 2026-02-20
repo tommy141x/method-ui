@@ -176,6 +176,11 @@ export const NumberTicker: Component<NumberTickerProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconActivity from "~icons/lucide/activity";
+import IconTrendingUp from "~icons/lucide/trending-up";
+import IconUsers from "~icons/lucide/users";
+
 export const meta: ComponentMeta<NumberTickerProps> = {
 	name: "Number Ticker",
 	description:
@@ -198,17 +203,17 @@ export const meta: ComponentMeta<NumberTickerProps> = {
 			code: () => (
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<div class="rounded-lg border border-border p-6 text-center">
-						<div class="h-12 w-12 i-lucide-users mx-auto mb-3 text-blue-500" />
+						<IconUsers class="h-12 w-12 mx-auto mb-3 text-blue-500" />
 						<NumberTicker value={1234} class="text-3xl font-bold block mb-2" />
 						<p class="text-sm text-muted-foreground">Total Users</p>
 					</div>
 					<div class="rounded-lg border border-border p-6 text-center">
-						<div class="h-12 w-12 i-lucide-trending-up mx-auto mb-3 text-green-500" />
+						<IconTrendingUp class="h-12 w-12 mx-auto mb-3 text-green-500" />
 						<NumberTicker value={98.5} decimalPlaces={1} class="text-3xl font-bold block mb-2" />
 						<p class="text-sm text-muted-foreground">Success Rate %</p>
 					</div>
 					<div class="rounded-lg border border-border p-6 text-center">
-						<div class="h-12 w-12 i-lucide-activity mx-auto mb-3 text-purple-500" />
+						<IconActivity class="h-12 w-12 mx-auto mb-3 text-purple-500" />
 						<NumberTicker value={45678} class="text-3xl font-bold block mb-2" />
 						<p class="text-sm text-muted-foreground">Active Sessions</p>
 					</div>

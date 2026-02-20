@@ -1,7 +1,8 @@
 import type { Component, JSX } from "solid-js";
 import { createSignal, Show, splitProps } from "solid-js";
+import IconCheck from "~icons/lucide/check";
+import IconCopy from "~icons/lucide/copy";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 import { Button } from "./button";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "./tabs";
@@ -93,8 +94,8 @@ export const SnippetCopyButton: Component<SnippetCopyButtonProps> = (props) => {
 			<Show
 				when={local.children}
 				fallback={
-					<Show when={isCopied()} fallback={<div class={icon("copy")} />}>
-						<div class={icon("check")} />
+					<Show when={isCopied()} fallback={<IconCopy />}>
+						<IconCheck />
 					</Show>
 				}
 			>
@@ -138,7 +139,7 @@ export const SnippetTabsContent: Component<SnippetTabsContentProps> = (props) =>
 	const [local, others] = splitProps(props, ["children", "class"]);
 
 	return (
-		<TabsContent class={cn("!mt-0 bg-muted p-4 text-sm", local.class)} {...others}>
+		<TabsContent class={cn("mt-0! bg-muted p-4 text-sm", local.class)} {...others}>
 			<pre class="overflow-x-auto">{local.children}</pre>
 		</TabsContent>
 	);
@@ -160,6 +161,11 @@ export const SnippetContent: Component<SnippetContentProps> = (props) => {
 		</div>
 	);
 };
+
+// Example-only imports - removed during CLI transform
+import IconFileCode from "~icons/lucide/file-code";
+import IconPalette from "~icons/lucide/palette";
+import IconSettings from "~icons/lucide/settings";
 
 export const meta: ComponentMeta<SnippetProps> = {
 	name: "Snippet",
@@ -225,7 +231,7 @@ export default function App() {
 							<SnippetTabsList>
 								<SnippetIndicator />
 								<SnippetTabsTrigger value="tsx">
-									<div class="h-4 w-4 i-lucide-file-code" />
+									<IconFileCode class="h-4 w-4" />
 									App.tsx
 								</SnippetTabsTrigger>
 							</SnippetTabsList>
@@ -261,15 +267,15 @@ export default function App() {
 							<SnippetTabsList>
 								<SnippetIndicator />
 								<SnippetTabsTrigger value="component">
-									<div class="h-4 w-4 i-lucide-file-code" />
+									<IconFileCode class="h-4 w-4" />
 									Component.tsx
 								</SnippetTabsTrigger>
 								<SnippetTabsTrigger value="styles">
-									<div class="h-4 w-4 i-lucide-palette" />
+									<IconPalette class="h-4 w-4" />
 									styles.css
 								</SnippetTabsTrigger>
 								<SnippetTabsTrigger value="config">
-									<div class="h-4 w-4 i-lucide-settings" />
+									<IconSettings class="h-4 w-4" />
 									config.ts
 								</SnippetTabsTrigger>
 							</SnippetTabsList>

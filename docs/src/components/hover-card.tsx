@@ -1,11 +1,11 @@
 import { HoverCard as ArkHoverCard } from "@ark-ui/solid/hover-card";
+import type { PositioningOptions } from "@zag-js/popper";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import { type JSX, Show, splitProps } from "solid-js";
 import { Motion, Presence } from "solid-motionone";
 import { unoMerge } from "unocss-merge";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
@@ -16,7 +16,7 @@ interface HoverCardProps {
 	onOpenChange?: (details: { open: boolean }) => void;
 	openDelay?: number;
 	closeDelay?: number;
-	positioning?: Record<string, unknown>;
+	positioning?: PositioningOptions;
 	disabled?: boolean;
 }
 

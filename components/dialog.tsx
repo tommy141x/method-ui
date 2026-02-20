@@ -10,8 +10,8 @@ import {
 } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
+import IconX from "~icons/lucide/x";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 /**
@@ -230,7 +230,7 @@ export const DialogCloseTrigger = (props: DialogCloseTriggerProps) => {
 		>
 			{local.children || (
 				<>
-					<div class={cn("h-4 w-4", icon("x"))} />
+					<IconX class="h-4 w-4" />
 					<span class="sr-only">Close</span>
 				</>
 			)}

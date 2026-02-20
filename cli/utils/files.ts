@@ -4,35 +4,6 @@ import { fileURLToPath } from "node:url";
 import * as p from "@clack/prompts";
 
 /**
- * Get icon collection configuration based on library name
- */
-function getIconCollection(iconLibrary: string): {
-	name: string;
-	package: string;
-} {
-	const collections = {
-		lucide: {
-			name: "lucide",
-			package: "@iconify-json/lucide/icons.json",
-		},
-		heroicons: {
-			name: "heroicons",
-			package: "@iconify-json/heroicons/icons.json",
-		},
-		tabler: {
-			name: "tabler",
-			package: "@iconify-json/tabler/icons.json",
-		},
-		phosphor: {
-			name: "ph",
-			package: "@iconify-json/ph/icons.json",
-		},
-	};
-
-	return collections[iconLibrary as keyof typeof collections] || collections.lucide;
-}
-
-/**
  * Find the CLI's lib directory (contains template files)
  */
 export function getTemplatesDirectory(): string {
@@ -118,34 +89,20 @@ function createBackup(filePath: string): string {
 }
 
 /**
- * Read and process a template file with variable substitution
+ * Read a template file
  */
-function readTemplate(templatePath: string, iconLibrary?: string): string {
+function readTemplate(templatePath: string): string {
 	if (!existsSync(templatePath)) {
 		throw new Error(`Template file not found: ${templatePath}`);
 	}
 
-	let content = readFileSync(templatePath, "utf-8");
-
-	// Replace icon configuration if provided
-	if (iconLibrary) {
-		const iconCollection = getIconCollection(iconLibrary);
-		const iconConfig = `${iconCollection.name}: () =>
-          import("${iconCollection.package}").then((i) => i.default),`;
-
-		content = content.replace(
-			/\/\/ This will be replaced with actual icon library configuration\s*\n\s*\/\/ Format:.*$/m,
-			iconConfig
-		);
-	}
-
-	return content;
+	return readFileSync(templatePath, "utf-8");
 }
 
 /**
  * Generate UnoCSS configuration file content from template
  */
-export async function generateUnoConfig(iconLibrary: string): Promise<string> {
+export async function generateUnoConfig(_iconLibrary: string): Promise<string> {
 	const { readComponentsConfig, isTypeScriptProject } = await import("./config.js");
 	const config = readComponentsConfig();
 	const typescript = isTypeScriptProject(config);
@@ -153,7 +110,7 @@ export async function generateUnoConfig(iconLibrary: string): Promise<string> {
 	const templatesDir = getTemplatesDirectory();
 	const templatePath = join(templatesDir, "uno.config.ts");
 
-	let content = readTemplate(templatePath, iconLibrary);
+	let content = readTemplate(templatePath);
 
 	// Transform to JavaScript if needed
 	if (!typescript) {

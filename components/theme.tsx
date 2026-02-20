@@ -9,6 +9,7 @@ import {
 	splitProps,
 	useContext,
 } from "solid-js";
+import IconCheck from "~icons/lucide/check";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
 
@@ -355,7 +356,7 @@ export const ThemeSwitcher: Component<ThemeSwitcherProps> = (props) => {
 								<div class="flex items-center justify-between w-full">
 									<span class="font-medium">{themeDef.name}</span>
 									<Show when={isActive}>
-										<div class="i-lucide-check size-4 text-primary" />
+										<IconCheck class="size-4 text-primary" />
 									</Show>
 								</div>
 								<Show when={local.showDescription && themeDef.description}>

@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@ark-ui/solid": "^5.30.0",
+		"@motionone/dom": "^10.18.0",
 		"@opennextjs/cloudflare": "^1.16.5",
 		"@responsive-image/vite-plugin": "^2.0.2",
 		"@solidjs/meta": "^0.29.4",
@@ -29,9 +30,9 @@
 	"devDependencies": {
 		"@iconify-json/lucide": "^1.2.82",
 		"@types/bun": "^1.3.5",
-		"@unocss/preset-icons": "^0.65.4",
 		"typescript": "^5.9.3",
-		"unocss": "^0.65.4"
+		"unocss": "^0.65.4",
+		"unplugin-icons": "^23.0.1"
 	},
 	"patchedDependencies": {
 		"@tanstack/directive-functions-plugin@1.121.21": "patches/@tanstack%2Fdirective-functions-plugin@1.121.21.patch"

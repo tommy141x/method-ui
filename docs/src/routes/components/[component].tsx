@@ -1,4 +1,3 @@
-import { cn } from "@lib/cn";
 import metadataJson from "@lib/registry.json";
 import { Meta, Title } from "@solidjs/meta";
 import { useParams } from "@solidjs/router";
@@ -12,6 +11,10 @@ import {
 	onMount,
 	Show,
 } from "solid-js";
+import IconBox from "~icons/lucide/box";
+import IconCheck from "~icons/lucide/check";
+import IconCode from "~icons/lucide/code";
+import IconCopy from "~icons/lucide/copy";
 import {
 	Accordion,
 	AccordionContent,
@@ -233,7 +236,7 @@ export default function ComponentPage() {
 				fallback={
 					<Card>
 						<CardContent class="py-12 text-center">
-							<div class={cn("h-12 w-12 mx-auto mb-4 text-muted-foreground", "i-lucide-box")} />
+							<IconBox class="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
 							<h2 class="text-xl font-semibold mb-2">Component Not Found</h2>
 							<p class="text-muted-foreground">
 								The component "{params.component}" does not exist.
@@ -323,9 +326,9 @@ export default function ComponentPage() {
 														setTimeout(() => setCopied(false), 1000);
 													}}
 												>
-													<div
-														class={cn("h-4 w-4", copied() ? "i-lucide-check" : "i-lucide-copy")}
-													/>
+													<Show when={copied()} fallback={<IconCopy class="h-4 w-4" />}>
+														<IconCheck class="h-4 w-4" />
+													</Show>
 												</Button>
 											</TooltipTrigger>
 											<TooltipContent>Copy install command</TooltipContent>
@@ -364,7 +367,7 @@ export default function ComponentPage() {
 																</Show>
 															</div>
 															<Button size="sm" variant="outline" onClick={() => toggleCode(index)}>
-																<div class={cn("h-4 w-4 mr-2", "i-lucide-code")} />
+																<IconCode class="h-4 w-4 mr-2" />
 																{showCode()[index] ? "Hide" : "Show"} Code
 															</Button>
 														</div>
@@ -398,7 +401,7 @@ export default function ComponentPage() {
 																					);
 																				}}
 																			>
-																				<div class={cn("h-3 w-3", "i-lucide-copy")} />
+																				<IconCopy class="h-3 w-3" />
 																			</Button>
 																		</TooltipTrigger>
 																		<TooltipContent>Copy code</TooltipContent>

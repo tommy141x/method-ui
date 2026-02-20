@@ -1,4 +1,6 @@
 import { type Component, Show } from "solid-js";
+import IconMoon from "~icons/lucide/moon";
+import IconSun from "~icons/lucide/sun";
 import { Button } from "./button";
 import { useTheme } from "./theme";
 
@@ -32,12 +34,12 @@ export const ThemeToggle: Component = () => {
 		>
 			{/* Moon icon for base theme (dark) */}
 			<Show when={isBaseTheme()}>
-				<div class="i-lucide-moon w-4 h-4 transition-all duration-200" />
+				<IconMoon class="w-4 h-4 transition-all duration-200" />
 			</Show>
 
 			{/* Sun icon for light theme */}
 			<Show when={isLightTheme()}>
-				<div class="i-lucide-sun w-4 h-4 transition-all duration-200" />
+				<IconSun class="w-4 h-4 transition-all duration-200" />
 			</Show>
 
 			{/* Primary color circle for custom themes */}

@@ -5,8 +5,20 @@ import StarterKit from "@tiptap/starter-kit";
 import type { Component, JSX } from "solid-js";
 import { createEffect, createSignal, onCleanup, Show, splitProps } from "solid-js";
 import { createTiptapEditor } from "solid-tiptap";
+import IconBold from "~icons/lucide/bold";
+import IconCode from "~icons/lucide/code";
+import IconCornerDownLeft from "~icons/lucide/corner-down-left";
+import IconItalic from "~icons/lucide/italic";
+import IconList from "~icons/lucide/list";
+import IconListOrdered from "~icons/lucide/list-ordered";
+import IconMinus from "~icons/lucide/minus";
+import IconQuote from "~icons/lucide/quote";
+import IconRedo from "~icons/lucide/redo";
+import IconSquareCode from "~icons/lucide/square-code";
+import IconStrikethrough from "~icons/lucide/strikethrough";
+import IconUnderline from "~icons/lucide/underline";
+import IconUndo from "~icons/lucide/undo";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 import { Button } from "./button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
@@ -107,7 +119,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={isBold()}
 					title="Bold (Ctrl+B)"
 				>
-					<div class={cn(icon("bold"), "h-4 w-4")}></div>
+					<IconBold class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -115,7 +127,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={isItalic()}
 					title="Italic (Ctrl+I)"
 				>
-					<div class={cn(icon("italic"), "h-4 w-4")}></div>
+					<IconItalic class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -123,7 +135,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={isUnderline()}
 					title="Underline (Ctrl+U)"
 				>
-					<div class={cn(icon("underline"), "h-4 w-4")}></div>
+					<IconUnderline class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -131,7 +143,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={isStrike()}
 					title="Strikethrough"
 				>
-					<div class={cn(icon("strikethrough"), "h-4 w-4")}></div>
+					<IconStrikethrough class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -139,7 +151,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={isCode()}
 					title="Inline Code"
 				>
-					<div class={cn(icon("code"), "h-4 w-4")}></div>
+					<IconCode class="h-4 w-4" />
 				</ToolbarButton>
 			</div>
 
@@ -181,7 +193,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={props.editor()?.isActive("bulletList")}
 					title="Bullet List"
 				>
-					<div class={cn(icon("list"), "h-4 w-4")}></div>
+					<IconList class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -189,7 +201,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={props.editor()?.isActive("orderedList")}
 					title="Numbered List"
 				>
-					<div class={cn(icon("list-ordered"), "h-4 w-4")}></div>
+					<IconListOrdered class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -197,7 +209,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={props.editor()?.isActive("blockquote")}
 					title="Blockquote"
 				>
-					<div class={cn(icon("quote"), "h-4 w-4")}></div>
+					<IconQuote class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -205,7 +217,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					active={props.editor()?.isActive("codeBlock")}
 					title="Code Block"
 				>
-					<div class={cn(icon("square-code"), "h-4 w-4")}></div>
+					<IconSquareCode class="h-4 w-4" />
 				</ToolbarButton>
 			</div>
 
@@ -217,14 +229,14 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					onClick={() => props.editor()?.chain().focus().setHorizontalRule().run()}
 					title="Horizontal Rule"
 				>
-					<div class={cn(icon("minus"), "h-4 w-4")}></div>
+					<IconMinus class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
 					onClick={() => props.editor()?.chain().focus().setHardBreak().run()}
 					title="Line Break"
 				>
-					<div class={cn(icon("corner-down-left"), "h-4 w-4")}></div>
+					<IconCornerDownLeft class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -232,7 +244,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					disabled={!props.editor()?.can().undo()}
 					title="Undo"
 				>
-					<div class={cn(icon("undo"), "h-4 w-4")}></div>
+					<IconUndo class="h-4 w-4" />
 				</ToolbarButton>
 
 				<ToolbarButton
@@ -240,7 +252,7 @@ const Toolbar: Component<{ editor: () => TiptapEditor | undefined }> = (props) =
 					disabled={!props.editor()?.can().redo()}
 					title="Redo"
 				>
-					<div class={cn(icon("redo"), "h-4 w-4")}></div>
+					<IconRedo class="h-4 w-4" />
 				</ToolbarButton>
 			</div>
 		</div>

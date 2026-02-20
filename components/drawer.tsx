@@ -12,8 +12,8 @@ import {
 } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
+import IconX from "~icons/lucide/x";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // ===== Context =====
@@ -599,7 +599,7 @@ export const DrawerCloseTrigger = (props: DrawerCloseTriggerProps) => {
 		>
 			{local.children || (
 				<>
-					<div class={cn("h-4 w-4", icon("x"))} />
+					<IconX class="h-4 w-4" />
 					<span class="sr-only">Close</span>
 				</>
 			)}
@@ -620,6 +620,8 @@ export const DrawerBody = (props: DrawerBodyProps) => {
 	return <div class={cn("flex-1 overflow-y-auto p-4", local.class)} {...others} />;
 };
 
+// Example-only imports - removed during CLI transform
+import IconPlus from "~icons/lucide/plus";
 // Import components for examples only
 import { Button } from "./button";
 import { Input } from "./input";
@@ -838,7 +840,7 @@ export const meta: ComponentMeta<DrawerProps> = {
 				<Drawer side="right">
 					<DrawerTrigger>
 						<Button>
-							<div class={cn("h-4 w-4 mr-2", icon("plus"))} />
+							<IconPlus class="h-4 w-4 mr-2" />
 							Add Item
 						</Button>
 					</DrawerTrigger>

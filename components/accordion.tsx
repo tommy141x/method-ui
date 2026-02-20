@@ -2,8 +2,8 @@ import { Accordion as ArkAccordion } from "@ark-ui/solid";
 import { cva } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
 import { splitProps } from "solid-js";
+import IconChevronDown from "~icons/lucide/chevron-down";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const accordionItemVariants = cva("border-b border-border last:border-b-0", {
@@ -149,7 +149,7 @@ export const AccordionTrigger: Component<AccordionTriggerProps> = (props) => {
 		>
 			{local.children}
 			<ArkAccordion.ItemIndicator class="transition-transform duration-200 data-[state=open]:rotate-180">
-				<div class={cn("h-4 w-4", icon("chevron-down"))} />
+				<IconChevronDown class="h-4 w-4" />
 			</ArkAccordion.ItemIndicator>
 		</ArkAccordion.ItemTrigger>
 	);
@@ -187,7 +187,7 @@ export const AccordionIndicator: Component<AccordionIndicatorProps> = (props) =>
 			class={cn("transition-transform duration-200 data-[state=open]:rotate-180", local.class)}
 			{...others}
 		>
-			<div class={cn("h-4 w-4", icon("chevron-down"))} />
+			<IconChevronDown class="h-4 w-4" />
 		</ArkAccordion.ItemIndicator>
 	);
 };

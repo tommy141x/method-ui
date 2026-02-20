@@ -2,7 +2,6 @@ import { Tooltip as ArkTooltip } from "@ark-ui/solid/tooltip";
 import type { PositioningOptions } from "@zag-js/popper";
 import { type JSX, Show, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
-
 import { Motion, Presence } from "solid-motionone";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
@@ -84,6 +83,14 @@ export const TooltipContent = (props: TooltipContentProps) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconAlertCircle from "~icons/lucide/alert-circle";
+import IconCheckCircle from "~icons/lucide/check-circle";
+import IconClock from "~icons/lucide/clock";
+import IconHelpCircle from "~icons/lucide/help-circle";
+import IconInfo from "~icons/lucide/info";
+import IconSave from "~icons/lucide/save";
+import IconTrash from "~icons/lucide/trash";
 import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
@@ -114,7 +121,7 @@ export const meta: ComponentMeta<TooltipProps> = {
 					<Tooltip>
 						<TooltipTrigger>
 							<Button variant="default">
-								<div class="h-4 w-4 i-lucide-save" />
+								<IconSave class="h-4 w-4" />
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>Save changes</TooltipContent>
@@ -123,7 +130,7 @@ export const meta: ComponentMeta<TooltipProps> = {
 					<Tooltip>
 						<TooltipTrigger>
 							<Button variant="outline">
-								<div class="h-4 w-4 i-lucide-trash" />
+								<IconTrash class="h-4 w-4" />
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>Delete item</TooltipContent>
@@ -132,7 +139,7 @@ export const meta: ComponentMeta<TooltipProps> = {
 					<Tooltip>
 						<TooltipTrigger>
 							<Button variant="ghost">
-								<div class="h-4 w-4 i-lucide-info" />
+								<IconInfo class="h-4 w-4" />
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>More information</TooltipContent>
@@ -148,7 +155,7 @@ export const meta: ComponentMeta<TooltipProps> = {
 					<Tooltip>
 						<TooltipTrigger>
 							<Badge variant="default">
-								<div class="h-3 w-3 i-lucide-check-circle mr-1" />
+								<IconCheckCircle class="h-3 w-3 mr-1" />
 								Active
 							</Badge>
 						</TooltipTrigger>
@@ -158,7 +165,7 @@ export const meta: ComponentMeta<TooltipProps> = {
 					<Tooltip>
 						<TooltipTrigger>
 							<Badge variant="secondary">
-								<div class="h-3 w-3 i-lucide-clock mr-1" />
+								<IconClock class="h-3 w-3 mr-1" />
 								Pending
 							</Badge>
 						</TooltipTrigger>
@@ -168,7 +175,7 @@ export const meta: ComponentMeta<TooltipProps> = {
 					<Tooltip>
 						<TooltipTrigger>
 							<Badge variant="destructive">
-								<div class="h-3 w-3 i-lucide-alert-circle mr-1" />
+								<IconAlertCircle class="h-3 w-3 mr-1" />
 								Error
 							</Badge>
 						</TooltipTrigger>
@@ -184,7 +191,7 @@ export const meta: ComponentMeta<TooltipProps> = {
 				<Tooltip interactive>
 					<TooltipTrigger>
 						<Button variant="outline">
-							<div class="h-4 w-4 i-lucide-help-circle mr-2" />
+							<IconHelpCircle class="h-4 w-4 mr-2" />
 							Hover for more info
 						</Button>
 					</TooltipTrigger>

@@ -66,6 +66,12 @@ export const Badge: Component<BadgeProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconAlertCircle from "~icons/lucide/alert-circle";
+import IconBadgeCheck from "~icons/lucide/badge-check";
+import IconMousePointerClick from "~icons/lucide/mouse-pointer-click";
+import IconStar from "~icons/lucide/star";
+
 export const meta: ComponentMeta<BadgeProps> = {
 	name: "Badge",
 	description:
@@ -91,15 +97,15 @@ export const meta: ComponentMeta<BadgeProps> = {
 			code: () => (
 				<div class="flex flex-wrap gap-2">
 					<Badge variant="secondary" class="bg-blue-500 text-white dark:bg-blue-600">
-						<div class="h-3 w-3 i-lucide-badge-check" />
+						<IconBadgeCheck class="h-3 w-3" />
 						Verified
 					</Badge>
 					<Badge>
-						<div class="h-3 w-3 i-lucide-star" />
+						<IconStar class="h-3 w-3" />
 						Featured
 					</Badge>
 					<Badge variant="destructive">
-						<div class="h-3 w-3 i-lucide-alert-circle" />
+						<IconAlertCircle class="h-3 w-3" />
 						Error
 					</Badge>
 				</div>
@@ -155,7 +161,7 @@ export const meta: ComponentMeta<BadgeProps> = {
 						Click me
 					</Badge>
 					<Badge variant="secondary" clickable onClick={() => console.log("Secondary clicked")}>
-						<div class="h-3 w-3 i-lucide-mouse-pointer-click" />
+						<IconMousePointerClick class="h-3 w-3" />
 						Interactive
 					</Badge>
 					<Badge variant="outline" clickable onClick={() => alert("Outline clicked")}>

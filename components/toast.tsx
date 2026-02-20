@@ -75,8 +75,13 @@ import {
 import type { Component } from "solid-js";
 import { Show, splitProps } from "solid-js";
 import { Portal } from "solid-js/web";
+import IconCircleCheck from "~icons/lucide/circle-check";
+import IconCircleX from "~icons/lucide/circle-x";
+import IconInfo from "~icons/lucide/info";
+import IconLoaderCircle from "~icons/lucide/loader-circle";
+import IconTriangleAlert from "~icons/lucide/triangle-alert";
+import IconX from "~icons/lucide/x";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // Re-export createToaster from Ark UI with proper types
@@ -168,19 +173,19 @@ const ToastIcon: Component<{ type?: string }> = (props) => {
 		<Show when={props.type}>
 			<div class="shrink-0 mt-0.5">
 				<Show when={props.type === "success"}>
-					<div class={cn("h-5 w-5 text-green-600 dark:text-green-400", icon("circle-check"))} />
+					<IconCircleCheck class="h-5 w-5 text-green-600 dark:text-green-400" />
 				</Show>
 				<Show when={props.type === "error"}>
-					<div class={cn("h-5 w-5 text-destructive", icon("circle-x"))} />
+					<IconCircleX class="h-5 w-5 text-destructive" />
 				</Show>
 				<Show when={props.type === "warning"}>
-					<div class={cn("h-5 w-5 text-yellow-600 dark:text-yellow-400", icon("triangle-alert"))} />
+					<IconTriangleAlert class="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
 				</Show>
 				<Show when={props.type === "info"}>
-					<div class={cn("h-5 w-5 text-primary", icon("info"))} />
+					<IconInfo class="h-5 w-5 text-primary" />
 				</Show>
 				<Show when={props.type === "loading"}>
-					<div class={cn("h-5 w-5 animate-spin text-primary", icon("loader-circle"))} />
+					<IconLoaderCircle class="h-5 w-5 animate-spin text-primary" />
 				</Show>
 			</div>
 		</Show>
@@ -290,7 +295,7 @@ export const Toast: Component<ToastProps> = (props) => {
 
 							<Show when={toast().type !== "loading"}>
 								<ArkToast.CloseTrigger class="absolute right-2 top-2 rounded-sm p-1 opacity-0 transition-opacity group-hover:opacity-70 hover:opacity-100">
-									<div class={cn("h-4 w-4", icon("x"))} />
+									<IconX class="h-4 w-4" />
 								</ArkToast.CloseTrigger>
 							</Show>
 						</ArkToast.Root>

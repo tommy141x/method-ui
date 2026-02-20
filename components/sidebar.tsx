@@ -14,8 +14,9 @@ import {
 } from "solid-js";
 import { Dynamic, Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
+import IconChevronRight from "~icons/lucide/chevron-right";
+import IconPanelLeft from "~icons/lucide/panel-left";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 import { Badge } from "./badge";
 import { Button } from "./button";
@@ -524,7 +525,7 @@ export const SidebarTrigger: Component<SidebarTriggerProps> = (props) => {
 		>
 			{local.children || (
 				<>
-					<div class={cn("h-4 w-4", icon("panel-left"))} />
+					<IconPanelLeft class="h-4 w-4" />
 					<span class="sr-only">Toggle Sidebar</span>
 				</>
 			)}
@@ -879,13 +880,9 @@ export const SidebarMenuCollapsibleTrigger: Component<SidebarMenuCollapsibleTrig
 			{...others}
 		>
 			{local.children}
-			<Collapsible.Indicator
-				class={cn(
-					icon("chevron-right"),
-					"ml-auto h-4 w-4 shrink-0 transition-transform duration-200",
-					"data-[state=open]:rotate-90"
-				)}
-			/>
+			<Collapsible.Indicator class="ml-auto h-4 w-4 shrink-0 transition-transform duration-200 data-[state=open]:rotate-90">
+				<IconChevronRight class="h-4 w-4" />
+			</Collapsible.Indicator>
 		</Collapsible.Trigger>
 	);
 
@@ -1278,6 +1275,32 @@ export const SidebarMenuSkeleton: Component<SidebarMenuSkeletonProps> = (props) 
 
 // Import components for examples
 
+// Example-only imports - removed during CLI transform
+import IconBarChart from "~icons/lucide/bar-chart";
+import IconCalendar from "~icons/lucide/calendar";
+import IconCheckSquare from "~icons/lucide/check-square";
+import IconCircle from "~icons/lucide/circle";
+import IconCode from "~icons/lucide/code";
+import IconCommand from "~icons/lucide/command";
+import IconFileEdit from "~icons/lucide/file-edit";
+import IconFileText from "~icons/lucide/file-text";
+import IconFolder from "~icons/lucide/folder";
+import IconGlobe from "~icons/lucide/globe";
+import IconHelpCircle from "~icons/lucide/help-circle";
+import IconHome from "~icons/lucide/home";
+import IconInbox from "~icons/lucide/inbox";
+import IconLayoutDashboard from "~icons/lucide/layout-dashboard";
+import IconMoreHorizontal from "~icons/lucide/more-horizontal";
+import IconPalette from "~icons/lucide/palette";
+import IconPlus from "~icons/lucide/plus";
+import IconSend from "~icons/lucide/send";
+import IconSettings from "~icons/lucide/settings";
+import IconSmartphone from "~icons/lucide/smartphone";
+import IconSparkles from "~icons/lucide/sparkles";
+import IconTrendingUp from "~icons/lucide/trending-up";
+import IconUser from "~icons/lucide/user";
+import IconZap from "~icons/lucide/zap";
+
 export const meta: ComponentMeta<SidebarProviderProps> = {
 	name: "Sidebar",
 	description:
@@ -1326,25 +1349,25 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 								<SidebarMenu>
 									<SidebarMenuItem>
 										<SidebarMenuButton isActive tooltip="Home">
-											<div class={cn("h-4 w-4", icon("home"))} />
+											<IconHome class="h-4 w-4" />
 											<span>Home</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Inbox">
-											<div class={cn("h-4 w-4", icon("inbox"))} />
+											<IconInbox class="h-4 w-4" />
 											<span>Inbox</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Calendar">
-											<div class={cn("h-4 w-4", icon("calendar"))} />
+											<IconCalendar class="h-4 w-4" />
 											<span>Calendar</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Settings">
-											<div class={cn("h-4 w-4", icon("settings"))} />
+											<IconSettings class="h-4 w-4" />
 											<span>Settings</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
@@ -1357,7 +1380,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 							<SidebarMenuItem>
 								<SidebarMenuButton size="lg">
 									<div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-muted">
-										<div class={cn("h-4 w-4", icon("user"))} />
+										<IconUser class="h-4 w-4" />
 									</div>
 									<div class="flex flex-col gap-0.5 leading-none">
 										<span class="font-semibold">John Doe</span>
@@ -1399,7 +1422,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 							<SidebarMenuItem>
 								<SidebarMenuButton size="lg">
 									<div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-										<div class={cn("h-4 w-4", icon("command"))} />
+										<IconCommand class="h-4 w-4" />
 									</div>
 									<div class="flex flex-col gap-0.5 leading-none">
 										<span class="font-semibold">Acme Inc</span>
@@ -1416,19 +1439,19 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 								<SidebarMenu>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Dashboard" isActive>
-											<div class={cn("h-4 w-4", icon("layout-dashboard"))} />
+											<IconLayoutDashboard class="h-4 w-4" />
 											<span>Dashboard</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Projects">
-											<div class={cn("h-4 w-4", icon("folder"))} />
+											<IconFolder class="h-4 w-4" />
 											<span>Projects</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Tasks">
-											<div class={cn("h-4 w-4", icon("check-square"))} />
+											<IconCheckSquare class="h-4 w-4" />
 											<span>Tasks</span>
 											<SidebarMenuBadge>12</SidebarMenuBadge>
 										</SidebarMenuButton>
@@ -1443,13 +1466,13 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 								<SidebarMenu>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Engineering">
-											<div class={cn("h-4 w-4", icon("code"))} />
+											<IconCode class="h-4 w-4" />
 											<span>Engineering</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Design">
-											<div class={cn("h-4 w-4", icon("palette"))} />
+											<IconPalette class="h-4 w-4" />
 											<span>Design</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
@@ -1490,7 +1513,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 								<SidebarMenuItem>
 									<SidebarMenuButton size="lg" class="hover:bg-transparent active:bg-transparent">
 										<div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-											<div class={cn("h-4 w-4", icon("zap"))} />
+											<IconZap class="h-4 w-4" />
 										</div>
 										<div class="flex flex-col gap-0.5 leading-none">
 											<span class="font-semibold">WorkSpace</span>
@@ -1505,7 +1528,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 									<SidebarMenu>
 										<SidebarMenuItem>
 											<SidebarMenuButton tooltip="Dashboard">
-												<div class={cn("h-4 w-4", icon("home"))} />
+												<IconHome class="h-4 w-4" />
 												<span>Dashboard</span>
 											</SidebarMenuButton>
 										</SidebarMenuItem>
@@ -1514,26 +1537,26 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 											onOpenChange={(details) => setProjectsOpen(details.open)}
 										>
 											<SidebarMenuCollapsibleTrigger tooltip="Projects">
-												<div class={cn("h-4 w-4", icon("folder"))} />
+												<IconFolder class="h-4 w-4" />
 												<span>Projects</span>
 											</SidebarMenuCollapsibleTrigger>
 											<SidebarMenuCollapsibleContent>
 												<SidebarMenuSub>
 													<SidebarMenuSubItem>
 														<SidebarMenuSubButton isActive>
-															<div class={cn("h-4 w-4", icon("circle"))} />
+															<IconCircle class="h-4 w-4" />
 															<span>Website Redesign</span>
 														</SidebarMenuSubButton>
 													</SidebarMenuSubItem>
 													<SidebarMenuSubItem>
 														<SidebarMenuSubButton>
-															<div class={cn("h-4 w-4", icon("circle"))} />
+															<IconCircle class="h-4 w-4" />
 															<span>Mobile App</span>
 														</SidebarMenuSubButton>
 													</SidebarMenuSubItem>
 													<SidebarMenuSubItem>
 														<SidebarMenuSubButton>
-															<div class={cn("h-4 w-4", icon("circle"))} />
+															<IconCircle class="h-4 w-4" />
 															<span>API Integration</span>
 														</SidebarMenuSubButton>
 													</SidebarMenuSubItem>
@@ -1542,7 +1565,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 										</SidebarMenuCollapsible>
 										<SidebarMenuItem>
 											<SidebarMenuButton tooltip="Analytics">
-												<div class={cn("h-4 w-4", icon("bar-chart"))} />
+												<IconBarChart class="h-4 w-4" />
 												<span>Analytics</span>
 											</SidebarMenuButton>
 										</SidebarMenuItem>
@@ -1590,7 +1613,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 							<SidebarGroup>
 								<SidebarGroupLabel>Messages</SidebarGroupLabel>
 								<SidebarGroupAction>
-									<div class={cn("h-4 w-4", icon("plus"))} />
+									<IconPlus class="h-4 w-4" />
 								</SidebarGroupAction>
 								<SidebarGroupContent>
 									<SidebarMenu>
@@ -1606,25 +1629,25 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 										>
 											<SidebarMenuItem>
 												<SidebarMenuButton isActive tooltip="Inbox">
-													<div class={cn("h-4 w-4", icon("inbox"))} />
+													<IconInbox class="h-4 w-4" />
 													<span>Inbox</span>
 													<SidebarMenuBadge>12</SidebarMenuBadge>
 												</SidebarMenuButton>
 											</SidebarMenuItem>
 											<SidebarMenuItem>
 												<SidebarMenuButton tooltip="Drafts">
-													<div class={cn("h-4 w-4", icon("file-edit"))} />
+													<IconFileEdit class="h-4 w-4" />
 													<span>Drafts</span>
 													<SidebarMenuBadge>3</SidebarMenuBadge>
 												</SidebarMenuButton>
 											</SidebarMenuItem>
 											<SidebarMenuItem>
 												<SidebarMenuButton tooltip="Sent">
-													<div class={cn("h-4 w-4", icon("send"))} />
+													<IconSend class="h-4 w-4" />
 													<span>Sent</span>
 												</SidebarMenuButton>
 												<SidebarMenuAction showOnHover>
-													<div class={cn("h-4 w-4", icon("more-horizontal"))} />
+													<IconMoreHorizontal class="h-4 w-4" />
 												</SidebarMenuAction>
 											</SidebarMenuItem>
 										</Show>
@@ -1638,13 +1661,13 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 									<SidebarMenu>
 										<SidebarMenuItem>
 											<SidebarMenuButton tooltip="Website Redesign">
-												<div class={cn("h-4 w-4", icon("globe"))} />
+												<IconGlobe class="h-4 w-4" />
 												<span>Website Redesign</span>
 											</SidebarMenuButton>
 										</SidebarMenuItem>
 										<SidebarMenuItem>
 											<SidebarMenuButton tooltip="Mobile App">
-												<div class={cn("h-4 w-4", icon("smartphone"))} />
+												<IconSmartphone class="h-4 w-4" />
 												<span>Mobile App</span>
 											</SidebarMenuButton>
 										</SidebarMenuItem>
@@ -1698,7 +1721,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 							<SidebarMenuItem>
 								<SidebarMenuButton size="lg" class="hover:bg-transparent active:bg-transparent">
 									<div class="flex h-8 w-8 items-center justify-center rounded-md bg-linear-to-br from-purple-500 to-pink-500 text-white">
-										<div class={cn("h-4 w-4", icon("sparkles"))} />
+										<IconSparkles class="h-4 w-4" />
 									</div>
 									<div class="flex flex-col gap-0.5 leading-none">
 										<span class="font-semibold">Premium</span>
@@ -1714,19 +1737,19 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 								<SidebarMenu>
 									<SidebarMenuItem>
 										<SidebarMenuButton isActive tooltip="Overview">
-											<div class={cn("h-4 w-4", icon("layout-dashboard"))} />
+											<IconLayoutDashboard class="h-4 w-4" />
 											<span>Overview</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Analytics">
-											<div class={cn("h-4 w-4", icon("trending-up"))} />
+											<IconTrendingUp class="h-4 w-4" />
 											<span>Analytics</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton tooltip="Reports">
-											<div class={cn("h-4 w-4", icon("file-text"))} />
+											<IconFileText class="h-4 w-4" />
 											<span>Reports</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
@@ -1738,7 +1761,7 @@ export const meta: ComponentMeta<SidebarProviderProps> = {
 						<SidebarMenu>
 							<SidebarMenuItem>
 								<SidebarMenuButton tooltip="Help">
-									<div class={cn("h-4 w-4", icon("help-circle"))} />
+									<IconHelpCircle class="h-4 w-4" />
 									<span>Help & Support</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>

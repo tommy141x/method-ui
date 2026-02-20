@@ -1,8 +1,46 @@
-import { execSync } from "node:child_process";
+import { execSync, spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import * as p from "@clack/prompts";
 import { getTemplatesDirectory } from "./files.js";
+
+/**
+ * Best-effort: run `biome check --write --unsafe` on a single file using the
+ * target project's own Biome installation (local or via npx).
+ * Silently does nothing if Biome is unavailable or returns an error.
+ */
+function tryFormatWithBiome(filePath: string): void {
+	try {
+		// Try the locally-installed biome binary first (fastest, respects project config)
+		const local = spawnSync("biome", ["check", "--write", "--unsafe", filePath], {
+			stdio: "pipe",
+			timeout: 15_000,
+		});
+
+		if (local.status === 0 || local.status === 1) {
+			// status 1 means "found issues but applied fixes" — that's fine
+			return;
+		}
+
+		// Fall back to bunx first (faster for Bun-based projects), then npx
+		const bunx = spawnSync("bunx", ["@biomejs/biome", "check", "--write", "--unsafe", filePath], {
+			stdio: "pipe",
+			timeout: 30_000,
+		});
+
+		if (bunx.status === 0 || bunx.status === 1) {
+			return;
+		}
+
+		// Final fallback: npx for npm/yarn/pnpm projects
+		spawnSync("npx", ["--yes", "@biomejs/biome", "check", "--write", "--unsafe", filePath], {
+			stdio: "pipe",
+			timeout: 30_000,
+		});
+	} catch (_error) {
+		// Biome not available — skip silently
+	}
+}
 
 interface PackageJson {
 	name?: string;
@@ -60,7 +98,7 @@ export interface PackageManagerInfo {
 // Constants
 export const REQUIRED_PACKAGES = [
 	"@ark-ui/solid",
-	"@unocss/preset-icons",
+	"unplugin-icons",
 	"class-variance-authority",
 	"clsx",
 	"unocss",
@@ -324,8 +362,8 @@ export function analyzeComponentDependencies(filePath: string): DependencyAnalys
 						path: source,
 					});
 				}
-			} else if (!source.startsWith("/") && !source.startsWith(".")) {
-				// External package dependency
+			} else if (!source.startsWith("/") && !source.startsWith(".") && !source.startsWith("~")) {
+				// External package dependency (skip ~icons/... virtual unplugin-icons imports)
 				const packageName = getPackageName(source);
 				const imports = extractImportedNames(match[0]);
 
@@ -387,7 +425,7 @@ function getComponentDependenciesFromRegistry(
 	try {
 		// Look for registry.json in the templates directory
 		const templatesDir = getTemplatesDirectory();
-		const registryPath = join(templatesDir, "lib", "registry.json");
+		const registryPath = join(templatesDir, "registry.json");
 
 		if (!existsSync(registryPath)) {
 			return null;
@@ -404,7 +442,11 @@ function getComponentDependenciesFromRegistry(
 
 		return {
 			components: componentMetadata.dependencies.components || [],
-			packages: componentMetadata.dependencies.packages || [],
+			// Filter out ~icons virtual import prefixes — they are resolved by
+			// unplugin-icons at build time and are not real npm packages
+			packages: (componentMetadata.dependencies.packages || []).filter(
+				(pkg: string) => !pkg.startsWith("~")
+			),
 		};
 	} catch (_error) {
 		// If registry is not available or malformed, return null to fall back to file analysis
@@ -685,6 +727,27 @@ export interface InstallationResult {
 }
 
 /**
+ * Get the names of components already installed in the user's components directory
+ */
+export function getInstalledComponentNames(projectRoot: string, componentsPath: string): string[] {
+	const { readdirSync } = require("node:fs");
+
+	const fullPath = join(projectRoot, componentsPath);
+
+	if (!existsSync(fullPath)) {
+		return [];
+	}
+
+	try {
+		return (readdirSync(fullPath) as string[])
+			.filter((file) => file.endsWith(".tsx") || file.endsWith(".jsx"))
+			.map((file) => file.replace(/\.(tsx|jsx)$/, ""));
+	} catch (_error) {
+		return [];
+	}
+}
+
+/**
  * Display installation plan to user and get confirmation
  */
 async function displayInstallationPlan(
@@ -795,6 +858,7 @@ async function installComponents(
 			}
 
 			safeWriteFile(outputPath, finalCode);
+			tryFormatWithBiome(outputPath);
 			installed.push(componentName);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "Unknown error";
@@ -829,8 +893,9 @@ export async function installWithDependencies(
 	const componentsPath = getComponentsPath(config);
 
 	// Get components source directory from CLI package
+	// getTemplatesDirectory() returns the lib/ dir; components/ sits next to it
 	const templatesDir = getTemplatesDirectory();
-	const componentsSourceDir = templatesDir.replace("templates", "components");
+	const componentsSourceDir = join(dirname(templatesDir), "components");
 
 	// Analyze dependencies
 	const missing = getMissingDependencies(
@@ -918,6 +983,194 @@ export async function installWithDependencies(
 				for (const error of componentResult.errors) p.log.error(`  ${error}`);
 			}
 		}
+	}
+
+	return result;
+}
+
+/**
+ * Reinstall components by overwriting them without prompting.
+ * Re-runs the full transform pipeline so changes like a new iconLibrary
+ * in components.json are picked up automatically.
+ */
+async function updateComponents(
+	componentNames: string[],
+	projectRoot: string,
+	componentsPath: string
+): Promise<{
+	success: boolean;
+	updated: string[];
+	errors: string[];
+}> {
+	if (componentNames.length === 0) {
+		return { success: true, updated: [], errors: [] };
+	}
+
+	const { prepareComponentForUser, validateComponent } = await import("./transform.js");
+	const { safeWriteFile } = await import("./files.js");
+	const { transformTypeScriptToJavaScript } = await import("./typescript.js");
+	const { readComponentsConfig, isTypeScriptProject } = await import("./config.js");
+	const { join } = await import("node:path");
+
+	const updated: string[] = [];
+	const errors: string[] = [];
+	const packageManager = detectPackageManager();
+	const config = readComponentsConfig();
+	const isTypeScript = isTypeScriptProject(config);
+
+	for (const componentName of componentNames) {
+		try {
+			const result = prepareComponentForUser(componentName, packageManager);
+
+			let finalCode = result.code;
+			let finalFileName = result.fileName;
+
+			if (!isTypeScript) {
+				finalCode = transformTypeScriptToJavaScript(finalCode);
+				finalFileName = finalFileName.replace(".tsx", ".jsx");
+			}
+
+			const validation = validateComponent(finalCode);
+			if (!validation.valid) {
+				errors.push(`${componentName}: Validation failed: ${validation.errors.join(", ")}`);
+				continue;
+			}
+
+			const outputPath = join(projectRoot, componentsPath, finalFileName);
+			safeWriteFile(outputPath, finalCode);
+			tryFormatWithBiome(outputPath);
+			updated.push(componentName);
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : "Unknown error";
+			errors.push(`${componentName}: ${errorMessage}`);
+		}
+	}
+
+	return {
+		success: errors.length === 0,
+		updated,
+		errors,
+	};
+}
+
+/**
+ * Update (reinstall) the given components, also installing any newly required
+ * packages that are not yet present in the project.
+ * Reads components.json fresh on every call, so icon library changes etc. are
+ * picked up without any extra steps.
+ */
+export async function updateWithDependencies(
+	componentNames: string[]
+): Promise<InstallationResult> {
+	const { getProjectRoot } = await import("./project.js");
+	const { readComponentsConfig, getComponentsPath } = await import("./config.js");
+	const { getTemplatesDirectory } = await import("./files.js");
+
+	const projectRoot = getProjectRoot();
+	const config = readComponentsConfig();
+
+	if (!config) {
+		throw new Error("No components.json found. Please run 'method init' first.");
+	}
+
+	const componentsPath = getComponentsPath(config);
+	// getTemplatesDirectory() returns the lib/ dir; components/ sits next to it
+	const templatesDir = getTemplatesDirectory();
+	const componentsSourceDir = join(dirname(templatesDir), "components");
+
+	// Check for any missing packages (new deps the project doesn't have yet)
+	const missing = getMissingDependencies(
+		componentNames,
+		projectRoot,
+		componentsPath,
+		componentsSourceDir
+	);
+
+	const result: InstallationResult = {
+		success: true,
+		installedComponents: [],
+		installedPackages: [],
+		errors: [],
+	};
+
+	// Handle missing component dependencies first
+	if (missing.missingComponents.length > 0) {
+		p.log.warn("Missing component dependencies required:");
+		for (const comp of missing.missingComponents) {
+			p.log.message(`  • ${comp}`);
+		}
+
+		const shouldInstallComps = await p.confirm({
+			message: "Would you like to install the missing components?",
+			initialValue: true,
+		});
+
+		if (p.isCancel(shouldInstallComps)) {
+			p.cancel("Operation cancelled.");
+			process.exit(0);
+		}
+
+		if (shouldInstallComps) {
+			// Use updateComponents (force-overwrite) to install the missing deps —
+			// it's the same write pipeline, just without the overwrite prompt.
+			const depResult = await updateComponents(
+				missing.missingComponents,
+				projectRoot,
+				componentsPath
+			);
+			result.installedComponents.push(...depResult.updated);
+			if (!depResult.success) {
+				result.success = false;
+				result.errors.push(...depResult.errors);
+			} else {
+				p.log.success(`Installed ${depResult.updated.length} missing component(s)`);
+			}
+		}
+	}
+
+	// Install any missing packages
+	if (missing.missingPackages.length > 0) {
+		p.log.warn("Missing packages required by these components:");
+		for (const pkg of missing.missingPackages) {
+			const imports = pkg.imports.length > 0 ? ` (${pkg.imports.join(", ")})` : "";
+			p.log.message(`  • ${pkg.name}${imports}`);
+		}
+
+		const shouldInstall = await p.confirm({
+			message: "Would you like to install the missing packages?",
+			initialValue: true,
+		});
+
+		if (p.isCancel(shouldInstall)) {
+			p.cancel("Operation cancelled.");
+			process.exit(0);
+		}
+
+		if (shouldInstall) {
+			try {
+				const packageNames = missing.missingPackages.map((pkg) => pkg.name);
+				const packageManager = detectPackageManager();
+				installPackages(packageNames, { packageManager });
+				result.installedPackages = packageNames;
+				p.log.success(`Installed ${packageNames.length} package(s)`);
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : "Unknown error";
+				result.success = false;
+				result.errors.push(`Package installation failed: ${errorMessage}`);
+				return result;
+			}
+		}
+	}
+
+	// Reinstall (overwrite) the requested components
+	p.log.step("Updating components...");
+	const updateResult = await updateComponents(componentNames, projectRoot, componentsPath);
+
+	result.installedComponents = updateResult.updated;
+
+	if (!updateResult.success) {
+		result.success = false;
+		result.errors.push(...updateResult.errors);
 	}
 
 	return result;

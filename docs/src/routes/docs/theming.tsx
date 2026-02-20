@@ -1,5 +1,14 @@
 import { Meta, Title } from "@solidjs/meta";
 import { For, Show } from "solid-js";
+import IconArrowRight from "~icons/lucide/arrow-right";
+import IconBox from "~icons/lucide/box";
+import IconCheckCircle from "~icons/lucide/check-circle";
+import IconCode from "~icons/lucide/code";
+import IconInfo from "~icons/lucide/info";
+import IconLayers from "~icons/lucide/layers";
+import IconLightbulb from "~icons/lucide/lightbulb";
+import IconPalette from "~icons/lucide/palette";
+import IconXCircle from "~icons/lucide/x-circle";
 import { Badge } from "../../components/badge";
 import { Button } from "../../components/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/card";
@@ -42,7 +51,7 @@ export default function Theming() {
 					<CardContent class="space-y-4">
 						<div class="grid gap-4">
 							<div class="flex gap-3">
-								<div class="i-lucide-palette size-5 text-primary shrink-0 mt-0.5" />
+								<IconPalette class="size-5 text-primary shrink-0 mt-0.5" />
 								<div>
 									<h3 class="font-medium mb-1">No Special Treatment</h3>
 									<p class="text-sm text-muted-foreground">
@@ -52,7 +61,7 @@ export default function Theming() {
 								</div>
 							</div>
 							<div class="flex gap-3">
-								<div class="i-lucide-box size-5 text-primary shrink-0 mt-0.5" />
+								<IconBox class="size-5 text-primary shrink-0 mt-0.5" />
 								<div>
 									<h3 class="font-medium mb-1">The 'base' Theme</h3>
 									<p class="text-sm text-muted-foreground">
@@ -62,7 +71,7 @@ export default function Theming() {
 								</div>
 							</div>
 							<div class="flex gap-3">
-								<div class="i-lucide-layers size-5 text-primary shrink-0 mt-0.5" />
+								<IconLayers class="size-5 text-primary shrink-0 mt-0.5" />
 								<div>
 									<h3 class="font-medium mb-1">CSS Variable Merging</h3>
 									<p class="text-sm text-muted-foreground">
@@ -72,7 +81,7 @@ export default function Theming() {
 								</div>
 							</div>
 							<div class="flex gap-3">
-								<div class="i-lucide-code size-5 text-primary shrink-0 mt-0.5" />
+								<IconCode class="size-5 text-primary shrink-0 mt-0.5" />
 								<div>
 									<h3 class="font-medium mb-1">Flexible Definition</h3>
 									<p class="text-sm text-muted-foreground">
@@ -430,7 +439,7 @@ const themes = [
 							<h3 class="text-sm font-medium mb-3">How it works</h3>
 							<div class="space-y-3 text-sm">
 								<div class="flex gap-3">
-									<div class="i-lucide-arrow-right size-5 text-primary shrink-0 mt-0.5" />
+									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
 										<strong>CSS Classes:</strong> When using CSS-defined themes, all classes in the
 										inheritance chain are applied unless the theme ID is 'base' which uses :root
@@ -438,21 +447,21 @@ const themes = [
 									</div>
 								</div>
 								<div class="flex gap-3">
-									<div class="i-lucide-arrow-right size-5 text-primary shrink-0 mt-0.5" />
+									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
 										<strong>Inline cssVars:</strong> Variables are recursively merged, with child
 										themes overriding parent values
 									</div>
 								</div>
 								<div class="flex gap-3">
-									<div class="i-lucide-arrow-right size-5 text-primary shrink-0 mt-0.5" />
+									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
 										<strong>Recursive:</strong> Themes can extend themes that extend other themes
 										(e.g., modern → dark → base)
 									</div>
 								</div>
 								<div class="flex gap-3">
-									<div class="i-lucide-arrow-right size-5 text-primary shrink-0 mt-0.5" />
+									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
 										<strong>Safe:</strong> Circular dependencies are automatically detected and
 										prevented
@@ -463,7 +472,7 @@ const themes = [
 
 						<div class="bg-green-500/10 border border-green-500/20 p-4 rounded-lg">
 							<div class="flex gap-2 items-start">
-								<div class="i-lucide-lightbulb size-4 text-green-500 mt-0.5 shrink-0" />
+								<IconLightbulb class="size-4 text-green-500 mt-0.5 shrink-0" />
 								<div class="text-sm">
 									<strong class="text-green-500">Pro Tip:</strong> Use theme inheritance to create
 									color variants for different base themes. For example, create "rose-light" and
@@ -531,7 +540,7 @@ const themes = [
 
 						<div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
 							<div class="flex gap-2 items-start">
-								<div class="i-lucide-info size-4 text-blue-500 mt-0.5 shrink-0" />
+								<IconInfo class="size-4 text-blue-500 mt-0.5 shrink-0" />
 								<div class="text-sm">
 									<strong class="text-blue-500">Note:</strong> Inline cssVars override CSS-defined
 									themes. If a theme has both a CSS class and cssVars, the cssVars take precedence.
@@ -663,7 +672,7 @@ function MyApp() {
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<div class="flex gap-3">
-							<div class="i-lucide-check-circle size-5 text-green-500 shrink-0 mt-0.5" />
+							<IconCheckCircle class="size-5 text-green-500 shrink-0 mt-0.5" />
 							<div>
 								<h3 class="font-medium mb-1">Override Only What You Need</h3>
 								<p class="text-sm text-muted-foreground">
@@ -680,7 +689,7 @@ function MyApp() {
 						</div>
 
 						<div class="flex gap-3">
-							<div class="i-lucide-check-circle size-5 text-green-500 shrink-0 mt-0.5" />
+							<IconCheckCircle class="size-5 text-green-500 shrink-0 mt-0.5" />
 							<div>
 								<h3 class="font-medium mb-1">Use HSL Color Format</h3>
 								<p class="text-sm text-muted-foreground">
@@ -698,7 +707,7 @@ function MyApp() {
 						</div>
 
 						<div class="flex gap-3">
-							<div class="i-lucide-check-circle size-5 text-green-500 shrink-0 mt-0.5" />
+							<IconCheckCircle class="size-5 text-green-500 shrink-0 mt-0.5" />
 							<div>
 								<h3 class="font-medium mb-1">Test in Multiple Contexts</h3>
 								<p class="text-sm text-muted-foreground">
@@ -709,7 +718,7 @@ function MyApp() {
 						</div>
 
 						<div class="flex gap-3">
-							<div class="i-lucide-x-circle size-5 text-red-500 shrink-0 mt-0.5" />
+							<IconXCircle class="size-5 text-red-500 shrink-0 mt-0.5" />
 							<div>
 								<h3 class="font-medium mb-1">Don't Redefine Everything</h3>
 								<p class="text-sm text-muted-foreground">
@@ -720,7 +729,7 @@ function MyApp() {
 						</div>
 
 						<div class="flex gap-3">
-							<div class="i-lucide-check-circle size-5 text-green-500 shrink-0 mt-0.5" />
+							<IconCheckCircle class="size-5 text-green-500 shrink-0 mt-0.5" />
 							<div>
 								<h3 class="font-medium mb-1">Use Theme Inheritance</h3>
 								<p class="text-sm text-muted-foreground">

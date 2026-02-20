@@ -1,8 +1,10 @@
 import { TreeView as ArkTreeView, createTreeCollection } from "@ark-ui/solid";
 import type { Component, JSX } from "solid-js";
 import { For, splitProps } from "solid-js";
+import IconChevronRight from "~icons/lucide/chevron-right";
+import IconFile from "~icons/lucide/file";
+import IconFolder from "~icons/lucide/folder";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // Types
@@ -44,10 +46,10 @@ const InternalTreeNode: Component<{
 						class={cn(
 							"flex items-center gap-1.5 py-1.5 px-1 rounded-md cursor-pointer select-none",
 							"ps-[calc((var(--depth)-1)*22px)]",
-							"[&[data-depth='1']]:ps-1",
+							"data-[depth='1']:ps-1",
 							"hover:bg-accent hover:text-accent-foreground",
-							"data-[selected]:text-primary",
-							"data-[focus]:outline-none data-[focus]:ring-2 data-[focus]:ring-ring data-[focus]:ring-offset-1"
+							"data-selected:text-primary",
+							"data-focus:outline-none data-focus:ring-2 data-focus:ring-ring data-focus:ring-offset-1"
 						)}
 					>
 						<ArkTreeView.BranchIndicator
@@ -56,14 +58,14 @@ const InternalTreeNode: Component<{
 								"data-[state=open]:rotate-90"
 							)}
 						>
-							<div class={cn("h-4 w-4", icon("chevron-right"))} />
+							<IconChevronRight class="h-4 w-4" />
 						</ArkTreeView.BranchIndicator>
 						<ArkTreeView.BranchText class="flex items-center gap-2">
 							{props.renderBranch ? (
 								props.renderBranch(props.node)
 							) : (
 								<>
-									<div class={cn("h-4 w-4", icon("folder"))} />
+									<IconFolder class="h-4 w-4" />
 									{props.node.name}
 								</>
 							)}
@@ -107,7 +109,7 @@ const InternalTreeNode: Component<{
 							class={cn(
 								"h-full w-px bg-border absolute",
 								"left-[calc((var(--depth)-1)*29px)]",
-								"[&[data-depth='1']]:left-3"
+								"data-[depth='1']:left-3"
 							)}
 						/>
 						<For each={props.node.children}>
@@ -128,8 +130,8 @@ const InternalTreeNode: Component<{
 						"flex items-center gap-2 rounded-md cursor-pointer relative py-1.5 px-1",
 						"ps-[calc(var(--depth)*22px)]",
 						"hover:bg-accent hover:text-accent-foreground",
-						"data-[selected]:text-primary",
-						"data-[focus]:outline-none data-[focus]:ring-2 data-[focus]:ring-ring data-[focus]:ring-offset-1"
+						"data-selected:text-primary",
+						"data-focus:outline-none data-focus:ring-2 data-focus:ring-ring data-focus:ring-offset-1"
 					)}
 				>
 					<ArkTreeView.ItemText class="flex items-center gap-2">
@@ -137,7 +139,7 @@ const InternalTreeNode: Component<{
 							props.renderItem(props.node)
 						) : (
 							<>
-								<div class={cn("h-4 w-4", icon("file"))} />
+								<IconFile class="h-4 w-4" />
 								{props.node.name}
 							</>
 						)}
@@ -217,6 +219,10 @@ export const TreeViewBranchIndentGuide = ArkTreeView.BranchIndentGuide;
 export const TreeViewItem = ArkTreeView.Item;
 export const TreeViewItemText = ArkTreeView.ItemText;
 export const TreeViewItemIndicator = ArkTreeView.ItemIndicator;
+
+// Example-only imports - removed during CLI transform
+import IconFileCode from "~icons/lucide/file-code";
+import IconFolderOpen from "~icons/lucide/folder-open";
 
 export const meta: ComponentMeta<TreeViewProps> = {
 	name: "TreeView",
@@ -323,13 +329,13 @@ export const meta: ComponentMeta<TreeViewProps> = {
 						]}
 						renderBranch={(node) => (
 							<>
-								<div class="h-4 w-4 i-lucide-folder-open" />
+								<IconFolderOpen class="h-4 w-4" />
 								<span class="font-semibold">{node.name}</span>
 							</>
 						)}
 						renderItem={(node) => (
 							<>
-								<div class="h-4 w-4 i-lucide-file-code" />
+								<IconFileCode class="h-4 w-4" />
 								<span class="text-muted-foreground">{node.name}</span>
 							</>
 						)}

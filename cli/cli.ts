@@ -12,11 +12,13 @@ import {
 	checkPackageCompatibility,
 	detectPackageManager,
 	formatPackageList,
+	getInstalledComponentNames,
 	getMissingPackages,
 	getMissingPackagesWithIcons,
 	installPackages,
 	installWithDependencies,
 	isPackageManagerAvailable,
+	updateWithDependencies,
 } from "./utils/dependencies.js";
 import { createProjectFiles } from "./utils/files.js";
 
@@ -291,8 +293,17 @@ const addCommand = defineCommand({
 			}
 		}
 
-		// Parse component names - support both single and multiple components
-		const componentNames = args.components ? args.components.split(/\s+/) : [];
+		// Parse component names - support both single and multiple components.
+		// citty uses mri under the hood, so args._ always contains ALL positional
+		// args (including the first one that also gets bound to args.components).
+		// Using args._ as the sole source avoids duplicating the first component.
+		const componentNames = (
+			Array.isArray(args._) && (args._ as string[]).length > 0
+				? (args._ as string[])
+				: args.components
+					? [args.components]
+					: []
+		).filter(Boolean);
 
 		if (componentNames.length === 0) {
 			p.log.step("Available components:");
@@ -365,6 +376,149 @@ const addCommand = defineCommand({
 				const errorMessage = error instanceof Error ? error.message : "Unknown error";
 				p.log.error(`Failed to add component(s): ${componentNames.join(", ")} - ${errorMessage}`);
 			}
+		}
+	},
+});
+
+const updateCommand = defineCommand({
+	meta: {
+		name: "update",
+		description: "Update (reinstall) components from the latest source",
+	},
+	args: {
+		components: {
+			type: "positional",
+			description: "Component name(s) to update (omit to update all installed)",
+			required: false,
+		},
+	},
+	async run({ args }) {
+		if (!isInProject()) {
+			p.log.error(
+				"Could not find project root. Please run this command from within a project directory (one that contains package.json)."
+			);
+			return;
+		}
+
+		if (!hasComponentsConfig()) {
+			p.log.error("No components.json found. Please run 'method init' first.");
+			return;
+		}
+
+		const config = readComponentsConfig();
+		if (config) {
+			const validationErrors = validateComponentsConfig(config);
+			if (validationErrors.length > 0) {
+				p.log.error("Configuration validation failed:");
+				for (const error of validationErrors) {
+					p.log.error(`  ${error}`);
+				}
+				p.log.message("Please run 'method init' to fix the configuration.");
+				process.exit(1);
+			}
+		}
+
+		const projectRoot = getProjectRoot();
+		const componentsPath = getComponentsPath(config ?? undefined);
+
+		// Resolve which components to update
+		const rawPositionals = Array.isArray(args._) ? (args._ as string[]) : [];
+		const requestedNames =
+			rawPositionals.length > 0 ? rawPositionals : args.components ? [args.components] : [];
+
+		let componentNames: string[];
+
+		if (requestedNames.length === 0) {
+			// No args — discover all installed components, filtered to only those
+			// that exist in the library source (ignore custom/project-specific files)
+			const installed = getInstalledComponentNames(projectRoot, componentsPath);
+			const updatable = installed.filter((name) => componentExists(name));
+			const skipped = installed.filter((name) => !componentExists(name));
+
+			if (updatable.length === 0) {
+				p.log.warn(
+					`No Method UI components found in ${componentsPath}. Add some with 'method add' first.`
+				);
+				return;
+			}
+
+			p.log.step(`Found ${updatable.length} Method UI component(s):`);
+			for (const name of updatable) {
+				p.log.message(`  • ${name}`);
+			}
+
+			if (skipped.length > 0) {
+				p.log.info(`Skipping ${skipped.length} non-library file(s): ${skipped.join(", ")}`);
+			}
+
+			const shouldUpdateAll = await p.confirm({
+				message: "Update all of them?",
+				initialValue: true,
+			});
+
+			if (p.isCancel(shouldUpdateAll) || !shouldUpdateAll) {
+				p.cancel("Update cancelled.");
+				return;
+			}
+
+			componentNames = updatable;
+		} else {
+			// Validate that every requested component is actually installed
+			const installed = getInstalledComponentNames(projectRoot, componentsPath);
+			const notInstalled = requestedNames.filter((name) => !installed.includes(name));
+			const notInLibrary = requestedNames.filter(
+				(name) => installed.includes(name) && !componentExists(name)
+			);
+
+			if (notInstalled.length > 0) {
+				p.log.error(`The following component(s) are not installed: ${notInstalled.join(", ")}`);
+				p.log.message("Use 'method add' to install new components, or check the component name.");
+				return;
+			}
+
+			if (notInLibrary.length > 0) {
+				p.log.error(
+					`The following file(s) are not part of the Method UI library: ${notInLibrary.join(", ")}`
+				);
+				return;
+			}
+
+			componentNames = requestedNames;
+		}
+
+		try {
+			const result = await updateWithDependencies(componentNames);
+
+			if (result.success) {
+				if (result.installedComponents.length > 0) {
+					p.log.success(`Successfully updated ${result.installedComponents.length} component(s):`);
+					for (const comp of result.installedComponents) {
+						p.log.message(`  ✓ ${comp}`);
+					}
+				}
+
+				if (result.installedPackages.length > 0) {
+					p.log.success(`Installed ${result.installedPackages.length} new package(s):`);
+					for (const pkg of result.installedPackages) {
+						p.log.message(`  ✓ ${pkg}`);
+					}
+				}
+			} else {
+				p.log.error("Update failed:");
+				for (const error of result.errors) {
+					p.log.error(`  ${error}`);
+				}
+
+				if (result.installedComponents.length > 0) {
+					p.log.message("Partially updated:");
+					for (const comp of result.installedComponents) {
+						p.log.message(`  ✓ ${comp}`);
+					}
+				}
+			}
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : "Unknown error";
+			p.log.error(`Failed to update component(s): ${errorMessage}`);
 		}
 	},
 });
@@ -470,6 +624,7 @@ const main = defineCommand({
 	subCommands: {
 		init: initCommand,
 		add: addCommand,
+		update: updateCommand,
 		remove: removeCommand,
 	},
 });

@@ -14,8 +14,9 @@ import {
 } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
+import IconLoaderCircle from "~icons/lucide/loader-circle";
+import IconSearch from "~icons/lucide/search";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // Context for managing group state
@@ -225,11 +226,11 @@ export const CommandInput = (props: CommandInputProps) => {
 				when={!context.loading?.()}
 				fallback={
 					<div class="h-4 w-4 mr-2 shrink-0 opacity-50 flex items-center justify-center animate-spin">
-						<div class={cn("h-4 w-4", icon("loader-circle"))} />
+						<IconLoaderCircle class="h-4 w-4" />
 					</div>
 				}
 			>
-				<div class={cn("h-4 w-4 mr-2 shrink-0 opacity-50", icon("search"))} />
+				<IconSearch class="h-4 w-4 mr-2 shrink-0 opacity-50" />
 			</Show>
 			<input
 				ref={inputRef}
@@ -758,6 +759,14 @@ export const CommandDialog = (props: CommandDialogProps) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconCalculator from "~icons/lucide/calculator";
+import IconCalendar from "~icons/lucide/calendar";
+import IconCreditCard from "~icons/lucide/credit-card";
+import IconFileText from "~icons/lucide/file-text";
+import IconSettings from "~icons/lucide/settings";
+import IconSmile from "~icons/lucide/smile";
+import IconUser from "~icons/lucide/user";
 // Import components for examples
 import { Button } from "./button";
 
@@ -783,32 +792,32 @@ export const meta: ComponentMeta<CommandProps> = {
 								<CommandEmpty>No results found.</CommandEmpty>
 								<CommandGroup heading="Suggestions">
 									<CommandItem value="calendar">
-										<div class="h-4 w-4 mr-2 i-lucide-calendar" />
+										<IconCalendar class="h-4 w-4 mr-2" />
 										<span>Calendar</span>
 									</CommandItem>
 									<CommandItem value="search-emoji">
-										<div class="h-4 w-4 mr-2 i-lucide-smile" />
+										<IconSmile class="h-4 w-4 mr-2" />
 										<span>Search Emoji</span>
 									</CommandItem>
 									<CommandItem value="calculator" disabled>
-										<div class="h-4 w-4 mr-2 i-lucide-calculator" />
+										<IconCalculator class="h-4 w-4 mr-2" />
 										<span>Calculator</span>
 									</CommandItem>
 								</CommandGroup>
 								<CommandSeparator />
 								<CommandGroup heading="Settings">
 									<CommandItem value="profile">
-										<div class="h-4 w-4 mr-2 i-lucide-user" />
+										<IconUser class="h-4 w-4 mr-2" />
 										<span>Profile</span>
 										<CommandShortcut>⌘P</CommandShortcut>
 									</CommandItem>
 									<CommandItem value="billing">
-										<div class="h-4 w-4 mr-2 i-lucide-credit-card" />
+										<IconCreditCard class="h-4 w-4 mr-2" />
 										<span>Billing</span>
 										<CommandShortcut>⌘B</CommandShortcut>
 									</CommandItem>
 									<CommandItem value="settings">
-										<div class="h-4 w-4 mr-2 i-lucide-settings" />
+										<IconSettings class="h-4 w-4 mr-2" />
 										<span>Settings</span>
 										<CommandShortcut>⌘S</CommandShortcut>
 									</CommandItem>
@@ -865,32 +874,32 @@ export const meta: ComponentMeta<CommandProps> = {
 									<CommandEmpty>No results found.</CommandEmpty>
 									<CommandGroup heading="Suggestions">
 										<CommandItem value="calendar" onSelect={() => setOpen(false)}>
-											<div class="h-4 w-4 mr-2 i-lucide-calendar" />
+											<IconCalendar class="h-4 w-4 mr-2" />
 											<span>Calendar</span>
 										</CommandItem>
 										<CommandItem value="search-emoji" onSelect={() => setOpen(false)}>
-											<div class="h-4 w-4 mr-2 i-lucide-smile" />
+											<IconSmile class="h-4 w-4 mr-2" />
 											<span>Search Emoji</span>
 										</CommandItem>
 										<CommandItem value="calculator" onSelect={() => setOpen(false)}>
-											<div class="h-4 w-4 mr-2 i-lucide-calculator" />
+											<IconCalculator class="h-4 w-4 mr-2" />
 											<span>Calculator</span>
 										</CommandItem>
 									</CommandGroup>
 									<CommandSeparator />
 									<CommandGroup heading="Settings">
 										<CommandItem value="profile" onSelect={() => setOpen(false)}>
-											<div class="h-4 w-4 mr-2 i-lucide-user" />
+											<IconUser class="h-4 w-4 mr-2" />
 											<span>Profile</span>
 											<CommandShortcut>⌘P</CommandShortcut>
 										</CommandItem>
 										<CommandItem value="billing" onSelect={() => setOpen(false)}>
-											<div class="h-4 w-4 mr-2 i-lucide-credit-card" />
+											<IconCreditCard class="h-4 w-4 mr-2" />
 											<span>Billing</span>
 											<CommandShortcut>⌘B</CommandShortcut>
 										</CommandItem>
 										<CommandItem value="settings" onSelect={() => setOpen(false)}>
-											<div class="h-4 w-4 mr-2 i-lucide-settings" />
+											<IconSettings class="h-4 w-4 mr-2" />
 											<span>Settings</span>
 											<CommandShortcut>⌘S</CommandShortcut>
 										</CommandItem>
@@ -974,7 +983,7 @@ export const meta: ComponentMeta<CommandProps> = {
 								<For each={items()}>
 									{(item) => (
 										<CommandItem value={item.title}>
-											<div class="h-4 w-4 mr-2 i-lucide-file-text" />
+											<IconFileText class="h-4 w-4 mr-2" />
 											<div class="flex flex-col gap-0.5 overflow-hidden">
 												<span class="truncate">{item.title}</span>
 												<span class="text-xs text-muted-foreground truncate">{item.category}</span>

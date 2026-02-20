@@ -16,15 +16,10 @@ import {
 import { isServer, Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
 import { unoMerge } from "unocss-merge";
+import IconChevronDown from "~icons/lucide/chevron-down";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
-}
-
-// Icon helper function - returns UnoCSS icon class for your configured icon library
-function icon(name: string): string {
-	return `i-lucide-${name}`;
 }
 
 // Types
@@ -414,11 +409,10 @@ export const NavMenuTrigger: Component<NavMenuTriggerProps> = (props) => {
 			{...others}
 		>
 			{local.children}
-			<div
+			<IconChevronDown
 				class={cn(
 					"relative top-px ml-1 h-3 w-3 transition-transform duration-300",
-					"group-data-[state=open]:rotate-180",
-					icon("chevron-down")
+					"group-data-[state=open]:rotate-180"
 				)}
 				aria-hidden="true"
 			/>
@@ -722,9 +716,5 @@ export const NavMenuViewport: Component<NavMenuViewportProps> = (props) => {
 		</div>
 	);
 };
-
-/* -------------------------------------------------------------------------------------------------
- * Examples & Meta
- * -----------------------------------------------------------------------------------------------*/
 
 export default NavMenu;

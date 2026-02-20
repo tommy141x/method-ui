@@ -3,8 +3,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { createContext, createMemo, For, type JSX, Show, splitProps, useContext } from "solid-js";
 import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
+import IconCheck from "~icons/lucide/check";
+import IconChevronDown from "~icons/lucide/chevron-down";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 const selectTriggerVariants = cva(
@@ -157,7 +158,7 @@ export const Select = (props: SelectProps) => {
 							}}
 						</ArkSelect.Context>
 						<ArkSelect.Indicator class="transition-transform duration-200 data-[state=open]:rotate-180 shrink-0">
-							<div class={cn("h-4 w-4", icon("chevron-down"))} />
+							<IconChevronDown class="h-4 w-4" />
 						</ArkSelect.Indicator>
 					</ArkSelect.Trigger>
 				</ArkSelect.Control>
@@ -197,7 +198,7 @@ export const Select = (props: SelectProps) => {
 																			{item.content()}
 																		</div>
 																		<ArkSelect.ItemIndicator class="inline-flex h-4 w-4 items-center justify-center shrink-0 ml-2 transition-all duration-200 data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
-																			<div class={cn("h-4 w-4", icon("check"))} />
+																			<IconCheck class="h-4 w-4" />
 																		</ArkSelect.ItemIndicator>
 																	</ArkSelect.Item>
 																)}
@@ -220,7 +221,7 @@ export const Select = (props: SelectProps) => {
 																					{item.content()}
 																				</div>
 																				<ArkSelect.ItemIndicator class="inline-flex h-4 w-4 items-center justify-center shrink-0 ml-2 transition-all duration-200 data-[state=checked]:animate-in data-[state=checked]:fade-in data-[state=checked]:zoom-in-50 [&[hidden]]:hidden">
-																					<div class={cn("h-4 w-4", icon("check"))} />
+																					<IconCheck class="h-4 w-4" />
 																				</ArkSelect.ItemIndicator>
 																			</ArkSelect.Item>
 																		)}
@@ -345,12 +346,17 @@ export const SelectIndicator = (props: { children?: JSX.Element; class?: string 
 			class={cn("transition-transform duration-200 data-[state=open]:rotate-180", local.class)}
 			{...others}
 		>
-			{local.children || <div class={cn("h-4 w-4", icon("chevron-down"))} />}
+			{local.children || <IconChevronDown class="h-4 w-4" />}
 		</ArkSelect.Indicator>
 	);
 };
 
 export const SelectHiddenSelect = ArkSelect.HiddenSelect;
+
+// Example-only imports - removed during CLI transform
+import IconAtom from "~icons/lucide/atom";
+import IconLayers from "~icons/lucide/layers";
+import IconZap from "~icons/lucide/zap";
 
 export const meta: ComponentMeta<SelectProps> = {
 	name: "Select",
@@ -379,15 +385,15 @@ export const meta: ComponentMeta<SelectProps> = {
 				<Select>
 					<SelectPlaceholder>Select a Framework</SelectPlaceholder>
 					<SelectItem value="react">
-						<div class="h-4 w-4 i-lucide-atom" />
+						<IconAtom class="h-4 w-4" />
 						<span>React</span>
 					</SelectItem>
 					<SelectItem value="solid">
-						<div class="h-4 w-4 i-lucide-zap" />
+						<IconZap class="h-4 w-4" />
 						<span>Solid</span>
 					</SelectItem>
 					<SelectItem value="vue">
-						<div class="h-4 w-4 i-lucide-layers" />
+						<IconLayers class="h-4 w-4" />
 						<span>Vue</span>
 					</SelectItem>
 				</Select>
@@ -403,15 +409,15 @@ export const meta: ComponentMeta<SelectProps> = {
 					<SelectGroup>
 						<SelectLabel>Frameworks</SelectLabel>
 						<SelectItem value="react">
-							<div class="h-4 w-4 i-lucide-atom" />
+							<IconAtom class="h-4 w-4" />
 							<span>React</span>
 						</SelectItem>
 						<SelectItem value="solid">
-							<div class="h-4 w-4 i-lucide-zap" />
+							<IconZap class="h-4 w-4" />
 							<span>Solid</span>
 						</SelectItem>
 						<SelectItem value="vue">
-							<div class="h-4 w-4 i-lucide-layers" />
+							<IconLayers class="h-4 w-4" />
 							<span>Vue</span>
 						</SelectItem>
 					</SelectGroup>

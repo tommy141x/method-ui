@@ -7,7 +7,6 @@ import type { Component, JSX } from "solid-js";
 import { createEffect, createSignal, onCleanup, onMount, splitProps } from "solid-js";
 import { unoMerge } from "unocss-merge";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
@@ -374,7 +373,5 @@ export const TabsIndicator: Component<TabsIndicatorProps> = (props) => {
 
 // Composable exports
 export const TabsRoot = Tabs;
-
-// Metadata for documentation
 
 export default Tabs;

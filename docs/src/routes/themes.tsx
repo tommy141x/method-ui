@@ -1,6 +1,7 @@
 import { cn } from "@lib/cn";
 import { Meta, Title } from "@solidjs/meta";
 import { For, Show } from "solid-js";
+import IconInfo from "~icons/lucide/info";
 import { Badge } from "../components/badge";
 import { Button } from "../components/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card";
@@ -301,7 +302,7 @@ const themes = [
 
 							<div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
 								<div class="flex gap-2 items-start">
-									<div class="i-lucide-info size-4 text-blue-500 mt-0.5 shrink-0" />
+									<IconInfo class="size-4 text-blue-500 mt-0.5 shrink-0" />
 									<div class="text-sm">
 										<strong class="text-blue-500">Tip:</strong> Inline cssVars override CSS-defined
 										themes. If a theme has both a CSS class and cssVars defined, the cssVars take

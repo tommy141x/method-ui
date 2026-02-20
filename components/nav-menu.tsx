@@ -13,8 +13,8 @@ import {
 } from "solid-js";
 import { isServer, Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
+import IconChevronDown from "~icons/lucide/chevron-down";
 import { cn } from "../lib/cn";
-import { icon } from "../lib/icon";
 import type { ComponentMeta } from "../lib/meta";
 
 // Types
@@ -404,11 +404,10 @@ export const NavMenuTrigger: Component<NavMenuTriggerProps> = (props) => {
 			{...others}
 		>
 			{local.children}
-			<div
+			<IconChevronDown
 				class={cn(
 					"relative top-px ml-1 h-3 w-3 transition-transform duration-300",
-					"group-data-[state=open]:rotate-180",
-					icon("chevron-down")
+					"group-data-[state=open]:rotate-180"
 				)}
 				aria-hidden="true"
 			/>
@@ -718,6 +717,16 @@ export const NavMenuViewport: Component<NavMenuViewportProps> = (props) => {
  * -----------------------------------------------------------------------------------------------*/
 
 // Import components for examples
+import IconBook from "~icons/lucide/book";
+import IconFileText from "~icons/lucide/file-text";
+import IconLayoutDashboard from "~icons/lucide/layout-dashboard";
+import IconPenTool from "~icons/lucide/pen-tool";
+import IconPuzzle from "~icons/lucide/puzzle";
+import IconShield from "~icons/lucide/shield";
+import IconSparkles from "~icons/lucide/sparkles";
+import IconTrendingUp from "~icons/lucide/trending-up";
+import IconUsers from "~icons/lucide/users";
+import IconZap from "~icons/lucide/zap";
 import { Button } from "./button";
 
 export const meta: ComponentMeta<NavMenuProps> = {
@@ -741,7 +750,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										class="w-[180px] shrink-0 rounded-lg bg-linear-to-br from-primary/20 to-primary/5 p-4 transition-colors hover:from-primary/30 hover:to-primary/10"
 									>
 										<div class="flex flex-col gap-2">
-											<div class={cn("h-8 w-8", icon("sparkles"))} />
+											<IconSparkles class="h-8 w-8" />
 											<div class="font-semibold">New Release</div>
 											<div class="text-xs text-muted-foreground">Check out our latest features</div>
 										</div>
@@ -753,7 +762,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 											href="#analytics"
 											class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 										>
-											<div class={cn("h-5 w-5 mt-0.5", icon("trending-up"))} />
+											<IconTrendingUp class="h-5 w-5 mt-0.5" />
 											<div>
 												<div class="font-medium">Analytics</div>
 												<div class="text-xs text-muted-foreground">Track your metrics</div>
@@ -763,7 +772,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 											href="#dashboard"
 											class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 										>
-											<div class={cn("h-5 w-5 mt-0.5", icon("layout-dashboard"))} />
+											<IconLayoutDashboard class="h-5 w-5 mt-0.5" />
 											<div>
 												<div class="font-medium">Dashboard</div>
 												<div class="text-xs text-muted-foreground">Manage workspace</div>
@@ -773,7 +782,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 											href="#reports"
 											class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 										>
-											<div class={cn("h-5 w-5 mt-0.5", icon("file-text"))} />
+											<IconFileText class="h-5 w-5 mt-0.5" />
 											<div>
 												<div class="font-medium">Reports</div>
 												<div class="text-xs text-muted-foreground">Generate reports</div>
@@ -791,7 +800,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										href="#docs"
 										class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										<div class={cn("h-5 w-5 mt-0.5", icon("book"))} />
+										<IconBook class="h-5 w-5 mt-0.5" />
 										<div>
 											<div class="font-medium">Documentation</div>
 											<div class="text-xs text-muted-foreground">Learn how to use our platform</div>
@@ -801,7 +810,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										href="#blog"
 										class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										<div class={cn("h-5 w-5 mt-0.5", icon("pen-tool"))} />
+										<IconPenTool class="h-5 w-5 mt-0.5" />
 										<div>
 											<div class="font-medium">Blog</div>
 											<div class="text-xs text-muted-foreground">Latest news and updates</div>
@@ -832,7 +841,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										href="#feature1"
 										class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										<div class={cn("h-5 w-5 mt-0.5", icon("zap"))} />
+										<IconZap class="h-5 w-5 mt-0.5" />
 										<div>
 											<div class="font-medium">Lightning Fast</div>
 											<div class="text-xs text-muted-foreground">Optimized performance</div>
@@ -842,7 +851,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										href="#feature2"
 										class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										<div class={cn("h-5 w-5 mt-0.5", icon("shield"))} />
+										<IconShield class="h-5 w-5 mt-0.5" />
 										<div>
 											<div class="font-medium">Secure</div>
 											<div class="text-xs text-muted-foreground">Enterprise-grade security</div>
@@ -852,7 +861,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										href="#feature3"
 										class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										<div class={cn("h-5 w-5 mt-0.5", icon("users"))} />
+										<IconUsers class="h-5 w-5 mt-0.5" />
 										<div>
 											<div class="font-medium">Collaborative</div>
 											<div class="text-xs text-muted-foreground">Work together seamlessly</div>
@@ -904,7 +913,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										href="#automation"
 										class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										<div class={cn("h-5 w-5 mt-0.5", icon("zap"))} />
+										<IconZap class="h-5 w-5 mt-0.5" />
 										<div>
 											<div class="font-medium">Automation</div>
 											<div class="text-xs text-muted-foreground">Streamline your workflows</div>
@@ -914,7 +923,7 @@ export const meta: ComponentMeta<NavMenuProps> = {
 										href="#integration"
 										class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
-										<div class={cn("h-5 w-5 mt-0.5", icon("puzzle"))} />
+										<IconPuzzle class="h-5 w-5 mt-0.5" />
 										<div>
 											<div class="font-medium">Integrations</div>
 											<div class="text-xs text-muted-foreground">Connect your favorite tools</div>

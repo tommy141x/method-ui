@@ -1,11 +1,12 @@
 import { Tooltip as ArkTooltip } from "@ark-ui/solid/tooltip";
+import type { PositioningOptions } from "@zag-js/popper";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import { type JSX, Show, splitProps } from "solid-js";
+import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
 import { unoMerge } from "unocss-merge";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
@@ -17,7 +18,7 @@ interface TooltipProps {
 	onOpenChange?: (details: { open: boolean }) => void;
 	openDelay?: number;
 	closeDelay?: number;
-	positioning?: Record<string, unknown>;
+	positioning?: PositioningOptions;
 	disabled?: boolean;
 	interactive?: boolean;
 	closeOnClick?: boolean;
@@ -54,32 +55,34 @@ export const TooltipContent = (props: TooltipContentProps) => {
 	return (
 		<ArkTooltip.Context>
 			{(context) => (
-				<ArkTooltip.Positioner>
-					<Presence>
-						<Show when={context().open}>
-							<Motion.div
-								animate={{ opacity: [0, 1], scale: [0.96, 1] }}
-								exit={{ opacity: [1, 0], scale: [1, 0.96] }}
-								transition={{ duration: 0.15, easing: "ease-out" }}
-							>
-								<ArkTooltip.Content
-									class={cn(
-										"z-50 rounded-md bg-secondary text-secondary-foreground px-3 py-1.5 text-xs shadow-md",
-										local.class
-									)}
-									{...others}
+				<Portal>
+					<ArkTooltip.Positioner>
+						<Presence>
+							<Show when={context().open}>
+								<Motion.div
+									animate={{ opacity: [0, 1], scale: [0.96, 1] }}
+									exit={{ opacity: [1, 0], scale: [1, 0.96] }}
+									transition={{ duration: 0.15, easing: "ease-out" }}
 								>
-									{local.showArrow !== false && (
-										<ArkTooltip.Arrow class="--arrow-size-[8px] --arrow-background-[var(--colors-secondary)]">
-											<ArkTooltip.ArrowTip />
-										</ArkTooltip.Arrow>
-									)}
-									{local.children}
-								</ArkTooltip.Content>
-							</Motion.div>
-						</Show>
-					</Presence>
-				</ArkTooltip.Positioner>
+									<ArkTooltip.Content
+										class={cn(
+											"z-50 rounded-md bg-secondary text-secondary-foreground px-3 py-1.5 text-xs shadow-md",
+											local.class
+										)}
+										{...others}
+									>
+										{local.showArrow !== false && (
+											<ArkTooltip.Arrow class="--arrow-size-[8px] --arrow-background-[var(--colors-secondary)]">
+												<ArkTooltip.ArrowTip />
+											</ArkTooltip.Arrow>
+										)}
+										{local.children}
+									</ArkTooltip.Content>
+								</Motion.div>
+							</Show>
+						</Presence>
+					</ArkTooltip.Positioner>
+				</Portal>
 			)}
 		</ArkTooltip.Context>
 	);

@@ -5,22 +5,17 @@ import clsx from "clsx";
 import type { Component, JSX } from "solid-js";
 import { splitProps } from "solid-js";
 import { unoMerge } from "unocss-merge";
+import IconChevronDown from "~icons/lucide/chevron-down";
 
-// Hardcoded cn function - makes this component completely self-contained
 function cn(...classLists: ClassValue[]) {
 	return unoMerge(clsx(classLists));
 }
 
-// Icon helper function - returns UnoCSS icon class for your configured icon library
-function icon(name: string): string {
-	return `i-lucide-${name}`;
-}
-
-const accordionItemVariants = cva("border-b border-border", {
+const accordionItemVariants = cva("border-b border-border last:border-b-0", {
 	variants: {
 		variant: {
-			default: "border-b border-border",
-			outlined: "border border-border rounded-lg mb-2",
+			default: "border-b border-border last:border-b-0",
+			outlined: "border border-border rounded-lg mb-2 last:mb-0",
 		},
 	},
 	defaultVariants: {
@@ -29,7 +24,7 @@ const accordionItemVariants = cva("border-b border-border", {
 });
 
 const accordionTriggerVariants = cva(
-	"flex w-full items-center justify-between py-4 font-medium transition-all hover:underline text-left disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:no-underline",
+	"flex w-full items-center justify-between py-4 font-medium transition-all hover:underline text-left disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:no-underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md outline-none",
 	{
 		variants: {
 			variant: {
@@ -44,6 +39,18 @@ const accordionTriggerVariants = cva(
 );
 
 const accordionContentVariants = cva("text-sm", {
+	variants: {
+		variant: {
+			default: "",
+			outlined: "",
+		},
+	},
+	defaultVariants: {
+		variant: "default",
+	},
+});
+
+const accordionContentInnerVariants = cva("", {
 	variants: {
 		variant: {
 			default: "px-0 pb-4 pt-0",
@@ -76,6 +83,37 @@ export const Accordion: Component<AccordionProps> = (props) => {
 			unmountOnExit={false}
 			{...others}
 		>
+			<style>
+				{`
+          @keyframes accordion-slideDown {
+            from {
+              height: 0;
+            }
+            to {
+              height: var(--height);
+            }
+          }
+
+          @keyframes accordion-slideUp {
+            from {
+              height: var(--height);
+            }
+            to {
+              height: 0;
+            }
+          }
+
+          [data-scope="accordion"][data-part="item-content"][data-state="open"] {
+            animation: accordion-slideDown 250ms cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+          }
+
+          [data-scope="accordion"][data-part="item-content"][data-state="closed"] {
+            animation: accordion-slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+          }
+        `}
+			</style>
 			{local.children}
 		</ArkAccordion.Root>
 	);
@@ -116,7 +154,7 @@ export const AccordionTrigger: Component<AccordionTriggerProps> = (props) => {
 		>
 			{local.children}
 			<ArkAccordion.ItemIndicator class="transition-transform duration-200 data-[state=open]:rotate-180">
-				<div class={cn("h-4 w-4", icon("chevron-down"))} />
+				<IconChevronDown class="h-4 w-4" />
 			</ArkAccordion.ItemIndicator>
 		</ArkAccordion.ItemTrigger>
 	);
@@ -136,38 +174,9 @@ export const AccordionContent: Component<AccordionContentProps> = (props) => {
 			class={cn(accordionContentVariants({ variant: variantProps.variant }), local.class)}
 			{...others}
 		>
-			<style>
-				{`
-          @keyframes slideDown {
-            from {
-              height: 0;
-            }
-            to {
-              height: var(--height);
-            }
-          }
-
-          @keyframes slideUp {
-            from {
-              height: var(--height);
-            }
-            to {
-              height: 0;
-            }
-          }
-
-          [data-scope="accordion"][data-part="item-content"][data-state="open"] {
-            animation: slideDown 250ms cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-          }
-
-          [data-scope="accordion"][data-part="item-content"][data-state="closed"] {
-            animation: slideUp 250ms cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-          }
-        `}
-			</style>
-			{local.children}
+			<div class={cn(accordionContentInnerVariants({ variant: variantProps.variant }))}>
+				{local.children}
+			</div>
 		</ArkAccordion.ItemContent>
 	);
 };
@@ -183,7 +192,7 @@ export const AccordionIndicator: Component<AccordionIndicatorProps> = (props) =>
 			class={cn("transition-transform duration-200 data-[state=open]:rotate-180", local.class)}
 			{...others}
 		>
-			<div class={cn("h-4 w-4", icon("chevron-down"))} />
+			<IconChevronDown class="h-4 w-4" />
 		</ArkAccordion.ItemIndicator>
 	);
 };

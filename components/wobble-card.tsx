@@ -142,6 +142,13 @@ export const WobbleCard: Component<WobbleCardProps> = (props) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconCode from "~icons/lucide/code";
+import IconPalette from "~icons/lucide/palette";
+import IconShield from "~icons/lucide/shield";
+import IconSparkles from "~icons/lucide/sparkles";
+import IconZap from "~icons/lucide/zap";
+
 export const meta: ComponentMeta<WobbleCardProps> = {
 	name: "Wobble Card",
 	description:
@@ -165,8 +172,8 @@ export const meta: ComponentMeta<WobbleCardProps> = {
 			description: "Card with image content",
 			code: () => (
 				<WobbleCard class="p-0" containerClass="max-w-sm">
-					<div class="aspect-video bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center">
-						<div class="h-16 w-16 i-lucide-sparkles text-white" />
+					<div class="aspect-video bg-linear-to-br from-primary to-purple-500 flex items-center justify-center">
+						<IconSparkles class="h-16 w-16 text-white" />
 					</div>
 					<div class="p-6">
 						<h3 class="text-xl font-bold mb-2">Image Card</h3>
@@ -183,22 +190,22 @@ export const meta: ComponentMeta<WobbleCardProps> = {
 			code: () => (
 				<div class="grid grid-cols-2 gap-4 max-w-2xl">
 					<WobbleCard class="p-6" containerClass="h-48">
-						<div class="h-10 w-10 mb-3 i-lucide-zap text-primary" />
+						<IconZap class="h-10 w-10 mb-3 text-primary" />
 						<h4 class="font-semibold mb-1">Fast</h4>
 						<p class="text-sm text-muted-foreground">Lightning quick performance</p>
 					</WobbleCard>
 					<WobbleCard class="p-6" containerClass="h-48">
-						<div class="h-10 w-10 mb-3 i-lucide-shield text-primary" />
+						<IconShield class="h-10 w-10 mb-3 text-primary" />
 						<h4 class="font-semibold mb-1">Secure</h4>
 						<p class="text-sm text-muted-foreground">Built with security first</p>
 					</WobbleCard>
 					<WobbleCard class="p-6" containerClass="h-48">
-						<div class="h-10 w-10 mb-3 i-lucide-palette text-primary" />
+						<IconPalette class="h-10 w-10 mb-3 text-primary" />
 						<h4 class="font-semibold mb-1">Beautiful</h4>
 						<p class="text-sm text-muted-foreground">Stunning visual design</p>
 					</WobbleCard>
 					<WobbleCard class="p-6" containerClass="h-48">
-						<div class="h-10 w-10 mb-3 i-lucide-code text-primary" />
+						<IconCode class="h-10 w-10 mb-3 text-primary" />
 						<h4 class="font-semibold mb-1">Developer Friendly</h4>
 						<p class="text-sm text-muted-foreground">Easy to integrate</p>
 					</WobbleCard>

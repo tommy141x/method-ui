@@ -78,6 +78,8 @@ export const HoverCardContent = (props: HoverCardContentProps) => {
 	);
 };
 
+// Example-only imports - removed during CLI transform
+import IconInfo from "~icons/lucide/info";
 import { Badge } from "./badge";
 // Import components for examples only - won't count as dependencies
 // since they're imported right before the meta export
@@ -114,7 +116,7 @@ export const meta: ComponentMeta<HoverCardProps> = {
 				<HoverCard>
 					<HoverCardTrigger>
 						<Badge variant="secondary">
-							<div class="h-3 w-3 i-lucide-info mr-1" />
+							<IconInfo class="h-3 w-3 mr-1" />
 							Info
 						</Badge>
 					</HoverCardTrigger>
