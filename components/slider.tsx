@@ -60,7 +60,7 @@ export const Slider: Component<SliderProps> = (props) => {
 			)}
 			<ArkSlider.Control class="relative flex items-center w-full touch-none select-none">
 				<ArkSlider.Track class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
-					<ArkSlider.Range class="absolute h-full bg-primary data-[disabled]:opacity-50" />
+					<ArkSlider.Range class="absolute h-full bg-primary data-disabled:opacity-50" />
 				</ArkSlider.Track>
 				<ArkSlider.Thumb
 					index={0}

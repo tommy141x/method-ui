@@ -94,10 +94,13 @@ export const Image: Component<ImageProps> = (props) => {
 		| "low"
 		| "auto";
 
-	const imgStyle: JSX.CSSProperties = {
-		...(local.objectFit ? { "object-fit": local.objectFit } : {}),
-		...(local.objectPosition ? { "object-position": local.objectPosition } : {}),
-	};
+	const imgStyle: JSX.CSSProperties | undefined =
+		local.objectFit || local.objectPosition
+			? {
+					...(local.objectFit ? { "object-fit": local.objectFit } : {}),
+					...(local.objectPosition ? { "object-position": local.objectPosition } : {}),
+				}
+			: undefined;
 
 	// If it's a responsive ImageData object, use the @responsive-image/solid component.
 	// Renders a proper <picture> element with <source> elements for avif/webp and an

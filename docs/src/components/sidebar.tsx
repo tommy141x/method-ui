@@ -5,11 +5,11 @@ import type { Accessor, Component, JSX } from "solid-js";
 import {
 	createContext,
 	createEffect,
+	createMemo,
 	createSignal,
 	mergeProps,
 	onCleanup,
 	onMount,
-	children as resolveChildren,
 	Show,
 	splitProps,
 	useContext,
@@ -31,8 +31,6 @@ function cn(...classLists: ClassValue[]) {
 }
 
 // Constants
-const _SIDEBAR_COOKIE_NAME = "sidebar:state";
-const _SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
@@ -73,33 +71,15 @@ export const useSidebar = () => {
 const createIsMobile = () => {
 	const [isMobile, setIsMobile] = createSignal(false);
 
-	onMount(() => {
-		const checkMobile = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-
-		checkMobile();
-		window.addEventListener("resize", checkMobile);
-		onCleanup(() => window.removeEventListener("resize", checkMobile));
+	createEffect(() => {
+		const mql = window.matchMedia("(max-width: 767px)");
+		const onChange = (e: MediaQueryListEvent | MediaQueryList) => setIsMobile(e.matches);
+		mql.addEventListener("change", onChange);
+		onChange(mql);
+		onCleanup(() => mql.removeEventListener("change", onChange));
 	});
 
 	return isMobile;
-};
-
-// Helper to get cookie
-const _getCookie = (name: string): string | undefined => {
-	if (typeof document === "undefined") return undefined;
-	const value = `; ${document.cookie}`;
-	const parts = value.split(`; ${name}=`);
-	if (parts.length === 2) return parts.pop()?.split(";").shift();
-	return undefined;
-};
-
-// Helper to set cookie
-const _setCookie = (name: string, value: string, maxAge: number) => {
-	if (typeof document === "undefined") return;
-	// biome-ignore lint/suspicious/noDocumentCookie: direct cookie access is intentional for sidebar state persistence
-	document.cookie = `${name}=${value}; path=/; max-age=${maxAge}`;
 };
 
 // SidebarProvider
@@ -689,14 +669,12 @@ export const SidebarGroup: Component<SidebarGroupProps> = (props) => {
 interface SidebarGroupLabelProps {
 	children?: JSX.Element;
 	class?: string;
-	asChild?: boolean;
 }
 
 export const SidebarGroupLabel: Component<SidebarGroupLabelProps> = (props) => {
-	const [local, others] = splitProps(props, ["children", "class", "asChild"]);
-	const resolved = resolveChildren(() => local.children);
+	const [local, others] = splitProps(props, ["children", "class"]);
 
-	const content = (
+	return (
 		<div
 			data-sidebar="group-label"
 			data-slot="sidebar-group-label"
@@ -710,11 +688,9 @@ export const SidebarGroupLabel: Component<SidebarGroupLabelProps> = (props) => {
 			)}
 			{...others}
 		>
-			{resolved()}
+			{local.children}
 		</div>
 	);
-
-	return content;
 };
 
 // SidebarGroupAction
@@ -926,42 +902,9 @@ export const SidebarMenuCollapsibleContent: Component<SidebarMenuCollapsibleCont
 	const [local, others] = splitProps(props, ["children", "class"]);
 
 	return (
-		<>
-			<style>
-				{`
-          @keyframes slideDown {
-            from {
-              height: 0;
-            }
-            to {
-              height: var(--height);
-            }
-          }
-
-          @keyframes slideUp {
-            from {
-              height: var(--height);
-            }
-            to {
-              height: 0;
-            }
-          }
-
-          [data-scope="collapsible"][data-part="content"][data-state="open"] {
-            animation: slideDown 200ms cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-          }
-
-          [data-scope="collapsible"][data-part="content"][data-state="closed"] {
-            animation: slideUp 200ms cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-          }
-        `}
-			</style>
-			<Collapsible.Content data-sidebar="menu-sub-container" class={cn(local.class)} {...others}>
-				{local.children}
-			</Collapsible.Content>
-		</>
+		<Collapsible.Content data-sidebar="menu-sub-container" class={cn(local.class)} {...others}>
+			{local.children}
+		</Collapsible.Content>
 	);
 };
 
@@ -993,7 +936,6 @@ export const SidebarMenuButton: Component<SidebarMenuButtonProps> = (props) => {
 
 	const merged = mergeProps({ variant: "default", size: "default" }, local);
 	const sidebar = useSidebar();
-	const resolved = resolveChildren(() => local.children);
 	const Component = local.as || "button";
 
 	const button = (
@@ -1026,7 +968,7 @@ export const SidebarMenuButton: Component<SidebarMenuButtonProps> = (props) => {
 			)}
 			{...others}
 		>
-			{resolved()}
+			{local.children}
 		</Dynamic>
 	);
 
@@ -1034,21 +976,13 @@ export const SidebarMenuButton: Component<SidebarMenuButtonProps> = (props) => {
 		return button;
 	}
 
-	// Simple tooltip implementation
 	return (
-		<div class="relative group/tooltip">
-			{button}
+		<Tooltip openDelay={0}>
+			<TooltipTrigger class="w-full">{button}</TooltipTrigger>
 			<Show when={sidebar.state() === "collapsed" && !sidebar.isMobile()}>
-				<div
-					class={cn(
-						"pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 rounded-md bg-secondary px-3 py-1.5 text-xs text-secondary-foreground shadow-md opacity-0 transition-opacity",
-						"group-hover/tooltip:opacity-100"
-					)}
-				>
-					{local.tooltip}
-				</div>
+				<TooltipContent>{local.tooltip}</TooltipContent>
 			</Show>
-		</div>
+		</Tooltip>
 	);
 };
 
@@ -1260,8 +1194,9 @@ interface SidebarMenuSkeletonProps {
 export const SidebarMenuSkeleton: Component<SidebarMenuSkeletonProps> = (props) => {
 	const [local, others] = splitProps(props, ["class", "showIcon"]);
 
-	// Random width between 50 to 90%
-	const width = () => `${Math.floor(Math.random() * 40) + 50}%`;
+	// Random width between 50 to 90%, stabilised with createMemo so it doesn't
+	// recalculate (and visually jump) on every reactive re-render
+	const width = createMemo(() => `${Math.floor(Math.random() * 40) + 50}%`);
 
 	return (
 		<div

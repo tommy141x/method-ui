@@ -12,7 +12,7 @@ import {
 	useContext,
 } from "solid-js";
 import { isServer, Portal } from "solid-js/web";
-import { Motion, Presence } from "solid-motionone";
+
 import IconChevronDown from "~icons/lucide/chevron-down";
 import { cn } from "../lib/cn";
 import type { ComponentMeta } from "../lib/meta";
@@ -452,38 +452,32 @@ export const NavMenuContent: Component<NavMenuContentProps> = (props) => {
 	return (
 		<>
 			<Show when={!hasViewport()}>
-				<Presence exitBeforeEnter>
-					<Show when={itemContext.isOpen()}>
-						<Motion.div
-							ref={(el: HTMLDivElement) => {
-								contentRef = el;
-							}}
-							id={contentId}
-							aria-labelledby={triggerId}
-							data-state={itemContext.isOpen() ? "open" : "closed"}
-							initial={{ opacity: 0, scale: 0.95 }}
-							animate={{ opacity: 1, scale: 1 }}
-							exit={{ opacity: 0, scale: 0.95 }}
-							transition={{ duration: 0.2 }}
-							class={cn(
-								"absolute top-full left-0 z-50 mt-1.5 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md",
-								local.class
-							)}
-							onPointerEnter={() => context.onContentEnter()}
-							onPointerLeave={(e: PointerEvent) => {
-								if (e.pointerType === "mouse") {
-									context.onContentLeave();
-								}
-							}}
-							style={{
-								"pointer-events": !itemContext.isOpen() ? "none" : undefined,
-							}}
-							{...others}
-						>
-							{local.children}
-						</Motion.div>
-					</Show>
-				</Presence>
+				<Show when={itemContext.isOpen()}>
+					<section
+						ref={(el: HTMLElement) => {
+							contentRef = el;
+						}}
+						id={contentId}
+						aria-labelledby={triggerId}
+						data-state="open"
+						class={cn(
+							"absolute top-full left-0 z-50 mt-1.5 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md",
+							local.class
+						)}
+						onPointerEnter={() => context.onContentEnter()}
+						onPointerLeave={(e: PointerEvent) => {
+							if (e.pointerType === "mouse") {
+								context.onContentLeave();
+							}
+						}}
+						style={{
+							animation: "navMenuIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+						}}
+						{...others}
+					>
+						{local.children}
+					</section>
+				</Show>
 			</Show>
 
 			<Show when={hasViewport() && context.viewport()}>

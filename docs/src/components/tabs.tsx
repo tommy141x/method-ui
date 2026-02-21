@@ -64,26 +64,41 @@ export const Tabs: Component<TabsProps> = (props) => {
 	let previousHeight = 0;
 	let currentAnimations: Array<{ stop: () => void }> = [];
 
+	// Returns only the tab content elements that directly belong to this Tabs instance,
+	// filtering out any content elements that belong to nested Tabs components.
+	const getDirectTabContents = (): HTMLElement[] => {
+		if (!containerRef) return [];
+		const allContents = Array.from(
+			containerRef.querySelectorAll(
+				"[data-scope='tabs'][data-part='content']"
+			) as NodeListOf<HTMLElement>
+		);
+		return allContents.filter((content) => {
+			const closestRoot = content.closest("[data-scope='tabs'][data-part='root']");
+			return closestRoot === containerRef;
+		});
+	};
+
 	// Function to measure tab heights
 	const measureHeights = () => {
 		if (!containerRef) return;
 
-		const allContents = containerRef.querySelectorAll(
-			"[data-scope='tabs'][data-part='content']"
-		) as NodeListOf<HTMLElement>;
+		const directContents = getDirectTabContents();
 
-		allContents.forEach((content) => {
+		// Save the hidden state of every element BEFORE we start manipulating them
+		const hiddenStates = new Map<HTMLElement, boolean>(
+			directContents.map((c) => [c, c.hasAttribute("hidden")])
+		);
+
+		directContents.forEach((content) => {
 			// Get the value from aria-labelledby which points to trigger id
 			const labelledBy = content.getAttribute("aria-labelledby") || "";
 			const value = labelledBy.replace("tabs:", "").split(":trigger-")[1];
 
 			if (!value) return;
 
-			// Save current state
-			const wasHidden = content.hasAttribute("hidden");
-
 			// Temporarily show this tab and hide others
-			allContents.forEach((other) => {
+			directContents.forEach((other) => {
 				if (other === content) {
 					other.removeAttribute("hidden");
 				} else {
@@ -97,10 +112,14 @@ export const Tabs: Component<TabsProps> = (props) => {
 			// Measure the container's actual height with this tab visible
 			const height = containerRef.offsetHeight;
 			tabHeights.set(value, height);
+		});
 
-			// Restore hidden state
+		// Restore ALL elements to their original hidden state
+		hiddenStates.forEach((wasHidden, content) => {
 			if (wasHidden) {
 				content.setAttribute("hidden", "");
+			} else {
+				content.removeAttribute("hidden");
 			}
 		});
 	};
@@ -140,12 +159,8 @@ export const Tabs: Component<TabsProps> = (props) => {
 			containerRef.style.overflow = "hidden";
 		}
 
-		// Get all tab content elements and identify old/new based on value
-		const allContents = Array.from(
-			containerRef.querySelectorAll(
-				"[data-scope='tabs'][data-part='content']"
-			) as NodeListOf<HTMLElement>
-		);
+		// Get only the direct tab content elements of this Tabs instance
+		const allContents = getDirectTabContents();
 
 		const newContent =
 			allContents.find((content) => {
