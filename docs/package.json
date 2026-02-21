@@ -11,27 +11,27 @@
 		"method": "bun run ../cli/cli.ts"
 	},
 	"dependencies": {
-		"@ark-ui/solid": "^5.30.0",
+		"@ark-ui/solid": "^5.32.0",
 		"@motionone/dom": "^10.18.0",
 		"@opennextjs/cloudflare": "^1.16.5",
 		"@responsive-image/vite-plugin": "^2.0.2",
 		"@solidjs/meta": "^0.29.4",
 		"@solidjs/router": "^0.15.4",
-		"@solidjs/start": "^1.2.1",
+		"@solidjs/start": "^1.3.0",
 		"@unocss/reset": "^0.65.4",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
-		"solid-js": "^1.9.10",
+		"solid-js": "^1.9.11",
 		"solid-motionone": "^1.0.4",
 		"solid-notifications": "^1.2.0",
 		"unocss-merge": "^0.6.0",
-		"vinxi": "^0.5.10"
+		"vinxi": "^0.5.11"
 	},
 	"devDependencies": {
-		"@iconify-json/lucide": "^1.2.82",
-		"@types/bun": "^1.3.5",
+		"@iconify-json/lucide": "^1.2.92",
+		"@types/bun": "^1.3.9",
 		"typescript": "^5.9.3",
-		"unocss": "^0.65.4",
+		"unocss": "^66.6.0",
 		"unplugin-icons": "^23.0.1"
 	},
 	"patchedDependencies": {

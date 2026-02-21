@@ -62,8 +62,8 @@
 		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
-		"@ark-ui/solid": "^5.31.0",
-		"@biomejs/biome": "^2.4.3",
+		"@ark-ui/solid": "^5.32.0",
+		"@biomejs/biome": "^2.4.4",
 		"@iconify-json/lucide": "^1.2.92",
 		"@onebeyond/license-checker": "^2.2.0",
 		"@responsive-image/solid": "^2.0.4",

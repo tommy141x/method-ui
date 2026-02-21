@@ -4,13 +4,13 @@ import {
 	defineConfig,
 	presetAttributify,
 	presetTypography,
-	presetUno,
 	presetWebFonts,
+	presetWind4,
 } from "unocss";
 
 export default defineConfig({
 	presets: [
-		presetUno(),
+		presetWind4(),
 		presetAttributify(),
 		presetTypography(),
 		presetWebFonts({
