@@ -26,7 +26,8 @@ export default defineConfig({
 			},
 		},
 		ssr: {
-			noExternal: ["@ark-ui/solid", "solid-motionone"],
+			noExternal: ["@ark-ui/solid"],
+			external: ["@responsive-image/solid"],
 		},
 	},
 });
