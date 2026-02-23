@@ -110,7 +110,7 @@ export const Image: Component<ImageProps> = (props) => {
 			<ResponsiveImage
 				src={local.src}
 				alt={local.alt}
-				class={cn("rounded-lg", local.class)}
+				class={cn(local.class)}
 				loading={optimizedLoading}
 				fetchpriority={optimizedFetchPriority}
 				decoding={local.decoding ?? "async"}
@@ -131,11 +131,13 @@ export const Image: Component<ImageProps> = (props) => {
 		<img
 			src={typeof local.src === "string" ? local.src : ""}
 			alt={local.alt}
-			class={cn("rounded-lg", local.class)}
+			class={cn(local.class)}
 			loading={optimizedLoading}
 			fetchpriority={optimizedFetchPriority}
 			decoding={local.decoding ?? "async"}
 			style={imgStyle}
+			width={local.width}
+			height={local.height}
 			onLoad={local.onLoad}
 			onError={local.onError}
 			{...otherProps}

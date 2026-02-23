@@ -66,7 +66,10 @@
  * - Dark mode support
  */
 
-import type { CreateToasterProps, CreateToasterReturn } from "@ark-ui/solid/toast";
+import type {
+	CreateToasterProps,
+	CreateToasterReturn,
+} from "@ark-ui/solid/toast";
 import {
 	Toast as ArkToast,
 	Toaster as ArkToaster,
@@ -109,7 +112,7 @@ const toasterRegistry = new Map<string, CreateToasterReturn>();
  */
 export function getToaster(
 	name: string = "default",
-	config?: CreateToasterProps
+	config?: CreateToasterProps,
 ): CreateToasterReturn {
 	if (!toasterRegistry.has(name)) {
 		const defaultConfig: CreateToasterProps = {
@@ -131,9 +134,14 @@ export function getToaster(
  * @param name - Name of the toaster
  * @param config - Configuration for the toaster
  */
-export function configureToaster(name: string, config: CreateToasterProps): void {
+export function configureToaster(
+	name: string,
+	config: CreateToasterProps,
+): void {
 	if (toasterRegistry.has(name)) {
-		console.warn(`Toaster "${name}" is already created. Configuration will be ignored.`);
+		console.warn(
+			`Toaster "${name}" is already created. Configuration will be ignored.`,
+		);
 		return;
 	}
 	toasterRegistry.set(name, arkCreateToaster(config));
@@ -199,10 +207,16 @@ const ToastIcon: Component<{ type?: string }> = (props) => {
 
 // Main Toast component
 export const Toast: Component<ToastProps> = (props) => {
-	const [local, others] = splitProps(props, ["toaster", "name", "config", "class"]);
+	const [local, others] = splitProps(props, [
+		"toaster",
+		"name",
+		"config",
+		"class",
+	]);
 
 	// Get toaster instance: use provided toaster, or get/create named toaster
-	const toasterInstance = local.toaster || getToaster(local.name || "default", local.config);
+	const toasterInstance =
+		local.toaster || getToaster(local.name || "default", local.config);
 
 	if (!toasterInstance) return null;
 
@@ -271,7 +285,7 @@ export const Toast: Component<ToastProps> = (props) => {
 								"data-[type=warning]:border-yellow-600/50 dark:data-[type=warning]:border-yellow-400/50",
 								"data-[type=info]:border-primary/50",
 								"data-[type=loading]:border-primary/50",
-								local.class
+								local.class,
 							)}
 							style={{
 								"border-radius": "var(--radius)",

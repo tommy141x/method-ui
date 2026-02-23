@@ -207,7 +207,7 @@ export const Select = (props: SelectProps) => {
 													>
 														<For each={collection().group()}>
 															{([groupLabel, groupItems]: [string, SelectItemData[]]) => (
-																<ArkSelect.ItemGroup class="p-1 not-first:pt-2">
+																<ArkSelect.ItemGroup class="p-1 [&:not(:first-child)]:pt-2">
 																	<ArkSelect.ItemGroupLabel class="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
 																		{groupLabel}
 																	</ArkSelect.ItemGroupLabel>

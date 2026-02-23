@@ -49,7 +49,7 @@ export const Highlighter: Component<HighlighterProps> = (props) => {
 	const strokeWidth = () => local.strokeWidth ?? 2;
 	const animationDuration = () => local.animationDuration ?? 800;
 	const iterations = () => local.iterations ?? 2;
-	const padding = () => local.padding ?? 5;
+	const padding = () => local.padding ?? 2;
 	const multiline = () => local.multiline ?? true;
 	const delay = () => local.delay ?? 0;
 	const reanimateOnScroll = () => local.reanimateOnScroll ?? false;

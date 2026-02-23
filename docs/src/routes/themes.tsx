@@ -1,24 +1,28 @@
 import { cn } from "@lib/cn";
-import { Meta, Title } from "@solidjs/meta";
+import { createFileRoute } from "@tanstack/solid-router";
 import { For, Show } from "solid-js";
 import IconInfo from "~icons/lucide/info";
 import { Badge } from "../components/badge";
 import { Button } from "../components/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "../components/card";
 import { Navbar } from "../components/navbar";
 import { useTheme } from "../components/theme";
 
-export default function Themes() {
+export const Route = createFileRoute("/themes")({
+	component: Themes,
+});
+
+function Themes() {
 	const { theme, setTheme, themes } = useTheme();
 
 	return (
 		<div class="min-h-screen bg-background">
-			<Title>Themes - Method UI</Title>
-			<Meta
-				name="description"
-				content="Customize the look and feel of your application with Method UI themes. Choose from pre-built color schemes or create your own."
-			/>
-
 			<Navbar />
 
 			<div class="container mx-auto px-4 py-12">
@@ -29,8 +33,8 @@ export default function Themes() {
 					</Badge>
 					<h1 class="text-4xl md:text-5xl font-bold mb-4">Themes</h1>
 					<p class="text-xl text-muted-foreground">
-						Customize the look and feel of your application. Choose from pre-built themes or create
-						your own using CSS variables.
+						Customize the look and feel of your application. Choose from
+						pre-built themes or create your own using CSS variables.
 					</p>
 				</div>
 
@@ -38,8 +42,8 @@ export default function Themes() {
 				<div class="mb-12">
 					<h2 class="text-2xl font-bold mb-6">Available Themes</h2>
 					<p class="text-muted-foreground mb-6">
-						Choose from our curated collection of themes. Each theme can be further customized with
-						CSS variables.
+						Choose from our curated collection of themes. Each theme can be
+						further customized with CSS variables.
 					</p>
 					<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 						<For each={themes()}>
@@ -52,7 +56,7 @@ export default function Themes() {
 									<Card
 										class={cn(
 											"cursor-pointer transition-all hover:shadow-lg h-full flex flex-col",
-											theme() === themeOption.id && "ring-2 ring-primary"
+											theme() === themeOption.id && "ring-2 ring-primary",
 										)}
 									>
 										<CardHeader class="flex-1 flex flex-col justify-between min-h-[180px]">
@@ -78,7 +82,9 @@ export default function Themes() {
 													fallback={
 														<div class="flex gap-2 items-center">
 															<div class="w-10 h-10 rounded-full border-2 border-border shadow-sm bg-linear-to-br from-blue-500 to-purple-600 shrink-0" />
-															<div class="text-xs text-muted-foreground">Base Theme</div>
+															<div class="text-xs text-muted-foreground">
+																Base Theme
+															</div>
 														</div>
 													}
 												>
@@ -89,7 +95,9 @@ export default function Themes() {
 														}}
 														title="Primary Color"
 													/>
-													<div class="text-xs text-muted-foreground">Primary Color</div>
+													<div class="text-xs text-muted-foreground">
+														Primary Color
+													</div>
 												</Show>
 											</div>
 										</CardHeader>
@@ -106,7 +114,9 @@ export default function Themes() {
 					<Card>
 						<CardHeader>
 							<CardTitle>Current Theme Preview</CardTitle>
-							<CardDescription>See how components look with the selected theme</CardDescription>
+							<CardDescription>
+								See how components look with the selected theme
+							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
 							{/* Buttons */}
@@ -138,12 +148,14 @@ export default function Themes() {
 								<Card class="max-w-md bg-muted">
 									<CardHeader>
 										<CardTitle>Card Title</CardTitle>
-										<CardDescription>This is a card with the current theme applied</CardDescription>
+										<CardDescription>
+											This is a card with the current theme applied
+										</CardDescription>
 									</CardHeader>
 									<CardContent>
 										<p class="text-sm">
-											Cards automatically inherit the theme colors and adapt to your selected color
-											scheme.
+											Cards automatically inherit the theme colors and adapt to
+											your selected color scheme.
 										</p>
 									</CardContent>
 								</Card>
@@ -160,28 +172,58 @@ export default function Themes() {
 						<CardHeader>
 							<CardTitle>Available CSS Variables</CardTitle>
 							<CardDescription>
-								Method UI uses CSS variables for theming. All variables are defined in :root and can
-								be overridden in theme classes.
+								Method UI uses CSS variables for theming. All variables are
+								defined in :root and can be overridden in theme classes.
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-								<div class="bg-muted p-2 rounded font-mono text-xs">--background</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--foreground</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--primary</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--primary-foreground</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--secondary</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--secondary-foreground</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--muted</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--muted-foreground</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--accent</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--accent-foreground</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--destructive</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--destructive-foreground</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--border</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--input</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--background
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--foreground
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--primary
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--primary-foreground
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--secondary
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--secondary-foreground
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--muted
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--muted-foreground
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--accent
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--accent-foreground
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--destructive
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--destructive-foreground
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--border
+								</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--input
+								</div>
 								<div class="bg-muted p-2 rounded font-mono text-xs">--ring</div>
-								<div class="bg-muted p-2 rounded font-mono text-xs">--radius</div>
+								<div class="bg-muted p-2 rounded font-mono text-xs">
+									--radius
+								</div>
 							</div>
 						</CardContent>
 					</Card>
@@ -190,13 +232,16 @@ export default function Themes() {
 						<CardHeader>
 							<CardTitle>Method 1: Define Themes in CSS</CardTitle>
 							<CardDescription>
-								Create theme classes in your global.css file. This is the recommended approach for
-								themes you want to use across your entire app.
+								Create theme classes in your global.css file. This is the
+								recommended approach for themes you want to use across your
+								entire app.
 							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
 							<div>
-								<h3 class="text-sm font-medium mb-2">Step 1: Add theme classes to global.css</h3>
+								<h3 class="text-sm font-medium mb-2">
+									Step 1: Add theme classes to global.css
+								</h3>
 								<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 									<pre class="whitespace-pre-wrap">
 										{`/* In your global.css */
@@ -225,7 +270,9 @@ export default function Themes() {
 							</div>
 
 							<div>
-								<h3 class="text-sm font-medium mb-2">Step 2: Register themes in ThemeProvider</h3>
+								<h3 class="text-sm font-medium mb-2">
+									Step 2: Register themes in ThemeProvider
+								</h3>
 								<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 									<pre class="whitespace-pre-wrap">
 										{`import { ThemeProvider } from '@/components/theme';
@@ -251,13 +298,15 @@ const themes = [
 						<CardHeader>
 							<CardTitle>Method 2: Define Themes Inline</CardTitle>
 							<CardDescription>
-								Pass CSS variables directly in your theme configuration. Great for dynamic themes or
-								when you don't want to modify CSS files.
+								Pass CSS variables directly in your theme configuration. Great
+								for dynamic themes or when you don't want to modify CSS files.
 							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
 							<div>
-								<h3 class="text-sm font-medium mb-2">Define themes with cssVars property</h3>
+								<h3 class="text-sm font-medium mb-2">
+									Define themes with cssVars property
+								</h3>
 								<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 									<pre class="whitespace-pre-wrap">
 										{`import { ThemeProvider } from '@/components/theme';
@@ -304,9 +353,9 @@ const themes = [
 								<div class="flex gap-2 items-start">
 									<IconInfo class="size-4 text-blue-500 mt-0.5 shrink-0" />
 									<div class="text-sm">
-										<strong class="text-blue-500">Tip:</strong> Inline cssVars override CSS-defined
-										themes. If a theme has both a CSS class and cssVars defined, the cssVars take
-										precedence.
+										<strong class="text-blue-500">Tip:</strong> Inline cssVars
+										override CSS-defined themes. If a theme has both a CSS class
+										and cssVars defined, the cssVars take precedence.
 									</div>
 								</div>
 							</div>
@@ -316,14 +365,18 @@ const themes = [
 					<Card>
 						<CardHeader>
 							<CardTitle>Best Practices</CardTitle>
-							<CardDescription>Tips for creating maintainable themes</CardDescription>
+							<CardDescription>
+								Tips for creating maintainable themes
+							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
 							<div>
-								<h3 class="text-sm font-medium mb-2">✅ Do: Override only what you need</h3>
+								<h3 class="text-sm font-medium mb-2">
+									✅ Do: Override only what you need
+								</h3>
 								<p class="text-sm text-muted-foreground mb-2">
-									Theme classes only need to define variables that differ from :root. Everything
-									else automatically inherits.
+									Theme classes only need to define variables that differ from
+									:root. Everything else automatically inherits.
 								</p>
 								<div class="bg-muted p-3 rounded font-mono text-xs">
 									<pre>{`.my-theme {
@@ -334,10 +387,12 @@ const themes = [
 							</div>
 
 							<div>
-								<h3 class="text-sm font-medium mb-2">✅ Do: Use HSL color format</h3>
+								<h3 class="text-sm font-medium mb-2">
+									✅ Do: Use HSL color format
+								</h3>
 								<p class="text-sm text-muted-foreground mb-2">
-									HSL (Hue Saturation Lightness) makes it easier to create color variations and
-									maintain consistency.
+									HSL (Hue Saturation Lightness) makes it easier to create color
+									variations and maintain consistency.
 								</p>
 								<div class="bg-muted p-3 rounded font-mono text-xs">
 									<pre>{`--primary: 221.2 83.2% 53.3%;
@@ -350,16 +405,19 @@ const themes = [
 									✅ Do: Test in both light and dark contexts
 								</h3>
 								<p class="text-sm text-muted-foreground">
-									Color themes should work well when applied on top of both light and dark base
-									themes. Test your custom colors in both contexts.
+									Color themes should work well when applied on top of both
+									light and dark base themes. Test your custom colors in both
+									contexts.
 								</p>
 							</div>
 
 							<div>
-								<h3 class="text-sm font-medium mb-2">❌ Don't: Redefine all variables</h3>
+								<h3 class="text-sm font-medium mb-2">
+									❌ Don't: Redefine all variables
+								</h3>
 								<p class="text-sm text-muted-foreground">
-									You don't need to copy all variables from :root into your theme. Only define what
-									changes.
+									You don't need to copy all variables from :root into your
+									theme. Only define what changes.
 								</p>
 							</div>
 						</CardContent>

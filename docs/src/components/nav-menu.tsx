@@ -50,7 +50,9 @@ const NavMenuContext = createContext<NavMenuContextValue>();
 const useNavMenu = () => {
 	const context = useContext(NavMenuContext);
 	if (!context) {
-		throw new Error("NavMenu components must be used within a NavMenu component");
+		throw new Error(
+			"NavMenu components must be used within a NavMenu component",
+		);
 	}
 	return context;
 };
@@ -65,7 +67,9 @@ const NavMenuItemContext = createContext<NavMenuItemContextValue>();
 const useNavMenuItem = () => {
 	const context = useContext(NavMenuItemContext);
 	if (!context) {
-		throw new Error("NavMenuItem child components must be used within a NavMenuItem component");
+		throw new Error(
+			"NavMenuItem child components must be used within a NavMenuItem component",
+		);
 	}
 	return context;
 };
@@ -110,12 +114,15 @@ export const NavMenu: Component<NavMenuProps> = (props) => {
 			defaultValue: "",
 			viewport: true,
 		},
-		local
+		local,
 	);
 
-	const [internalValue, setInternalValue] = createSignal(merged.defaultValue || "");
+	const [internalValue, setInternalValue] = createSignal(
+		merged.defaultValue || "",
+	);
 	const [isOpenDelayed, setIsOpenDelayed] = createSignal(true);
-	const [viewportElement, setViewportElement] = createSignal<HTMLElement | null>(null);
+	const [viewportElement, setViewportElement] =
+		createSignal<HTMLElement | null>(null);
 
 	const openTimerRef: { current: number } = { current: 0 };
 	const closeTimerRef: { current: number } = { current: 0 };
@@ -139,7 +146,7 @@ export const NavMenu: Component<NavMenuProps> = (props) => {
 			window.clearTimeout(skipDelayTimerRef.current);
 			skipDelayTimerRef.current = window.setTimeout(
 				() => setIsOpenDelayed(true),
-				merged.skipDelayDuration
+				merged.skipDelayDuration,
 			);
 		}
 
@@ -234,10 +241,12 @@ export const NavMenu: Component<NavMenuProps> = (props) => {
 		},
 		viewport: viewportElement,
 		setViewport: setViewportElement,
-		registerContent: (val: string, el: HTMLElement) => contentElements.set(val, el),
+		registerContent: (val: string, el: HTMLElement) =>
+			contentElements.set(val, el),
 		unregisterContent: (val: string) => contentElements.delete(val),
 		getTriggerElement: (val: string) => triggerElements.get(val) || null,
-		registerTrigger: (val: string, el: HTMLElement) => triggerElements.set(val, el),
+		registerTrigger: (val: string, el: HTMLElement) =>
+			triggerElements.set(val, el),
 	};
 
 	return (
@@ -246,7 +255,10 @@ export const NavMenu: Component<NavMenuProps> = (props) => {
 				data-orientation={merged.orientation}
 				dir={merged.dir}
 				data-state={value() ? "open" : "closed"}
-				class={cn("relative z-10 flex max-w-max flex-1 items-center justify-center", local.class)}
+				class={cn(
+					"relative z-10 flex max-w-max flex-1 items-center justify-center",
+					local.class,
+				)}
 				{...others}
 			>
 				{local.children}
@@ -272,7 +284,10 @@ export const NavMenuList: Component<NavMenuListProps> = (props) => {
 	return (
 		<ul
 			data-orientation={context.orientation()}
-			class={cn("group flex flex-1 list-none items-center justify-center gap-1", local.class)}
+			class={cn(
+				"group flex flex-1 list-none items-center justify-center gap-1",
+				local.class,
+			)}
 			{...others}
 		>
 			{local.children}
@@ -378,7 +393,7 @@ export const NavMenuTrigger: Component<NavMenuTriggerProps> = (props) => {
 				"focus:bg-accent focus:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 				"disabled:pointer-events-none disabled:opacity-50",
 				"data-[state=open]:bg-accent/50 data-[state=open]:text-accent-foreground",
-				local.class
+				local.class,
 			)}
 			onPointerEnter={(e) => {
 				local.onPointerEnter?.(e);
@@ -387,7 +402,12 @@ export const NavMenuTrigger: Component<NavMenuTriggerProps> = (props) => {
 			onPointerMove={(e) => {
 				local.onPointerMove?.(e);
 				whenMouse(() => {
-					if (local.disabled || wasClickCloseRef.current || hasPointerMoveOpenedRef.current) return;
+					if (
+						local.disabled ||
+						wasClickCloseRef.current ||
+						hasPointerMoveOpenedRef.current
+					)
+						return;
 					context.onTriggerEnter(itemContext.value);
 					hasPointerMoveOpenedRef.current = true;
 				})(e);
@@ -411,7 +431,7 @@ export const NavMenuTrigger: Component<NavMenuTriggerProps> = (props) => {
 			<IconChevronDown
 				class={cn(
 					"relative top-px ml-1 h-3 w-3 transition-transform duration-300",
-					"group-data-[state=open]:rotate-180"
+					"group-data-[state=open]:rotate-180",
 				)}
 				aria-hidden="true"
 			/>
@@ -430,7 +450,11 @@ interface NavMenuContentProps {
 }
 
 export const NavMenuContent: Component<NavMenuContentProps> = (props) => {
-	const [local, others] = splitProps(props, ["children", "class", "forceMount"]);
+	const [local, others] = splitProps(props, [
+		"children",
+		"class",
+		"forceMount",
+	]);
 
 	const context = useNavMenu();
 	const itemContext = useNavMenuItem();
@@ -466,7 +490,7 @@ export const NavMenuContent: Component<NavMenuContentProps> = (props) => {
 						data-state="open"
 						class={cn(
 							"absolute top-full left-0 z-50 mt-1.5 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md",
-							local.class
+							local.class,
 						)}
 						onPointerEnter={() => context.onContentEnter()}
 						onPointerLeave={(e: PointerEvent) => {
@@ -537,7 +561,7 @@ export const NavMenuLink: Component<NavMenuLinkProps> = (props) => {
 				"hover:bg-accent hover:text-accent-foreground",
 				"focus:bg-accent focus:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring",
 				"data-active:bg-accent/50 data-active:text-accent-foreground",
-				others.class
+				others.class,
 			)}
 		/>
 	);
@@ -622,7 +646,7 @@ export const NavMenuViewport: Component<NavMenuViewportProps> = (props) => {
 			}
 
 			const activeContent = viewportRef.querySelector(
-				`[data-value="${activeValue}"]`
+				`[data-value="${activeValue}"]`,
 			) as HTMLElement;
 			if (activeContent) {
 				// Create a temporary container outside the viewport to measure natural dimensions
@@ -691,7 +715,7 @@ export const NavMenuViewport: Component<NavMenuViewportProps> = (props) => {
 				class={cn(
 					"relative mt-1.5 origin-top-left rounded-md border border-border bg-popover text-popover-foreground shadow-md",
 					"overflow-hidden",
-					local.class
+					local.class,
 				)}
 				style={{
 					position: "relative",

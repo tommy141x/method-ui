@@ -1,16 +1,19 @@
-import { Meta, Title } from "@solidjs/meta";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/card";
+import { createFileRoute } from "@tanstack/solid-router";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "../../components/card";
 import { DocsLayout } from "../../components/docs-layout";
 
-export default function Installation() {
+export const Route = createFileRoute("/docs/installation")({
+	component: Installation,
+});
+
+function Installation() {
 	return (
 		<DocsLayout>
-			<Title>Installation - Method UI Documentation</Title>
-			<Meta
-				name="description"
-				content="Learn how to install and set up Method UI in your SolidJS project."
-			/>
-
 			<div class="space-y-6">
 				<div>
 					<h1 class="text-4xl font-bold mb-4">Installation</h1>
@@ -51,8 +54,8 @@ export default function Installation() {
 						<div>
 							<h3 class="font-semibold mb-2">2. Set Up Styling</h3>
 							<p class="text-sm text-muted-foreground mb-2">
-								Method UI uses CSS variables for theming. Add the base styles to your global CSS
-								file:
+								Method UI uses CSS variables for theming. Add the base styles to
+								your global CSS file:
 							</p>
 							<pre class="bg-muted p-4 rounded-md overflow-x-auto text-sm">
 								<code>{`@layer base {
@@ -70,8 +73,9 @@ export default function Installation() {
 						<div>
 							<h3 class="font-semibold mb-2">3. Copy Components</h3>
 							<p class="text-sm text-muted-foreground mb-2">
-								Browse the component library and copy the components you need into your project.
-								Each component is self-contained and can be customized to your needs.
+								Browse the component library and copy the components you need
+								into your project. Each component is self-contained and can be
+								customized to your needs.
 							</p>
 						</div>
 					</CardContent>
@@ -92,7 +96,9 @@ export default function Installation() {
       ...
   lib/
     utils.ts
-  app.tsx`}</code>
+  routes/
+    __root.tsx
+    index.tsx`}</code>
 						</pre>
 					</CardContent>
 				</Card>

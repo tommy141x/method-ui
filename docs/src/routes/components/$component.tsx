@@ -1,6 +1,5 @@
 import metadataJson from "@lib/registry.json";
-import { Meta, Title } from "@solidjs/meta";
-import { useParams } from "@solidjs/router";
+import { createFileRoute, useParams } from "@tanstack/solid-router";
 import {
 	createEffect,
 	createSignal,
@@ -23,10 +22,26 @@ import {
 } from "../../components/accordion";
 import { Badge } from "../../components/badge";
 import { Button } from "../../components/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "../../components/card";
 import { DocsLayout } from "../../components/docs-layout";
-import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "../../components/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../components/tooltip";
+import {
+	Tabs,
+	TabsContent,
+	TabsIndicator,
+	TabsList,
+	TabsTrigger,
+} from "../../components/tabs";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "../../components/tooltip";
 
 const componentMetadata = metadataJson.componentMetadata;
 
@@ -54,7 +69,7 @@ function dedent(code: string): string {
 		...nonEmptyLines.map((line) => {
 			const match = line.match(/^\s*/);
 			return match ? match[0].length : 0;
-		})
+		}),
 	);
 
 	// Remove minimum indentation from all lines
@@ -136,12 +151,14 @@ const components: ComponentInfo[] = Object.entries(componentMetadata)
 			return null;
 		}
 
-		const runtimeExamples = (runtimeMeta.examples as ComponentExample[] | undefined) ?? [];
+		const runtimeExamples =
+			(runtimeMeta.examples as ComponentExample[] | undefined) ?? [];
 
 		// Merge runtime examples (code functions) with generated sources
 		const mergedExamples = (
-			((metadata as Record<string, unknown>).examples as Record<string, unknown>[] | undefined) ??
-			[]
+			((metadata as Record<string, unknown>).examples as
+				| Record<string, unknown>[]
+				| undefined) ?? []
 		).map((generatedExample: Record<string, unknown>, index: number) => {
 			const runtimeExample = runtimeExamples[index];
 			return {
@@ -156,18 +173,25 @@ const components: ComponentInfo[] = Object.entries(componentMetadata)
 		// Generate default API reference link based on component name
 		const defaultApiReference = `https://ark-ui.com/docs/components/${fileName}#api-reference`;
 		const apiReference =
-			"apiReference" in runtimeMeta ? (runtimeMeta.apiReference as string) : defaultApiReference;
+			"apiReference" in runtimeMeta
+				? (runtimeMeta.apiReference as string)
+				: defaultApiReference;
 
 		return {
 			name: fileName,
 			meta: {
 				name: (metadata as Record<string, unknown>).name as string,
 				description:
-					((metadata as Record<string, unknown>).description as string | undefined) ||
-					(runtimeMeta.description as string | undefined),
+					((metadata as Record<string, unknown>).description as
+						| string
+						| undefined) || (runtimeMeta.description as string | undefined),
 				apiReference: apiReference,
-				props: (metadata as Record<string, unknown>).props as ComponentProp[] | undefined,
-				variants: (metadata as Record<string, unknown>).variants as ComponentVariant[] | undefined,
+				props: (metadata as Record<string, unknown>).props as
+					| ComponentProp[]
+					| undefined,
+				variants: (metadata as Record<string, unknown>).variants as
+					| ComponentVariant[]
+					| undefined,
 				examples: mergedExamples as ComponentExample[],
 				dependencies: (metadata as Record<string, unknown>).dependencies as
 					| ComponentDependencies
@@ -191,19 +215,19 @@ function ExampleRenderer(props: { code: () => JSX.Element }) {
 	return <>{props.code()}</>;
 }
 
-export default function ComponentPage() {
-	const params = useParams();
+export const Route = createFileRoute("/components/$component")({
+	component: ComponentPage,
+});
+
+function ComponentPage() {
+	const params = useParams({ from: "/components/$component" });
 	const [showCode, setShowCode] = createSignal<Record<number, boolean>>({});
 	const [selectedTab, setSelectedTab] = createSignal("0");
 	const [copied, setCopied] = createSignal(false);
 
 	const currentComponent = () => {
-		return components.find((c) => c.name === params.component);
+		return components.find((c) => c.name === params().component);
 	};
-
-	const componentName = () => currentComponent()?.meta.name || "Component";
-	const componentDescription = () =>
-		currentComponent()?.meta.description || `${componentName()} component for SolidJS`;
 
 	const toggleCode = (index: number) => {
 		setShowCode((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -218,7 +242,7 @@ export default function ComponentPage() {
 
 	// Reset tab when component changes
 	createEffect(() => {
-		params.component;
+		params().component;
 		setSelectedTab("0");
 		setShowCode({});
 		setTimeout(() => {
@@ -228,9 +252,6 @@ export default function ComponentPage() {
 
 	return (
 		<DocsLayout>
-			<Title>{componentName()} - Method UI Components</Title>
-			<Meta name="description" content={componentDescription()} />
-
 			<Show
 				when={currentComponent()}
 				fallback={
@@ -239,7 +260,7 @@ export default function ComponentPage() {
 							<IconBox class="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
 							<h2 class="text-xl font-semibold mb-2">Component Not Found</h2>
 							<p class="text-muted-foreground">
-								The component "{params.component}" does not exist.
+								The component "{params().component}" does not exist.
 							</p>
 						</CardContent>
 					</Card>
@@ -254,10 +275,13 @@ export default function ComponentPage() {
 									<h1 class="text-4xl font-bold text-foreground mb-2">
 										{componentInfo().meta.name}
 									</h1>
-									<p class="text-lg text-muted-foreground">{componentInfo().meta.description}</p>
+									<p class="text-lg text-muted-foreground">
+										{componentInfo().meta.description}
+									</p>
 									<Show
 										when={
-											componentInfo().meta.apiReference && componentInfo().meta.apiReference !== ""
+											componentInfo().meta.apiReference &&
+											componentInfo().meta.apiReference !== ""
 										}
 									>
 										<a
@@ -307,7 +331,9 @@ export default function ComponentPage() {
 							{/* Install Command */}
 							<Card class="mb-6">
 								<CardContent class="pt-6">
-									<p class="text-sm text-muted-foreground mb-2">Install this component</p>
+									<p class="text-sm text-muted-foreground mb-2">
+										Install this component
+									</p>
 									<div class="flex items-center justify-between gap-2 bg-muted px-3 py-2 rounded">
 										<code class="text-sm font-mono flex-1">
 											bunx method@latest add {componentInfo().name}
@@ -320,13 +346,16 @@ export default function ComponentPage() {
 													class="h-auto p-2 hover:bg-foreground/10"
 													onClick={() => {
 														navigator.clipboard.writeText(
-															`bunx method@latest add ${componentInfo().name}`
+															`bunx method@latest add ${componentInfo().name}`,
 														);
 														setCopied(true);
 														setTimeout(() => setCopied(false), 1000);
 													}}
 												>
-													<Show when={copied()} fallback={<IconCopy class="h-4 w-4" />}>
+													<Show
+														when={copied()}
+														fallback={<IconCopy class="h-4 w-4" />}
+													>
 														<IconCheck class="h-4 w-4" />
 													</Show>
 												</Button>
@@ -342,11 +371,16 @@ export default function ComponentPage() {
 						<Show when={(componentInfo().meta.examples?.length ?? 0) > 0}>
 							<div>
 								<h2 class="text-2xl font-semibold mb-4">Examples</h2>
-								<Tabs value={selectedTab()} onValueChange={(e) => setSelectedTab(e.value)}>
+								<Tabs
+									value={selectedTab()}
+									onValueChange={(e) => setSelectedTab(e.value)}
+								>
 									<TabsList>
 										<Index each={componentInfo().meta.examples ?? []}>
 											{(example, index) => (
-												<TabsTrigger value={index.toString()}>{example().title}</TabsTrigger>
+												<TabsTrigger value={index.toString()}>
+													{example().title}
+												</TabsTrigger>
 											)}
 										</Index>
 										<TabsIndicator />
@@ -366,7 +400,11 @@ export default function ComponentPage() {
 																	</CardDescription>
 																</Show>
 															</div>
-															<Button size="sm" variant="outline" onClick={() => toggleCode(index)}>
+															<Button
+																size="sm"
+																variant="outline"
+																onClick={() => toggleCode(index)}
+															>
 																<IconCode class="h-4 w-4 mr-2" />
 																{showCode()[index] ? "Hide" : "Show"} Code
 															</Button>
@@ -376,7 +414,9 @@ export default function ComponentPage() {
 														{/* Example Preview */}
 														<div class="border border-border rounded-lg p-8 bg-background flex items-center justify-center min-h-32 mb-4">
 															{typeof example().code === "function" ? (
-																<ExampleRenderer code={example().code as () => JSX.Element} />
+																<ExampleRenderer
+																	code={example().code as () => JSX.Element}
+																/>
 															) : null}
 														</div>
 
@@ -395,9 +435,13 @@ export default function ComponentPage() {
 																				onClick={() => {
 																					navigator.clipboard.writeText(
 																						example().source ||
-																							(typeof example().code === "function"
-																								? (example().code as () => JSX.Element).toString()
-																								: "")
+																							(typeof example().code ===
+																							"function"
+																								? (
+																										example()
+																											.code as () => JSX.Element
+																									).toString()
+																								: ""),
 																					);
 																				}}
 																			>
@@ -411,7 +455,9 @@ export default function ComponentPage() {
 																	<code class="language-tsx text-foreground">
 																		{example().source ||
 																			(typeof example().code === "function"
-																				? (example().code as () => JSX.Element).toString()
+																				? (
+																						example().code as () => JSX.Element
+																					).toString()
 																				: "")}
 																	</code>
 																</pre>
@@ -429,15 +475,26 @@ export default function ComponentPage() {
 						{/* Component Details */}
 						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 							{/* Component Dependencies */}
-							<Show when={(componentInfo().meta.dependencies?.components?.length ?? 0) > 0}>
+							<Show
+								when={
+									(componentInfo().meta.dependencies?.components?.length ?? 0) >
+									0
+								}
+							>
 								<Card>
 									<CardHeader>
 										<CardTitle class="text-lg">Dependencies</CardTitle>
-										<CardDescription>These components are automatically installed</CardDescription>
+										<CardDescription>
+											These components are automatically installed
+										</CardDescription>
 									</CardHeader>
 									<CardContent>
 										<div class="flex flex-wrap gap-2">
-											<For each={componentInfo().meta.dependencies?.components ?? []}>
+											<For
+												each={
+													componentInfo().meta.dependencies?.components ?? []
+												}
+											>
 												{(dep) => (
 													<Badge variant="secondary" class="font-mono">
 														{dep}
@@ -452,13 +509,16 @@ export default function ComponentPage() {
 							{/* Variants Info */}
 							<Show
 								when={
-									componentInfo().meta.variants && (componentInfo().meta.variants?.length ?? 0) > 0
+									componentInfo().meta.variants &&
+									(componentInfo().meta.variants?.length ?? 0) > 0
 								}
 							>
 								<Card>
 									<CardHeader>
 										<CardTitle class="text-lg">Variants</CardTitle>
-										<CardDescription>Available style variants for this component</CardDescription>
+										<CardDescription>
+											Available style variants for this component
+										</CardDescription>
 									</CardHeader>
 									<CardContent>
 										<div class="space-y-3">
@@ -466,7 +526,9 @@ export default function ComponentPage() {
 												{(variant) => (
 													<div class="space-y-1">
 														<div class="flex items-center gap-2">
-															<span class="font-mono text-sm font-medium">{variant.name}</span>
+															<span class="font-mono text-sm font-medium">
+																{variant.name}
+															</span>
 															<Show when={variant.defaultValue}>
 																<Badge variant="secondary" class="text-xs">
 																	default: {variant.defaultValue}
@@ -476,7 +538,10 @@ export default function ComponentPage() {
 														<div class="flex flex-wrap gap-1.5">
 															<For each={variant.values}>
 																{(value) => (
-																	<Badge variant="outline" class="text-xs font-mono font-normal">
+																	<Badge
+																		variant="outline"
+																		class="text-xs font-mono font-normal"
+																	>
 																		{value}
 																	</Badge>
 																)}
@@ -493,7 +558,10 @@ export default function ComponentPage() {
 
 						{/* Props Table */}
 						<Show
-							when={componentInfo().meta.props && (componentInfo().meta.props?.length ?? 0) > 0}
+							when={
+								componentInfo().meta.props &&
+								(componentInfo().meta.props?.length ?? 0) > 0
+							}
 						>
 							<Accordion collapsible defaultValue={["props"]}>
 								<AccordionItem value="props">
@@ -542,7 +610,10 @@ export default function ComponentPage() {
 																				{prop.name}
 																			</code>
 																			<Show when={prop.required}>
-																				<Badge variant="destructive" class="ml-2 text-xs">
+																				<Badge
+																					variant="destructive"
+																					class="ml-2 text-xs"
+																				>
 																					required
 																				</Badge>
 																			</Show>
@@ -555,7 +626,11 @@ export default function ComponentPage() {
 																		<td class="py-3 px-4">
 																			<Show
 																				when={prop.defaultValue}
-																				fallback={<span class="text-muted-foreground">-</span>}
+																				fallback={
+																					<span class="text-muted-foreground">
+																						-
+																					</span>
+																				}
 																			>
 																				<code class="text-xs font-mono text-muted-foreground">
 																					{prop.defaultValue}

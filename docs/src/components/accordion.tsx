@@ -35,7 +35,7 @@ const accordionTriggerVariants = cva(
 		defaultVariants: {
 			variant: "default",
 		},
-	}
+	},
 );
 
 const accordionContentVariants = cva("text-sm", {
@@ -128,10 +128,17 @@ type AccordionItemProps = {
 };
 
 export const AccordionItem: Component<AccordionItemProps> = (props) => {
-	const [local, variantProps, others] = splitProps(props, ["children", "class"], ["variant"]);
+	const [local, variantProps, others] = splitProps(
+		props,
+		["children", "class"],
+		["variant"],
+	);
 	return (
 		<ArkAccordion.Item
-			class={cn(accordionItemVariants({ variant: variantProps.variant }), local.class)}
+			class={cn(
+				accordionItemVariants({ variant: variantProps.variant }),
+				local.class,
+			)}
 			{...others}
 		>
 			{local.children}
@@ -146,10 +153,17 @@ type AccordionTriggerProps = {
 };
 
 export const AccordionTrigger: Component<AccordionTriggerProps> = (props) => {
-	const [local, variantProps, others] = splitProps(props, ["children", "class"], ["variant"]);
+	const [local, variantProps, others] = splitProps(
+		props,
+		["children", "class"],
+		["variant"],
+	);
 	return (
 		<ArkAccordion.ItemTrigger
-			class={cn(accordionTriggerVariants({ variant: variantProps.variant }), local.class)}
+			class={cn(
+				accordionTriggerVariants({ variant: variantProps.variant }),
+				local.class,
+			)}
 			{...others}
 		>
 			{local.children}
@@ -167,14 +181,25 @@ type AccordionContentProps = {
 };
 
 export const AccordionContent: Component<AccordionContentProps> = (props) => {
-	const [local, variantProps, others] = splitProps(props, ["children", "class"], ["variant"]);
+	const [local, variantProps, others] = splitProps(
+		props,
+		["children", "class"],
+		["variant"],
+	);
 
 	return (
 		<ArkAccordion.ItemContent
-			class={cn(accordionContentVariants({ variant: variantProps.variant }), local.class)}
+			class={cn(
+				accordionContentVariants({ variant: variantProps.variant }),
+				local.class,
+			)}
 			{...others}
 		>
-			<div class={cn(accordionContentInnerVariants({ variant: variantProps.variant }))}>
+			<div
+				class={cn(
+					accordionContentInnerVariants({ variant: variantProps.variant }),
+				)}
+			>
 				{local.children}
 			</div>
 		</ArkAccordion.ItemContent>
@@ -185,11 +210,16 @@ type AccordionIndicatorProps = {
 	class?: string;
 };
 
-export const AccordionIndicator: Component<AccordionIndicatorProps> = (props) => {
+export const AccordionIndicator: Component<AccordionIndicatorProps> = (
+	props,
+) => {
 	const [local, others] = splitProps(props, ["class"]);
 	return (
 		<ArkAccordion.ItemIndicator
-			class={cn("transition-transform duration-200 data-[state=open]:rotate-180", local.class)}
+			class={cn(
+				"transition-transform duration-200 data-[state=open]:rotate-180",
+				local.class,
+			)}
 			{...others}
 		>
 			<IconChevronDown class="h-4 w-4" />

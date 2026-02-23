@@ -1,5 +1,5 @@
 import metadataJson from "@lib/registry.json";
-import { A, useLocation } from "@solidjs/router";
+import { Link, useLocation } from "@tanstack/solid-router";
 import { For, type JSX } from "solid-js";
 import IconBookOpen from "~icons/lucide/book-open";
 import IconDownload from "~icons/lucide/download";
@@ -87,7 +87,7 @@ export function DocsLayout(props: DocsLayoutProps) {
 							<div class="space-y-1">
 								<For each={docsSections}>
 									{(section) => (
-										<A href={section.href}>
+										<Link href={section.href}>
 											<button
 												type="button"
 												class={`w-full flex items-center gap-2 px-2 py-2 text-sm rounded-md ${
@@ -99,7 +99,7 @@ export function DocsLayout(props: DocsLayoutProps) {
 												<section.Icon class="h-4 w-4" />
 												<span>{section.name}</span>
 											</button>
-										</A>
+										</Link>
 									)}
 								</For>
 							</div>
@@ -118,7 +118,7 @@ export function DocsLayout(props: DocsLayoutProps) {
 							<div class="space-y-1">
 								<For each={components}>
 									{(component) => (
-										<A href={`/components/${component.name}`}>
+										<Link href={`/components/${component.name}`}>
 											<button
 												type="button"
 												class={`w-full flex items-center justify-between gap-2 px-2 py-2 text-sm rounded-md ${
@@ -134,7 +134,7 @@ export function DocsLayout(props: DocsLayoutProps) {
 													</Badge>
 												)}
 											</button>
-										</A>
+										</Link>
 									)}
 								</For>
 							</div>
@@ -147,13 +147,16 @@ export function DocsLayout(props: DocsLayoutProps) {
 
 				{/* Main Content */}
 				<main class="ml-64 flex-1 min-h-[calc(100vh-60px)]">
-					<div class="container mx-auto px-4 py-6 max-w-6xl">{props.children}</div>
+					<div class="container mx-auto px-4 py-6 max-w-6xl">
+						{props.children}
+					</div>
 
 					{/* Footer */}
 					<footer class="border-t border-border mt-12 py-8">
 						<div class="container mx-auto px-4 text-center text-sm text-muted-foreground">
 							<p>
-								Built with <span class="text-red-500">♥</span> using SolidJS, Ark UI, and UnoCSS
+								Built with <span class="text-red-500">♥</span> using SolidJS,
+								Ark UI, and UnoCSS
 							</p>
 						</div>
 					</footer>

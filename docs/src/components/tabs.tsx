@@ -4,7 +4,13 @@ import { cva } from "class-variance-authority";
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import type { Component, JSX } from "solid-js";
-import { createEffect, createSignal, onCleanup, onMount, splitProps } from "solid-js";
+import {
+	createEffect,
+	createSignal,
+	onCleanup,
+	onMount,
+	splitProps,
+} from "solid-js";
 import { unoMerge } from "unocss-merge";
 
 function cn(...classLists: ClassValue[]) {
@@ -26,7 +32,7 @@ const tabTriggerVariants = cva(
 		defaultVariants: {
 			variant: "default",
 		},
-	}
+	},
 );
 
 const tabListVariants = cva("inline-flex items-center relative", {
@@ -70,11 +76,13 @@ export const Tabs: Component<TabsProps> = (props) => {
 		if (!containerRef) return [];
 		const allContents = Array.from(
 			containerRef.querySelectorAll(
-				"[data-scope='tabs'][data-part='content']"
-			) as NodeListOf<HTMLElement>
+				"[data-scope='tabs'][data-part='content']",
+			) as NodeListOf<HTMLElement>,
 		);
 		return allContents.filter((content) => {
-			const closestRoot = content.closest("[data-scope='tabs'][data-part='root']");
+			const closestRoot = content.closest(
+				"[data-scope='tabs'][data-part='root']",
+			);
 			return closestRoot === containerRef;
 		});
 	};
@@ -87,7 +95,7 @@ export const Tabs: Component<TabsProps> = (props) => {
 
 		// Save the hidden state of every element BEFORE we start manipulating them
 		const hiddenStates = new Map<HTMLElement, boolean>(
-			directContents.map((c) => [c, c.hasAttribute("hidden")])
+			directContents.map((c) => [c, c.hasAttribute("hidden")]),
 		);
 
 		directContents.forEach((content) => {
@@ -189,7 +197,7 @@ export const Tabs: Component<TabsProps> = (props) => {
 
 		// Calculate the height of TabsList to position content below it
 		const tabsList = containerRef.querySelector(
-			"[data-scope='tabs'][data-part='list']"
+			"[data-scope='tabs'][data-part='list']",
 		) as HTMLElement;
 		const tabsListHeight = tabsList ? tabsList.offsetHeight : 0;
 
@@ -236,13 +244,21 @@ export const Tabs: Component<TabsProps> = (props) => {
 
 			// Fade out old content
 			if (oldContent) {
-				const anim = animate(oldContent, { opacity: 0 }, { duration: 0.3, easing: "ease-in-out" });
+				const anim = animate(
+					oldContent,
+					{ opacity: 0 },
+					{ duration: 0.3, easing: "ease-in-out" },
+				);
 				currentAnimations.push(anim);
 			}
 
 			// Fade in new content simultaneously for smooth crossfade
 			if (newContent) {
-				const anim = animate(newContent, { opacity: 1 }, { duration: 0.3, easing: "ease-in-out" });
+				const anim = animate(
+					newContent,
+					{ opacity: 1 },
+					{ duration: 0.3, easing: "ease-in-out" },
+				);
 				currentAnimations.push(anim);
 			}
 
@@ -250,7 +266,7 @@ export const Tabs: Component<TabsProps> = (props) => {
 			const heightAnim = animate(
 				containerRef,
 				{ height: `${targetHeight}px` },
-				{ duration: 0.3, easing: [0.16, 1, 0.3, 1] }
+				{ duration: 0.3, easing: [0.16, 1, 0.3, 1] },
 			);
 			currentAnimations.push(heightAnim);
 
@@ -283,7 +299,11 @@ export const Tabs: Component<TabsProps> = (props) => {
 	});
 
 	return (
-		<ArkTabs.Root ref={containerRef} class={cn("w-full relative", local.class)} {...others}>
+		<ArkTabs.Root
+			ref={containerRef}
+			class={cn("w-full relative", local.class)}
+			{...others}
+		>
 			{local.children}
 		</ArkTabs.Root>
 	);
@@ -297,11 +317,18 @@ type TabsListProps = {
 };
 
 export const TabsList: Component<TabsListProps> = (props) => {
-	const [local, variantProps, others] = splitProps(props, ["children", "class"], ["variant"]);
+	const [local, variantProps, others] = splitProps(
+		props,
+		["children", "class"],
+		["variant"],
+	);
 
 	return (
 		<ArkTabs.List
-			class={cn(tabListVariants({ variant: variantProps.variant }), local.class)}
+			class={cn(
+				tabListVariants({ variant: variantProps.variant }),
+				local.class,
+			)}
 			{...others}
 		>
 			{local.children}
@@ -319,11 +346,18 @@ type TabsTriggerProps = {
 };
 
 export const TabsTrigger: Component<TabsTriggerProps> = (props) => {
-	const [local, variantProps, others] = splitProps(props, ["children", "class"], ["variant"]);
+	const [local, variantProps, others] = splitProps(
+		props,
+		["children", "class"],
+		["variant"],
+	);
 
 	return (
 		<ArkTabs.Trigger
-			class={cn(tabTriggerVariants({ variant: variantProps.variant }), local.class)}
+			class={cn(
+				tabTriggerVariants({ variant: variantProps.variant }),
+				local.class,
+			)}
 			{...others}
 		>
 			{local.children}
@@ -346,7 +380,7 @@ export const TabsContent: Component<TabsContentProps> = (props) => {
 			class={cn(
 				"ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visual:ring-offset-2",
 				"mt-4",
-				local.class
+				local.class,
 			)}
 			{...others}
 		>
@@ -379,7 +413,9 @@ export const TabsIndicator: Component<TabsIndicatorProps> = (props) => {
 				top: "var(--top)",
 				width: "var(--width)",
 				height: "var(--height)",
-				transition: mounted() ? "all 250ms cubic-bezier(0.16, 1, 0.3, 1)" : "none",
+				transition: mounted()
+					? "all 250ms cubic-bezier(0.16, 1, 0.3, 1)"
+					: "none",
 			}}
 			{...others}
 		/>

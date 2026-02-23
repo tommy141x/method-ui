@@ -1,18 +1,20 @@
-import { Meta, Title } from "@solidjs/meta";
-import { A } from "@solidjs/router";
+import { createFileRoute, Link } from "@tanstack/solid-router";
 import { Button } from "../../components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/card";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "../../components/card";
 import { DocsLayout } from "../../components/docs-layout";
 
-export default function GettingStarted() {
+export const Route = createFileRoute("/docs/getting-started")({
+	component: GettingStarted,
+});
+
+function GettingStarted() {
 	return (
 		<DocsLayout>
-			<Title>Getting Started - Method UI Documentation</Title>
-			<Meta
-				name="description"
-				content="Learn how to use Method UI components in your SolidJS project. Examples, customization, TypeScript support, and more."
-			/>
-
 			<div class="space-y-6">
 				<div>
 					<h1 class="text-4xl font-bold mb-4">Getting Started</h1>
@@ -27,8 +29,8 @@ export default function GettingStarted() {
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<p>
-							After installing the dependencies, you're ready to start using Method UI components in
-							your SolidJS application.
+							After installing the dependencies, you're ready to start using
+							Method UI components in your SolidJS application.
 						</p>
 						<div class="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto">
 							<pre>{`// Add your first component
@@ -50,7 +52,8 @@ export default function App() {
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<p>
-							Components are designed to be flexible and customizable. Here's a complete example:
+							Components are designed to be flexible and customizable. Here's a
+							complete example:
 						</p>
 						<div class="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto">
 							<pre>{`import { Button } from "./components/button";
@@ -85,8 +88,8 @@ export default function MyComponent() {
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<p>
-							Most components come with multiple variants to match your design needs. Check each
-							component's documentation for available options.
+							Most components come with multiple variants to match your design
+							needs. Check each component's documentation for available options.
 						</p>
 						<div class="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto">
 							<pre>{`// Button variants
@@ -109,8 +112,8 @@ export default function MyComponent() {
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<p>
-							Method UI uses CSS variables for theming, making it easy to customize colors and
-							styles across your entire application.
+							Method UI uses CSS variables for theming, making it easy to
+							customize colors and styles across your entire application.
 						</p>
 						<div class="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto">
 							<pre>{`/* In your global.css */
@@ -128,9 +131,9 @@ export default function MyComponent() {
 }`}</pre>
 						</div>
 						<div class="mt-4">
-							<A href="/docs/theming">
+							<Link to="/docs/theming">
 								<Button variant="outline">Explore Themes</Button>
-							</A>
+							</Link>
 						</div>
 					</CardContent>
 				</Card>
@@ -141,8 +144,9 @@ export default function MyComponent() {
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<p>
-							All Method UI components are written in TypeScript and provide full type definitions.
-							Your IDE will give you autocomplete and type checking out of the box.
+							All Method UI components are written in TypeScript and provide
+							full type definitions. Your IDE will give you autocomplete and
+							type checking out of the box.
 						</p>
 						<div class="bg-muted rounded-lg p-4 font-mono text-sm overflow-x-auto">
 							<pre>{`import { Button } from "./components/button";
@@ -163,11 +167,13 @@ const MyButton = (props: ButtonProps) => {
 					<CardContent>
 						<ul class="space-y-2 list-disc list-inside">
 							<li>
-								<A href="/docs/theming" class="text-primary hover:underline">
+								<Link to="/docs/theming" class="text-primary hover:underline">
 									Learn about theming
-								</A>
+								</Link>
 							</li>
-							<li>Browse the components in the sidebar to see what's available</li>
+							<li>
+								Browse the components in the sidebar to see what's available
+							</li>
 							<li>Check out the examples for each component</li>
 							<li>Customize components to match your design system</li>
 						</ul>

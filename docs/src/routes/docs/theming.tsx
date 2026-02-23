@@ -1,4 +1,4 @@
-import { Meta, Title } from "@solidjs/meta";
+import { createFileRoute } from "@tanstack/solid-router";
 import { For, Show } from "solid-js";
 import IconArrowRight from "~icons/lucide/arrow-right";
 import IconBox from "~icons/lucide/box";
@@ -11,21 +11,25 @@ import IconPalette from "~icons/lucide/palette";
 import IconXCircle from "~icons/lucide/x-circle";
 import { Badge } from "../../components/badge";
 import { Button } from "../../components/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "../../components/card";
 import { DocsLayout } from "../../components/docs-layout";
 import { useTheme } from "../../components/theme";
 
-export default function Theming() {
+export const Route = createFileRoute("/docs/theming")({
+	component: Theming,
+});
+
+function Theming() {
 	const { theme, setTheme, themes, currentTheme } = useTheme();
 
 	return (
 		<DocsLayout>
-			<Title>Theming - Method UI</Title>
-			<Meta
-				name="description"
-				content="Learn how to customize and theme your Method UI application with CSS variables and the Theme component."
-			/>
-
 			<div class="max-w-4xl">
 				{/* Header */}
 				<div class="mb-12">
@@ -34,8 +38,8 @@ export default function Theming() {
 					</Badge>
 					<h1 class="text-4xl md:text-5xl font-bold mb-4">Theming</h1>
 					<p class="text-xl text-muted-foreground">
-						A flexible theme system that treats all themes equally. Create light, dark, or custom
-						color themes with ease.
+						A flexible theme system that treats all themes equally. Create
+						light, dark, or custom color themes with ease.
 					</p>
 				</div>
 
@@ -44,8 +48,8 @@ export default function Theming() {
 					<CardHeader>
 						<CardTitle>Overview</CardTitle>
 						<CardDescription>
-							The Method UI theme system uses CSS variables and a simple provider pattern to enable
-							powerful theming capabilities.
+							The Method UI theme system uses CSS variables and a simple
+							provider pattern to enable powerful theming capabilities.
 						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-4">
@@ -55,8 +59,8 @@ export default function Theming() {
 								<div>
 									<h3 class="font-medium mb-1">No Special Treatment</h3>
 									<p class="text-sm text-muted-foreground">
-										All themes are equal. There's no hardcoded "light" or "dark" logic - just
-										themes.
+										All themes are equal. There's no hardcoded "light" or "dark"
+										logic - just themes.
 									</p>
 								</div>
 							</div>
@@ -65,8 +69,8 @@ export default function Theming() {
 								<div>
 									<h3 class="font-medium mb-1">The 'base' Theme</h3>
 									<p class="text-sm text-muted-foreground">
-										Use theme ID 'base' to reference :root styles without creating a CSS class.
-										Perfect for your default theme.
+										Use theme ID 'base' to reference :root styles without
+										creating a CSS class. Perfect for your default theme.
 									</p>
 								</div>
 							</div>
@@ -75,8 +79,8 @@ export default function Theming() {
 								<div>
 									<h3 class="font-medium mb-1">CSS Variable Merging</h3>
 									<p class="text-sm text-muted-foreground">
-										Define only what you want to change. Unspecified variables automatically inherit
-										from :root.
+										Define only what you want to change. Unspecified variables
+										automatically inherit from :root.
 									</p>
 								</div>
 							</div>
@@ -85,8 +89,8 @@ export default function Theming() {
 								<div>
 									<h3 class="font-medium mb-1">Flexible Definition</h3>
 									<p class="text-sm text-muted-foreground">
-										Define themes in CSS files or inline in your code - whatever works best for your
-										project.
+										Define themes in CSS files or inline in your code - whatever
+										works best for your project.
 									</p>
 								</div>
 							</div>
@@ -98,7 +102,9 @@ export default function Theming() {
 				<Card class="mb-8">
 					<CardHeader>
 						<CardTitle>Quick Start</CardTitle>
-						<CardDescription>Get started with theming in 3 simple steps</CardDescription>
+						<CardDescription>
+							Get started with theming in 3 simple steps
+						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-6">
 						<div>
@@ -190,20 +196,28 @@ function ThemeToggle() {
 				<Card class="mb-8">
 					<CardHeader>
 						<CardTitle>Interactive Demo</CardTitle>
-						<CardDescription>Try switching themes to see the changes in real-time</CardDescription>
+						<CardDescription>
+							Try switching themes to see the changes in real-time
+						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-6">
 						<div>
 							<h3 class="text-sm font-medium mb-3">Current Theme</h3>
 							<div class="p-4 bg-muted rounded-lg space-y-2">
 								<div class="text-sm">
-									Theme ID: <code class="font-mono bg-background px-2 py-1 rounded">{theme()}</code>
+									Theme ID:{" "}
+									<code class="font-mono bg-background px-2 py-1 rounded">
+										{theme()}
+									</code>
 								</div>
 								<div class="text-sm">
-									Theme Name: <strong>{currentTheme()?.name || "Unknown"}</strong>
+									Theme Name:{" "}
+									<strong>{currentTheme()?.name || "Unknown"}</strong>
 								</div>
 								<Show when={currentTheme()?.description}>
-									<div class="text-xs text-muted-foreground">{currentTheme()?.description}</div>
+									<div class="text-xs text-muted-foreground">
+										{currentTheme()?.description}
+									</div>
 								</Show>
 							</div>
 						</div>
@@ -267,7 +281,8 @@ function ThemeToggle() {
 					<CardHeader>
 						<CardTitle>Available CSS Variables</CardTitle>
 						<CardDescription>
-							All variables defined in :root that can be overridden in theme classes
+							All variables defined in :root that can be overridden in theme
+							classes
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -294,7 +309,9 @@ function ThemeToggle() {
 								"--ring",
 								"--radius",
 							].map((variable) => (
-								<div class="bg-muted px-3 py-2 rounded font-mono text-xs">{variable}</div>
+								<div class="bg-muted px-3 py-2 rounded font-mono text-xs">
+									{variable}
+								</div>
 							))}
 						</div>
 					</CardContent>
@@ -305,12 +322,15 @@ function ThemeToggle() {
 					<CardHeader>
 						<CardTitle>Method 1: Define Themes in CSS</CardTitle>
 						<CardDescription>
-							Recommended for themes you want to use across your entire application
+							Recommended for themes you want to use across your entire
+							application
 						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<div>
-							<h3 class="text-sm font-medium mb-3">Add theme classes to your global.css</h3>
+							<h3 class="text-sm font-medium mb-3">
+								Add theme classes to your global.css
+							</h3>
 							<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 								<pre class="whitespace-pre-wrap">
 									{`/* global.css */
@@ -355,7 +375,9 @@ function ThemeToggle() {
 						</div>
 
 						<div>
-							<h3 class="text-sm font-medium mb-3">Register themes in your ThemeProvider</h3>
+							<h3 class="text-sm font-medium mb-3">
+								Register themes in your ThemeProvider
+							</h3>
 							<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 								<pre class="whitespace-pre-wrap">
 									{`import { ThemeProvider } from '@/components/theme';
@@ -381,12 +403,15 @@ const themes = [
 					<CardHeader>
 						<CardTitle>Theme Inheritance</CardTitle>
 						<CardDescription>
-							Create theme variants by extending other themes - supports recursive inheritance
+							Create theme variants by extending other themes - supports
+							recursive inheritance
 						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<div>
-							<h3 class="text-sm font-medium mb-3">Extend themes with the extends property</h3>
+							<h3 class="text-sm font-medium mb-3">
+								Extend themes with the extends property
+							</h3>
 							<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 								<pre class="whitespace-pre-wrap">
 									{`import { ThemeProvider } from '@/components/theme';
@@ -441,30 +466,31 @@ const themes = [
 								<div class="flex gap-3">
 									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
-										<strong>CSS Classes:</strong> When using CSS-defined themes, all classes in the
-										inheritance chain are applied unless the theme ID is 'base' which uses :root
-										(e.g., <code class="bg-muted px-1 rounded">dark rose-dark</code>)
+										<strong>CSS Classes:</strong> When using CSS-defined themes,
+										all classes in the inheritance chain are applied unless the
+										theme ID is 'base' which uses :root (e.g.,{" "}
+										<code class="bg-muted px-1 rounded">dark rose-dark</code>)
 									</div>
 								</div>
 								<div class="flex gap-3">
 									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
-										<strong>Inline cssVars:</strong> Variables are recursively merged, with child
-										themes overriding parent values
+										<strong>Inline cssVars:</strong> Variables are recursively
+										merged, with child themes overriding parent values
 									</div>
 								</div>
 								<div class="flex gap-3">
 									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
-										<strong>Recursive:</strong> Themes can extend themes that extend other themes
-										(e.g., modern → dark → base)
+										<strong>Recursive:</strong> Themes can extend themes that
+										extend other themes (e.g., modern → dark → base)
 									</div>
 								</div>
 								<div class="flex gap-3">
 									<IconArrowRight class="size-5 text-primary shrink-0 mt-0.5" />
 									<div>
-										<strong>Safe:</strong> Circular dependencies are automatically detected and
-										prevented
+										<strong>Safe:</strong> Circular dependencies are
+										automatically detected and prevented
 									</div>
 								</div>
 							</div>
@@ -474,9 +500,10 @@ const themes = [
 							<div class="flex gap-2 items-start">
 								<IconLightbulb class="size-4 text-green-500 mt-0.5 shrink-0" />
 								<div class="text-sm">
-									<strong class="text-green-500">Pro Tip:</strong> Use theme inheritance to create
-									color variants for different base themes. For example, create "rose-light" and
-									"rose-dark" that extend "light" and "dark" respectively.
+									<strong class="text-green-500">Pro Tip:</strong> Use theme
+									inheritance to create color variants for different base
+									themes. For example, create "rose-light" and "rose-dark" that
+									extend "light" and "dark" respectively.
 								</div>
 							</div>
 						</div>
@@ -488,12 +515,15 @@ const themes = [
 					<CardHeader>
 						<CardTitle>Method 2: Define Themes Inline</CardTitle>
 						<CardDescription>
-							Great for dynamic themes or when you don't want to modify CSS files
+							Great for dynamic themes or when you don't want to modify CSS
+							files
 						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<div>
-							<h3 class="text-sm font-medium mb-3">Pass CSS variables in theme config</h3>
+							<h3 class="text-sm font-medium mb-3">
+								Pass CSS variables in theme config
+							</h3>
 							<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 								<pre class="whitespace-pre-wrap">
 									{`import { ThemeProvider } from '@/components/theme';
@@ -542,8 +572,9 @@ const themes = [
 							<div class="flex gap-2 items-start">
 								<IconInfo class="size-4 text-blue-500 mt-0.5 shrink-0" />
 								<div class="text-sm">
-									<strong class="text-blue-500">Note:</strong> Inline cssVars override CSS-defined
-									themes. If a theme has both a CSS class and cssVars, the cssVars take precedence.
+									<strong class="text-blue-500">Note:</strong> Inline cssVars
+									override CSS-defined themes. If a theme has both a CSS class
+									and cssVars, the cssVars take precedence.
 								</div>
 							</div>
 						</div>
@@ -633,7 +664,9 @@ function ThemeSelector() {
 						</div>
 
 						<div>
-							<h3 class="text-sm font-medium mb-3">Using Built-in ThemeSwitcher</h3>
+							<h3 class="text-sm font-medium mb-3">
+								Using Built-in ThemeSwitcher
+							</h3>
 							<div class="bg-muted p-4 rounded-lg font-mono text-xs overflow-x-auto">
 								<pre class="whitespace-pre-wrap">
 									{`import { ThemeSwitcher } from '@/components/theme';
@@ -668,7 +701,9 @@ function MyApp() {
 				<Card class="mb-8">
 					<CardHeader>
 						<CardTitle>Best Practices</CardTitle>
-						<CardDescription>Tips for creating maintainable themes</CardDescription>
+						<CardDescription>
+							Tips for creating maintainable themes
+						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-4">
 						<div class="flex gap-3">
@@ -676,8 +711,8 @@ function MyApp() {
 							<div>
 								<h3 class="font-medium mb-1">Override Only What You Need</h3>
 								<p class="text-sm text-muted-foreground">
-									Theme classes only need to define variables that differ from :root. Everything
-									else automatically inherits.
+									Theme classes only need to define variables that differ from
+									:root. Everything else automatically inherits.
 								</p>
 								<div class="mt-2 bg-muted p-3 rounded font-mono text-xs">
 									<pre>{`.my-theme {
@@ -693,8 +728,8 @@ function MyApp() {
 							<div>
 								<h3 class="font-medium mb-1">Use HSL Color Format</h3>
 								<p class="text-sm text-muted-foreground">
-									HSL (Hue Saturation Lightness) makes it easier to create color variations and
-									maintain consistency.
+									HSL (Hue Saturation Lightness) makes it easier to create color
+									variations and maintain consistency.
 								</p>
 								<div class="mt-2 bg-muted p-3 rounded font-mono text-xs">
 									<pre>{`/* ✅ Good */
@@ -711,8 +746,8 @@ function MyApp() {
 							<div>
 								<h3 class="font-medium mb-1">Test in Multiple Contexts</h3>
 								<p class="text-sm text-muted-foreground">
-									Make sure your custom color themes work well when layered on different base themes
-									(like light and dark).
+									Make sure your custom color themes work well when layered on
+									different base themes (like light and dark).
 								</p>
 							</div>
 						</div>
@@ -722,8 +757,9 @@ function MyApp() {
 							<div>
 								<h3 class="font-medium mb-1">Don't Redefine Everything</h3>
 								<p class="text-sm text-muted-foreground">
-									You don't need to copy all variables from :root into your theme. Only define what
-									changes. The CSS cascade handles the rest.
+									You don't need to copy all variables from :root into your
+									theme. Only define what changes. The CSS cascade handles the
+									rest.
 								</p>
 							</div>
 						</div>
@@ -733,8 +769,8 @@ function MyApp() {
 							<div>
 								<h3 class="font-medium mb-1">Use Theme Inheritance</h3>
 								<p class="text-sm text-muted-foreground">
-									Instead of duplicating theme definitions, use the extends property to create
-									variants based on existing themes.
+									Instead of duplicating theme definitions, use the extends
+									property to create variants based on existing themes.
 								</p>
 							</div>
 						</div>
@@ -763,10 +799,12 @@ function MyApp() {
 									<strong>config.storageKey</strong>?: string (default: "theme")
 								</div>
 								<div>
-									<strong>config.attribute</strong>?: "class" | "data-theme" (default: "class")
+									<strong>config.attribute</strong>?: "class" | "data-theme"
+									(default: "class")
 								</div>
 								<div>
-									<strong>config.syncAcrossTabs</strong>?: boolean (default: true)
+									<strong>config.syncAcrossTabs</strong>?: boolean (default:
+									true)
 								</div>
 							</div>
 						</div>
@@ -797,7 +835,9 @@ function MyApp() {
 
 						<div>
 							<h3 class="font-semibold mb-2">ThemeDefinition</h3>
-							<p class="text-sm text-muted-foreground mb-3">Object describing a theme.</p>
+							<p class="text-sm text-muted-foreground mb-3">
+								Object describing a theme.
+							</p>
 							<div class="bg-muted p-4 rounded-lg font-mono text-xs space-y-2">
 								<div>
 									<strong>id</strong>: string - Unique identifier
@@ -809,10 +849,12 @@ function MyApp() {
 									<strong>description</strong>?: string - Optional description
 								</div>
 								<div>
-									<strong>cssVars</strong>?: Record&lt;string, string&gt; - CSS variable overrides
+									<strong>cssVars</strong>?: Record&lt;string, string&gt; - CSS
+									variable overrides
 								</div>
 								<div>
-									<strong>extends</strong>?: string - Base theme ID to inherit from
+									<strong>extends</strong>?: string - Base theme ID to inherit
+									from
 								</div>
 							</div>
 						</div>

@@ -104,7 +104,7 @@ export const ThemeProvider: Component<ThemeProviderProps> = (props) => {
 
 	// Initialize theme - always start with default to avoid hydration mismatch
 	const [theme, setThemeState] = createSignal<string>(
-		config.defaultTheme || config.themes[0]?.id || ""
+		config.defaultTheme || config.themes[0]?.id || "",
 	);
 	const [mounted, setMounted] = createSignal(false);
 
@@ -126,7 +126,10 @@ export const ThemeProvider: Component<ThemeProviderProps> = (props) => {
 	};
 
 	// Recursively collect CSS vars from base themes
-	const collectThemeVars = (themeId: string, visited = new Set<string>()): ThemeVars => {
+	const collectThemeVars = (
+		themeId: string,
+		visited = new Set<string>(),
+	): ThemeVars => {
 		// Prevent circular dependencies
 		if (visited.has(themeId)) {
 			console.warn(`Circular theme dependency detected: ${themeId}`);
@@ -327,10 +330,17 @@ export interface ThemeSwitcherProps {
 
 export const ThemeSwitcher: Component<ThemeSwitcherProps> = (props) => {
 	const { themes, theme: currentThemeId, setTheme, mounted } = useTheme();
-	const [local, others] = splitProps(props, ["class", "showDescription", "renderButton"]);
+	const [local, others] = splitProps(props, [
+		"class",
+		"showDescription",
+		"renderButton",
+	]);
 
 	return (
-		<Show when={mounted()} fallback={<div class="animate-pulse h-20 w-full bg-muted/50 rounded" />}>
+		<Show
+			when={mounted()}
+			fallback={<div class="animate-pulse h-20 w-full bg-muted/50 rounded" />}
+		>
 			<div class={cn("flex flex-col gap-2", local.class)} {...others}>
 				<For each={themes()}>
 					{(themeDef) => {
@@ -353,7 +363,7 @@ export const ThemeSwitcher: Component<ThemeSwitcherProps> = (props) => {
 									"hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 									isActive
 										? "border-primary bg-primary/5"
-										: "border-border bg-card hover:border-primary/50"
+										: "border-border bg-card hover:border-primary/50",
 								)}
 								aria-label={`Select ${themeDef.name} theme`}
 								aria-pressed={isActive}
@@ -365,7 +375,9 @@ export const ThemeSwitcher: Component<ThemeSwitcherProps> = (props) => {
 									</Show>
 								</div>
 								<Show when={local.showDescription && themeDef.description}>
-									<span class="text-xs text-muted-foreground">{themeDef.description}</span>
+									<span class="text-xs text-muted-foreground">
+										{themeDef.description}
+									</span>
 								</Show>
 							</button>
 						);

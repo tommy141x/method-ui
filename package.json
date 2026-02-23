@@ -64,7 +64,7 @@
 	"devDependencies": {
 		"@ark-ui/solid": "^5.32.0",
 		"@biomejs/biome": "^2.4.4",
-		"@iconify-json/lucide": "^1.2.92",
+		"@iconify-json/lucide": "^1.2.93",
 		"@onebeyond/license-checker": "^2.2.0",
 		"@responsive-image/solid": "^2.0.4",
 		"@tiptap/core": "^3.20.0",

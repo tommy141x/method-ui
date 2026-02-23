@@ -1,10 +1,20 @@
-import { A } from "@solidjs/router";
+import { createFileRoute, Link } from "@tanstack/solid-router";
 import { Badge } from "../components/badge";
 import { Button } from "../components/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "../components/card";
 import { Navbar } from "../components/navbar";
 
-export default function Home() {
+export const Route = createFileRoute("/")({
+	component: Home,
+});
+
+function Home() {
 	return (
 		<div class="min-h-screen bg-background">
 			<Navbar />
@@ -16,23 +26,24 @@ export default function Home() {
 						Built with SolidJS & Ark UI
 					</Badge>
 					<h1 class="text-5xl md:text-7xl font-bold tracking-tight">
-						Build beautiful apps with <span class="text-primary">Method UI</span>
+						Build beautiful apps with{" "}
+						<span class="text-primary">Method UI</span>
 					</h1>
 					<p class="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-						A comprehensive component library for SolidJS. Beautifully designed, accessible, and
-						customizable components for your next project.
+						A comprehensive component library for SolidJS. Beautifully designed,
+						accessible, and customizable components for your next project.
 					</p>
 					<div class="flex flex-wrap items-center justify-center gap-4 pt-6">
-						<A href="/docs">
+						<Link to="/docs">
 							<Button size="lg" class="text-lg px-8">
 								Get Started
 							</Button>
-						</A>
-						<A href="/components/button">
+						</Link>
+						<Link to="/components/$component" params={{ component: "button" }}>
 							<Button size="lg" variant="outline" class="text-lg px-8">
 								View Components
 							</Button>
-						</A>
+						</Link>
 					</div>
 				</div>
 			</section>
@@ -52,8 +63,8 @@ export default function Home() {
 							<CardHeader>
 								<CardTitle>🎨 Customizable</CardTitle>
 								<CardDescription>
-									Fully themeable components with CSS variables and variants. Make it yours with
-									minimal effort.
+									Fully themeable components with CSS variables and variants.
+									Make it yours with minimal effort.
 								</CardDescription>
 							</CardHeader>
 						</Card>
@@ -62,8 +73,8 @@ export default function Home() {
 							<CardHeader>
 								<CardTitle>♿ Accessible</CardTitle>
 								<CardDescription>
-									Built on top of Ark UI with WAI-ARIA compliance. Keyboard navigation and screen
-									reader support out of the box.
+									Built on top of Ark UI with WAI-ARIA compliance. Keyboard
+									navigation and screen reader support out of the box.
 								</CardDescription>
 							</CardHeader>
 						</Card>
@@ -72,8 +83,8 @@ export default function Home() {
 							<CardHeader>
 								<CardTitle>⚡ Fast</CardTitle>
 								<CardDescription>
-									Powered by SolidJS for blazing fast performance. Fine-grained reactivity with no
-									virtual DOM overhead.
+									Powered by SolidJS for blazing fast performance. Fine-grained
+									reactivity with no virtual DOM overhead.
 								</CardDescription>
 							</CardHeader>
 						</Card>
@@ -82,8 +93,8 @@ export default function Home() {
 							<CardHeader>
 								<CardTitle>📦 Ready to Use</CardTitle>
 								<CardDescription>
-									Copy and paste components directly into your project. No package installation
-									required.
+									Copy and paste components directly into your project. No
+									package installation required.
 								</CardDescription>
 							</CardHeader>
 						</Card>
@@ -92,8 +103,8 @@ export default function Home() {
 							<CardHeader>
 								<CardTitle>🎯 TypeScript</CardTitle>
 								<CardDescription>
-									Fully typed components with excellent IDE support. Catch errors early with type
-									safety.
+									Fully typed components with excellent IDE support. Catch
+									errors early with type safety.
 								</CardDescription>
 							</CardHeader>
 						</Card>
@@ -102,8 +113,8 @@ export default function Home() {
 							<CardHeader>
 								<CardTitle>🌙 Dark Mode</CardTitle>
 								<CardDescription>
-									Built-in dark mode support with automatic theme switching. Beautiful in both light
-									and dark themes.
+									Built-in dark mode support with automatic theme switching.
+									Beautiful in both light and dark themes.
 								</CardDescription>
 							</CardHeader>
 						</Card>
@@ -116,24 +127,29 @@ export default function Home() {
 				<div class="max-w-4xl mx-auto">
 					<div class="text-center mb-12">
 						<h2 class="text-3xl md:text-4xl font-bold mb-4">Quick Start</h2>
-						<p class="text-lg text-muted-foreground">Get up and running in minutes</p>
+						<p class="text-lg text-muted-foreground">
+							Get up and running in minutes
+						</p>
 					</div>
 
 					<Card>
 						<CardHeader>
 							<CardTitle>Installation</CardTitle>
-							<CardDescription>Add Method UI to your SolidJS project</CardDescription>
+							<CardDescription>
+								Add Method UI to your SolidJS project
+							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
 							<div class="bg-muted rounded-lg p-4 font-mono text-sm">
 								npm install @ark-ui/solid solid-js
 							</div>
 							<p class="text-sm text-muted-foreground">
-								Then browse the components in the docs and copy the code you need into your project.
+								Then browse the components in the docs and copy the code you
+								need into your project.
 							</p>
-							<A href="/docs">
+							<Link to="/docs">
 								<Button>Browse Components</Button>
-							</A>
+							</Link>
 						</CardContent>
 					</Card>
 				</div>

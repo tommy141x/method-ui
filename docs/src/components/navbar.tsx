@@ -1,4 +1,4 @@
-import { A } from "@solidjs/router";
+import { Link } from "@tanstack/solid-router";
 import { createSignal, Show } from "solid-js";
 import IconBookOpen from "~icons/lucide/book-open";
 import IconDownload from "~icons/lucide/download";
@@ -28,9 +28,12 @@ export function Navbar() {
 		<header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
 			<div class="container mx-auto px-4 h-16 flex items-center justify-between">
 				<div class="flex items-center gap-8">
-					<A href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+					<Link
+						href="/"
+						class="flex items-center gap-2 hover:opacity-80 transition-opacity"
+					>
 						<h1 class="text-xl font-bold">Method UI</h1>
-					</A>
+					</Link>
 
 					{/* Desktop Navigation with NavMenu */}
 					<div class="hidden md:block">
@@ -40,7 +43,7 @@ export function Navbar() {
 									<NavMenuTrigger>Docs</NavMenuTrigger>
 									<NavMenuContent class="p-2">
 										<div class="grid gap-1 w-[280px]">
-											<A
+											<Link
 												href="/docs"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
@@ -51,37 +54,43 @@ export function Navbar() {
 														Complete guides and references
 													</div>
 												</div>
-											</A>
-											<A
+											</Link>
+											<Link
 												href="/docs/getting-started"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
 												<IconRocket class="h-5 w-5 mt-0.5" />
 												<div>
 													<div class="font-medium">Getting Started</div>
-													<div class="text-xs text-muted-foreground">Quick setup guide</div>
+													<div class="text-xs text-muted-foreground">
+														Quick setup guide
+													</div>
 												</div>
-											</A>
-											<A
+											</Link>
+											<Link
 												href="/docs/installation"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
 												<IconDownload class="h-5 w-5 mt-0.5" />
 												<div>
 													<div class="font-medium">Installation</div>
-													<div class="text-xs text-muted-foreground">Install Method UI</div>
+													<div class="text-xs text-muted-foreground">
+														Install Method UI
+													</div>
 												</div>
-											</A>
-											<A
+											</Link>
+											<Link
 												href="/docs/theming"
 												class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 											>
 												<IconPalette class="h-5 w-5 mt-0.5" />
 												<div>
 													<div class="font-medium">Theming</div>
-													<div class="text-xs text-muted-foreground">Customize your theme</div>
+													<div class="text-xs text-muted-foreground">
+														Customize your theme
+													</div>
 												</div>
-											</A>
+											</Link>
 										</div>
 									</NavMenuContent>
 								</NavMenuItem>
@@ -91,7 +100,7 @@ export function Navbar() {
 									<NavMenuContent class="p-2">
 										<div class="flex gap-2">
 											{/* Featured Card */}
-											<A
+											<Link
 												href="/components/button"
 												class="w-[180px] shrink-0 rounded-lg bg-linear-to-br from-primary/20 to-primary/5 p-4 transition-colors hover:from-primary/30 hover:to-primary/10"
 											>
@@ -102,11 +111,11 @@ export function Navbar() {
 														Explore our component library
 													</div>
 												</div>
-											</A>
+											</Link>
 
 											{/* Component Grid */}
 											<div class="w-[280px] flex flex-col gap-1">
-												<A
+												<Link
 													href="/components/button"
 													class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 												>
@@ -117,27 +126,31 @@ export function Navbar() {
 															Interactive button component
 														</div>
 													</div>
-												</A>
-												<A
+												</Link>
+												<Link
 													href="/components/input"
 													class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 												>
 													<IconTextCursorInput class="h-5 w-5 mt-0.5" />
 													<div>
 														<div class="font-medium">Input</div>
-														<div class="text-xs text-muted-foreground">Form input components</div>
+														<div class="text-xs text-muted-foreground">
+															Form input components
+														</div>
 													</div>
-												</A>
-												<A
+												</Link>
+												<Link
 													href="/components/dialog"
 													class="flex items-start gap-3 rounded-md p-3 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 												>
 													<IconRectangleVertical class="h-5 w-5 mt-0.5" />
 													<div>
 														<div class="font-medium">Dialog</div>
-														<div class="text-xs text-muted-foreground">Modal dialogs</div>
+														<div class="text-xs text-muted-foreground">
+															Modal dialogs
+														</div>
 													</div>
-												</A>
+												</Link>
 											</div>
 										</div>
 									</NavMenuContent>
@@ -165,7 +178,10 @@ export function Navbar() {
 						class="md:hidden"
 						onClick={() => setMobileMenuOpen(!mobileMenuOpen())}
 					>
-						<Show when={mobileMenuOpen()} fallback={<IconMenu class="h-5 w-5" />}>
+						<Show
+							when={mobileMenuOpen()}
+							fallback={<IconMenu class="h-5 w-5" />}
+						>
 							<IconX class="h-5 w-5" />
 						</Show>
 					</Button>
@@ -177,67 +193,71 @@ export function Navbar() {
 				<div class="md:hidden border-t border-border bg-background">
 					<nav class="container mx-auto px-4 py-4 flex flex-col gap-4">
 						<div class="space-y-1">
-							<div class="text-xs font-semibold text-muted-foreground px-3 py-2">DOCUMENTATION</div>
-							<A
+							<div class="text-xs font-semibold text-muted-foreground px-3 py-2">
+								DOCUMENTATION
+							</div>
+							<Link
 								href="/docs"
 								class="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent"
-								activeClass="text-foreground bg-accent"
+								activeProps={{ class: "text-foreground bg-accent" }}
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								Overview
-							</A>
-							<A
+							</Link>
+							<Link
 								href="/docs/getting-started"
 								class="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent"
-								activeClass="text-foreground bg-accent"
+								activeProps={{ class: "text-foreground bg-accent" }}
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								Getting Started
-							</A>
-							<A
+							</Link>
+							<Link
 								href="/docs/installation"
 								class="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent"
-								activeClass="text-foreground bg-accent"
+								activeProps={{ class: "text-foreground bg-accent" }}
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								Installation
-							</A>
-							<A
+							</Link>
+							<Link
 								href="/docs/theming"
 								class="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent"
-								activeClass="text-foreground bg-accent"
+								activeProps={{ class: "text-foreground bg-accent" }}
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								Theming
-							</A>
+							</Link>
 						</div>
 
 						<div class="space-y-1">
-							<div class="text-xs font-semibold text-muted-foreground px-3 py-2">NAVIGATION</div>
-							<A
+							<div class="text-xs font-semibold text-muted-foreground px-3 py-2">
+								NAVIGATION
+							</div>
+							<Link
 								href="/components/button"
 								class="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent"
-								activeClass="text-foreground bg-accent"
+								activeProps={{ class: "text-foreground bg-accent" }}
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								Components
-							</A>
-							<A
+							</Link>
+							<Link
 								href="/blocks"
 								class="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent"
-								activeClass="text-foreground bg-accent"
+								activeProps={{ class: "text-foreground bg-accent" }}
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								Blocks
-							</A>
-							<A
+							</Link>
+							<Link
 								href="/themes"
 								class="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent"
-								activeClass="text-foreground bg-accent"
+								activeProps={{ class: "text-foreground bg-accent" }}
 								onClick={() => setMobileMenuOpen(false)}
 							>
 								Themes
-							</A>
+							</Link>
 						</div>
 					</nav>
 				</div>

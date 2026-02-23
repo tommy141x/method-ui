@@ -110,7 +110,7 @@ export const PopoverContent = (props: PopoverContentProps) => {
 									{...others}
 								>
 									{local.showArrow !== false && (
-										<ArkPopover.Arrow class="--arrow-size-[12px] --arrow-background-[var(--colors-popover)]">
+										<ArkPopover.Arrow class="[--arrow-size:12px] [--arrow-background:hsl(var(--popover))]">
 											<ArkPopover.ArrowTip class="border-t border-l border-border" />
 										</ArkPopover.Arrow>
 									)}

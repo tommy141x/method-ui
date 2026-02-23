@@ -16,7 +16,12 @@ interface SkeletonProps {
 export const Skeleton: Component<SkeletonProps> = (props) => {
 	const [local, others] = splitProps(props, ["class"]);
 
-	return <div class={cn("animate-pulse rounded-md bg-muted", local.class)} {...others} />;
+	return (
+		<div
+			class={cn("animate-pulse rounded-md bg-muted", local.class)}
+			{...others}
+		/>
+	);
 };
 
 export default Skeleton;

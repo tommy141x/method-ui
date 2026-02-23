@@ -67,7 +67,7 @@ export const TooltipContent = (props: TooltipContentProps) => {
 										{...others}
 									>
 										{local.showArrow !== false && (
-											<ArkTooltip.Arrow class="--arrow-size-[8px] --arrow-background-[var(--colors-secondary)]">
+											<ArkTooltip.Arrow class="[--arrow-size:8px] [--arrow-background:hsl(var(--secondary))]">
 												<ArkTooltip.ArrowTip />
 											</ArkTooltip.Arrow>
 										)}

@@ -8,7 +8,10 @@
  */
 
 import { Field } from "@ark-ui/solid";
-import { Combobox as ArkCombobox, useListCollection } from "@ark-ui/solid/combobox";
+import {
+	Combobox as ArkCombobox,
+	useListCollection,
+} from "@ark-ui/solid/combobox";
 import { useFilter } from "@ark-ui/solid/locale";
 import { TagsInput as ArkTagsInput } from "@ark-ui/solid/tags-input";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -59,7 +62,7 @@ const inputVariants = cva(
 			variant: "default",
 			size: "default",
 		},
-	}
+	},
 );
 
 const tagVariants = cva(
@@ -75,12 +78,13 @@ const tagVariants = cva(
 		defaultVariants: {
 			size: "default",
 		},
-	}
+	},
 );
 
 // Input component with variants
 type InputProps = Omit<
-	JSX.InputHTMLAttributes<HTMLInputElement> & JSX.TextareaHTMLAttributes<HTMLTextAreaElement>,
+	JSX.InputHTMLAttributes<HTMLInputElement> &
+		JSX.TextareaHTMLAttributes<HTMLTextAreaElement>,
 	"type"
 > &
 	VariantProps<typeof inputVariants> & {
@@ -174,7 +178,9 @@ export const Input = (props: InputProps) => {
 		"ignorePasswordManagers",
 		"autoresize",
 		// Only extract these for tags variant - otherwise let them pass through
-		...(isTagsVariant ? (["value", "defaultValue", "onValueChange"] as const) : []),
+		...(isTagsVariant
+			? (["value", "defaultValue", "onValueChange"] as const)
+			: []),
 		"max",
 		"maxLength",
 		"addOnPaste",
@@ -192,7 +198,9 @@ export const Input = (props: InputProps) => {
 	const hasError = createMemo(() => !!wrapperProps.error);
 	const hasSuccess = createMemo(() => !!wrapperProps.success && !hasError());
 
-	const [showPassword, setShowPassword] = createSignal(local.defaultVisible ?? false);
+	const [showPassword, setShowPassword] = createSignal(
+		local.defaultVisible ?? false,
+	);
 
 	// Handle controlled visibility
 	const isPasswordVisible = () => local.visible ?? showPassword();
@@ -243,7 +251,7 @@ export const Input = (props: InputProps) => {
 											variant: effectiveVariant(),
 											size: local.size,
 										}),
-										local.class
+										local.class,
 									)}
 									// biome-ignore lint/suspicious/noExplicitAny: ark-ui type compatibility
 									{...(others as any)}
@@ -279,7 +287,7 @@ export const Input = (props: InputProps) => {
 														variant: effectiveVariant(),
 														size: local.size,
 													}),
-													local.class
+													local.class,
 												)}
 											>
 												<Index each={api().value}>
@@ -288,7 +296,7 @@ export const Input = (props: InputProps) => {
 															<ArkTagsInput.ItemPreview
 																class={cn(
 																	tagVariants({ size: local.size }),
-																	"data-highlighted:bg-accent data-highlighted:text-accent-foreground"
+																	"data-highlighted:bg-accent data-highlighted:text-accent-foreground",
 																)}
 															>
 																<ArkTagsInput.ItemText class="select-none">
@@ -320,7 +328,7 @@ export const Input = (props: InputProps) => {
 					{(() => {
 						const filterFn = useFilter({ sensitivity: "base" });
 						const items = (local.options || []).map((opt) =>
-							typeof opt === "string" ? opt : opt.label
+							typeof opt === "string" ? opt : opt.label,
 						);
 
 						const { collection, filter } = useListCollection({
@@ -360,16 +368,19 @@ export const Input = (props: InputProps) => {
 															variant: effectiveVariant(),
 															size: local.size,
 														}),
-														local.clearable && (context().value.length > 0 || context().inputValue)
+														local.clearable &&
+															(context().value.length > 0 ||
+																context().inputValue)
 															? "pr-20"
 															: "pr-10",
-														local.class
+														local.class,
 													)}
 													{...others}
 												/>
 												<Show
 													when={
-														local.clearable && (context().value.length > 0 || context().inputValue)
+														local.clearable &&
+														(context().value.length > 0 || context().inputValue)
 													}
 												>
 													<ArkCombobox.ClearTrigger class="absolute right-10 top-0 h-full px-2 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center disabled:opacity-50">
@@ -395,12 +406,15 @@ export const Input = (props: InputProps) => {
 																		item={item}
 																		class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50"
 																	>
-																		<ArkCombobox.ItemText>{item}</ArkCombobox.ItemText>
+																		<ArkCombobox.ItemText>
+																			{item}
+																		</ArkCombobox.ItemText>
 																		<Show
 																			when={
 																				collection().stringifyItem(item) &&
 																				context().value.includes(
-																					collection().stringifyItem(item) ?? ""
+																					collection().stringifyItem(item) ??
+																						"",
 																				)
 																			}
 																		>
@@ -439,13 +453,15 @@ export const Input = (props: InputProps) => {
 							required={local.required}
 							data-1p-ignore={local.ignorePasswordManagers}
 							data-lpignore={local.ignorePasswordManagers}
-							data-form-type={local.ignorePasswordManagers ? "other" : undefined}
+							data-form-type={
+								local.ignorePasswordManagers ? "other" : undefined
+							}
 							class={cn(
 								inputVariants({
 									variant: effectiveVariant(),
 									size: local.size,
 								}),
-								local.class
+								local.class,
 							)}
 							{...others}
 						/>
@@ -455,7 +471,11 @@ export const Input = (props: InputProps) => {
 							disabled={local.disabled}
 							class="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
 						>
-							{isPasswordVisible() ? <IconEyeOff class="h-4 w-4" /> : <IconEye class="h-4 w-4" />}
+							{isPasswordVisible() ? (
+								<IconEyeOff class="h-4 w-4" />
+							) : (
+								<IconEye class="h-4 w-4" />
+							)}
 						</button>
 					</div>
 				}
@@ -473,7 +493,7 @@ export const Input = (props: InputProps) => {
 						inputVariants({ variant: effectiveVariant(), size: local.size }),
 						hasError() && "border-destructive focus-visible:ring-destructive",
 						hasSuccess() && "border-green-500 focus-visible:ring-green-500",
-						local.class
+						local.class,
 					)}
 					{...others}
 				/>
@@ -500,7 +520,7 @@ export const Input = (props: InputProps) => {
 					for={fieldId()}
 					class={cn(
 						"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-						wrapperProps.labelClass
+						wrapperProps.labelClass,
 					)}
 				>
 					{wrapperProps.label}

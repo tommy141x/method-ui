@@ -73,7 +73,8 @@ const createIsMobile = () => {
 
 	createEffect(() => {
 		const mql = window.matchMedia("(max-width: 767px)");
-		const onChange = (e: MediaQueryListEvent | MediaQueryList) => setIsMobile(e.matches);
+		const onChange = (e: MediaQueryListEvent | MediaQueryList) =>
+			setIsMobile(e.matches);
 		mql.addEventListener("change", onChange);
 		onChange(mql);
 		onCleanup(() => mql.removeEventListener("change", onChange));
@@ -146,7 +147,10 @@ export const SidebarProvider: Component<SidebarProviderProps> = (props) => {
 		if (local.disableKeyboardShortcut) return;
 
 		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
+			if (
+				event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+				(event.metaKey || event.ctrlKey)
+			) {
 				event.preventDefault();
 				toggleSidebar();
 			}
@@ -174,7 +178,11 @@ export const SidebarProvider: Component<SidebarProviderProps> = (props) => {
 
 	// If customLayout is true, don't create wrapper div
 	if (local.customLayout) {
-		return <SidebarContext.Provider value={contextValue}>{local.children}</SidebarContext.Provider>;
+		return (
+			<SidebarContext.Provider value={contextValue}>
+				{local.children}
+			</SidebarContext.Provider>
+		);
 	}
 
 	return (
@@ -190,7 +198,7 @@ export const SidebarProvider: Component<SidebarProviderProps> = (props) => {
 				class={cn(
 					"group/sidebar-wrapper relative flex w-full",
 					local.fullHeight !== false && "h-screen overflow-hidden",
-					local.class
+					local.class,
 				)}
 				{...others}
 			>
@@ -262,7 +270,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
 			variant: "sidebar" as SidebarVariant,
 			collapsible: "offcanvas" as SidebarCollapsible,
 		},
-		local
+		local,
 	);
 
 	// Check if we're inside an existing SidebarProvider
@@ -333,7 +341,7 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 			variant: "sidebar" as SidebarVariant,
 			collapsible: "offcanvas" as SidebarCollapsible,
 		},
-		local
+		local,
 	);
 
 	const context = useSidebar();
@@ -359,7 +367,7 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 						merged.variant === "floating" &&
 							"rounded-2xl border border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-lg",
 						merged.variant === "sidebar" && "border-r border-border",
-						local.class
+						local.class,
 					)}
 					{...others}
 				>
@@ -406,8 +414,10 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 								}}
 								class={cn(
 									"fixed inset-y-0 z-50 flex h-full w-(--sidebar-width) flex-col bg-background border-border shadow-lg",
-									merged.side === "left" ? "left-0 border-r" : "right-0 border-l",
-									local.class
+									merged.side === "left"
+										? "left-0 border-r"
+										: "right-0 border-l",
+									local.class,
 								)}
 								{...others}
 							>
@@ -441,7 +451,9 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 			<aside
 				class="group peer hidden md:block shrink-0"
 				data-state={context.state()}
-				data-collapsible={context.state() === "collapsed" ? merged.collapsible : ""}
+				data-collapsible={
+					context.state() === "collapsed" ? merged.collapsible : ""
+				}
 				data-variant={merged.variant}
 				data-side={merged.side}
 				data-sidebar="container"
@@ -451,13 +463,15 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 					style={{ width: getWidth() }}
 					class={cn(
 						"flex h-full box-border",
-						context.isInitialMount() ? "" : "transition-[width] duration-200 ease-in-out",
+						context.isInitialMount()
+							? ""
+							: "transition-[width] duration-200 ease-in-out",
 						merged.variant === "inset"
 							? "p-2"
 							: merged.variant === "sidebar"
 								? "group-data-[side=left]:border-r group-data-[side=right]:border-l border-border"
 								: "",
-						local.class
+						local.class,
 					)}
 					{...others}
 				>
@@ -467,13 +481,18 @@ const SidebarInternal: Component<SidebarInternalProps> = (props) => {
 						data-side={merged.side}
 						style={{
 							opacity:
-								merged.collapsible === "offcanvas" && context.state() === "collapsed" ? 0 : 1,
+								merged.collapsible === "offcanvas" &&
+								context.state() === "collapsed"
+									? 0
+									: 1,
 						}}
 						class={cn(
 							"flex h-full w-full flex-col bg-background overflow-hidden",
-							context.isInitialMount() ? "" : "transition-opacity duration-150 ease-out",
+							context.isInitialMount()
+								? ""
+								: "transition-opacity duration-150 ease-out",
 							merged.variant === "floating" &&
-								"rounded-2xl border border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-lg"
+								"rounded-2xl border border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-lg",
 						)}
 					>
 						{local.children}
@@ -552,7 +571,7 @@ export const SidebarRail: Component<SidebarRailProps> = (props) => {
 				"group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full",
 				"[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
 				"[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
-				local.class
+				local.class,
 			)}
 			{...others}
 		/>
@@ -575,7 +594,7 @@ export const SidebarInset: Component<SidebarInsetProps> = (props) => {
 			class={cn(
 				"relative flex flex-1 flex-col bg-background overflow-auto",
 				"peer-data-[variant=inset]:m-2 peer-data-[variant=inset]:rounded-xl peer-data-[variant=inset]:shadow peer-data-[variant=inset]:border peer-data-[variant=inset]:border-border",
-				local.class
+				local.class,
 			)}
 			{...others}
 		/>
@@ -598,7 +617,7 @@ export const SidebarHeader: Component<SidebarHeaderProps> = (props) => {
 			class={cn(
 				"flex flex-col gap-2 p-2",
 				"group-data-[collapsible=icon]:overflow-hidden",
-				local.class
+				local.class,
 			)}
 			{...others}
 		/>
@@ -639,7 +658,7 @@ export const SidebarContent: Component<SidebarContentProps> = (props) => {
 			data-slot="sidebar-content"
 			class={cn(
 				"flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
-				local.class
+				local.class,
 			)}
 			{...others}
 		/>
@@ -684,7 +703,7 @@ export const SidebarGroupLabel: Component<SidebarGroupLabelProps> = (props) => {
 				"focus-visible:ring-2 focus-visible:ring-ring",
 				"group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
 				"[&>svg]:size-4 [&>svg]:shrink-0",
-				local.class
+				local.class,
 			)}
 			{...others}
 		>
@@ -700,7 +719,9 @@ interface SidebarGroupActionProps {
 	onClick?: () => void;
 }
 
-export const SidebarGroupAction: Component<SidebarGroupActionProps> = (props) => {
+export const SidebarGroupAction: Component<SidebarGroupActionProps> = (
+	props,
+) => {
 	const [local, others] = splitProps(props, ["class"]);
 
 	return (
@@ -713,7 +734,7 @@ export const SidebarGroupAction: Component<SidebarGroupActionProps> = (props) =>
 				"absolute top-3.5 right-3 size-5 p-0",
 				"after:absolute after:-inset-2 md:after:hidden",
 				"group-data-[collapsible=icon]:hidden",
-				local.class
+				local.class,
 			)}
 			{...others}
 		/>
@@ -726,7 +747,9 @@ interface SidebarGroupContentProps {
 	class?: string;
 }
 
-export const SidebarGroupContent: Component<SidebarGroupContentProps> = (props) => {
+export const SidebarGroupContent: Component<SidebarGroupContentProps> = (
+	props,
+) => {
 	const [local, others] = splitProps(props, ["class"]);
 
 	return (
@@ -786,7 +809,9 @@ interface SidebarMenuCollapsibleProps {
 	onOpenChange?: (details: { open: boolean }) => void;
 }
 
-export const SidebarMenuCollapsible: Component<SidebarMenuCollapsibleProps> = (props) => {
+export const SidebarMenuCollapsible: Component<SidebarMenuCollapsibleProps> = (
+	props,
+) => {
 	const [local, others] = splitProps(props, [
 		"children",
 		"class",
@@ -823,9 +848,9 @@ interface SidebarMenuCollapsibleTriggerProps {
 	onClick?: (e: MouseEvent) => void;
 }
 
-export const SidebarMenuCollapsibleTrigger: Component<SidebarMenuCollapsibleTriggerProps> = (
-	props
-) => {
+export const SidebarMenuCollapsibleTrigger: Component<
+	SidebarMenuCollapsibleTriggerProps
+> = (props) => {
 	const [local, others] = splitProps(props, [
 		"children",
 		"class",
@@ -849,13 +874,15 @@ export const SidebarMenuCollapsibleTrigger: Component<SidebarMenuCollapsibleTrig
 				"disabled:pointer-events-none disabled:opacity-50",
 				"aria-disabled:pointer-events-none aria-disabled:opacity-50",
 				"data-[active=true]:bg-accent data-[active=true]:font-medium data-[active=true]:text-accent-foreground data-[active=true]:hover:bg-accent",
-				local.isActiveChild && !local.isActive && "bg-accent/30 text-accent-foreground/80",
+				local.isActiveChild &&
+					!local.isActive &&
+					"bg-accent/30 text-accent-foreground/80",
 				"group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:justify-center",
 				"transition-[width,height,padding]",
 				"[&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
 				"group-data-[collapsible=icon]:[&>*:not(:first-child):not([data-part='indicator'])]:hidden",
 				"h-10",
-				local.class
+				local.class,
 			)}
 			onClick={local.onClick}
 			{...others}
@@ -886,7 +913,9 @@ interface SidebarMenuCollapsibleChevronProps {
 	class?: string;
 }
 
-export const SidebarMenuCollapsibleChevron: Component<SidebarMenuCollapsibleChevronProps> = () => {
+export const SidebarMenuCollapsibleChevron: Component<
+	SidebarMenuCollapsibleChevronProps
+> = () => {
 	return null;
 };
 
@@ -896,13 +925,17 @@ interface SidebarMenuCollapsibleContentProps {
 	class?: string;
 }
 
-export const SidebarMenuCollapsibleContent: Component<SidebarMenuCollapsibleContentProps> = (
-	props
-) => {
+export const SidebarMenuCollapsibleContent: Component<
+	SidebarMenuCollapsibleContentProps
+> = (props) => {
 	const [local, others] = splitProps(props, ["children", "class"]);
 
 	return (
-		<Collapsible.Content data-sidebar="menu-sub-container" class={cn(local.class)} {...others}>
+		<Collapsible.Content
+			data-sidebar="menu-sub-container"
+			class={cn(local.class)}
+			{...others}
+		>
 			{local.children}
 		</Collapsible.Content>
 	);
@@ -964,7 +997,7 @@ export const SidebarMenuButton: Component<SidebarMenuButtonProps> = (props) => {
 					"h-12 text-sm group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:size-8!",
 				merged.variant === "outline" &&
 					"bg-background shadow-[0_0_0_1px_hsl(var(--border))] hover:bg-accent hover:text-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--accent))]",
-				local.class
+				local.class,
 			)}
 			{...others}
 		>
@@ -1013,7 +1046,7 @@ export const SidebarMenuAction: Component<SidebarMenuActionProps> = (props) => {
 				"group-data-[collapsible=icon]:hidden",
 				local.showOnHover &&
 					"peer-data-[active=true]/menu-button:text-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0",
-				local.class
+				local.class,
 			)}
 			{...others}
 		/>
@@ -1042,7 +1075,7 @@ export const SidebarMenuBadge: Component<SidebarMenuBadgeProps> = (props) => {
 				"peer-data-[size=default]/menu-button:top-1.5",
 				"peer-data-[size=lg]/menu-button:top-2.5",
 				"group-data-[collapsible=icon]:hidden",
-				local.class
+				local.class,
 			)}
 			{...others}
 		>
@@ -1067,7 +1100,7 @@ export const SidebarMenuSub: Component<SidebarMenuSubProps> = (props) => {
 			class={cn(
 				"ml-4 flex min-w-0 flex-col items-start gap-1 border-l border-border px-2.5 py-0.5",
 				"group-data-[collapsible=icon]:hidden",
-				local.class
+				local.class,
 			)}
 			{...others}
 		/>
@@ -1080,7 +1113,9 @@ interface SidebarMenuSubItemProps {
 	class?: string;
 }
 
-export const SidebarMenuSubItem: Component<SidebarMenuSubItemProps> = (props) => {
+export const SidebarMenuSubItem: Component<SidebarMenuSubItemProps> = (
+	props,
+) => {
 	const [local, others] = splitProps(props, ["class"]);
 
 	return (
@@ -1105,7 +1140,9 @@ interface SidebarMenuSubButtonProps {
 	[key: string]: unknown;
 }
 
-export const SidebarMenuSubButton: Component<SidebarMenuSubButtonProps> = (props) => {
+export const SidebarMenuSubButton: Component<SidebarMenuSubButtonProps> = (
+	props,
+) => {
 	const [local, others] = splitProps(props, [
 		"children",
 		"class",
@@ -1136,7 +1173,7 @@ export const SidebarMenuSubButton: Component<SidebarMenuSubButtonProps> = (props
 				merged.size === "sm" && "text-xs",
 				merged.size === "md" && "text-sm",
 				"group-data-[collapsible=icon]:hidden",
-				local.class
+				local.class,
 			)}
 			{...others}
 		>
@@ -1191,7 +1228,9 @@ interface SidebarMenuSkeletonProps {
 	showIcon?: boolean;
 }
 
-export const SidebarMenuSkeleton: Component<SidebarMenuSkeletonProps> = (props) => {
+export const SidebarMenuSkeleton: Component<SidebarMenuSkeletonProps> = (
+	props,
+) => {
 	const [local, others] = splitProps(props, ["class", "showIcon"]);
 
 	// Random width between 50 to 90%, stabilised with createMemo so it doesn't

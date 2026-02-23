@@ -1,9 +1,20 @@
+import { createFileRoute } from "@tanstack/solid-router";
 import { Badge } from "../components/badge";
 import { Button } from "../components/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "../components/card";
 import { Navbar } from "../components/navbar";
 
-export default function Blocks() {
+export const Route = createFileRoute("/blocks")({
+	component: Blocks,
+});
+
+function Blocks() {
 	const blockCategories = [
 		{
 			name: "Marketing",
@@ -39,8 +50,8 @@ export default function Blocks() {
 					</Badge>
 					<h1 class="text-4xl md:text-5xl font-bold mb-4">Component Blocks</h1>
 					<p class="text-xl text-muted-foreground">
-						Pre-built sections and layouts you can copy and paste into your apps. Built with Method
-						UI components.
+						Pre-built sections and layouts you can copy and paste into your
+						apps. Built with Method UI components.
 					</p>
 				</div>
 
@@ -52,7 +63,9 @@ export default function Blocks() {
 								<div class="flex items-start justify-between">
 									<div class="flex-1">
 										<CardTitle>{category.name}</CardTitle>
-										<CardDescription class="mt-2">{category.description}</CardDescription>
+										<CardDescription class="mt-2">
+											{category.description}
+										</CardDescription>
 									</div>
 									<Badge variant="secondary" class="ml-4">
 										{category.count}
@@ -73,9 +86,10 @@ export default function Blocks() {
 					<CardHeader>
 						<CardTitle>What are blocks?</CardTitle>
 						<CardDescription class="mt-2">
-							Blocks are fully responsive, production-ready sections that you can copy and paste
-							into your application. They're built using Method UI components and follow best
-							practices for accessibility and design.
+							Blocks are fully responsive, production-ready sections that you
+							can copy and paste into your application. They're built using
+							Method UI components and follow best practices for accessibility
+							and design.
 						</CardDescription>
 					</CardHeader>
 					<CardContent class="space-y-4">
@@ -92,8 +106,8 @@ export default function Blocks() {
 						<div>
 							<h3 class="font-semibold mb-2">📦 Coming Soon</h3>
 							<p class="text-sm text-muted-foreground">
-								We're working hard on creating a comprehensive collection of blocks for various use
-								cases. Check back soon!
+								We're working hard on creating a comprehensive collection of
+								blocks for various use cases. Check back soon!
 							</p>
 						</div>
 					</CardContent>

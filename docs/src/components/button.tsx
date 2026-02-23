@@ -40,11 +40,17 @@ const buttonVariants = cva(
 			variant: "default",
 			size: "default",
 		},
-	}
+	},
 );
 
 type ButtonProps = {
-	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+	variant?:
+		| "default"
+		| "destructive"
+		| "outline"
+		| "secondary"
+		| "ghost"
+		| "link";
 	size?: "default" | "sm" | "lg" | "icon";
 	class?: string | undefined;
 	children?: JSX.Element;
@@ -66,7 +72,7 @@ type ButtonProps = {
 const Button: Component<ButtonProps> = (props) => {
 	const merged = mergeProps(
 		{ variant: "default" as const, size: "default" as const, toggle: false },
-		props
+		props,
 	);
 
 	const [local, toggleProps, others] = splitProps(
@@ -84,7 +90,7 @@ const Button: Component<ButtonProps> = (props) => {
 			"disabled",
 			"as",
 		],
-		["pressed", "defaultPressed", "onPressedChange"]
+		["pressed", "defaultPressed", "onPressedChange"],
 	);
 
 	const isDisabled = () => !!(local.disabled || local.loading);
@@ -110,10 +116,15 @@ const Button: Component<ButtonProps> = (props) => {
 		return (
 			<ArkToggle.Root
 				pressed={toggleProps.pressed as unknown as boolean | undefined}
-				defaultPressed={toggleProps.defaultPressed as unknown as boolean | undefined}
+				defaultPressed={
+					toggleProps.defaultPressed as unknown as boolean | undefined
+				}
 				onPressedChange={toggleProps.onPressedChange}
 				disabled={isDisabled()}
-				class={cn(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+				class={cn(
+					buttonVariants({ variant: local.variant, size: local.size }),
+					local.class,
+				)}
 				{...others}
 			>
 				{content()}
@@ -126,7 +137,10 @@ const Button: Component<ButtonProps> = (props) => {
 		return (
 			<button
 				disabled={isDisabled()}
-				class={cn(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+				class={cn(
+					buttonVariants({ variant: local.variant, size: local.size }),
+					local.class,
+				)}
 				{...others}
 			>
 				{content()}
@@ -142,7 +156,10 @@ const Button: Component<ButtonProps> = (props) => {
 	return (
 		<Dynamic
 			component={local.as}
-			class={cn(buttonVariants({ variant: local.variant, size: local.size }), local.class)}
+			class={cn(
+				buttonVariants({ variant: local.variant, size: local.size }),
+				local.class,
+			)}
 			{...dynamicProps}
 			{...others}
 		>

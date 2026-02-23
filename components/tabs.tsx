@@ -339,7 +339,7 @@ export const TabsContent: Component<TabsContentProps> = (props) => {
 	return (
 		<ArkTabs.Content
 			class={cn(
-				"ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visual:ring-offset-2",
+				"ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
 				"mt-4",
 				local.class
 			)}
