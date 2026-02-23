@@ -71,7 +71,7 @@ export const HoverCardContent = (props: HoverCardContentProps) => {
 									{...others}
 								>
 									{local.showArrow !== false && (
-										<ArkHoverCard.Arrow class="--arrow-size-[12px] --arrow-background-[var(--colors-background)]">
+										<ArkHoverCard.Arrow class="[--arrow-size:12px] [--arrow-background:hsl(var(--background))]">
 											<ArkHoverCard.ArrowTip class="border-t border-l border-border" />
 										</ArkHoverCard.Arrow>
 									)}

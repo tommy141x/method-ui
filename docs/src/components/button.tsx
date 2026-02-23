@@ -61,9 +61,10 @@ type ButtonProps = {
 	// New props for loading state
 	loading?: boolean;
 	loadingText?: string;
-	// New props for icons — pass a JSX element, e.g. <IconCheck />
-	leftIcon?: JSX.Element;
-	rightIcon?: JSX.Element;
+	// Icons — pass as render functions so they are lazily evaluated inside
+	// the Button's reactive render tree (avoids SSR/hydration mismatches).
+	leftIcon?: () => JSX.Element;
+	rightIcon?: () => JSX.Element;
 	// Polymorphic as prop
 	as?: ValidComponent;
 	[key: string]: unknown;
@@ -100,15 +101,11 @@ const Button: Component<ButtonProps> = (props) => {
 			<Show when={local.loading}>
 				<IconLoaderCircle class="h-4 w-4 animate-spin" />
 			</Show>
-			<Show when={!local.loading && local.leftIcon} keyed>
-				{(leftIcon) => leftIcon}
-			</Show>
+			{!local.loading && local.leftIcon ? local.leftIcon() : null}
 			<Show when={local.loading && local.loadingText} fallback={local.children}>
 				{local.loadingText}
 			</Show>
-			<Show when={!local.loading && local.rightIcon} keyed>
-				{(rightIcon) => rightIcon}
-			</Show>
+			{!local.loading && local.rightIcon ? local.rightIcon() : null}
 		</>
 	);
 

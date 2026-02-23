@@ -22,30 +22,33 @@ function Themes() {
 	const { theme, setTheme, themes } = useTheme();
 
 	return (
-		<div class="min-h-screen bg-background">
+		<div class="min-h-screen bg-background text-foreground">
 			<Navbar />
 
-			<div class="container mx-auto px-4 py-12">
+			<div class="container mx-auto px-4 py-16 max-w-5xl">
 				{/* Header */}
-				<div class="max-w-3xl mb-12">
-					<Badge variant="secondary" class="mb-4">
+				<div class="mb-12">
+					<Badge variant="secondary" class="mb-4 text-xs">
 						Customization
 					</Badge>
-					<h1 class="text-4xl md:text-5xl font-bold mb-4">Themes</h1>
-					<p class="text-xl text-muted-foreground">
-						Customize the look and feel of your application. Choose from
-						pre-built themes or create your own using CSS variables.
+					<h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+						Themes
+					</h1>
+					<p class="text-muted-foreground text-base max-w-xl leading-relaxed">
+						Switch between built-in themes or define your own with CSS
+						variables. Click any theme below to preview it live across all
+						components.
 					</p>
 				</div>
 
 				{/* Theme Gallery */}
 				<div class="mb-12">
-					<h2 class="text-2xl font-bold mb-6">Available Themes</h2>
-					<p class="text-muted-foreground mb-6">
-						Choose from our curated collection of themes. Each theme can be
-						further customized with CSS variables.
+					<h2 class="text-xl font-semibold mb-2">Available themes</h2>
+					<p class="text-sm text-muted-foreground mb-6">
+						Click a theme to apply it instantly. Your selection is persisted
+						across pages.
 					</p>
-					<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 						<For each={themes()}>
 							{(themeOption) => (
 								<button
@@ -55,8 +58,9 @@ function Themes() {
 								>
 									<Card
 										class={cn(
-											"cursor-pointer transition-all hover:shadow-lg h-full flex flex-col",
-											theme() === themeOption.id && "ring-2 ring-primary",
+											"cursor-pointer transition-colors hover:bg-accent/30 hover:border-primary/30 h-full flex flex-col",
+											theme() === themeOption.id &&
+												"ring-2 ring-primary border-primary/50",
 										)}
 									>
 										<CardHeader class="flex-1 flex flex-col justify-between min-h-[180px]">
@@ -110,12 +114,16 @@ function Themes() {
 
 				{/* Live Preview */}
 				<div class="mb-12">
-					<h2 class="text-2xl font-bold mb-6">Live Preview</h2>
+					<h2 class="text-xl font-semibold mb-2">Live preview</h2>
+					<p class="text-sm text-muted-foreground mb-6">
+						All components below update instantly when you switch themes above.
+					</p>
 					<Card>
 						<CardHeader>
-							<CardTitle>Current Theme Preview</CardTitle>
+							<CardTitle class="text-base">Component preview</CardTitle>
 							<CardDescription>
-								See how components look with the selected theme
+								Showing buttons, badges, and cards with the active theme
+								applied.
 							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
@@ -166,14 +174,17 @@ function Themes() {
 
 				{/* Customization Guide */}
 				<div class="space-y-6">
-					<h2 class="text-2xl font-bold">Customization</h2>
+					<h2 class="text-xl font-semibold">Customization</h2>
 
 					<Card>
 						<CardHeader>
-							<CardTitle>Available CSS Variables</CardTitle>
+							<CardTitle class="text-base">Available CSS variables</CardTitle>
 							<CardDescription>
-								Method UI uses CSS variables for theming. All variables are
-								defined in :root and can be overridden in theme classes.
+								All variables are defined on{" "}
+								<code class="font-mono text-xs bg-muted px-1 rounded">
+									:root
+								</code>{" "}
+								and overridden per theme class.
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
@@ -230,11 +241,15 @@ function Themes() {
 
 					<Card>
 						<CardHeader>
-							<CardTitle>Method 1: Define Themes in CSS</CardTitle>
+							<CardTitle class="text-base">
+								Method 1: Define themes in CSS
+							</CardTitle>
 							<CardDescription>
-								Create theme classes in your global.css file. This is the
-								recommended approach for themes you want to use across your
-								entire app.
+								Create theme classes in your{" "}
+								<code class="font-mono text-xs bg-muted px-1 rounded">
+									global.css
+								</code>
+								. Recommended for themes used across your entire app.
 							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
@@ -296,10 +311,12 @@ const themes = [
 
 					<Card>
 						<CardHeader>
-							<CardTitle>Method 2: Define Themes Inline</CardTitle>
+							<CardTitle class="text-base">
+								Method 2: Define themes inline
+							</CardTitle>
 							<CardDescription>
-								Pass CSS variables directly in your theme configuration. Great
-								for dynamic themes or when you don't want to modify CSS files.
+								Pass CSS variables directly in your theme config. Great for
+								dynamic or user-generated themes.
 							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
@@ -364,9 +381,9 @@ const themes = [
 
 					<Card>
 						<CardHeader>
-							<CardTitle>Best Practices</CardTitle>
+							<CardTitle class="text-base">Best practices</CardTitle>
 							<CardDescription>
-								Tips for creating maintainable themes
+								Tips for creating clean, maintainable themes.
 							</CardDescription>
 						</CardHeader>
 						<CardContent class="space-y-4">
@@ -424,6 +441,13 @@ const themes = [
 					</Card>
 				</div>
 			</div>
+
+			{/* Footer */}
+			<footer class="border-t border-border py-8 mt-8">
+				<div class="container mx-auto px-4 text-center text-xs text-muted-foreground">
+					Built with SolidJS, Ark UI &amp; UnoCSS
+				</div>
+			</footer>
 		</div>
 	);
 }

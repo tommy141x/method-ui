@@ -28,7 +28,7 @@ export const ThemeToggle: Component = () => {
 			onClick={toggleTheme}
 			variant="outline"
 			size="icon"
-			class="fixed top-4 right-4 z-50"
+			class="h-9 w-9"
 			aria-label="Toggle theme"
 			title={currentTheme()?.name || theme()}
 		>
